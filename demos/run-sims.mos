@@ -1,0 +1,8 @@
+cd("/media/Storage/Documents/Dymola")
+
+ok = simulateModel("Modelica.Electrical.Analog.Examples.ChuaCircuit", stopTime=2.500000e+03, resultFile="ChuaCircuit");
+if ok then
+    system("cp ChuaCircuit.mat /media/Storage/Documents/Dymola/FCSys/resources/source/Python/demos");
+end if;
+
+exit();
