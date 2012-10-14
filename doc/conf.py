@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# FCSys User's Guide build configuration file, created by sphinx-quickstart for
-# matplotlib and modified.
+# modelicares User's Guide build configuration file, created by sphinx-
+# quickstart for matplotlib and modified.
 #
 # This file is execfile()d with the current directory set to its containing dir.
 #
@@ -39,15 +39,15 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General substitutions.
-project = 'FCSys Utilities'
+project = 'modelicares'
 copyright = '2012 (Kevin Davies).  Documentation scripts from matplotlib v1.2'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
 #
 # The short X.Y version.
-import fcres
-version = fcres.__version__
+import modelicares
+version = modelicares.__version__
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -128,7 +128,7 @@ html_use_modindex = True
 html_use_opensearch = 'False'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'FCSysUtilitiesDoc'
+htmlhelp_basename = 'modelicaresDoc'
 
 math_output = 'MathML'
 
@@ -145,7 +145,7 @@ latex_font_size = '11pt'
 # (source start file, target name, title, author, document class [howto/manual]).
 
 latex_documents = [
-  ('index', 'FCSysUtilities.tex', r"FCSys Utilities User's Guide", 'Kevin Davies', 'manual'),
+  ('index', 'modelicares.tex', r"modelicares User's Guide", 'Kevin Davies', 'manual'),
 ]
 
 latex_elements = { 'classoptions': ',openany,openside',

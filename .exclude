@@ -1,0 +1,29 @@
+# List of files and folders to exclude when extracting a copy of this folder for
+# distribution
+#
+# This is the order of precedence for determining if a file or folder will be
+# included (top priority first):
+#   1. The files and folders in .include are included.
+#   2. The files and folders in .exclude (this file) are excluded.
+#   3. By default, all files and folders are included.
+#
+# This is used by rsync via 00-extract.sh.
+# KLD 5/22/12
+
+
+temp_plot*
+build
+control/build
+doc
+*.pyc
+resources/images/matplotlib.svg
+
+# Scripts for development
+00-*
+create-matplotlib-icon.py
+
+# Hidden, synchronization, and backup files
+.*
+
+# Work in progress
+hierarchial.py
