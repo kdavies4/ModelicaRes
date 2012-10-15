@@ -1,0 +1,21 @@
+# Images
+*.png
+*.pdf
+*.gif
+*.ico
+*.jpg
+
+# Compiled files
+*.pyc
+build/
+build/
+
+# Internal link to demos
+doc/demos
+
+# Stuff that is only for Github web page
+release
+images
+
+# Generated files
+doc/_static
