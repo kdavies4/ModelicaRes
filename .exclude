@@ -17,6 +17,8 @@ control/build
 doc
 *.pyc
 resources/images/matplotlib.svg
+images
+release
 
 # Scripts for development
 00-*

@@ -20,6 +20,6 @@ rm $dest_dir/$foldername.zip
 # Copy this folder with the relevant files.
 rsync $thisfolder -rL --delete --include-from $thisfolder/.include --exclude-from $thisfolder/.exclude $dest_dir/
 
-# Make a zipped copy.
-cd $dest_dir
-zip -r $foldername.zip $foldername
+# Make compressed copies.
+zip -r release/$foldername.zip $dest_dir/$foldername
+tar -zcvf release/$foldername.tar.gz $dest_dir/$foldername
