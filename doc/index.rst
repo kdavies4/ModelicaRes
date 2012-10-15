@@ -60,7 +60,7 @@ modelicares
       :mod:`modelicares`, has classes and methods for loading, interpreting,
       and plotting Modelica_ results in the format used by Dymola.  The
       :mod:`res` module suports it with general methods.  Finally, the
-      :mod:`texunit` module has methods to translate Modelica *unit* and
+      :mod:`texunit` module has methods to translate Modelica_ *unit* and
       *displayUnit* strings into TeX_-formatted strings.
 
       .. Seealso:: The buildingspy
