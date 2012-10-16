@@ -2,8 +2,10 @@
 """Set up the modelicares modules.
 
 Instructions for installation on Linux:
+
 1. Build the modules.
    $ python ./setup.py build
+
 2. Install the modules.
    $ sudo python ./setup.py install
 """
