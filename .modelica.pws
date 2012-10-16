@@ -1,1 +1,23 @@
-/media/Storage/Documents/Dymola/FCSys/.modelica.pws
+personal_ws-1.1 en 22
+redeclare
+der
+Modelica
+JModelica
+acausal
+stateSelect
+OpenModelica
+SystemModeler
+Dymola
+actualStream
+AssertionLevel
+choicesAllMatching
+choicesFromPackage
+connectorSizing
+constrainedby
+DAEs
+der
+displayUnit
+inStream
+inline
+noEvent
+redeclare

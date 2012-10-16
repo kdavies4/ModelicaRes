@@ -1,6 +1,6 @@
-###########
-modelicares
-###########
+###############
+  modelicares
+###############
    **Python utilities to analyze and plot Modelica results**
 
    The goal of *modelicares* is to provide open-source tools to help interpret
@@ -67,7 +67,7 @@ modelicares
          (`http://simulationresearch.lbl.gov/modelica/buildingspy/
          <http://simulationresearch.lbl.gov/modelica/buildingspy/>`_) and DyMat
          (`http://www.j-raedler.de/projects/dymat/
-         <http://www.j-raedler.de/projects/dymat/>`_ projects provide other
+         <http://www.j-raedler.de/projects/dymat/>`_) projects provide other
          Python_ modules that are related.
 
    .. toctree::
@@ -83,6 +83,8 @@ modelicares
          other Python_ modules that are related.
 
       A PDF version of this documentation is available `here <modelicares.pdf>`_.
+      The development site for *modelicares* is
+      `https://github.com/kdavies4/modelicares <https://github.com/kdavies4/modelicares>`_.
 
 .. _Python: http://www.python.org/
 .. _Modelica: http://www.modelica.org/

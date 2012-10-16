@@ -41,12 +41,11 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'modelicares'
-copyright = u'2012, Kevin Davies'
+project = 'modelicares'
+copyright = '2012, Kevin Davies'
 
-# The version info for the project you're documenting, acts as replacement for
-# |version| and |release|, also used in various other places throughout the
-# built documents.
+# The default replacements for |version| and |release|, also used in various
+# other places throughout the built documents.
 #
 # The short X.Y version.
 import modelicares
@@ -136,7 +135,7 @@ html_sidebars = {'**': ['globaltoc.html', 'searchbox.html']}
 #html_domain_indices = True
 
 # If true, links to the reST sources are added to the pages.
-#html_show_sourcelink = True
+html_show_sourcelink = False
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
 #html_show_sphinx = True
@@ -152,6 +151,7 @@ html_use_opensearch = 'False'
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'modelicaresdoc'
 
+math_output = 'MathML'
 
 # -- Options for LaTeX output --------------------------------------------------
 

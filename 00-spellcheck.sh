@@ -5,5 +5,5 @@
 
 for f in help/*.html
     do
-        aspell --extra-dicts=./.modelica.pws --personal=./.fcsys.pws -c $f
+        aspell --extra-dicts=./.modelica.pws --personal=./.modelicares.pws -c $f
     done
