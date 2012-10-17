@@ -1,7 +1,7 @@
-:mod:`modelicares.texunit`
+:mod:`modelicares.linres`
 ==========================
 
-.. automodule:: modelicares.texunit
+.. automodule:: modelicares.linres
    :members:
    :undoc-members:
    :show-inheritance:

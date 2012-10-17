@@ -1,7 +1,7 @@
-:mod:`modelicares.texunit`
+:mod:`modelicares.simres`
 ==========================
 
-.. automodule:: modelicares.texunit
+.. automodule:: modelicares.simres
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,0 +1,120 @@
+#!/usr/bin/env python
+"""Load results from Modelica_ simulation(s) and provide a Python_ interpreter
+to analyze the results.
+
+This script can be executed at the command line.  It will accept as arguments
+the names of result files or names of directories with result files.  The
+filenames may contain wildcards.  If no arguments are given, the script
+provides a dialog to choose a file or folder.  Finally, it provides working
+session of `IPython <http://www.ipython.org/>`_ with the results preloaded.
+PyLab_ is directly imported (``from pylab import *``) to provide many functions
+of NumPy_ and matplotlib_ (e.g., :meth:`sin` and :meth:`plot`).  The essential
+classes and functions of ModelicaRes are directly available as well.
+
+**Example:**
+
+.. code-block:: sh
+
+   $ loadres examples/
+   Valid: SimRes('.../examples/ChuaCircuit.mat')
+   Valid: SimRes('.../examples/ChuaCircuit2.mat')
+   Valid: SimRes('.../examples/ThreeTanks.mat')
+   Valid: LinRes('.../examples/PID.mat')
+   Simulation results have been loaded into sims[0] through sims[2].
+   A linearization result has been loaded into lin.
+
+   In [1]:
+
+where '...' depends on the local system.
+
+.. _Modelica: http://www.modelica.org/
+.. _Python: http://www.python.org/
+.. _PyLab: http://www.scipy.org/PyLab
+.. _NumPy: http://numpy.scipy.org/
+.. _matplotlib: http://www.matplotlib.org/
+"""
+import os
+import time
+
+from sys import argv
+#from wx import App, DirSelector, FileSelector
+from easygui import fileopenbox, diropenbox
+
+from modelicares import SimRes, LinRes, multiload
+from modelicares.gui import boolbox
+
+if __name__ == '__main__':
+    DEFAULT_PATH = '../examples'
+
+    def _local_exit(t=0.5):
+        """Exit with a message and a delay."""
+        print("Exiting...")
+        time.sleep(t)
+        exit()
+
+    #choice = MessageDialog()
+
+    # Determine the file location(s).
+    if len(argv) == 1:
+        choice = boolbox("Open one file or all files from a folder?",
+                         title="File or folder", choices=('File', 'Folder'),
+                         default=0)
+        if choice == 0: # File
+            loc = fileopenbox(msg="Choose a data file.",
+                              default=os.path.join(DEFAULT_PATH, "*.mat"),
+                              filetypes=['*.mat'])
+            # easygui is ugly, but wx seems to make the working session slow:
+            #app = App()
+            #fname = FileSelector("Choose a data file.",
+            #                     default_path=DEFAULT_PATH, wildcard='*.mat')
+            print loc
+        elif choice == 1: # Folder
+            loc = diropenbox("Choose a folder with data file(s).",
+                             default=default_path)
+            #app = App()
+            #loc = DirSelector("Choose a folder with data file(s).",
+            #                  defaultPath=DEFAULT_PATH)
+        else:
+            _local_exit()
+        if not loc:
+            _local_exit()
+    else:
+        loc = argv[1:]
+
+    # Load the file(s).
+    sims, lins = multiload(loc)
+    n_sims = len(sims)
+    if n_sims == 1:
+        sim = sims[0]
+        del sims
+        print("A simulation result has been loaded into sim.")
+    elif n_sims > 1:
+        print("Simulation results have been loaded into sims[0] through "
+              "sims[%i]." % (n_sims-1))#, end="")
+    n_lins = len(lins)
+    if n_lins == 1:
+        lin = lins[0]
+        del lins
+        print("A linearization result has been loaded into lin.")
+    elif n_lins > 1:
+        print("Linearization results have been loaded into lins[0] through "
+              "lins[%i]." % (n_lins-1))#, end="")
+    elif n_sims == 0:
+        print("No files were loaded.")
+        _local_exit()
+
+    # Open the IPython or standard Python interpreter.
+    #    http://writeonly.wordpress.com/2008/09/08/embedding-a-python-shell-in-a-python-script/,
+    #    accessed 11/2/2010
+    from pylab import *
+    from modelicares import *
+    try:
+        from IPython.Shell import IPShellEmbed
+        IPShellEmbed(argv=['-noconfirm_exit'])()
+        # Note: The -pylab option cannot be embedded (see
+        # http://article.gmane.org/gmane.comp.python.ipython.user/1190/match=pylab),
+        # so man
+    except ImportError:
+        from code import InteractiveConsole
+        # Calling this with globals ensures that we can see the environment.
+        InteractiveConsole(globals()).interact()

@@ -11,11 +11,32 @@ build/
 build/
 
 # Internal link to demos
-doc/demos
+/doc/demos
 
-# Stuff that is only for Github web page
-release
-images
+# Stuff that is only for the Github web page
+/release
+/images
 
 # Generated files
-doc/_static
+/MANIFEST
+*.tar.gz
+*.zip
+*.html
+objects.inv
+/doc/searchindex.js
+/examples/*.svg
+/examples/*.mos
+/doc/_static
+/examples/ChuaCircuit_1*
+/examples/ChuaCircuit_2*
+/dist
+
+# Copied files
+/doc/_sources
+
+# Backup files
+*.py.bak
+.fuse_hidden*
+
+# Internal links
+/modelicares/examples

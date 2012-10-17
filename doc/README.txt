@@ -1,7 +1,7 @@
-Documentation for modelicares
+Documentation for ModelicaRes
 =============================
 
-This is the top-level build directory for documenting modelicares.  All of the
+This is the top-level build directory for documenting ModelicaRes.  All of the
 documentation is written using Sphinx, a Python documentation system built on
 top of ReST.  This file has been copied and adapted from matplotlib v1.2
 (http://matplotlib.org/), which is licensed as open source
