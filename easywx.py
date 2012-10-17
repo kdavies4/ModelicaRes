@@ -1,9 +1,8 @@
 # Based on http://code.google.com/p/easywx/, accessed 10/7/12
-"""
-easywx provides an easy-to-use interface for simple GUI interaction with a user.
-It does not require the programmer to know anything about wxpython, frames,
-widgets, callbacks or lambda.  All GUI interactions are invoked by a simple
-function calls that return results.
+"""easywx provides an easy-to-use interface for simple GUI interaction with a
+user.  It does not require the programmer to know anything about wxpython,
+frames, widgets, callbacks or lambda.  All GUI interactions are invoked by a
+simple function calls that return results.
 
 WARNING about using easywx with IDLE
 =====================================
@@ -64,11 +63,11 @@ class _ButtonBox(wx.Frame):
         sizer_2 = wx.BoxSizer(wx.VERTICAL)
         sizer_3 = wx.GridSizer(1, len(self.buttons), 0, 0)
         sizer_2.Add(self.label_1, 0,
-                    wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 6)
+            wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 6)
         for button in self.buttons:
             sizer_3.Add(button, 0,
-                        wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL,
-                        len(self.buttons))
+                wx.ALL|wx.ALIGN_CENTER_HORIZONTAL |wx.ALIGN_CENTER_VERTICAL,
+                len(self.buttons))
         sizer_2.Add(sizer_3, 1, wx.EXPAND, 0)
         self.panel_1.SetSizer(sizer_2)
         sizer_1.Add(self.panel_1, 1, wx.EXPAND, 0)
@@ -91,7 +90,8 @@ def buttonbox(msg="", title=" ", choices=("Button1", "Button2", "Button3"),
     """
     SetGlobals()
     global _replyText
-    box = _ButtonBox(None, -1, title, msg=msg, choices=choices, default=default)
+    box = _ButtonBox(None, -1, title, msg=msg, choices=choices,
+        default=default)
     _app.SetTopWindow(box)
     box.Show()
     _app.MainLoop()
@@ -102,7 +102,8 @@ def msgbox(msg="(Your message goes here)", title=" ", ok_button="OK"):
     """Display a messagebox.
     """
     if type(ok_button) != type("OK"):
-        raise AssertionError("The 'ok_button' argument to msgbox must be a string.")
+        raise AssertionError(
+            "The 'ok_button' argument to msgbox must be a string.")
     return buttonbox(msg=msg, title=title, choices=[ok_button])
 
 # boolbox
@@ -142,8 +143,9 @@ def ynbox(msg="Shall I continue?", title=" ", choices=("Yes", "No"),
         else:
             return 0
 
-    If invoked without a msg argument, displays a generic request for a confirmation
-    that the user wishes to continue.  So it can be used this way::
+    If invoked without a msg argument, displays a generic request for a
+    confirmation that the user wishes to continue.  So it can be used this
+    way::
         if ynbox(): pass # continue
         else: sys.exit(0)  # exit the program
 
@@ -161,13 +163,15 @@ def ccbox(msg="Shall I continue?", title=" ", choices=("Continue", "Cancel"),
     The default is "Continue".
 
     The returned value is calculated this way::
-        if the first choice ("Continue") is chosen, or if the dialog is cancelled:
+        if the first choice ("Continue") is chosen, or if the dialog is
+        cancelled:
             return 1
         else:
             return 0
 
-    If invoked without a msg argument, displays a generic request for a confirmation
-    that the user wishes to continue.  So it can be used this way::
+    If invoked without a msg argument, displays a generic request for a
+    confirmation that the user wishes to continue.  So it can be used this
+    way::
 
         if ccbox():
             pass # continue

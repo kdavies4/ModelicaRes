@@ -83,8 +83,9 @@
          other Python_ modules that are related.
 
       A PDF version of this documentation is available `here <modelicares.pdf>`_.
-      The development site for *modelicares* is
-      `https://github.com/kdavies4/modelicares <https://github.com/kdavies4/modelicares>`_.
+      Updates to *modelicares* may be available at
+      http://kdavies4.github.com/modelicares/.  The development site is
+      https://github.com/kdavies4/modelicares.
 
 .. _Python: http://www.python.org/
 .. _Modelica: http://www.modelica.org/

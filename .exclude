@@ -7,9 +7,8 @@
 #   2. The files and folders in .exclude (this file) are excluded.
 #   3. By default, all files and folders are included.
 #
-# This is used by rsync via 00-extract.sh.
+# This is used by rsync via 00-release.sh.
 # KLD 5/22/12
-
 
 temp_plot*
 build

@@ -18,6 +18,9 @@ import sys, os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
+def setup(app):
+    app.add_javascript('copybutton.js')
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -41,8 +44,9 @@ master_doc = 'index'
 project = 'modelicares'
 copyright = '2012, Kevin Davies'
 
-# The default replacements for |version| and |release|, also used in various
-# other places throughout the built documents.
+# The version info for the project you're documenting, acts as replacement for
+# |version| and |release|, also used in various other places throughout the
+# built documents.
 #
 # The short X.Y version.
 import modelicares
@@ -206,5 +210,3 @@ man_pages = [
      [u'Kevin Davies'], 1)
 ]
 
-def setup(app):
-    app.add_javascript('copybutton.js')
