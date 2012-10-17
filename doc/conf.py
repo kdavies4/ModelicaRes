@@ -18,9 +18,6 @@ import sys, os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
-def setup(app):
-    app.add_javascript('copybutton.js')
-
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -92,7 +89,6 @@ html_theme = 'sphinxdoc'
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
-
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -209,3 +205,6 @@ man_pages = [
     ('index', 'modelicares', u'modelicares Documentation',
      [u'Kevin Davies'], 1)
 ]
+
+def setup(app):
+    app.add_javascript('copybutton.js')
