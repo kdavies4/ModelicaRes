@@ -1,13 +1,5 @@
-personal_ws-1.1 en 22
-redeclare
-der
-Modelica
-JModelica
+personal_ws-1.1 en 28
 acausal
-stateSelect
-OpenModelica
-SystemModeler
-Dymola
 actualStream
 AssertionLevel
 choicesAllMatching
@@ -15,9 +7,23 @@ choicesFromPackage
 connectorSizing
 constrainedby
 DAEs
+defaultComponentName
+defaultComponentPrefixes
+der
 der
 displayUnit
-inStream
+Dymola
+elseif
+elsewhen
 inline
+inStream
+JModelica
+MapleSim
+Modelica
 noEvent
+OpenModelica
 redeclare
+stateSelect
+StateSelect
+stateSelect
+SystemModeler

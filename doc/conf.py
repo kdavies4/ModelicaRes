@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# modelicares documentation build configuration file, created by
+# ModelicaRes documentation build configuration file, created by
 # sphinx-quickstart on Mon Oct 15 09:06:21 2012.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -17,8 +17,16 @@ import sys, os
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
+#sys.path.append(os.path.abspath('sphinxext'))
+
+def skip(app, what, name, obj, skip, options):
+    if (name == "__call__" or name == "__contains__" or name == "__getitem__"
+        or name == "__len__" or name == "__repr__" or name == "__str__"):
+        return False
+    return skip
 
 def setup(app):
+    app.connect("autodoc-skip-member", skip)
     app.add_javascript('copybutton.js')
 
 # -- General configuration -----------------------------------------------------
@@ -28,7 +36,16 @@ def setup(app):
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.pngmath']
+extensions = ['sphinx.ext.autodoc',
+              'sphinx.ext.doctest',
+              'sphinx.ext.pngmath',
+              #'mathmpl',
+              #'only_directives',
+              #'plot_directive',
+              #'ipython_directive',
+              #'ipython_console_highlighting',
+              #'numpydoc'
+             ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -41,7 +58,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'modelicares'
+project = 'ModelicaRes'
 copyright = '2012, Kevin Davies'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -97,6 +114,7 @@ html_theme = 'sphinxdoc'
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 html_title = project + " v" + version + " Documentation"
+
 #html_title = None
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
@@ -149,7 +167,7 @@ html_show_sourcelink = False
 html_use_opensearch = 'False'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'modelicaresdoc'
+htmlhelp_basename = 'ModelicaResDoc'
 
 math_output = 'MathML'
 
@@ -165,7 +183,7 @@ math_output = 'MathML'
 # (source start file, target name, title, author, document class [howto/manual]).
 
 latex_documents = [
-  ('index', 'modelicares.tex', u'modelicares Documentation',
+  ('index', 'ModelicaRes.tex', u'ModelicaRes Documentation',
    u'Kevin Davies', 'manual'),
 ]
 
@@ -206,7 +224,6 @@ autoclass_content = 'both'
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'modelicares', u'modelicares Documentation',
+    ('index', 'ModelicaRes', u'ModelicaRes Documentation',
      [u'Kevin Davies'], 1)
 ]
-

@@ -1,48 +1,44 @@
-#!/usr/bin/env python
-"""Set up the modelicares modules.
+#!/usr/bin/python
+"""Set up the ModelicaRes modules.
 
 Instructions for installation on Linux:
 
 1. Build the modules.
-   $ python ./setup.py build
+   $ ./setup.py build
 
 2. Install the modules.
-   $ sudo python ./setup.py install
+   $ sudo ./setup.py install
 """
-#import subprocess
 
 from distutils.core import setup
 
 # Install the core Python modules.
-setup(name='fcsys',
-      version='1.0',
-      description='Python plotting and analysis utilities for Modelica',
+setup(name='ModelicaRes',
+      version='0.1',
       author='Kevin Davies',
-      author_email='kld@alumni.carnegiemellon.edu',
-      license = "Modelica License Version 2",
-      url='http://www.github.org/modelicares', # **Give full URL once available.
-      requires=['scipy', 'matplotlib'],
-      py_modules=['res', 'modelicares', 'texunit', 'arrow_line', 'easywx'],
-     )
-
-# Install the third-party Python control module.
-# Copied from control/setup.py and modified to run from here
-setup(name='control',
-      version='0.5b',
-      description='Python Control Systems Library',
-      author='Richard Murray',
-      author_email='murray@cds.caltech.edu',
-      url='http://python-control.sourceforge.net',
-      requires=['scipy', 'matplotlib'],
-      package_dir = {'control':'control/src'},
-      packages=['control'],
-     )
-
-# In order to run dymosim from the command line in Linux, add this line to
-# /etc/environment or ~/.pam_environment:
-# LD_LIBRARY_PATH=/opt/dymola/bin/lib
+      author_email='kdavies4@gmail.com',
+      credits=['Kevin Bandy', 'Jason Grout', 'Jason Heeris', 'Joerg Raedler'],
+      packages=['control', 'modelicares'],
+      scripts=['bin/loadres'],
+      url='http://kdavies4.github.com/ModelicaRes/',
+      license='LICENSE.txt',
+      description='Utilities to set up and analyze Modelica simulation experiments',
+      long_description=open('README.txt').read(),
+      requires=['matplotlib', 'numpy', 'wx'],
+      package_dir = {'control': 'external/control/src'},
+      keywords = "modelica plot dymola mat simulation experiment",
+      classifiers = ["Development Status :: 4 - Beta",
+                     "Environment :: Console",
+                     "License :: OSI Approved :: BSD License",
+                     "Programming Language :: Python :: 2.7",
+                     "Intended Audience :: Science/Research",
+                     "Topic :: Scientific/Engineering",
+                     "Topic :: Utilities",
+                     ],
+      )
 
 # 10/30/11: Not currently using PyTables (but consider it for the future).
 # Install PyTables (version 2.3.1, and maybe later, works).
 # See http://www.pytables.org/moin/Downloads
-# subprocess.call("sudo easy_install tables")
+#import subprocess
+#subprocess.call("sudo easy_install tables")

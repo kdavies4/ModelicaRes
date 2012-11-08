@@ -1,0 +1,35 @@
+include matplotlibrc
+include *.txt
+#include MANIFEST.in
+
+# Examples
+include examples/*.csv
+include examples/*.mat
+include examples/*.py
+include examples/*.txt
+
+# Documentation
+include doc/_images/*
+include doc/_images/math/*
+include doc/_static/*
+include doc/_sources/*
+include doc/*.html
+include doc/*.inv
+include doc/*.js
+include doc/*.pdf
+
+# External packages
+include external/*.txt
+recursive-include external/control *.py
+include external/control/README
+include external/control/PKG-INFO
+include external/control/ChangeLog
+include external/control/Pending
+exclude external/control/setup.py
+exclude external/control/doc/conf.py
+
+# Development scripts
+exclude modelicares/00-*.py
+
+# Work in progress
+exclude modelicares/hierarchial.py

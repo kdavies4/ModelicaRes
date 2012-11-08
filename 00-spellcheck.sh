@@ -1,9 +1,11 @@
 #!/bin/bash
-# Run aspell (spell checking) on all the HTML help files.
+# Run aspell (spell checking) on all the HTML doc files.
 #
 # Kevin Davies, 10/6/12
 
-for f in help/*.html
+for f in doc/*.html
     do
         aspell --extra-dicts=./.modelica.pws --personal=./.modelicares.pws -c $f
     done
+echo Done.  Press enter to exit.
+read answer
