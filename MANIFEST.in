@@ -7,6 +7,8 @@ include examples/*.csv
 include examples/*.mat
 include examples/*.py
 include examples/*.txt
+exclude examples/ChuaCircuit_1.mat
+exclude examples/ChuaCircuit_2.mat
 
 # Documentation
 include doc/_images/*
