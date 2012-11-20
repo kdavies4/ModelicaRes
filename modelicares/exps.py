@@ -74,7 +74,7 @@ import numpy as np
 
 import modelicares.aux as aux
 
-from itertools import count, imap, product
+from itertools import count, product
 from collections import namedtuple
 from datetime import date
 from types import GeneratorType
@@ -647,15 +647,16 @@ def write_script(experiments=[(None, {}, {})], packages=[],
 
     .. code-block:: modelica
 
+       import Modelica.Utilities.Files.copy;
        cd(".../Documents/Dymola")
 
        // Experiment 1
        ok = simulateModel("Modelica.Electrical.Analog.Examples.ChuaCircuit", stopTime=2500);
        if ok then
-          system("cp dsin.txt .../examples/ChuaCircuit_1.in");
-          system("cp dslog.txt .../examples/ChuaCircuit_1.log");
-          system("cp dsres.mat .../examples/ChuaCircuit_1.mat");
-          system("cp dymosim .../examples/ChuaCircuit_1");
+          copy("dsin.txt", ".../examples/ChuaCircuit_1.in", true);
+          copy("dslog.txt", ".../examples/ChuaCircuit_1.log", true);
+          copy("dsres.mat", ".../examples/ChuaCircuit_1.mat", true);
+          copy("dymosim", ".../examples/ChuaCircuit_1"", true);
        end if;
 
        exit();
@@ -693,6 +694,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
     mos = open(fname, 'w')
     mos.write('// Modelica experiment script written by modelicares %s\n'
               % date.isoformat(date.today()))
+    mos.write('import Modelica.Utilities.Files.copy;\n')
     mos.write('cd("%s");\n' % aux.expand_path(working_dir))
     for package in packages:
         if package.endswith('.mo'):
@@ -728,7 +730,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
             exe = '.exe' if os.name == 'nt' else ''
             source = source.replace('%x', exe)
             destination = destination.replace('%x', exe)
-            mos.write('    system("cp %s %s");\n' %
+            mos.write('    copy("%s", "%s", true);\n' %
                       (source, os.path.join(results_dir, destination)))
         mos.write('end if;\n\n')
 
