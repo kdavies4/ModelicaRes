@@ -148,7 +148,7 @@ class Browser(wx.Frame):
 
 class mem:
     """Global memory class"""
-    pass
+    replyText = ''
 
 
 class _ButtonBox(wx.Frame):

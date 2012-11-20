@@ -14,7 +14,15 @@ figures, like xy plots, Bode and Nyquist plots, and Sankey diagrams.
 ModelicaRes can be scripted or run from a Python_ command-line interpreter with
 math and matrix functions from NumPy_.
 
-The main project site, http://kdavies4.github.com/ModelicaRes, includes the
+.. image:: doc/_static/browse.png
+   :scale: 45 %
+   :alt: variable browser
+
+.. image:: examples/PID-nyquist.png
+   :scale: 35 %
+   :alt: example for modelicares.LinRes.nyquist()
+
+The `main project site <http://kdavies4.github.com/ModelicaRes>`_ includes the
 full documentation and many examples.  The development site is
 https://github.com/kdavies4/modelicares.
 
@@ -28,18 +36,13 @@ Richard Murray (`python-control
 (method to expand a Modelica_ variable tree, from `DyMat
 <http://www.j-raedler.de/projects/dymat/>`_)
 
-To install on Linux, do the following from the base folder:
+To install on Linux using a downloaded copy, do the following from the base
+folder::
 
-   .. code-block:: sh
+   $ python ./setup.py build
+   $ sudo python ./setup.py install
 
-      $ python ./setup.py build
-      $ sudo python ./setup.py install
-
-.. Seealso:: The `buildingspy
-   <http://simulationresearch.lbl.gov/modelica/buildingspy/>`_ and DyMat_
-   projects provide other Python_ modules that are related.
-
-.. _Python: http://www.python.org/
 .. _Modelica: http://www.modelica.org/
+.. _Python: http://www.python.org/
 .. _matplotlib: http://www.matplotlib.org/
-.. _python-control: http://sourceforge.net/apps/mediawiki/python-control
+.. _NumPy: http://numpy.scipy.org/

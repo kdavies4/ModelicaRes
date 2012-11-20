@@ -1,1 +1,4 @@
-v0.1, **Month, **Day, 2012 -- Initial release.
+v0.1, Nov. 8, 2012 -- Initial release.
+v0.2, Nov. 20, 2012 -- Updates:
+   - Fixed bug when file or folder selection is canceled.
+   - Updated documentation.
