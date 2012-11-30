@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Load, analyze, and plot results from Modelica_ simulations.
+r"""Load, analyze, and plot results from Modelica_ simulations.
+
+.. Note::  The following examples are written for Linux.  On Windows\ :sup:`®`,
+   replace the path separators appropriately (change "/" to "\\").
 
 .. _Modelica: http://www.modelica.org/
 """
@@ -17,7 +20,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-import modelicares.aux as aux
+import modelicares.base as base
 
 from matplotlib import rcParams
 from collections import namedtuple
@@ -167,7 +170,7 @@ class SimRes(object):
         n_plots = len(times) # Number of plots
         #if not subtitles:
         #    subtitles = self.gen_subtitles_time(times) # Method missing?
-        ax = aux.setup_subplots(n_plots=n_plots, n_rows=n_rows,
+        ax = base.setup_subplots(n_plots=n_plots, n_rows=n_rows,
                             title=title, subtitles=subtitles, label=label,
                             xlabel=xlabel, xticks=ind, xticklabels=xticklabels,
                             ylabel=ylabel,
@@ -511,13 +514,13 @@ class SimRes(object):
 
             # Find the lower index.
             if t_1 != None:
-                i_1 = aux.get_indices(times, t_1)[1]
+                i_1 = base.get_indices(times, t_1)[1]
             else:
                 i_1 = 0
 
             # Find the upper index and return.
             if t_2 != None:
-                i_2 = aux.get_indices(times, t_2)[0]
+                i_2 = base.get_indices(times, t_2)[0]
             else:
                 i_2 = len(times) - 1
 
@@ -827,7 +830,7 @@ class SimRes(object):
         - *suffix*: String that will be added in parentheses at the end of the
           legend entries
 
-        - *\*\*kwargs*: Propagated to :meth:`aux.plot` (and thus to
+        - *\*\*kwargs*: Propagated to :meth:`base.plot` (and thus to
           :meth:`matplotlib.pyplot.plot`)
 
              If both y axes are used (primary and secondary), then the *dashes*
@@ -908,15 +911,15 @@ class SimRes(object):
             return ylabel, legends
 
         # Process the inputs.
-        ynames1 = aux.flatten_list(ynames1)
-        ynames2 = aux.flatten_list(ynames2)
+        ynames1 = base.flatten_list(ynames1)
+        ynames2 = base.flatten_list(ynames2)
         assert ynames1 or ynames2, "No signals were provided."
         if title is None:
             title = self.fbase
 
         # Create primary and secondary axes if necessary.
         if not ax1:
-            fig = aux.figure(label)
+            fig = base.figure(label)
             ax1 = fig.add_subplot(111)
         if ynames2 and not ax2:
             ax2 = ax1.twinx()
@@ -947,16 +950,16 @@ class SimRes(object):
                 # Use solid lines for primary axis and dotted lines for
                 # secondary.
                 kwargs['dashes'] = [(1, 0)]
-                aux.plot(y_1, self.get_times(ynames1) if xname == 'Time'
+                base.plot(y_1, self.get_times(ynames1) if xname == 'Time'
                              else x, ax1, label=legends1, **kwargs)
                 kwargs['dashes'] = [(3, 3)]
-                aux.plot(y_2, self.get_times(ynames2) if xname == 'Time'
+                base.plot(y_2, self.get_times(ynames2) if xname == 'Time'
                              else x, ax2, label=legends2, **kwargs)
             else:
-                aux.plot(y_1, (self.get_times(ynames1) if xname == 'Time'
+                base.plot(y_1, (self.get_times(ynames1) if xname == 'Time'
                              else x), ax1, label=legends1, **kwargs)
         elif ynames2:
-            aux.plot(y_2, self.get_times(ynames2) if xname == 'Time'
+            base.plot(y_2, self.get_times(ynames2) if xname == 'Time'
                          else x, ax2, label=legends2, **kwargs)
 
         # Decorate the figure.
@@ -1098,7 +1101,7 @@ class SimRes(object):
                     subtitles[i] += " (initial)"
                 elif time == stop_time:
                     subtitles[i] += " (final)"
-        axes = aux.setup_subplots(n_plots=n_plots, n_rows=n_rows,
+        axes = base.setup_subplots(n_plots=n_plots, n_rows=n_rows,
            title=title, subtitles=subtitles, label=label,
            margin_left=margin_left, margin_right=margin_right,
            margin_bottom=margin_bottom, margin_top=margin_top,

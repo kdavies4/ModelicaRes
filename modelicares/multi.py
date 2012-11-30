@@ -1,6 +1,10 @@
 #!/usr/bin/python
-"""Functions to load and plot data from multiple simulation and linearization
+# -*- coding: utf-8 -*-
+r"""Functions to load and plot data from multiple simulation and linearization
 files at once
+
+.. Note::  The following examples are written for Linux.  On Windows\ :sup:`®`,
+   replace the path separators appropriately (change "/" to "\\").
 
 .. _Modelica: http://www.modelica.org/
 """
@@ -106,7 +110,7 @@ def multiplot(sims, suffixes, dashes=[(1, 0), (3, 3), (1, 1), (3, 2, 1, 2)],
       :meth:`simres.SimRes.plot`)
 
     - *\*\*kwargs*: Propagated to  :meth:`simres.SimRes.plot` (and thus to
-      :meth:`aux.plot` and finally :meth:`matplotlib.pyplot.plot`)
+      :meth:`base.plot` and finally :meth:`matplotlib.pyplot.plot`)
 
          The *dashes* sequence is iterated across all plots.
 

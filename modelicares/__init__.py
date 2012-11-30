@@ -4,10 +4,10 @@
 This module provides direct access to the most important functions and classes
 from its submodules.  These are:
 
-- Supporting or auxiliary classes and functions: :meth:`aux.add_arrows`, :meth:`aux.add_hlines`,
-  :meth:`aux.add_vlines`, :meth:`aux.animate`, :class:`aux.ArrowLine`,
-  :meth:`aux.closeall`, :meth:`aux.figure`, :meth:`aux.load_csv`,
-  :meth:`aux.saveall`, :meth:`aux.setup_subplots`
+- Basic supporting classes and functions: :meth:`base.add_arrows`,
+  :meth:`base.add_hlines`, :meth:`base.add_vlines`, :meth:`base.animate`,
+  :class:`base.ArrowLine`, :meth:`base.closeall`, :meth:`base.figure`,
+  :meth:`base.load_csv`, :meth:`base.saveall`, :meth:`base.setup_subplots`
 
 - To manage simulation experiments:  :class:`exps.Experiment`,
   :meth:`exps.gen_experiments`, :class:`exps.ParamDict`,
@@ -54,13 +54,13 @@ __email__ = "kdavies4@gmail.com"
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#__all__ = ['aux', 'exps', 'linres', 'multi', 'simres', 'texunit']
+#__all__ = ['base', 'exps', 'linres', 'multi', 'simres', 'texunit']
 
 # Essential functions and classes
 #
 # These will be available directly from modelicares; others must be loaded from
 # their submodules.
-from aux import (add_arrows, add_hlines, add_vlines, animate, ArrowLine,
+from base import (add_arrows, add_hlines, add_vlines, animate, ArrowLine,
                  closeall, figure, load_csv, saveall, setup_subplots)
 from exps import (Experiment, gen_experiments, ParamDict, read_params,
                   run_models, write_params, write_script)

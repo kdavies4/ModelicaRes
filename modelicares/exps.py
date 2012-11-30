@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Set up and help run Modelica_ simulation experiments.
+r"""Set up and help run Modelica_ simulation experiments.
 
 This module suports two approaches for managing simulations.  The first is to
 create a Modelica_ script (using :meth:`write_script`) and run it within
@@ -22,6 +22,9 @@ dictionary format), which combines the values of all the variables (by
 piecewise alignment or permutation) and returns a generator to step through the
 experiments.  Finally, the generator is passed to the :meth:`write_script` or
 :meth:`run_models` function (see first paragragh).
+
+.. Note::  The following examples are written for Linux.  On Windows\ :sup:`®`,
+   replace the path separators appropriately (change "/" to "\\").
 
 .. _Modelica: http://www.modelica.org/
 """
@@ -72,7 +75,7 @@ import os
 import re
 import numpy as np
 
-import modelicares.aux as aux
+import modelicares.base as base
 
 from itertools import count, product
 from collections import namedtuple
@@ -197,7 +200,7 @@ def gen_experiments(models=None, params={}, args={}, permute = True):
        >>> # Also note that Python dictionaries do not preserve order (and it
        >>> # is not necessary here).
     """
-    params = aux.flatten_dict(params)
+    params = base.flatten_dict(params)
     i_args = len(params) + 1
     experiment = lambda x: Experiment(
                              model=x[0],
@@ -321,7 +324,7 @@ def read_params(names, fname='dsin.txt'):
                 #           = 3: state derivative.
                 #           = 4: output.
                 #           = 5: input.
-                #           = 6: auxiliary variable.
+                #           = 6: baseiliary variable.
                 # column 6: Data type of variable.
                 #           = 0: real.
                 #           = 1: boolean.
@@ -683,7 +686,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
     # Preprocess the arguments.
     if not isinstance(experiments, (list, GeneratorType)):
         experiments = [experiments]
-    fname = aux.expand_path(fname)
+    fname = base.expand_path(fname)
 
     # If neccessary, make a folder for the results.
     results_dir = os.path.split(fname)[0]
@@ -695,7 +698,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
     mos.write('// Modelica experiment script written by modelicares %s\n'
               % date.isoformat(date.today()))
     mos.write('import Modelica.Utilities.Files.copy;\n')
-    mos.write('cd("%s");\n' % aux.expand_path(working_dir))
+    mos.write('cd("%s");\n' % base.expand_path(working_dir))
     for package in packages:
         if package.endswith('.mo'):
             mos.write('openModel("%s");\n' % package)
@@ -717,7 +720,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
         # Write to the Modelica script.
         mos.write('// Experiment %i\n' % i)
         if model:
-            params = ParamDict(aux.flatten_dict(params))
+            params = ParamDict(base.flatten_dict(params))
             args['problem'] =  '"%s%s"' % (model, params)
         if args:
             mos.write('ok = %s%s;\n' % (command, ParamDict(args)))

@@ -1,8 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Load, analyze, and plot the result of linearizing a Modelica_ model.
+r"""Load, analyze, and plot the result of linearizing a Modelica_ model.
 
 This module relies on python-control_, which is included in the distribution.
+
+.. Note::  The following examples are written for Linux.  On Windows\ :sup:`®`,
+   replace the path separators appropriately (change "/" to "\\").
 
 .. _Modelica: http://www.modelica.org/
 .. _python-control: http://sourceforge.net/apps/mediawiki/python-control
@@ -15,7 +18,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-import modelicares.aux as aux
+import modelicares.base as base
 
 from scipy.io import loadmat
 from matplotlib.cbook import iterable
@@ -198,7 +201,7 @@ class LinRes(object):
         """
         # Create axes if necessary.
         if not ax:
-            fig = aux.figure(label)
+            fig = base.figure(label)
             ax = fig.add_subplot(111)
 
         # Create a title if necessary.
@@ -225,7 +228,7 @@ class LinRes(object):
                for i_y in range(self.sys.outputs)]
 
         # Create the plots.
-        aux.figure(label)
+        base.figure(label)
         for i, (i_u, i_y) in enumerate(pairs):
             # Extract the SISO TF. TODO: Is there a better way to do this?
             sys = ss(self.sys.A, self.sys.B[:, i_u], self.sys.C[i_y, :],
@@ -351,7 +354,7 @@ class LinRes(object):
                      for i_y in range(self.sys.outputs)]
 
         # Create the plots.
-        aux.figure(label)
+        base.figure(label)
         for i, (i_u, i_y) in enumerate(pairs):
             # Extract the SISO TF. TODO: Is there a better way to do this?
             sys = ss(self.sys.A, self.sys.B[:, i_u], self.sys.C[i_y, :],
@@ -374,8 +377,8 @@ class LinRes(object):
         if len(pairs) > 1:
             plt.legend()
         ax = plt.gca()
-        aux.add_hlines(ax, color='k', linestyle='--', linewidth=0.5)
-        aux.add_vlines(ax, color='k', linestyle='--', linewidth=0.5)
+        base.add_hlines(ax, color='k', linestyle='--', linewidth=0.5)
+        base.add_vlines(ax, color='k', linestyle='--', linewidth=0.5)
         plt.title(title)
         if xlabel: # Without this check, xlabel=None will give a label of "None".
             plt.xlabel(xlabel)

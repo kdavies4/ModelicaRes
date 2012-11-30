@@ -15,12 +15,12 @@
 
 # Install
 ./setup.py build
-sudo ./setup.py install
+sudo python ./setup.py install
 
 # Run the doc tests and recreate the example images.
 cd modelicares
 ./__init__.py
-./aux.py
+./base.py
 ./exps.py
 ./linres.py
 ./multi.py
@@ -46,7 +46,15 @@ cp -f build/latex/ModelicaRes.pdf ./
 cd ..
 
 # Make a distributable copy.
-./setup.py sdist --formats=gztar,zip
+#./setup.py sdist --formats=gztar,zip
+# Use the zip command to change all line endings to Windows format.
+./setup.py sdist
+name=`./setup.py --fullname`
+cd dist
+tar -xf $name.tar.gz
+zip -rl $name.zip $name
+rm -r $name
+cd ..
 
 # Make the web documentation.
 branch=`git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3` # Original branch

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Demo of loading a CSV file using aux.load_csv
+"""Demo of loading a CSV file using base.load_csv
 """
 __author__ = "Kevin Davies"
 __version__ = "2011-05-31"
