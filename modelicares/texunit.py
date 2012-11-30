@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """Methods to format numbers to support LaTeX_
 
-.. _LaTeX: <http://www.latex-project.org/>
+.. _LaTeX: http://www.latex-project.org/
 """
 __author__ = "Kevin Davies"
 __version__ = "0.1"

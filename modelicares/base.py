@@ -1,5 +1,9 @@
 #!/usr/bin/python
-"""Auxiliary methods to help plot and interpret experimental data
+# -*- coding: utf-8 -*-
+r"""Basic methods to help plot and interpret experimental data
+
+.. Note::  The following examples are written for Linux.  On Windows\ :sup:`®`,
+   replace the path separators appropriately (from "/" to "\\").
 """
 __author__ = "Kevin Davies"
 __credits__ = ["Jason Grout", "Jason Heeris"]
@@ -301,7 +305,8 @@ def animate(imagebase='_tmp', fname="animation", fps=10, clean=False):
     - *clean*: *True*, if the PNG images should be deleted afterward
 
     .. Note:: This method requires mencoder_.  On Linux, install it with the
-       following command: ``sudo apt-get install mencoder``.
+       following command: ``sudo apt-get install mencoder``.  Currently, this
+       method is not supported on Windows.
 
     .. _mencoder: http://en.wikipedia.org/wiki/MEncoder
 
@@ -328,6 +333,7 @@ def animate(imagebase='_tmp', fname="animation", fps=10, clean=False):
     """
     # Note:  The output of the code above is too large for inline doctest.
     # TODO:  Add a test later.
+    # TODO:  Add support for Windows.
 
     # Based on
     # http://matplotlib.sourceforge.net/faq/howto_faq.html#make-a-movie,
@@ -716,6 +722,7 @@ def load_csv(fname, header_row=0, first_data_row=None,
 
     **Example:**
 
+    >>> from modelicares import *
     >>> data = load_csv("examples/load_csv.csv", header_row=2)
     >>> print("The keys are: %s" % data.keys())
     The keys are: ['Price', 'Description', 'Make', 'Model', 'Year']
@@ -1032,7 +1039,7 @@ def saveall(formats=['pdf', 'png']):
                     #app = App()
                     chosen_directory = DirSelector(
                         "Choose a directory for the images.",
-                        defaultPath='../../../../')
+                        defaultPath=os.path.join(*['..']*4))
                     if chosen_directory == '':
                         return
                 directory = chosen_directory
@@ -1472,7 +1479,7 @@ class ArrowLine(Line2D):
            >>> line = ArrowLine(t, s, color='b', ls='-', lw=2, arrow='>',
            ...                  arrowsize=20)
            >>> ax.add_line(line) # doctest: +ELLIPSIS
-           <modelicares.aux.ArrowLine object at 0x...>
+           <modelicares.base.ArrowLine object at 0x...>
            >>> ax.set_xlim(-3, 3)
            (-3, 3)
            >>> ax.set_ylim(-3, 3)
