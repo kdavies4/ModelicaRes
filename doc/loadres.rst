@@ -16,7 +16,7 @@ of NumPy_ and matplotlib_ (e.g., :meth:`sin` and :meth:`plot`).
 
 .. code-block:: sh
 
-   $ loadres examples/
+   $ loadres examples
    Valid: SimRes('.../examples/ChuaCircuit.mat')
    Valid: SimRes('.../examples/ChuaCircuit2.mat')
    Valid: SimRes('.../examples/ThreeTanks.mat')
