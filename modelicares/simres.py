@@ -1,9 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-r"""Load, analyze, and plot results from Modelica_ simulations.
-
-.. Note::  The following examples are written for Linux.  On Windows\ :sup:`®`,
-   replace the path separators appropriately (change "/" to "\\").
+"""Load, analyze, and plot results from Modelica_ simulations.
 
 .. _Modelica: http://www.modelica.org/
 """
@@ -1238,7 +1235,7 @@ class SimRes(object):
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
            >>> sim # doctest: +ELLIPSIS
-           SimRes('.../examples/ChuaCircuit.mat')
+           SimRes('...ChuaCircuit.mat')
         """
         return "%s('%s')" % (self.__class__.__name__,
                              os.path.join(self.dir, self.fbase + '.mat'))
@@ -1253,7 +1250,7 @@ class SimRes(object):
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
            >>> print sim # doctest: +ELLIPSIS
-           Modelica simulation results from ".../examples/ChuaCircuit.mat"
+           Modelica simulation results from "...ChuaCircuit.mat"
         """
         return ('Modelica simulation results from "%s"' %
                 os.path.join(self.dir, self.fbase + '.mat'))

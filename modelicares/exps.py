@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-r"""Set up and help run Modelica_ simulation experiments.
+"""Set up and help run Modelica_ simulation experiments.
 
-This module suports two approaches for managing simulations.  The first is to
+This module supports two approaches for managing simulations.  The first is to
 create a Modelica_ script (using :meth:`write_script`) and run it within
 a Modelica_ environment (see "examples/ChuaCircuit.py"), which translates and
 simulates the models with the prescribed settings.  The second approach is to
@@ -21,10 +21,7 @@ parameter may have multiple possible values.  The dictionary is passed to the
 dictionary format), which combines the values of all the variables (by
 piecewise alignment or permutation) and returns a generator to step through the
 experiments.  Finally, the generator is passed to the :meth:`write_script` or
-:meth:`run_models` function (see first paragragh).
-
-.. Note::  The following examples are written for Linux.  On Windows\ :sup:`®`,
-   replace the path separators appropriately (change "/" to "\\").
+:meth:`run_models` function (see first paragraph).
 
 .. _Modelica: http://www.modelica.org/
 """
@@ -381,7 +378,7 @@ def run_models(experiments=[(None, {}, {})],
 
          *model* may include the file path.  It is not necessary to include the
          extension (e.g., ".exe").   There must be a corresponding model
-         intialization file on the same path with the same base name and the
+         initialization file on the same path with the same base name and the
          extension ".in".  For Dymola\ :sup:`®`, the executable is the
          "dymosim" file (possibly renamed) and the initialization file is a
          renamed 'dsin.txt' file.
@@ -574,7 +571,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
 
          Each may be a "\*.mo" file or a folder that contains a "package.mo"
          file.  The path may be absolute or relative to *working_dir*.  It may
-         be necessary to include in *packges* the file or folder that contains
+         be necessary to include in *packages* the file or folder that contains
          the model specified by the *model* subargument, but the Modelica
          Standard Library generally does not need to be included.
 
@@ -602,7 +599,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
           model name (*model*) without the full path.  '%i' may be included
           to indicate the simulation number in the sequence of experiments.
           '%x' may be included in the source or destination to represent '.exe'
-          if the operating system is Windows\ :sup:`®` and '' otherwise.
+          if the operating system is Windows and '' otherwise.
 
     If *command* is 'simulateModel' and the Modelica_ environment is
     Dymola\ :sup:`®`, then the following keywords may be used in *args*
@@ -644,7 +641,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
        >>> experiment = Experiment(model='Modelica.Electrical.Analog.Examples.ChuaCircuit',
        ...                         params={}, args=dict(stopTime=2500))
        >>> write_script(experiment, fname="examples/run-sims1.mos") # doctest: +ELLIPSIS
-       (['ChuaCircuit'], '.../examples')
+       (['ChuaCircuit'], '...examples')
 
     In "examples/run-sims1.mos":
 
@@ -678,7 +675,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
        ...             'C1.C': [8, 10],
        ...             'C2.C': [80, 100, 120]})
        >>> write_script(experiments, fname="examples/run-sims2.mos") # doctest: +ELLIPSIS
-       (['ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit'], '.../examples')
+       (['ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit'], '...examples')
 
     In "examples/run-sims2.mos", there are commands to run and save results
     from 12 simulation experiments.
@@ -749,7 +746,7 @@ class ParamDict(dict):
     modifiers, formatted for Modelica_
 
     Otherwise, this class is the same as :class:`dict`.  The underlying
-    structure is not nested or reformmated---only the informal representation
+    structure is not nested or reformatted---only the informal representation
     (:meth:`ParamDict.__str__`).
     """
     def __str__(self):

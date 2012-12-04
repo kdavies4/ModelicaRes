@@ -1,10 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-r"""Functions to load and plot data from multiple simulation and linearization
+"""Functions to load and plot data from multiple simulation and linearization
 files at once
-
-.. Note::  The following examples are written for Linux.  On Windows\ :sup:`®`,
-   replace the path separators appropriately (change "/" to "\\").
 
 .. _Modelica: http://www.modelica.org/
 """
@@ -49,17 +46,16 @@ def multiload(locations):
 
        # By file:
        >>> multiload(['examples/ChuaCircuit', 'examples/PID']) # doctest: +ELLIPSIS
-       Valid: SimRes('.../examples/ChuaCircuit.mat')
-       Valid: LinRes('.../examples/PID.mat')
-       ([SimRes('.../examples/ChuaCircuit.mat')], [LinRes('.../examples/PID.mat')])
+       Valid: SimRes('...ChuaCircuit.mat')
+       Valid: LinRes('...PID.mat')
+       ([SimRes('...ChuaCircuit.mat')], [LinRes('...PID.mat')])
 
        # By directory:
        >>> multiload('examples') # doctest: +ELLIPSIS
-       Valid: SimRes('.../examples/ChuaCircuit.mat')
-       Valid: SimRes('.../examples/ChuaCircuit2.mat')
-       Valid: SimRes('.../examples/ThreeTanks.mat')
-       Valid: LinRes('.../examples/PID.mat')
-       ([SimRes('.../examples/ChuaCircuit.mat'), SimRes('.../examples/ChuaCircuit2.mat'), SimRes('.../examples/ThreeTanks.mat')], [LinRes('.../examples/PID.mat')])
+       Valid: SimRes('...ChuaCircuit.mat')
+       Valid: SimRes('...ChuaCircuit2.mat')...
+       Valid: LinRes('...PID.mat')...
+       ([SimRes('...ChuaCircuit.mat'), SimRes('...ChuaCircuit2.mat'), SimRes('...ThreeTanks.mat')], [LinRes('...PID.mat')])
     """
 
     # Make a list of files.

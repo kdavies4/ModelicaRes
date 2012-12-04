@@ -1,9 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-r"""Basic methods to help plot and interpret experimental data
-
-.. Note::  The following examples are written for Linux.  On Windows\ :sup:`®`,
-   replace the path separators appropriately (from "/" to "\\").
+"""Basic methods to help plot and interpret experimental data
 """
 __author__ = "Kevin Davies"
 __credits__ = ["Jason Grout", "Jason Heeris"]
@@ -31,6 +28,7 @@ The factor and then the offset are applied to the number to arrive at the
 quantity expressed in terms of the unit.
 """
 
+
 # Create a class to contain information about a unit conversion.
 #Conversion = namedtuple('Conversion', ['unit', 'factor', 'offset', 'new_unit'])
 
@@ -38,7 +36,7 @@ quantity expressed in terms of the unit.
 def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
                lstar=0.05, label='',
                orientation='tangent', color='r'):
-    """Overlay arrows with annotations on top of a pre-plotted line.
+    r"""Overlay arrows with annotations on top of a pre-plotted line.
 
     **Arguments:**
 
@@ -143,7 +141,7 @@ def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
 
 
 def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
-    """Add horizontal lines to a set of axes with optional labels.
+    r"""Add horizontal lines to a set of axes with optional labels.
 
     **Arguments:**
 
@@ -443,9 +441,9 @@ def expand_path(path):
        >>> from modelicares import *
 
        >>> expand_path('~/Documents') # doctest: +ELLIPSIS
-       '/home/.../Documents'
-       >>> # on Linux or 'C:\Users\...\Documents' on Windows, where "..."
-       >>> # is the user id.
+       '...Documents'
+       >>> # where ... is '/home/user/' on Linux or 'C:\Users\user\' on
+       >>> # Windows (and "user" is the user id).
     """
     return os.path.abspath(os.path.expanduser(path))
 
@@ -518,7 +516,7 @@ def flatten_list(l, ltypes=(list, tuple)):
     return ltype(l)
 
 
-def figure(label, *args, **kwargs):
+def figure(label='', *args, **kwargs):
     """Create a figure and set its label.
 
     **Arguments:**
@@ -984,9 +982,14 @@ def saveall(formats=['pdf', 'png']):
     """Save all open figures as images in a format or list of formats.
 
     The directory and base filenames are taken from the *label* property of the
-    figures.  If the *label* property is empty, then a directory dialog is
-    opened to chose a directory.  In that case, the figures are saved as a
-    sequence of numbers.
+    figures.  A slash ("/") can be used as a path separator, even if the
+    operating system is Windows.  If the *label* property is empty, then a
+    directory dialog is opened to chose a directory.  In that case, the figures
+    are saved as a sequence of numbers.
+
+    .. Note::  In general, :meth:`saveall` should be called before
+       :meth:`matplotlib.pyplot.show` so that the figure(s) are still present
+       in memory.
 
     **Example:**
 

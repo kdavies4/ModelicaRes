@@ -1,11 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-r"""Load, analyze, and plot the result of linearizing a Modelica_ model.
+"""Load, analyze, and plot the result of linearizing a Modelica_ model.
 
 This module relies on python-control_, which is included in the distribution.
-
-.. Note::  The following examples are written for Linux.  On Windows\ :sup:`®`,
-   replace the path separators appropriately (change "/" to "\\").
 
 .. _Modelica: http://www.modelica.org/
 .. _python-control: http://sourceforge.net/apps/mediawiki/python-control
@@ -395,7 +392,7 @@ class LinRes(object):
            >>> from modelicares import LinRes
            >>> lin = LinRes('examples/PID.mat')
            >>> lin # doctest: +ELLIPSIS
-           LinRes('.../examples/PID.mat')
+           LinRes('...PID.mat')
         """
         return "%s('%s')" % (self.__class__.__name__,
                              os.path.join(self.dir, self.fbase + '.mat'))
@@ -412,7 +409,7 @@ class LinRes(object):
            >>> from modelicares import LinRes
            >>> lin = LinRes('examples/PID.mat')
            >>> print lin # doctest: +ELLIPSIS
-           Modelica linearization results from ".../examples/PID.mat"
+           Modelica linearization results from "...PID.mat"
         """
         return ('Modelica linearization results from "%s"' %
                 os.path.join(self.dir, self.fbase + '.mat'))
