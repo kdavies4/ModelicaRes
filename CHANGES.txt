@@ -4,3 +4,4 @@ v0.2, Nov. 20, 2012 -- Updates:
    - Updated documentation.
 v0.3, Dec. 4, 2012 -- Updates:
    - Added support for Windows.  modelicares.aux is now modelicares.base.
+v0.4, ***. *, 201* -- Updates:

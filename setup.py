@@ -8,7 +8,7 @@ from distutils.core import setup
 
 # Install the core Python modules.
 setup(name='ModelicaRes',
-      version='0.3',
+      version='0.4',
       author='Kevin Davies',
       author_email='kdavies4@gmail.com',
       #credits=['Kevin Bandy', 'Jason Grout', 'Jason Heeris', 'Joerg Raedler'],

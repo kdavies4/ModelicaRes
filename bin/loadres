@@ -15,7 +15,7 @@ classes and functions of ModelicaRes are directly available as well.
 
 .. code-block:: sh
 
-   $ loadres examples/
+   $ loadres examples
    Valid: SimRes('.../examples/ChuaCircuit.mat')
    Valid: SimRes('.../examples/ChuaCircuit2.mat')
    Valid: SimRes('.../examples/ThreeTanks.mat')
