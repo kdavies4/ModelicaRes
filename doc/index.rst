@@ -87,17 +87,16 @@
       <http://pypi.python.org/pypi/ModelicaRes/>`_).  The development site is
       https://github.com/kdavies4/ModelicaRes.
 
-      .. Seealso:: The BuildingsPy
-         (`http://simulationresearch.lbl.gov/modelica/buildingspy/
-         <http://simulationresearch.lbl.gov/modelica/buildingspy/>`_) and DyMat
-         (`http://www.j-raedler.de/projects/dymat/
-         <http://www.j-raedler.de/projects/dymat/>`_) projects provide other
-         Python_ modules that are related.  BuildingsPy_ has a :class:`Tester`
-         class that can be used for unit testing.  DyMat_ has functions to
-         export Modelica_ simulation data to comma separated values (CSV),
-         `Gnuplot <http://www.gnuplot.info/>`_, MATLAB\ :sup:`®`, and `Network
-         Common Data Form (netCDF)
-         <http://www.unidata.ucar.edu/software/netcdf/>`_.
+      .. Seealso:: The `pysimulator <https://code.google.com/p/pysimulator/>`_,
+         `BuildingsPy
+         <http://simulationresearch.lbl.gov/modelica/buildingspy/>`_, and
+         `DyMat`_ projects provide other Python_ modules that are related.
+         pysimulator_ includes a complete GUI and supports the Functional Model
+         Interface (FMI).  BuildingsPy_ has a :class:`Tester` class that can be
+         used for unit testing.  DyMat_ has functions to export Modelica_
+         simulation data to comma separated values (CSV), `Gnuplot
+         <http://www.gnuplot.info/>`_, MATLAB\ :sup:`®`, and `Network Common
+         Data Form (netCDF) <http://www.unidata.ucar.edu/software/netcdf/>`_.
 
    .. toctree::
 
@@ -119,7 +118,7 @@
       <http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html>`_),
       Richard Murray (`python-control
       <http://sourceforge.net/apps/mediawiki/python-control>`_), and Joerg
-      Raedler (method to expand a Modelica_ variable tree, from `DyMat
+      Raedler (method to expand a Modelica_ variable tree---from `DyMat
       <http://www.j-raedler.de/projects/dymat/>`_).
 
       A PDF version of this documentation is available `here
@@ -128,13 +127,16 @@
       Index`_ (`direct link`_).  The development site is
       https://github.com/kdavies4/ModelicaRes.
 
-      .. Seealso::  The `BuildingsPy
-         <http://simulationresearch.lbl.gov/modelica/buildingspy/>`_ and
+      .. Seealso:: The `pysimulator <https://code.google.com/p/pysimulator/>`_,
+         `BuildingsPy
+         <http://simulationresearch.lbl.gov/modelica/buildingspy/>`_, and
          `DyMat`_ projects provide other Python_ modules that are related.
-         BuildingsPy_ has a :class:`Tester` class that can be used for unit
-         testing.  DyMat_ has functions to export Modelica_ simulation data to
-         comma separated values (CSV), `Gnuplot`_, MATLAB\ :sup:`®`, and
-         `Network Common Data Form (netCDF)`_.
+         pysimulator_ includes a complete GUI and supports the Functional Model
+         Interface (FMI).  BuildingsPy_ has a :class:`Tester` class that can be
+         used for unit testing.  DyMat_ has functions to export Modelica_
+         simulation data to comma separated values (CSV), `Gnuplot
+         <http://www.gnuplot.info/>`_, MATLAB\ :sup:`®`, and `Network Common
+         Data Form (netCDF) <http://www.unidata.ucar.edu/software/netcdf/>`_.
 
 .. _Python: http://www.python.org/
 .. _Modelica: http://www.modelica.org/

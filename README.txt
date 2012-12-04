@@ -9,19 +9,23 @@ figures, like xy plots, Bode and Nyquist plots, and Sankey diagrams.
 ModelicaRes can be scripted or run from a Python_ command-line interpreter with
 math and matrix functions from NumPy_.
 
-The `main project site <http://kdavies4.github.com/ModelicaRes>`_ includes the
-full documentation and many examples.  The development site is
-https://github.com/kdavies4/modelicares.
 
-The authors are Kevin Davies and Kevin Bandy.  Third-party code has been
-included from Jason Grout (`ArrowLine
+Credits
+=======
+
+Kevin Bandy supported the development.  Third-party code has been included from
+Jason Grout (`ArrowLine
 <http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html>`_
 class), Jason Heeris (`efficient base-10 logarithm
 <http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html>`_),
 Richard Murray (`python-control
 <http://sourceforge.net/apps/mediawiki/python-control>`_), and Joerg Raedler
-(method to expand a Modelica_ variable tree, from `DyMat
+(method to expand a Modelica_ variable tree---from `DyMat
 <http://www.j-raedler.de/projects/dymat/>`_)
+
+
+Installation
+============
 
 To install the package, first download and extract it.  Then run the set up
 script (setup.py) from the base folder.  On Windows, use the following
@@ -29,10 +33,17 @@ command::
 
    python setup.py install
 
-On Linux use::
+On Linux, use::
 
    sudo python setup.py install
 
+
+For More Information
+====================
+
+The `main project site <http://kdavies4.github.com/ModelicaRes>`_ has the full
+documentation and many examples.  The development site is
+https://github.com/kdavies4/modelicares.
 
 .. _Modelica: http://www.modelica.org/
 .. _Python: http://www.python.org/
