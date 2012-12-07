@@ -6,9 +6,10 @@ files at once
 .. _Modelica: http://www.modelica.org/
 """
 __author__ = "Kevin Davies"
-__credits__ = ["Kevin Bandy"]
-__version__ = "0.1"
 __email__ = "kdavies4@gmail.com"
+__credits__ = ["Kevin Bandy"]
+__copyright__ = "Copyright 2012, Georgia Tech Research Corporation"
+__license__ = "BSD-compatible (see LICENSE.txt)"
 
 
 import os

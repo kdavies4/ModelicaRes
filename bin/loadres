@@ -33,6 +33,11 @@ where '...' depends on the local system.
 .. _NumPy: http://numpy.scipy.org/
 .. _matplotlib: http://www.matplotlib.org/
 """
+__author__ = "Kevin Davies"
+__email__ = "kdavies4@gmail.com"
+__copyright__ = "Copyright 2012, Georgia Tech Research Corporation"
+__license__ = "BSD-compatible (see LICENSE.txt)"
+
 import os
 import time
 

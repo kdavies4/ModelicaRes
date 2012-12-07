@@ -2,6 +2,10 @@
 # Copied (and cleaned up slightly) from
 # http://code.activestate.com/recipes/286150-hierarchical-data-objects/,
 # accessed 10/31/11
+__author__ = "Kevin Davies"
+__email__ = "kdavies4@gmail.com"
+__copyright__ = "Copyright 2012, Georgia Tech Research Corporation"
+__license__ = "BSD-compatible (see LICENSE.txt)"
 
 
 class HierarchicalData(object):
