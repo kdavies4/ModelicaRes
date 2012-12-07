@@ -167,7 +167,7 @@ def label_quantity(number, unit='', format='%G', times='\,', roman=False):
                 pow1000 = e/3
             else:
                 pow1000 = -(-e/3)
-            pow1000 = int(pow1000) # **Why is this necessary in Python 3?
+            pow1000 = int(pow1000) # TODO:  Why is this necessary in Python 3?
             if -8 <= pow1000 <= 8:
                 unit = _si_prefix(pow1000) + unit
                 numstr, exponent = (format % (number/1000**pow1000)).split('e')
