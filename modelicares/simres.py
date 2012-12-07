@@ -76,6 +76,28 @@ class SimRes(object):
     those results
     """
 
+    def __init__(self, fname='dsres.mat'):
+        """On initialization, load Modelica_ simulation results from a
+        MATLAB\ :sup:`®` file in Dymola\ :sup:`®` format.
+
+        **Arguments:**
+
+        - *fname*: Name of the file (may include the path)
+
+             The file extension ('.mat') is optional.
+
+        **Example:**
+
+           >>> from modelicares import SimRes
+           >>> sim = SimRes('examples/ChuaCircuit')
+        """
+        self._load(fname)
+
+        # Save the base filename and the directory.
+        self.dir, self.fbase = os.path.split(fname)
+        self.dir = os.path.abspath(self.dir)
+        self.fbase = os.path.splitext(self.fbase)[0]
+
     # TODO: Remove the "_" prefix once this is fixed, tested, and ready.
     def _bar(self, names, times=[0], width=0.6, n_rows=1,
              title=None, subtitles=[], label="bar",
@@ -1254,28 +1276,6 @@ class SimRes(object):
         """
         return ('Modelica simulation results from "%s"' %
                 os.path.join(self.dir, self.fbase + '.mat'))
-
-    def __init__(self, fname='dsres.mat'):
-        """On initialization, load Modelica_ simulation results from a
-        MATLAB\ :sup:`®` file in Dymola\ :sup:`®` format.
-
-        **Arguments:**
-
-        - *fname*: Name of the file (may include the path)
-
-             The file extension ('.mat') is optional.
-
-        **Example:**
-
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit')
-        """
-        self._load(fname)
-
-        # Save the base filename and the directory.
-        self.dir, self.fbase = os.path.split(fname)
-        self.dir = os.path.abspath(self.dir)
-        self.fbase = os.path.splitext(self.fbase)[0]
 
 
 class Info:

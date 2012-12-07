@@ -29,6 +29,80 @@ class LinRes(object):
     those results
     """
 
+    def __init__(self, fname='dslin.mat'):
+        """On initialization, load and preprocess a linearized Modelica_ model
+        (MATLAB\ :sup:`®` format).  The model is in state space:
+
+        .. code-block:: modelica
+
+             der(x) = A*x + B*u;
+                  y = C*x + D*u;
+
+        The linear system is stored as *sys* within this class.  It is an
+        instance of :class:`control.StateSpace`, which emulates the structure
+        of a continuous-time model in MATLAB\ :sup:`®` (e.g., the output of the
+        :meth:`ss` in MATLAB\ :sup:`®`).  It contains:
+
+           - *A*, *B*, *C*, *D*: Matrices of the linear system
+
+           - *stateName*: List of name(s) of the states (x)
+
+           - *inputName*: List of name(s) of the inputs (u)
+
+           - *outputName*: List of name(s) of the outputs (y)
+
+        **Arguments:**
+
+        - *fname*: Name of the file (may include the path)
+
+             The file extension ('.mat') is optional.  The file must contain
+             four matrices:  *Aclass* (specifies the class name, which must be
+             "AlinearSystem"), *nx*, *xuyName*, and *ABCD*.
+
+        **Example:**
+
+           >>> from modelicares import LinRes
+           >>> lin = LinRes('examples/PID')
+        """
+        self._load(fname)
+
+        # Save the base filename and the directory.
+        self.dir, self.fbase = os.path.split(fname)
+        self.dir = os.path.abspath(self.dir)
+        self.fbase = os.path.splitext(self.fbase)[0]
+
+    def __repr__(self):
+        """Return a formal description of the :class:`LinRes` instance.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import LinRes
+           >>> lin = LinRes('examples/PID.mat')
+           >>> lin # doctest: +ELLIPSIS
+           LinRes('...PID.mat')
+        """
+        return "%s('%s')" % (self.__class__.__name__,
+                             os.path.join(self.dir, self.fbase + '.mat'))
+        # Note:  The class name is indirectly inquired so that this method will
+        # still be valid if the class is extended.
+
+    def __str__(self):
+        """Return an informal description of the :class:`LinRes` instance.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import LinRes
+           >>> lin = LinRes('examples/PID.mat')
+           >>> print lin # doctest: +ELLIPSIS
+           Modelica linearization results from "...PID.mat"
+        """
+        return ('Modelica linearization results from "%s"' %
+                os.path.join(self.dir, self.fbase + '.mat'))
+
     def _load(self, fname='dslin.mat'):
         """Load a linearized Modelica_ model from *fname*.
 
@@ -381,80 +455,6 @@ class LinRes(object):
             plt.xlabel(xlabel)
         if ylabel: # Check required for same reason.
             plt.ylabel(ylabel)
-
-    def __repr__(self):
-        """Return a formal description of the :class:`LinRes` instance.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import LinRes
-           >>> lin = LinRes('examples/PID.mat')
-           >>> lin # doctest: +ELLIPSIS
-           LinRes('...PID.mat')
-        """
-        return "%s('%s')" % (self.__class__.__name__,
-                             os.path.join(self.dir, self.fbase + '.mat'))
-        # Note:  The class name is indirectly inquired so that this method will
-        # still be valid if the class is extended.
-
-    def __str__(self):
-        """Return an informal description of the :class:`LinRes` instance.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import LinRes
-           >>> lin = LinRes('examples/PID.mat')
-           >>> print lin # doctest: +ELLIPSIS
-           Modelica linearization results from "...PID.mat"
-        """
-        return ('Modelica linearization results from "%s"' %
-                os.path.join(self.dir, self.fbase + '.mat'))
-
-    def __init__(self, fname='dslin.mat'):
-        """On initialization, load and preprocess a linearized Modelica_ model
-        (MATLAB\ :sup:`®` format).  The model is in state space:
-
-        .. code-block:: modelica
-
-             der(x) = A*x + B*u;
-                  y = C*x + D*u;
-
-        The linear system is stored as *sys* within this class.  It is an
-        instance of :class:`control.StateSpace`, which emulates the structure
-        of a continuous-time model in MATLAB\ :sup:`®` (e.g., the output of the
-        :meth:`ss` in MATLAB\ :sup:`®`).  It contains:
-
-           - *A*, *B*, *C*, *D*: Matrices of the linear system
-
-           - *stateName*: List of name(s) of the states (x)
-
-           - *inputName*: List of name(s) of the inputs (u)
-
-           - *outputName*: List of name(s) of the outputs (y)
-
-        **Arguments:**
-
-        - *fname*: Name of the file (may include the path)
-
-             The file extension ('.mat') is optional.  The file must contain
-             four matrices:  *Aclass* (specifies the class name, which must be
-             "AlinearSystem"), *nx*, *xuyName*, and *ABCD*.
-
-        **Example:**
-
-           >>> from modelicares import LinRes
-           >>> lin = LinRes('examples/PID')
-        """
-        self._load(fname)
-
-        # Save the base filename and the directory.
-        self.dir, self.fbase = os.path.split(fname)
-        self.dir = os.path.abspath(self.dir)
-        self.fbase = os.path.splitext(self.fbase)[0]
 
 
 if __name__ == '__main__':
