@@ -9,6 +9,8 @@ This module relies on python-control_, which is included in the distribution.
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
+__copyright__ = "Copyright 2012, Georgia Tech Research Corporation"
+__license__ = "BSD-compatible (see LICENSE.txt)"
 
 
 import os

@@ -4,8 +4,9 @@
 .. _LaTeX: http://www.latex-project.org/
 """
 __author__ = "Kevin Davies"
-__version__ = "0.1"
 __email__ = "kdavies4@gmail.com"
+__copyright__ = "Copyright 2012, Georgia Tech Research Corporation"
+__license__ = "BSD-compatible (see LICENSE.txt)"
 
 
 def label_number(quantity="", unit=None, times='\,', per='\,/\,', roman=False):

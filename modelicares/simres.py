@@ -5,8 +5,11 @@
 .. _Modelica: http://www.modelica.org/
 """
 __author__ = "Kevin Davies"
-__credits__ = ["Kevin Bandy", "Joerg Raedler"]
 __email__ = "kdavies4@gmail.com"
+__credits__ = ["Kevin Bandy", "Joerg Raedler"]
+__copyright__ = "Copyright 2012, Georgia Tech Research Corporation"
+__license__ = "BSD-compatible (see LICENSE.txt)"
+
 
 #TODO:
 #  1. Add support to convert units from the data space to the axis space

@@ -3,9 +3,10 @@
 """Basic methods to help plot and interpret experimental data
 """
 __author__ = "Kevin Davies"
-__credits__ = ["Jason Grout", "Jason Heeris"]
 __email__ = "kdavies4@gmail.com"
-
+__credits__ = ["Jason Grout", "Jason Heeris"]
+__copyright__ = "Copyright 2012, Georgia Tech Research Corporation"
+__license__ = "BSD-compatible (see LICENSE.txt)"
 
 import os
 import wx
