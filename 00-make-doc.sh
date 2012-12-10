@@ -1,11 +1,6 @@
 #!/bin/bash
 # Make the documentation.
 #
-# First, build and install the package using setup.py on the master or
-# development branch:
-#    $ ./setup.py build
-#    $ sudo ./setup.py install
-#
 # Afterwards, once ready to update the web site:
 #    $ git commit -am "Updated documentation"
 #    $ git rebase -i origin/gh-pages # Optional--to remove intermediate commits
@@ -13,7 +8,7 @@
 #
 # Kevin Davies, 10/15/12
 
-# Install
+# Build and install
 ./setup.py build
 sudo python ./setup.py install
 
@@ -46,11 +41,11 @@ cp -f build/latex/ModelicaRes.pdf ./
 cd ..
 
 # Make a distributable copy.
-#./setup.py sdist --formats=gztar,zip
+./setup.py sdist --formats=gztar,zip
 # Use the zip command to change all line endings to Windows format.
-./setup.py sdist
 name=`./setup.py --fullname`
 cd dist
+rm $name.zip
 tar -xf $name.tar.gz
 zip -rl $name.zip $name
 rm -r $name

@@ -41,9 +41,9 @@ On Linux, use::
 For More Information
 ====================
 
-The `main project site <http://kdavies4.github.com/ModelicaRes>`_ has the full
-documentation and many examples.  The development site is
-https://github.com/kdavies4/modelicares.
+See the `main project site <http://kdavies4.github.com/ModelicaRes>`_ or the
+"doc" folder of the package for the full documentation and many examples.  The
+development site is https://github.com/kdavies4/modelicares.
 
 .. _Modelica: http://www.modelica.org/
 .. _Python: http://www.python.org/
