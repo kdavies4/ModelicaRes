@@ -6,8 +6,8 @@ and produce various plots and diagrams.  The figures are generated via
 matplotlib_, which offers a rich set of plotting routines.  ModelicaRes
 includes convenient functions to automatically pre-format and label some
 figures, like xy plots, Bode and Nyquist plots, and Sankey diagrams.
-ModelicaRes can be scripted or run from a Python_ command-line interpreter with
-math and matrix functions from NumPy_.
+ModelicaRes can be scripted or run from a Python_ interpreter with math and
+matrix functions from NumPy_.
 
 
 Credits
@@ -21,7 +21,7 @@ class), Jason Heeris (`efficient base-10 logarithm
 Richard Murray (`python-control
 <http://sourceforge.net/apps/mediawiki/python-control>`_), and Joerg Raedler
 (method to expand a Modelica_ variable tree---from `DyMat
-<http://www.j-raedler.de/projects/dymat/>`_)
+<http://www.j-raedler.de/projects/dymat/>`_).
 
 
 Installation

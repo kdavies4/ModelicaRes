@@ -30,9 +30,22 @@ __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
 __copyright__ = "Copyright 2012, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
-__version__ = "0.3"
+__version__ = "0.4"
 
+
+import sys
+
+
+# Check the Python version.
+major, minor1, minor2, s, tmp = sys.version_info
+if not (major == 2 and minor1 == 7):
+    raise ImportError('Currently, modelicares requires Python 2.7.')
+# TODO:  Add support for Python 3.x once wx supports it.
+
+
+# All functions and classes
 #__all__ = ['base', 'exps', 'linres', 'multi', 'simres', 'texunit']
+
 
 # Essential functions and classes
 #
@@ -42,7 +55,7 @@ from base import (add_arrows, add_hlines, add_vlines, animate, ArrowLine,
                  closeall, figure, load_csv, saveall, setup_subplots)
 from exps import (Experiment, gen_experiments, ParamDict, read_params,
                   run_models, write_params, write_script)
-from multi import multiload, multiplot
 from linres import LinRes
+from multi import multiload, multiplot
 from simres import SimRes
 from texunit import label_number, label_quantity, unit2tex

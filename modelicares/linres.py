@@ -99,7 +99,7 @@ class LinRes(object):
 
            >>> from modelicares import LinRes
            >>> lin = LinRes('examples/PID.mat')
-           >>> print lin # doctest: +ELLIPSIS
+           >>> print(lin) # doctest: +ELLIPSIS
            Modelica linearization results from "...PID.mat"
         """
         return ('Modelica linearization results from "%s"' %
