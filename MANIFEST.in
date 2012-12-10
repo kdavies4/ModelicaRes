@@ -1,6 +1,7 @@
 include matplotlibrc
 include *.txt
 #include MANIFEST.in
+exclude 00-*
 
 # Examples
 include examples/*.csv
