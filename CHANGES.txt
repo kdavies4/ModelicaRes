@@ -18,3 +18,7 @@ Changelog
    - Added default of label='' to :meth:`modelicares.base.figure`.
    - Updated documentation for Windows.
    - Added check for proper Python version (currently requires 2.7).
+
+0.5 (201*-**-**) -- Updates:
+
+   - **.
