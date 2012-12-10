@@ -101,7 +101,8 @@ class SimRes(object):
         self.dir = os.path.abspath(self.dir)
         self.fbase = os.path.splitext(self.fbase)[0]
 
-    # TODO: Remove the "_" prefix once this is fixed, tested, and ready.
+    # TODO: Remove the "_" prefix and NotImpletedError once this is fixed and
+    # tested.
     def _bar(self, names, times=[0], width=0.6, n_rows=1,
              title=None, subtitles=[], label="bar",
              xlabel=None, xticklabels=None, ylabel=None,
@@ -179,7 +180,7 @@ class SimRes(object):
 
         1. List of the axes within the figure
         """
-        raise NotImplementedError, "Needs work"
+        raise NotImplementedError
 
         # Indices for the bars (1, 2, ...)
         ind = np.arange(len(names)) + 1
@@ -1274,7 +1275,7 @@ class SimRes(object):
 
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> print sim # doctest: +ELLIPSIS
+           >>> print(sim) # doctest: +ELLIPSIS
            Modelica simulation results from "...ChuaCircuit.mat"
         """
         return ('Modelica simulation results from "%s"' %

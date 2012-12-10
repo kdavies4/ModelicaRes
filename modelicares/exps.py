@@ -106,7 +106,7 @@ def gen_experiments(models=None, params={}, args={}, permute = True):
        ...                       {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
        ...                       permute=False)
        >>> for experiment in doe:
-       ...     print experiment.model + str(experiment.params)
+       ...     print(experiment.model + str(experiment.params))
        Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=16))
        Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=18))
        Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=20))
@@ -122,7 +122,7 @@ def gen_experiments(models=None, params={}, args={}, permute = True):
        ...                       {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
        ...                       permute=True)
        >>> for experiment in doe:
-       ...     print experiment.model + str(experiment.params)
+       ...     print(experiment.model + str(experiment.params))
        Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=16))
        Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=16))
        Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=16))
@@ -143,7 +143,7 @@ def gen_experiments(models=None, params={}, args={}, permute = True):
        >>> params = dict(axis=dict(motor=dict(i_max=[5, 15],
        ...                                    Ra=dict(R=[200, 300]))))
        >>> for experiment in gen_experiments(models, params):
-       ...     print experiment.model + str(experiment.params)
+       ...     print(experiment.model + str(experiment.params))
        Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis(axis(motor(i_max=5, Ra(R=200))))
        Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis(axis(motor(i_max=15, Ra(R=200))))
        Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis(axis(motor(i_max=5, Ra(R=300))))
@@ -370,7 +370,7 @@ def run_models(experiments=[(None, {}, {})],
 
     There are no return values.
     """
-    raise NotImplementedError, "run_models() has not yet been implemented."
+    raise NotImplementedError("run_models() has not yet been implemented.")
     """
     **Examples:**
 import os
@@ -391,7 +391,7 @@ params = {'L.L': [18, 20],
 
 doe = gen_doe(params)
 for e in doe:
-   print str(e) + ' or ' + modifier(e)
+   print(str(e) + ' or ' + modifier(e))
 
 params.items()
 
@@ -742,7 +742,7 @@ class ParamDict(dict):
 
            >>> d = ParamDict({'a': 1, 'b.c': array([2, 3]), 'b.d': False,
            ...                'b.e': '"hello"', 'b.f': None})
-           >>> print d
+           >>> print(d)
            (a=1, b(c={2, 3}, e="hello", d=false))
 
            # The formal representation (and the internal structure) is unaffected:
@@ -750,7 +750,7 @@ class ParamDict(dict):
            {'a': 1, 'b.c': array([2, 3]), 'b.f': None, 'b.e': '"hello"', 'b.d': False}
 
            # An empty dictionary prints as an empty string (not "()"):
-           print ParamDict({})
+           print(ParamDict({}))
 
         .. _Python: http://www.python.org/
         """

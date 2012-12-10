@@ -303,9 +303,9 @@ def animate(imagebase='_tmp', fname="animation", fps=10, clean=False):
 
     - *clean*: *True*, if the PNG images should be deleted afterward
 
-    .. Note:: This method requires mencoder_.  On Linux, install it with the
+    .. Note:: This function requires mencoder_.  On Linux, install it with the
        following command: ``sudo apt-get install mencoder``.  Currently, this
-       method is not supported on Windows.
+       function is not supported on Windows.
 
     .. _mencoder: http://en.wikipedia.org/wiki/MEncoder
 
@@ -324,14 +324,16 @@ def animate(imagebase='_tmp', fname="animation", fps=10, clean=False):
            ax.cla()
            ax.imshow(rand(5,5), interpolation='nearest')
            fname = '_tmp%02d.png' % i
-           print 'Saving frame', fname
+           print("Saving frame %i (file %s)" % (i, fname))
            fig.savefig(fname) # doctest: +ELLIPSIS
 
        # Assemble the frames into a movie.
        animate(clean=True)
     """
     # Note:  The output of the code above is too large for inline doctest.
-    # TODO:  Add a test later.
+    # TODO:  Add a example/test.
+    # TODO:  Consider using the animation module from matplotlib.  Should it
+    # supercede this function?
     # TODO:  Add support for Windows.
 
     # Based on

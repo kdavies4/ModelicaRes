@@ -1,14 +1,14 @@
 KLD 12/7/2012:
 
 Steps to release the ModelicaRes module:
-    1. Address the to do (TODO) items in the code (or as many as possible).
-       Run modelicares/00-list-TODO.sh to list the occurrences of that tag.
-    2. Update the version numbers in setup.py and modelicares/__init__.py.
-    3. Update the entry in CHANGES.txt.
-    4. Update the link in doc/_templates/download.html of the gh-pages branch.
-    5. Run 00-make-doc.sh.
-    6. Rebase the gh-pages branch to squash extra commits.  Push it to origin
-       (git push origin gh-pages).
+    1.  Address the to do (TODO) items in the code (or as many as possible).
+        Run modelicares/00-list-TODO.sh to list the occurrences of that tag.
+    2.  Update the version numbers in setup.py and modelicares/__init__.py.
+    3.  Update the entry in CHANGES.txt.
+    4.  Update the link in doc/_templates/download.html of the gh-pages branch.
+    5.  Run 00-make-doc.sh.
+    6.  Rebase the gh-pages branch to squash extra commits.  Push it to origin
+        (git push origin gh-pages).
     7.  If necessary, update the sitemap using http://www.xml-sitemaps.com/.
         Put it in the base folder of the gh-pages branch and push to origin
         (git push origin gh-pages).  Udpate it in Google Webmaster tools
