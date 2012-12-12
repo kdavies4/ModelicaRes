@@ -91,10 +91,10 @@
          `BuildingsPy
          <http://simulationresearch.lbl.gov/modelica/buildingspy/>`_, and
          `DyMat`_ projects provide other Python_ modules that are related.
-         pysimulator_ includes a complete GUI and supports the Functional Model
-         Interface (FMI).  BuildingsPy_ has a :class:`Tester` class that can be
-         used for unit testing.  DyMat_ has functions to export Modelica_
-         simulation data to comma separated values (CSV), `Gnuplot
+         pysimulator_ includes an elaborate GUI and supports the Functional
+         Model Interface (FMI).  BuildingsPy_ has a :class:`Tester` class that
+         can be used for unit testing.  DyMat_ has functions to export
+         Modelica_ simulation data to comma separated values (CSV), `Gnuplot
          <http://www.gnuplot.info/>`_, MATLAB\ :sup:`®`, and `Network Common
          Data Form (netCDF) <http://www.unidata.ucar.edu/software/netcdf/>`_.
 
@@ -131,10 +131,10 @@
          `BuildingsPy
          <http://simulationresearch.lbl.gov/modelica/buildingspy/>`_, and
          `DyMat`_ projects provide other Python_ modules that are related.
-         pysimulator_ includes a complete GUI and supports the Functional Model
-         Interface (FMI).  BuildingsPy_ has a :class:`Tester` class that can be
-         used for unit testing.  DyMat_ has functions to export Modelica_
-         simulation data to comma separated values (CSV), `Gnuplot
+         pysimulator_ includes an elaborate GUI and supports the Functional
+         Model Interface (FMI).  BuildingsPy_ has a :class:`Tester` class that
+         can be used for unit testing.  DyMat_ has functions to export
+         Modelica_ simulation data to comma separated values (CSV), `Gnuplot
          <http://www.gnuplot.info/>`_, MATLAB\ :sup:`®`, and `Network Common
          Data Form (netCDF) <http://www.unidata.ucar.edu/software/netcdf/>`_.
 
