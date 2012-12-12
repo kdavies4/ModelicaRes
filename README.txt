@@ -37,13 +37,20 @@ On Linux, use::
 
    sudo python setup.py install
 
+The matplotlibrc file in the base folder has some recommended revisions to
+matplotlib_'s defaults.  To use it, copy or move the file to the working
+directory or matplotlib_'s configuration directory.  See
+http://matplotlib.org/users/customizing.html for details.
+
 
 For More Information
 ====================
 
-See the `main project site <http://kdavies4.github.com/ModelicaRes>`_ or the
-"doc" folder of the package for the full documentation and many examples.  The
-development site is https://github.com/kdavies4/modelicares.
+An installable copy of this package can be downloaded from `main project
+site <http://kdavies4.github.com/ModelicaRes>`_ or the `PyPI page
+<http://pypi.python.org/pypi/ModelicaRes/>`_.  See the `main project site`_ or
+the "doc" folder of the package for the full documentation and many examples.
+The development site is https://github.com/kdavies4/modelicares.
 
 .. _Modelica: http://www.modelica.org/
 .. _Python: http://www.python.org/
