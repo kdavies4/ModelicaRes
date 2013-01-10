@@ -7,5 +7,4 @@ for f in doc/*.html
     do
         aspell --extra-dicts=./.modelica.pws --personal=./.modelicares.pws -c $f
     done
-echo Done.  Press enter to exit.
-read answer
+read -p "Done.  Press [Enter] to exit."

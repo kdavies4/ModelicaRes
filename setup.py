@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Set up the ModelicaRes modules.
+"""Set up the ModelicaRes module.
 
 See README.txt for instructions.
 """
@@ -9,7 +9,6 @@ from glob import glob
 
 import modelicares # Only to read the version number
 
-# Install the core Python modules.
 setup(name='ModelicaRes',
       version=modelicares.__version__,
       author='Kevin Davies',
@@ -24,7 +23,8 @@ setup(name='ModelicaRes',
       provides=['modelicares'],
       requires=['python (==2.7)', 'matplotlib', 'numpy', 'wx'],
       package_dir={'control': 'external/control/src'},
-      keywords=['Modelica', 'matplotlib', 'simulation experiment', 'results'],
+      keywords=['Modelica', 'Dymola', 'plot', 'matplotlib', 'simulation',
+                'experiment', 'results'],
       classifiers=['Development Status :: 4 - Beta',
                    'Operating System :: POSIX :: Linux',
                    'Operating System :: Microsoft :: Windows',
