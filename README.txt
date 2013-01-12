@@ -9,10 +9,8 @@ figures, like xy plots, Bode and Nyquist plots, and Sankey diagrams.
 ModelicaRes can be scripted or run from a Python_ interpreter with math and
 matrix functions from NumPy_.
 
-
 Credits
-=======
-
+-------
 Kevin Bandy supported the development.  Third-party code has been included from
 Jason Grout (`ArrowLine
 <http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html>`_
@@ -23,13 +21,13 @@ Richard Murray (`python-control
 (method to expand a Modelica_ variable tree---from `DyMat
 <http://www.j-raedler.de/projects/dymat/>`_).
 
-
 Installation
-============
-
-To install the package, first download and extract it.  Then run the set up
-script (setup.py) from the base folder.  On Windows, use the following
-command::
+------------
+An installable copy of this package can be downloaded from `main project
+site <http://kdavies4.github.com/ModelicaRes>`_ or the `PyPI page
+<http://pypi.python.org/pypi/ModelicaRes/>`_.  To install the package, first
+download and extract it.  Then run the set up script (setup.py) from the base
+folder.  On Windows, use the following command::
 
    python setup.py install
 
@@ -42,15 +40,18 @@ matplotlib_'s defaults.  To use it, copy or move the file to the working
 directory or matplotlib_'s configuration directory.  See
 http://matplotlib.org/users/customizing.html for details.
 
+License terms
+-------------
+ModelicaRes is published under the liberal terms of the BSD license (see
+LICENSE.txt).  Although it is not required, you are invited and strongly
+encouraged to share any modifications you make (preferably in a Github fork
+from https://github.com/kdavies4/ModelicaRes).
 
 For More Information
-====================
-
-An installable copy of this package can be downloaded from `main project
-site <http://kdavies4.github.com/ModelicaRes>`_ or the `PyPI page
-<http://pypi.python.org/pypi/ModelicaRes/>`_.  See the `main project site`_ or
-the "doc" folder of the package for the full documentation and many examples.
-The development site is https://github.com/kdavies4/modelicares.
+--------------------
+See the `main project site`_ or the "doc" folder of the package for the full
+documentation and many examples.  The development site is
+https://github.com/kdavies4/modelicares.
 
 .. _Modelica: http://www.modelica.org/
 .. _Python: http://www.python.org/

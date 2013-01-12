@@ -5,5 +5,5 @@
 
 cd control/src
 grep --color ModelicaRes *.py
-echo -n "Press enter to exit."
-read answer
+echo
+read -p "Press [Enter] to exit."
