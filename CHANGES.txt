@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.1 (2012-11-8) -- Initial release.
+0.1 (2012-11-8) -- Initial release
 
 0.2 (2012-11-20) -- Updates:
 

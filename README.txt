@@ -11,8 +11,8 @@ matrix functions from NumPy_.
 
 Credits
 -------
-Kevin Bandy supported the development.  Third-party code has been included from
-Jason Grout (`ArrowLine
+Kevin Bandy helped to develop this package.  Third-party code has been included
+from Jason Grout (`ArrowLine
 <http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html>`_
 class), Jason Heeris (`efficient base-10 logarithm
 <http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html>`_),
@@ -25,7 +25,7 @@ Installation
 ------------
 An installable copy of this package can be downloaded from `main project
 site <http://kdavies4.github.com/ModelicaRes>`_ or the `PyPI page
-<http://pypi.python.org/pypi/ModelicaRes/>`_.  To install the package, first
+<http://pypi.python.org/pypi/ModelicaRes>`_.  To install the package, first
 download and extract it.  Then run the set up script (setup.py) from the base
 folder.  On Windows, use the following command::
 
@@ -53,7 +53,7 @@ See the `main project site`_ or the "doc" folder of the package for the full
 documentation and many examples.  The development site is
 https://github.com/kdavies4/modelicares.
 
-.. _Modelica: http://www.modelica.org/
-.. _Python: http://www.python.org/
-.. _matplotlib: http://www.matplotlib.org/
-.. _NumPy: http://numpy.scipy.org/
+.. _Modelica: http://www.modelica.org
+.. _Python: http://www.python.org
+.. _matplotlib: http://www.matplotlib.org
+.. _NumPy: http://numpy.scipy.org
