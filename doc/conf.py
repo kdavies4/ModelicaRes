@@ -59,7 +59,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'ModelicaRes'
-copyright = '2012, Kevin Davies, Georgia Tech Research Corporation'
+copyright = '2012-2013, Kevin Davies, Georgia Tech Research Corporation'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -183,7 +183,7 @@ math_output = 'MathML'
 # (source start file, target name, title, author, document class [howto/manual]).
 
 latex_documents = [
-  ('index', 'ModelicaRes.tex', u'ModelicaRes Documentation',
+  ('index', 'ModelicaRes.tex', u"ModelicaRes Documentation",
    u'Kevin Davies', 'manual'),
 ]
 
