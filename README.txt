@@ -50,7 +50,7 @@ Richard Murray (`python-control
 
 License terms
 -------------
-ModelicaRes_ is published under the liberal terms of the BSD license (see
+ModelicaRes_ is published under the terms of the BSD license (see
 LICENSE.txt).  Please share any modifications you make (preferably on a Github
 fork from https://github.com/kdavies4/ModelicaRes) so that others may benefit
 from your work.

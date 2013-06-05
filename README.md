@@ -26,8 +26,9 @@ development site is https://github.com/kdavies4/modelicares.
 An installable copy of this package can be downloaded from the
 [main project site] or the
 [PyPI page](http://pypi.python.org/pypi/ModelicaRes).  To install the package,
-first download and extract it.  Then run the set up script (setup.py) from the
-base folder.  On Windows, use the following command:
+first download and extract it.  Then run the set up script
+([setup.py](setup.py)) from the base folder.  On Windows, use the following
+command:
 
     python setup.py install
 
@@ -35,9 +36,9 @@ On Linux, use:
 
     sudo python setup.py install
 
-The matplotlibrc file in the base folder has some recommended revisions to
-[matplotlib]'s defaults.  To use it, copy or move the file to the working
-directory or [matplotlib]'s configuration directory.  See
+The [matplotlibrc](matplotlibrc) file in the base folder has some recommended
+revisions to [matplotlib]'s defaults.  To use it, copy or move the file to the
+working directory or [matplotlib]'s configuration directory.  See
 http://matplotlib.org/users/customizing.html for details.
 
 ### Credits
@@ -54,7 +55,7 @@ Joerg Raedler (method to expand a [Modelica] variable tree - from
 
 ### License terms
 
-[ModelicaRes] is published under the liberal terms of the BSD license (see
+[ModelicaRes] is published under the terms of the BSD license (see
 [LICENSE.txt](LICENSE.txt)).  Please share any modifications you make
 (preferably on a Github fork from https://github.com/kdavies4/ModelicaRes) so
 that others may benefit from your work.
