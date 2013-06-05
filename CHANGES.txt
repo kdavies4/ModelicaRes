@@ -19,6 +19,10 @@ Changelog
    - Updated documentation for Windows.
    - Added check for proper Python version (currently requires 2.7).
 
-0.5 (201*-**-**) -- Updates:
+0.5 (2013-6-5) -- Updates:
+
+   - Updated README.txt.
+
+0.6 (201*-**-**) -- Updates:
 
    - **.
