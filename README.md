@@ -10,7 +10,7 @@ figures.  It is currently possible to
  - Perform custom calculations, and
  - Produce various plots and diagrams.
 
-The figures are generated via [matplotlib](http://www.matplotlib.org), which
+The figures are generated via [matplotlib], which
 offers a rich set of plotting routines.  [ModelicaRes] includes convenient
 functions to automatically pre-format and label some figures, like xy plots,
 Bode and Nyquist plots, and Sankey diagrams.  [ModelicaRes] can be scripted or
@@ -49,16 +49,17 @@ class), Jason Heeris
 ([efficient base-10 logarithm](http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html)),
 Richard Murray
 ([python-control](http://sourceforge.net/apps/mediawiki/python-control)), and
-Joerg Raedler (method to expand a [Modelica] variable tree--from
+Joerg Raedler (method to expand a [Modelica] variable tree -- from
 [DyMat](http://www.j-raedler.de/projects/dymat/)).
 
 ### License terms
 
 [ModelicaRes] is published under the liberal terms of the BSD license (see
-[LICENSE.txt]).  Although it is not required, you are invited and strongly
+[LICENSE.txt](LICENSE.txt)).  Although it is not required, you are invited and strongly
 encouraged to share any modifications you make (preferably in a Github fork
 from https://github.com/kdavies4/ModelicaRes).
 
 [main project site]: http://kdavies4.github.io/ModelicaRes/
 [ModelicaRes]: http://kdavies4.github.io/ModelicaRes/
 [Modelica]: http://www.modelica.org
+[matplotlib]: http://www.matplotlib.org
