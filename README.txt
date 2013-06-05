@@ -1,11 +1,12 @@
 The goal of ModelicaRes_ is to provide an open-source tool to effectively
 manage Modelica_ simulations, interpret results, and create publishable
 figures.  It is currently possible to
- - Auto-generate simulation scripts,
- - Run model executables with varying parameters,
- - Browse data,
- - Perform custom calculations, and
- - Produce various plots and diagrams.
+
+- Auto-generate simulation scripts,
+- Run model executables with varying parameters,
+- Browse data,
+- Perform custom calculations, and
+- Produce various plots and diagrams.
 
 The figures are generated via matplotlib_, which offers a rich set of plotting
 routines.  ModelicaRes_ includes convenient functions to automatically
@@ -45,7 +46,7 @@ class), Jason Heeris (`efficient base-10 logarithm
 <http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html>`_),
 Richard Murray (`python-control
 <http://sourceforge.net/apps/mediawiki/python-control>`_), and Joerg Raedler
-(method to expand a Modelica_ variable tree---from `DyMat
+(method to expand a Modelica_ variable tree - from `DyMat
 <http://www.j-raedler.de/projects/dymat/>`_).
 
 License terms
