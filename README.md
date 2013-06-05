@@ -1,10 +1,9 @@
 ModelicaRes
 -----------
 
-The goal of [ModelicaRes](http://kdavies4.github.io/ModelicaRes/) is to provide
-an open-source tool to effectively manage [Modelica](http://www.modelica.org)
-simulations, interpret results, and create publishable figures.  It is currently
-possible to
+The goal of [ModelicaRes] is to provide an open-source tool to effectively
+manage [Modelica] simulations, interpret results, and create publishable
+figures.  It is currently possible to
  - Auto-generate simulation scripts,
  - Run model executables with varying parameters,
  - Browse data,
@@ -33,7 +32,7 @@ Joerg Raedler (method to expand a [Modelica] variable tree --- from
 ### Installation
 
 An installable copy of this package can be downloaded from the
-[main project site](http://kdavies4.github.com/ModelicaRes) or the
+[main project site](http://kdavies4.github.io/ModelicaRes/) or the
 [PyPI page](http://pypi.python.org/pypi/ModelicaRes).  To install the package,
 first download and extract it.  Then run the set up script (setup.py) from the
 base folder.  On Windows, use the following command::
@@ -62,4 +61,5 @@ See the [main project site] or the "doc" folder of the package for the full
 documentation and many examples.  The development site is
 https://github.com/kdavies4/modelicares.
 
+[ModelicaRes]: http://kdavies4.github.io/ModelicaRes/
 [Modelica]: http://www.modelica.org
