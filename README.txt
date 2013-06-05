@@ -46,7 +46,7 @@ class), Jason Heeris (`efficient base-10 logarithm
 <http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html>`_),
 Richard Murray (`python-control
 <http://sourceforge.net/apps/mediawiki/python-control>`_), and Joerg Raedler
-(method to expand a Modelica_ variable tree---from `DyMat
+(method to expand a Modelica_ variable tree - from `DyMat
 <http://www.j-raedler.de/projects/dymat/>`_).
 
 License terms
