@@ -27,13 +27,13 @@ An installable copy of this package can be downloaded from the
 [main project site] or the
 [PyPI page](http://pypi.python.org/pypi/ModelicaRes).  To install the package,
 first download and extract it.  Then run the set up script (setup.py) from the
-base folder.  On Windows, use the following command::
+base folder.  On Windows, use the following command:
 
-   python setup.py install
+    python setup.py install
 
-On Linux, use::
+On Linux, use:
 
-   sudo python setup.py install
+    sudo python setup.py install
 
 The matplotlibrc file in the base folder has some recommended revisions to
 [matplotlib]'s defaults.  To use it, copy or move the file to the working
@@ -49,15 +49,16 @@ class), Jason Heeris
 ([efficient base-10 logarithm](http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html)),
 Richard Murray
 ([python-control](http://sourceforge.net/apps/mediawiki/python-control)), and
-Joerg Raedler (method to expand a [Modelica] variable tree -- from
+Joerg Raedler (method to expand a [Modelica] variable tree - from
 [DyMat](http://www.j-raedler.de/projects/dymat/)).
 
 ### License terms
 
 [ModelicaRes] is published under the liberal terms of the BSD license (see
-[LICENSE.txt](LICENSE.txt)).  Although it is not required, you are invited and strongly
-encouraged to share any modifications you make (preferably in a Github fork
-from https://github.com/kdavies4/ModelicaRes).
+[LICENSE.txt](LICENSE.txt)).  Please share any modifications you make
+(preferably on a Github fork from https://github.com/kdavies4/ModelicaRes) so
+that others may benefit from your work.
+
 
 [main project site]: http://kdavies4.github.io/ModelicaRes/
 [ModelicaRes]: http://kdavies4.github.io/ModelicaRes/

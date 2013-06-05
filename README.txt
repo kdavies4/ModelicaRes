@@ -51,9 +51,10 @@ Richard Murray (`python-control
 License terms
 -------------
 ModelicaRes_ is published under the liberal terms of the BSD license (see
-LICENSE.txt).  Although it is not required, you are invited and strongly
-encouraged to share any modifications you make (preferably in a Github fork
-from https://github.com/kdavies4/ModelicaRes).
+LICENSE.txt).  Please share any modifications you make (preferably on a Github
+fork from https://github.com/kdavies4/ModelicaRes) so that others may benefit
+from your work.
+
 
 .. _ModelicaRes: http://kdavies4.github.io/ModelicaRes/
 .. _Modelica: http://www.modelica.org
