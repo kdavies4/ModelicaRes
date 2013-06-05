@@ -6,6 +6,7 @@ figures.  It is currently possible to
  - Browse data,
  - Perform custom calculations, and
  - Produce various plots and diagrams
+
 The figures are generated via matplotlib_, which offers a rich set of plotting
 routines.  ModelicaRes includes convenient functions to automatically pre-format
 and label some figures, like xy plots, Bode and Nyquist plots, and Sankey

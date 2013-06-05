@@ -10,6 +10,7 @@ possible to
  - Browse data,
  - Perform custom calculations, and
  - Produce various plots and diagrams
+
 The figures are generated via [matplotlib](http://www.matplotlib.org), which
 offers a rich set of plotting routines.  [ModelicaRes] includes convenient
 functions to automatically pre-format and label some figures, like xy plots,
@@ -20,10 +21,13 @@ functions from [NumPy](http://numpy.scipy.org).
 ### Credits
 
 Kevin Bandy helped to develop this package.  Third-party code has been included
-from Jason Grout ([ArrowLine](http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html)
-class), Jason Heeris ([efficient base-10 logarithm](http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html)),
-Richard Murray ([python-control](http://sourceforge.net/apps/mediawiki/python-control)), and Joerg Raedler
-(method to expand a [Modelica] variable tree---from
+from Jason Grout
+([ArrowLine](http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html)
+class), Jason Heeris
+([efficient base-10 logarithm](http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html)),
+Richard Murray
+([python-control](http://sourceforge.net/apps/mediawiki/python-control)), and
+Joerg Raedler (method to expand a [Modelica] variable tree --- from
 [DyMat](http://www.j-raedler.de/projects/dymat/)).
 
 ### Installation
@@ -57,3 +61,5 @@ from https://github.com/kdavies4/ModelicaRes).
 See the [main project site] or the "doc" folder of the package for the full
 documentation and many examples.  The development site is
 https://github.com/kdavies4/modelicares.
+
+[Modelica]: http://www.modelica.org
