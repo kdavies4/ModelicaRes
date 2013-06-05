@@ -29,12 +29,9 @@
 # You can also deploy your own backend outside of matplotlib by
 # referring to the module name (which must be in the PYTHONPATH) as
 # 'module://my_backend'
-#backend      : %(backend)s
-
 # KLD 10/9/2012:  Works:
 #backend      : GTKAgg
 backend      : GTKCairo
-
 # KLD 10/9/2012:  Not good:
 #backend      : Agg # No onscreen plots
 #backend      : WX # Doesn't seem to support TeX
@@ -62,6 +59,15 @@ backend      : GTKCairo
 # "pyqt" and "pyside".  The "pyqt" setting has the side effect of
 # forcing the use of Version 2 API for QString and QVariant.
 
+# The port to use for the web server in the WebAgg backend.
+# webagg.port : 8888
+
+# If webagg.port is unavailable, a number of other random ports will
+# be tried until one that is available is found.
+# webagg.port_retries : 50
+
+# When True, open the webbrowser to the plot that is shown
+# webagg.open_in_browser : True
 # if you are running pyplot inside a GUI and your backend choice
 # conflicts, we will automatically try to find a compatible one for
 # you if backend_fallback is True
@@ -95,10 +101,10 @@ backend      : GTKCairo
 # circles.  See
 # http://matplotlib.org/api/artist_api.html#module-matplotlib.patches
 # information on patch properties
-#patch.linewidth   	: 1.0     # edge width in points
-#patch.facecolor  	: blue
-#patch.edgecolor  	: black
-#patch.antialiased 	: True    # render patches in antialised (no jaggies)
+#patch.linewidth        : 1.0     # edge width in points
+#patch.facecolor        : blue
+#patch.edgecolor        : black
+#patch.antialiased      : True    # render patches in antialised (no jaggies)
 
 ### FONT
 #
@@ -242,7 +248,7 @@ mathtext.default : regular # The default font to use for math.
 #axes.edgecolor      : black   # axes edge color
 #axes.linewidth      : 1.0     # edge linewidth
 #axes.grid           : False   # display grid or not
-axes.titlesize      : 12   # fontsize of the axes title
+axes.titlesize       : 12   # fontsize of the axes title
 #axes.titlesize      : large   # fontsize of the axes title
 #axes.labelsize      : medium  # fontsize of the x any y labels
 #axes.labelweight    : normal  # weight of the x and y labels
@@ -338,23 +344,20 @@ figure.figsize   : 9.7, 6     # figure size in inches
 
 # The figure subplot parameters.  All dimensions are a fraction of the
 # figure width or height
-#figure.subplot.left	: 0.125  # the left side of the subplots of the figure
-figure.subplot.left	: 0.098  # the left side of the subplots of the figure
+#figure.subplot.left    : 0.125  # the left side of the subplots of the figure
+figure.subplot.left     : 0.1  # the left side of the subplots of the figure
 # KLD 3/24/2011:  This is about the narrowest the margins can be without clipping.
-#figure.subplot.right	: 0.9    # the right side of the subplots of the figure
-figure.subplot.right	: 0.91    # the right side of the subplots of the figure
+#figure.subplot.right   : 0.9    # the right side of the subplots of the figure
 # KLD 3/24/2011:  This is about the narrowest the margins can be without clipping the
 # secondary y axes.
-#figure.subplot.bottom	: 0.1    # the bottom of the subplots of the figure
-figure.subplot.bottom	: 0.1    # the bottom of the subplots of the figure
+#figure.subplot.bottom  : 0.1    # the bottom of the subplots of the figure
 # KLD 3/24/2011:  This is about the narrowest the margins can be without clipping a
 # Bode plot in python-control.
-#figure.subplot.top	: 0.9    # the top of the subplots of the figure
-figure.subplot.top	: 0.91    # the top of the subplots of the figure
+figure.subplot.top      : 0.9    # the top of the subplots of the figure
 # KLD 5/21/2011:  This is about the narrowest the margins can be without clipping a
 # 2-line title.
-#figure.subplot.wspace	: 0.2    # the amount of width reserved for blank space between subplots
-#figure.subplot.hspace	: 0.2    # the amount of height reserved for white space between subplots
+#figure.subplot.wspace  : 0.2    # the amount of width reserved for blank space between subplots
+#figure.subplot.hspace  : 0.2    # the amount of height reserved for white space between subplots
 
 ### IMAGES
 #image.aspect : equal             # equal | auto | a number
@@ -395,9 +398,9 @@ image.cmap   : hot               # gray | jet etc... (bone, gist_earth, gist_gra
 # the default savefig params can be different from the display params
 # Eg, you may want a higher resolution, or to make the figure
 # background white
-#savefig.dpi       : 100      # figure dots per inch
-#savefig.facecolor : white    # figure facecolor when saving
-#savefig.edgecolor : white    # figure edgecolor when saving
+#savefig.dpi        : 100      # figure dots per inch
+#savefig.facecolor  : white    # figure facecolor when saving
+#savefig.edgecolor  : white    # figure edgecolor when saving
 #savefig.format     : png      # png, ps, pdf, svg
 #savefig.bbox       : standard # 'tight' or 'standard'.
 #savefig.pad_inches : 0.1      # Padding to be used when bbox is set to 'tight'
