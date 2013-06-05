@@ -49,13 +49,13 @@ class), Jason Heeris
 ([efficient base-10 logarithm](http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html)),
 Richard Murray
 ([python-control](http://sourceforge.net/apps/mediawiki/python-control)), and
-Joerg Raedler (method to expand a [Modelica] variable tree --- from
+Joerg Raedler (method to expand a [Modelica] variable tree--from
 [DyMat](http://www.j-raedler.de/projects/dymat/)).
 
 ### License terms
 
 [ModelicaRes] is published under the liberal terms of the BSD license (see
-LICENSE.txt).  Although it is not required, you are invited and strongly
+[LICENSE.txt]).  Although it is not required, you are invited and strongly
 encouraged to share any modifications you make (preferably in a Github fork
 from https://github.com/kdavies4/ModelicaRes).
 
