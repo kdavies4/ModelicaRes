@@ -749,12 +749,12 @@ def load_csv(fname, header_row=0, first_data_row=None,
         for row in range(first_data_row - header_row - 1):
             reader.next()
     if types:
-        for i, (key, column, t) in enumerate(zip(keys, zip(*r), types)):
+        for i, (key, column, t) in enumerate(zip(keys, zip(*reader), types)):
             # zip(*reader) groups the data by columns.
             try:
                 if isinstance(t, basestring):
                     data[key] = column
-                elif isininstance(tm, (float, int)):
+                elif isinstance(t, (float, int)):
                     data[key] = np.array(map(t, column))
                 else:
                     data[key] = map(t, column)
