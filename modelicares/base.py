@@ -769,7 +769,7 @@ def load_csv(fname, header_row=0, first_data_row=None,
                 try:
                     data[key] = np.array(map(float, column))
                 except:
-                    data[key] = column
+                    data[key] = map(str, column)
 
     return data
 
