@@ -31,7 +31,7 @@ cd doc
 ./make.py html
 ./make.py latex
 
-# Copy the HTML and PDF documentation to root of the doc folder.
+# Copy the HTML and PDF documentation to the root of the doc folder.
 cp -f build/html/* ./
 rm -r _images
 cp -r build/html/_images ./
@@ -53,7 +53,7 @@ cd ..
 
 # Make the web documentation.
 branch=`git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3` # Original branch
-stash_msg=`git stash save`
+stash_msg=`git stash save "Work in progress while running 00-make-doc.sh"`
 git checkout gh-pages
 ./00-make-gh-pages.sh
 git checkout $branch

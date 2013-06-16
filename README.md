@@ -14,8 +14,7 @@ The figures are generated via [matplotlib], which
 offers a rich set of plotting routines.  [ModelicaRes] includes convenient
 functions to automatically pre-format and label some figures, like xy plots,
 Bode and Nyquist plots, and Sankey diagrams.  [ModelicaRes] can be scripted or
-run from a [Python](http://www.python.org) interpreter with math and matrix
-functions from [NumPy](http://numpy.scipy.org).
+run from a [Python] interpreter with math and matrix functions from [NumPy].
 
 For more information, please see the [main project site] or the [doc](doc)
 folder of the package for the full documentation and many examples.  The
@@ -43,15 +42,15 @@ http://matplotlib.org/users/customizing.html for details.
 
 ### Credits
 
-Kevin Bandy helped to develop this package.  Third-party code has been included
+The main author is Kevin Davies.  Kevin Bandy also helped in the development of
+this package.  Third-party code has been included
 from Jason Grout
 ([ArrowLine](http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html)
 class), Jason Heeris
 ([efficient base-10 logarithm](http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html)),
 Richard Murray
 ([python-control](http://sourceforge.net/apps/mediawiki/python-control)), and
-Joerg Raedler (method to expand a [Modelica] variable tree - from
-[DyMat](http://www.j-raedler.de/projects/dymat/)).
+Joerg Raedler (method to expand a [Modelica] variable tree - from [DyMat]).
 
 ### License terms
 
@@ -60,8 +59,26 @@ Joerg Raedler (method to expand a [Modelica] variable tree - from
 (preferably on a Github fork from https://github.com/kdavies4/ModelicaRes) so
 that others may benefit from your work.
 
+### See also
+
+The [pysimulator], [BuildingsPy], [DyMat], and [awesim] projects provide related
+[Python] modules.  [pysimulator] includes an elaborate GUI and supports the
+Functional Model Interface (FMI).  [BuildingsPy] has a **Tester** class that can
+be used for unit testing.  [DyMat] has functions to export [Modelica] simulation
+data to comma separated values (CSV), [Gnuplot](http://www.gnuplot.info/),
+MATLAB&reg; and
+[Network Common Data Form (netCDF)](http://www.unidata.ucar.edu/software/netcdf/).
+[awesim] provides tools to help run simulation experiments and organize the
+results.
+
 
 [main project site]: http://kdavies4.github.io/ModelicaRes/
 [ModelicaRes]: http://kdavies4.github.io/ModelicaRes/
 [Modelica]: http://www.modelica.org
+[Python]: http://www.python.org
+[NumPy]: http://numpy.scipy.org
 [matplotlib]: http://www.matplotlib.org
+[DyMat]: http://www.j-raedler.de/projects/dymat/
+[pysimulator]: https://code.google.com/p/pysimulator/
+[BuildingsPy]: http://simulationresearch.lbl.gov/modelica/buildingspy/
+[awesim]: https://github.com/saroele/awesim
