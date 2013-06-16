@@ -7,15 +7,7 @@
 
 # Compiled files
 *.pyc
-build/
-build/
-
-# Internal link to demos
-/doc/demos
-
-# Stuff that is only for the Github web page
-/release
-/images
+/build
 
 # Generated files
 /MANIFEST
@@ -24,9 +16,10 @@ build/
 *.html
 objects.inv
 /doc/searchindex.js
+/doc/_static
+/doc/build
 /examples/*.svg
 /examples/*.mos
-/doc/_static
 /examples/ChuaCircuit_1*
 /examples/ChuaCircuit_2*
 /dist

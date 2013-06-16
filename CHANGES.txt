@@ -25,4 +25,4 @@ Changelog
 
 0.6 (201*-**-**) -- Updates:
 
-   - **.
+   - Fixed errors in base.load_csv().
