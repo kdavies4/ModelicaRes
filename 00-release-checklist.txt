@@ -13,6 +13,6 @@ Steps to release the ModelicaRes module:
         Put it in the base folder of the gh-pages branch and push to origin
         (git push origin gh-pages).  Udpate it in Google Webmaster tools
         (https://www.google.com/webmasters/tools/sitemap-list?hl=en&siteUrl=http%3A%2F%2Fkdavies4.github.com%2FFCSys%2F#MAIN_TAB=1&CARD_TAB=-1).
-    8.  Upload the release to PyPI ("python setup.py upload").
-    9. Create a git tag for the release (e.g., "git tag -a v0.5.0") and push the
+    8.  Upload the release to PyPI ("./setup.py sdist upload").
+    9.  Create a git tag for the release (e.g., "git tag -a v0.5.0") and push the
         tags to github ("git push --tags").

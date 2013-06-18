@@ -26,3 +26,7 @@ Changelog
 0.5.1 (2013-6-18) -- Updates:
 
    - Fixed errors in base.load_csv().
+
+0.5.* (2013-*-**) -- Updates:
+
+   - **.

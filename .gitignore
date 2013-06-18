@@ -16,6 +16,7 @@
 *.html
 objects.inv
 /doc/build
+doc/searchindex.js
 /examples/*.svg
 /examples/*.mos
 /examples/ChuaCircuit_1*
