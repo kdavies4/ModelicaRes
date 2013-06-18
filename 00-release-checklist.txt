@@ -4,7 +4,7 @@ Steps to release the ModelicaRes module:
     1.  Address the to do (TODO) items in the code (or as many as possible).
         Run modelicares/00-list-TODO.sh to list the occurrences of that tag.
     2.  Update the version number in modelicares/__init__.py.
-    3.  Update the entry in CHANGES.txt.
+    3.  Add an entry in CHANGES.txt.
     4.  Update the link in doc/_templates/download.html of the gh-pages branch.
     5.  Run 00-make-doc.sh.
     6.  Rebase the gh-pages branch to squash extra commits.  Push it to origin
@@ -14,6 +14,5 @@ Steps to release the ModelicaRes module:
         (git push origin gh-pages).  Udpate it in Google Webmaster tools
         (https://www.google.com/webmasters/tools/sitemap-list?hl=en&siteUrl=http%3A%2F%2Fkdavies4.github.com%2FFCSys%2F#MAIN_TAB=1&CARD_TAB=-1).
     8.  Upload the release to PyPI ("python setup.py upload").
-    9.  Commit any staged revisions to git.
-    10. Create a git tag for the release (e.g., "git tag -a v0.5") and push the
+    9. Create a git tag for the release (e.g., "git tag -a v0.5.0") and push the
         tags to github ("git push --tags").
