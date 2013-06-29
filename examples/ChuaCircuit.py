@@ -21,7 +21,7 @@ run = True
 fname = 'run-sims.mos'
 
 # Working directory
-working_dir = '~/Documents/Dymola'
+working_dir = '~/Documents/Modelica'
 
 # List of Modelica packages that should be preloaded (besides the Modelica
 # Standard Library)
