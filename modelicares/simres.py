@@ -238,22 +238,6 @@ class SimRes(object):
         #     on Unix/Linux: /opt/dymola/mfiles/traj/tload.m
         #     on Windows: C:\Program Files\Dymola 7.4\Mfiles\traj\tload.m
 
-        # TODO:
-        #  1. Consider using a hierarchical data representation.  This may be a
-        #     starting point:
-        #       from hierarchial import HierarchicalData
-        #       self._traj = HierarchicalData()
-        #     In order to support arrays (e.g., subregions[1, 1, 1]), it may be
-        #     necessary to create a list (in this case, a 3D list) of new
-        #     HierarchicalData instances.  It may also be difficult to pass
-        #     arguments that refer to a pattern (e.g., a variable name relative
-        #     to all subregions).  Instead or also consider using PyTables or
-        #     pandas (with support for HDF5).
-        # 2.  If the data requirements get too big, consider using numpy.memmap
-        #     (or an alternative from PyTables?) to load the data only as
-        #     needed.  Is that possible?  See:
-        #     http://docs.scipy.org/doc/numpy/reference/generated/numpy.memmap.html
-
         TrajEntry = namedtuple('TrajEntry', ['data_set', 'sign', 'data_row',
                                              'description', 'unit',
                                              'displayUnit'])
@@ -605,7 +589,7 @@ class SimRes(object):
         """
         return self.get_values(names, i=-1, f=f)
 
-    def get_times(self, names, i=slice(0, None)):
+    def get_times(self, names, i=slice(0, None), f=lambda x: x):
         """Return vector(s) of the sample times of variable(s).
 
         **Arguments:**
@@ -617,6 +601,9 @@ class SimRes(object):
           return
 
              By default, all times are returned.
+
+        - *f*: Function that should be applied to all times (default is
+          identity)
 
         If *names* is a string, then the output will be an array of times.  If
         *names* is a (optionally nested) list of strings, then the output will
@@ -633,7 +620,7 @@ class SimRes(object):
            array([    0.        , ...  2500.        ], dtype=float32)
         """
         return self._get(names, lambda name:
-                         self._data[self._traj[name].data_set][0, i])
+                         f(self._data[self._traj[name].data_set][0, i]))
 
     def get_unit(self, names):
         """Return the *unit* attribute(s) of trajectory variable(s).
@@ -746,8 +733,6 @@ class SimRes(object):
                                      self.get_values(name, f=f),
                                      bounds_error=False)
             return get_values_at(times)
-            #**return interp1d(self.get_times(name), self.get_values(name, f=f),
-            #                bounds_error=False)(times)
 
         return self._get(names, _get_value_at_times)
 
@@ -966,7 +951,8 @@ class SimRes(object):
             y_1 = self.get_values(ynames1)
             y_2 = self.get_values(ynames2)
         else:
-            x, times = self.get_values(xname), self.get_times(xname)
+            x = self.get_values(xname)
+            times = self.get_times(xname)
             y_1 = self.get_values_at_times(ynames1, times)
             y_2 = self.get_values_at_times(ynames2, times)
 
@@ -977,16 +963,16 @@ class SimRes(object):
                 # secondary.
                 kwargs['dashes'] = [(1, 0)]
                 base.plot(y_1, self.get_times(ynames1) if xname == 'Time'
-                             else x, ax1, label=legends1, **kwargs)
+                          else x, ax1, label=legends1, **kwargs)
                 kwargs['dashes'] = [(3, 3)]
                 base.plot(y_2, self.get_times(ynames2) if xname == 'Time'
-                             else x, ax2, label=legends2, **kwargs)
+                          else x, ax2, label=legends2, **kwargs)
             else:
-                base.plot(y_1, (self.get_times(ynames1) if xname == 'Time'
-                             else x), ax1, label=legends1, **kwargs)
+                base.plot(y_1, self.get_times(ynames1) if xname == 'Time'
+                          else x, ax1, label=legends1, **kwargs)
         elif ynames2:
             base.plot(y_2, self.get_times(ynames2) if xname == 'Time'
-                         else x, ax2, label=legends2, **kwargs)
+                      else x, ax2, label=legends2, **kwargs)
 
         # Decorate the figure.
         ax1.set_title(title)

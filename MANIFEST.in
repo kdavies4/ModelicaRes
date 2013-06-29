@@ -33,6 +33,3 @@ exclude external/control/doc/conf.py
 
 # Development scripts
 exclude modelicares/00-*.py
-
-# Work in progress
-exclude modelicares/hierarchial.py
