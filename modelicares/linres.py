@@ -42,7 +42,7 @@ class LinRes(object):
 
         The linear system is stored as *sys* within this class.  It is an
         instance of :class:`control.StateSpace`, which emulates the structure
-        of a continuous-time model in MATLAB\ :sup:`®` (e.g., the output of the
+        of a continuous-time model in MATLAB\ :sup:`®` (e.g., the output of
         :meth:`ss` in MATLAB\ :sup:`®`).  It contains:
 
            - *A*, *B*, *C*, *D*: Matrices of the linear system

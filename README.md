@@ -66,7 +66,7 @@ The [pysimulator], [BuildingsPy], [DyMat], and [awesim] projects provide related
 Functional Model Interface (FMI).  [BuildingsPy] has a **Tester** class that can
 be used for unit testing.  [DyMat] has functions to export [Modelica] simulation
 data to comma separated values (CSV), [Gnuplot](http://www.gnuplot.info/),
-MATLAB&reg; and
+MATLAB&reg;, and
 [Network Common Data Form (netCDF)](http://www.unidata.ucar.edu/software/netcdf/).
 [awesim] provides tools to help run simulation experiments and organize the
 results.

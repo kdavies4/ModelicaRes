@@ -605,7 +605,7 @@ class SimRes(object):
         """
         return self.get_values(names, i=-1, f=f)
 
-    def get_times(self, names, i=slice(0, -1)):
+    def get_times(self, names, i=slice(0, None)):
         """Return vector(s) of the sample times of variable(s).
 
         **Arguments:**
@@ -661,8 +661,11 @@ class SimRes(object):
         """
         return self._get(names, lambda name: self._traj[name].unit)
 
-    def get_values(self, names, i=slice(0, -1), f=lambda x: x):
+    def get_values(self, names, i=slice(0, None), f=lambda x: x):
         """Return vector(s) of the values of the samples of variable(s).
+
+        If there is only a single value, then it is repeated (to support
+        plotting).
 
         **Arguments:**
 
@@ -694,9 +697,9 @@ class SimRes(object):
         def _get_value(entry):
             """Return the values of a variable given its *_traj* entry.
             """
-            return (f(self._data[entry.data_set][entry.data_row, i])
+            return f(self._data[entry.data_set][entry.data_row, i]
                     if entry.sign == 1 else
-                    f(-self._data[entry.data_set][entry.data_row, i]))
+                    -self._data[entry.data_set][entry.data_row, i])
 
         return self._get(names, lambda name: _get_value(self._traj[name]))
 
