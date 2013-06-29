@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """Set up the ModelicaRes module.
 
-See README.txt for instructions.
+See README.md for instructions.
 """
 
 from distutils.core import setup
