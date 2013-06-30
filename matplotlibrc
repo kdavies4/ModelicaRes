@@ -142,6 +142,7 @@ backend      : GTKCairo
 # 12pt is the standard value.
 #
 #font.family         : sans-serif
+#font.family         : serif
 #font.style          : normal
 #font.variant        : normal
 #font.weight         : medium
@@ -151,7 +152,7 @@ backend      : GTKCairo
 # settings for axes and ticks. Special text sizes can be defined
 # relative to font.size, using the following values: xx-small, x-small,
 # small, medium, large, x-large, xx-large, larger, or smaller
-#font.size           : 12.0
+# font.size           : 12.0
 #font.serif          : Bitstream Vera Serif, New Century Schoolbook, Century Schoolbook L, Utopia, ITC Bookman, Bookman, Nimbus Roman No9 L, Times New Roman, Times, Palatino, Charter, serif
 #font.sans-serif     : Bitstream Vera Sans, Lucida Grande, Verdana, Geneva, Lucid, Arial, Helvetica, Avant Garde, sans-serif
 #font.cursive        : Apple Chancery, Textile, Zapf Chancery, Sand, cursive
@@ -206,7 +207,7 @@ backend      : GTKCairo
                        #             or the autohinter if none is available.
                        # For backward compatibility, this value may also be
                        # True === 'auto' or False === 'none'.
-text.hinting_factor : 8 # Specifies the amount of softness for hinting in the
+#text.hinting_factor : 8 # Specifies the amount of softness for hinting in the
                          # horizontal direction.  A value of 1 will hint to full
                          # pixels.  A value of 2 will hint to half pixels etc.
 
@@ -248,7 +249,6 @@ mathtext.default : regular # The default font to use for math.
 #axes.edgecolor      : black   # axes edge color
 #axes.linewidth      : 1.0     # edge linewidth
 #axes.grid           : False   # display grid or not
-axes.titlesize       : 12   # fontsize of the axes title
 #axes.titlesize      : large   # fontsize of the axes title
 #axes.labelsize      : medium  # fontsize of the x any y labels
 #axes.labelweight    : normal  # weight of the x and y labels
@@ -286,7 +286,6 @@ axes.titlesize       : 12   # fontsize of the axes title
 #xtick.minor.pad      : 4      # distance to the minor tick label in points
 #xtick.color          : k      # color of the tick labels
 #xtick.labelsize      : medium # fontsize of the tick labels
-xtick.labelsize      : 12 # fontsize of the tick labels
 #xtick.direction      : in     # direction: in, out, or inout
 
 #ytick.major.size     : 4      # major tick size in points
@@ -297,7 +296,6 @@ xtick.labelsize      : 12 # fontsize of the tick labels
 #ytick.minor.pad      : 4      # distance to the minor tick label in points
 #ytick.color          : k      # color of the tick labels
 #ytick.labelsize      : medium # fontsize of the tick labels
-ytick.labelsize      : 12 # fontsize of the tick labels
 #ytick.direction      : in     # direction: in, out, or inout
 
 
@@ -313,7 +311,7 @@ ytick.labelsize      : 12 # fontsize of the tick labels
 #legend.isaxes        : True
 #legend.numpoints     : 2      # the number of points in the legend line
 #legend.fontsize      : large
-legend.fontsize      : 12
+legend.fontsize      : medium
 #legend.pad           : 0.0    # deprecated; the fractional whitespace inside the legend border
 #legend.borderpad     : 0.5    # border whitespace in fontsize units
 #legend.markerscale   : 1.0    # the relative size of legend markers vs. original
@@ -334,8 +332,8 @@ legend.fontsize      : 12
 ### FIGURE
 # See http://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure
 #figure.figsize   : 8, 6    # figure size in inches
-figure.figsize   : 9.7, 6     # figure size in inches
-# KLD:  The aspect ratio is approx. golden ratio (1.61803399).
+figure.figsize   : 8.1, 5     # figure size in inches
+# KLD:  The aspect ratio is approx. golden ratio (~1.61803399).
 #figure.dpi       : 80      # figure dots per inch
 #figure.facecolor : 0.75    # figure facecolor; 0.75 is scalar gray
 #figure.edgecolor : white   # figure edgecolor
@@ -487,7 +485,7 @@ image.cmap   : hot               # gray | jet etc... (bone, gist_earth, gist_gra
 #animation.avconv_path: 'avconv'   # Path to avconv binary. Without full path
                                    # $PATH is searched
 #animation.avconv_args: ''         # Additional arguments to pass to avconv
-#animation.mencoder_path: 'mencoder' 
+#animation.mencoder_path: 'mencoder'
 			           # Path to mencoder binary. Without full path
                                    # $PATH is searched
 #animation.mencoder_args: ''       # Additional arguments to pass to mencoder
