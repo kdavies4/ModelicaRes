@@ -1,9 +1,9 @@
 ModelicaRes
 -----------
 
-The goal of [ModelicaRes] is to provide an open-source tool to effectively
-manage [Modelica] simulations, interpret results, and create publishable
-figures.  It is currently possible to
+[ModelicaRes] is an open-source tool to manage [Modelica] simulations, interpret
+results, and create publishable figures.  It is currently possible to
+
  - Auto-generate simulation scripts,
  - Run model executables with varying parameters,
  - Browse data,

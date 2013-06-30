@@ -1,13 +1,11 @@
 #!/usr/bin/python
 """Set up the ModelicaRes module.
 
-See README.md for instructions.
+See the README.txt file for instructions.
 """
 
 from distutils.core import setup
 from glob import glob
-
-import modelicares # Only to read the version number
 
 setup(name='ModelicaRes',
       version=modelicares.__version__,
@@ -19,7 +17,7 @@ setup(name='ModelicaRes',
       url='http://kdavies4.github.com/ModelicaRes/',
       license='BSD-compatible (see LICENSE.txt)',
       description='Utilities to set up and analyze Modelica simulation experiments',
-      long_description=open('README.md').read(),
+      long_description=open('README.txt').read(),
       provides=['modelicares'],
       requires=['python (==2.7)', 'matplotlib', 'numpy', 'wx'],
       package_dir={'control': 'external/control/src'},

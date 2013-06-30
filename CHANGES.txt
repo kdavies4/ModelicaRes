@@ -32,3 +32,7 @@ Changelog
    - Fixed error so that by default :meth:`modelicares.SimRes.get_values` and
      :meth:`modelicares.SimRes.get_times` now include the final value and time.
    - Added function to scale time
+
+0.5.3 (201*-*-**) -- Updates:
+
+   - **
