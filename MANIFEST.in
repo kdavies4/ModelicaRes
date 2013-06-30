@@ -1,5 +1,6 @@
 include matplotlibrc
 include *.txt
+include *.md
 #include MANIFEST.in
 exclude 00-*
 

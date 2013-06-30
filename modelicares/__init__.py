@@ -17,9 +17,9 @@ from its submodules.  These are:
 - To handle multiple files at once: :meth:`multi.multiload`,
   :meth:`multi.multiplot`
 
-- For linearization results: :class:`linres.LinRes`
+- For simulation results: :class:`simres.SimRes`
 
-- For linearization results: :class:`simres.SimRes`
+- For linearization results: :class:`linres.LinRes`
 
 - To label numbers and quantities: :meth:`texunit.label_number`,
   :meth:`texunit.label_quantity`, :meth:`texunit.unit2tex`
@@ -30,7 +30,7 @@ __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
 __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
-__version__ = "0.5.2"
+__version__ = "0.5.3"
 
 
 import sys
