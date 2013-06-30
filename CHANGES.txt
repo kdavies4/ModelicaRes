@@ -27,7 +27,8 @@ Changelog
 
    - Fixed errors in base.load_csv().
 
-0.5.2 (2013-*-**) -- Updates:
+0.5.2 (2013-6-30) -- Updates:
 
    - Fixed error so that by default :meth:`modelicares.SimRes.get_values` and
      :meth:`modelicares.SimRes.get_times` now include the final value and time.
+   - Added function to scale time
