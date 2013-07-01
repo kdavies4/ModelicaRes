@@ -35,4 +35,4 @@ Changelog
 
 0.5.3 (201*-*-**) -- Updates:
 
-   - **
+   - Added :meth:`modelicares.base.save` to save the current figure
