@@ -89,7 +89,7 @@ def multiload(locations):
     return sims, lins
 
 
-def multiplot(sims, suffixes, dashes=[(1, 0), (3, 3), (1, 1), (3, 2, 1, 2)],
+def multiplot(sims, suffixes='', dashes=[(1, 0), (3, 3), (1, 1), (3, 2, 1, 2)],
               **kwargs):
     """Plot data from multiple simulations in 2D Cartesian coordinates.
 
@@ -105,6 +105,9 @@ def multiplot(sims, suffixes, dashes=[(1, 0), (3, 3), (1, 1), (3, 2, 1, 2)],
 
     - *suffixes*: Suffix or list of suffixes for the legends (see
       :meth:`simres.SimRes.plot`)
+
+         If *suffixes* is None, then no suffix will be used.  If it is *None*,
+         then the base filenames will be used.
 
     - *\*\*kwargs*: Propagated to  :meth:`simres.SimRes.plot` (and thus to
       :meth:`base.plot` and finally :meth:`matplotlib.pyplot.plot`)
@@ -151,7 +154,15 @@ def multiplot(sims, suffixes, dashes=[(1, 0), (3, 3), (1, 1), (3, 2, 1, 2)],
         dashes = cycle(dashes)
     kwargs['dashes'] = dashes
 
+    # Process the suffixes input.
+    if suffixes == '':
+        suffixes = [sim.fbase for sim in sims]
+    elif suffixes == None:
+        suffixes = ['']*len(sims)
+
+    # Generate the plots.
     try:
+        print sims[0]
         ax1, ax2 = sims[0].plot(suffix=suffixes[0], **kwargs)
         kwargs.update({'ax1': ax1, 'ax2': ax2})
         for sim, suffix in zip(sims[1:], suffixes[1:]):
