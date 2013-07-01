@@ -784,7 +784,8 @@ class SimRes(object):
              ynames2=[], ylabel2=None, legends2=[],
              leg2_kwargs={'loc': 'best'}, ax2=None,
              xname='Time', xlabel=None,
-             title=None, label="xy", incl_prefix=False, suffix=None, **kwargs):
+             title=None, label="xy", incl_prefix=False, suffix=None,
+             use_paren=True, **kwargs):
         """Plot data as points and/or curves in 2D Cartesian coordinates.
 
         A new figure is created if necessary.
@@ -838,8 +839,9 @@ class SimRes(object):
         - *incl_prefix*: If *True*, prefix the legend strings with the base
           filename of the class.
 
-        - *suffix*: String that will be added in parentheses at the end of the
-          legend entries
+        - *suffix*: String that will be added at the end of the legend entries
+
+        - *use_paren*: Add parentheses around the suffix
 
         - *\*\*kwargs*: Propagated to :meth:`base.plot` (and thus to
           :meth:`matplotlib.pyplot.plot`)
@@ -905,7 +907,9 @@ class SimRes(object):
                 if incl_prefix:
                     legends = [self.fbase + ': ' + leg for leg in legends]
                 if suffix:
-                    legends = [leg + ' (%s)' % suffix for leg in legends]
+                    legends = ([leg + ' (%s)' % suffix for leg in legends]
+                               if use_paren else
+                               [leg + suffix for leg in legends])
                 units = self.get_unit(ynames)
                 if len(set(units)) == 1:
                     # The  units are the same, so show the 1st one on the axis.
