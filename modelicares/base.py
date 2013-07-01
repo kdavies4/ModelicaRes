@@ -986,9 +986,13 @@ def saveall(formats=['pdf', 'png']):
 
     The directory and base filenames are taken from the *label* property of the
     figures.  A slash ("/") can be used as a path separator, even if the
-    operating system is Windows.  If the *label* property is empty, then a
-    directory dialog is opened to chose a directory.  In that case, the figures
-    are saved as a sequence of numbers.
+    operating system is Windows.  Folders are created as needed.  If the *label*
+    property is empty, then a directory dialog is opened to chose a directory.
+    In that case, the figures are saved as a sequence of numbers.
+
+    **Arguments:**
+
+    - *formats*: Format or list of formats in which the figures should be saved
 
     .. Note::  In general, :meth:`saveall` should be called before
        :meth:`matplotlib.pyplot.show` so that the figure(s) are still present
@@ -1056,6 +1060,83 @@ def saveall(formats=['pdf', 'png']):
             fig.savefig(fname, format=format)
             print("Saved " + fname)
 
+def save(formats=['pdf', 'png'], fbase='1'):
+    """Save the current figures as images in a format or list of formats.
+
+    The directory and base filenames are taken from the *label* property of the
+    figures.  A slash ("/") can be used as a path separator, even if the
+    operating system is Windows.  Folders are created as needed.  If the *label*
+    property is empty, then a directory dialog is opened to chose a directory.
+
+    **Arguments:**
+
+    - *formats*: Format or list of formats in which the figure should be saved
+
+    - *fbase*: Default directory and base filename
+
+      This is used if the *label* attribute of the figure is empty ('').
+
+    .. Note::  In general, :meth:`save` should be called before
+       :meth:`matplotlib.pyplot.show` so that the figure(s) are still present
+       in memory.
+
+    **Example:**
+
+    .. testsetup::
+       >>> closeall()
+
+    .. code-block:: python
+
+       >>> import matplotlib.pyplot as plt
+       >>> from modelicares import *
+
+       >>> figure('temp_plot') # doctest: +ELLIPSIS
+       <matplotlib.figure.Figure object at 0x...>
+       >>> plt.plot(range(10)) # doctest: +ELLIPSIS
+       [<matplotlib.lines.Line2D object at 0x...>]
+       >>> save()
+       Saved temp_plot.pdf
+       Saved temp_plot.png
+
+    .. Note::  The :meth:`figure` method can be used to directly create a
+       figure with a label.
+    """
+    from wx import DirSelector, App
+
+    # Initialize a dummy wx.App instance.  Dialogs can only be called after
+    # this is done [http://warp.byu.edu/site/content/131, accessed 10/9/2012].
+    app = App()
+
+    # If formats is a singleton, turn it into a list.
+    if not type(formats) is list:
+        formats = [formats,]
+
+    # Find the figure.
+    fig = plt.gcf()
+
+    # Save the figures, creating folders as necessary.
+    (directory, fbase_fig) = os.path.split(plt.getp(fig, 'label'))
+    if fbase_fig == '':
+        if directory == '':
+            if chosen_directory is None:
+                # Initialize a dummy wx.App instance.  Dialogs can only be
+                # called after this is done
+                # [http://code.google.com/p/easywx/, accessed 10/7/2012].
+                #app = App()
+                chosen_directory = DirSelector(
+                    "Choose a directory for the images.",
+                    defaultPath=os.path.join(*['..']*4))
+                if chosen_directory == '':
+                    return
+            directory = chosen_directory
+    else:
+        fbase = fbase_fig
+    if directory != '' and not os.path.isdir(directory):
+        os.mkdir(directory)
+    for format in formats:
+        fname = os.path.join(directory, fbase + '.' + format)
+        fig.savefig(fname, format=format)
+        print("Saved " + fname)
 
 def setup_subplots(n_plots, n_rows, title="", subtitles=None,
                    label="multiplot",

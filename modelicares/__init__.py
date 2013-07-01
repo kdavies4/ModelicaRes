@@ -7,7 +7,7 @@ from its submodules.  These are:
 - Basic supporting classes and functions: :meth:`base.add_arrows`,
   :meth:`base.add_hlines`, :meth:`base.add_vlines`, :meth:`base.animate`,
   :class:`base.ArrowLine`, :meth:`base.closeall`, :meth:`base.figure`,
-  :meth:`base.load_csv`, :meth:`base.saveall`, :meth:`base.setup_subplots`
+  :meth:`base.load_csv`, :meth:`base.save`, :meth:`base.saveall`, :meth:`base.setup_subplots`
 
 - To manage simulation experiments:  :class:`exps.Experiment`,
   :meth:`exps.gen_experiments`, :class:`exps.ParamDict`,
@@ -52,7 +52,7 @@ if not (major == 2 and minor1 == 7):
 # These will be available directly from modelicares; others must be loaded from
 # their submodules.
 from base import (add_arrows, add_hlines, add_vlines, animate, ArrowLine,
-                 closeall, figure, load_csv, saveall, setup_subplots)
+                 closeall, figure, load_csv, save, saveall, setup_subplots)
 from exps import (Experiment, gen_experiments, ParamDict, read_params,
                   run_models, write_params, write_script)
 from linres import LinRes

@@ -7,6 +7,8 @@ See the README.txt file for instructions.
 from distutils.core import setup
 from glob import glob
 
+import modelicares # Only to read the version number
+
 setup(name='ModelicaRes',
       version=modelicares.__version__,
       author='Kevin Davies',
