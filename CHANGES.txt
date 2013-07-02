@@ -33,7 +33,7 @@ Changelog
      :meth:`modelicares.SimRes.get_times` now include the final value and time.
    - Added function to scale time
 
-0.5.3 (201*-*-**) -- Updates:
+0.6.0 (2013-7-2) -- Updates:
 
    - Added :meth:`modelicares.base.save` to save the current figure
    - Added *use_paren* option to :meth:`SimRes.plot`

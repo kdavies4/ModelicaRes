@@ -17,8 +17,7 @@
 objects.inv
 /doc/build
 doc/searchindex.js
-/examples/*.svg
-/examples/*.mos
+*.mos
 /examples/ChuaCircuit/1/*
 /examples/ChuaCircuit/2/*
 /dist
