@@ -43,13 +43,13 @@
 # RMM, 2 April 2011: modified to work with new Lti structure (see ChangeLog)
 #   * Not tested: should still work on signal.ltisys objects
 # 
-# $Id: rlocus.py 172 2011-08-07 15:12:58Z murrayrm $
+# $Id: rlocus.py 225 2012-11-03 21:03:39Z murrayrm $
 
 # Packages used by this module
 from scipy import array, poly1d, row_stack, zeros_like, real, imag
 import scipy.signal             # signal processing toolbox
 import pylab                    # plotting routines
-import xferfcn                  # transfer function manipulation
+import control.xferfcn as xferfcn
 
 # Main function: compute a root locus diagram
 def root_locus(sys, kvect, xlim=None, ylim=None, plotstr='-', Plot=True):
@@ -61,7 +61,7 @@ def root_locus(sys, kvect, xlim=None, ylim=None, plotstr='-', Plot=True):
     ----------
     sys : linsys
         Linear input/output systems (SISO only, for now)
-    klist : gain_range (default = None)
+    kvect : gain_range (default = None)
         List of gains to use in computing diagram
     Plot : boolean (default = True)
         If True, plot magnitude and phase
@@ -69,7 +69,6 @@ def root_locus(sys, kvect, xlim=None, ylim=None, plotstr='-', Plot=True):
     Return values
     -------------
     rlist : list of computed root locations
-    klist : list of gains
     """
 
     # Convert numerator and denominator to polynomials if they aren't
@@ -158,7 +157,7 @@ def _RLSortRoots(sys, mymat):
             # sort the current row by finding the element with the
             # smallest absolute distance to each root in the
             # previous row
-            available = range(len(prevrow))
+            available = list(range(len(prevrow)))
             for elem in row:
                 evect = elem-prevrow[available]
                 ind1 = abs(evect).argmin()

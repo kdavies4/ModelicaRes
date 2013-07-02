@@ -23,12 +23,13 @@ class TestRootLocus(unittest.TestCase):
 
     def testRootLocus(self):
         """Basic root locus plot"""
-        klist = [-1, 0, 1];
+        klist = [-1, 0, 1]
         rlist = root_locus(self.sys1, [-1, 0, 1], Plot=False)
 
         for k in klist:
             np.testing.assert_array_almost_equal(
-                rlist[k], feedback(self.sys1, klist[k]).pole())
+                np.sort(rlist[k]),
+                np.sort(feedback(self.sys1, klist[k]).pole()))
 
 def suite():
     return unittest.TestLoader().loadTestsFromTestCase(TestRootLocus)

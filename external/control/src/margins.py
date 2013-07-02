@@ -8,6 +8,9 @@ margin.stability_margins
 margin.phase_crossover_frequencies
 """
 
+# Python 3 compatability (needs to go here)
+from __future__ import print_function
+
 """Copyright (c) 2011 by California Institute of Technology
 All rights reserved.
 
@@ -43,13 +46,14 @@ SUCH DAMAGE.
 Author: Richard M. Murray
 Date: 14 July 2011
 
-$Id: margins.py 180 2012-01-08 02:57:46Z murrayrm $
+$Id: margins.py 217 2012-11-03 04:22:53Z murrayrm $
 
 """
 
-import xferfcn
-from freqplot import bode
 import numpy as np
+import control.xferfcn as xferfcn
+from control.freqplot import bode
+from control.lti import isdtime
 
 # gain and phase margins
 # contributed by Sawyer B. Fuller <minster@caltech.edu>
@@ -88,8 +92,14 @@ def stability_margins(sysdata, deg=True):
 
     if (not getattr(sysdata, '__iter__', False)):
         sys = sysdata
+
+        # TODO: implement for discrete time systems
+        if (isdtime(sys, strict=True)):
+            raise NotImplementedError("Function not implemented in discrete time")
+
         mag, phase, omega = bode(sys, deg=deg, Plot=False)
     elif len(sysdata) == 3:
+        # TODO: replace with FRD object type?
         mag, phase, omega = sysdata
     else: 
         raise ValueError("Margin sysdata must be either a linear system or a 3-sequence of mag, phase, omega.")
@@ -111,7 +121,7 @@ def stability_margins(sysdata, deg=True):
             wp = np.nan
             pm = np.inf
         else: # gain always greater than one
-            print "margin: no magnitude crossings found"
+            print("margin: no magnitude crossings found")
             wp = np.nan
             pm = np.nan
     else:
@@ -119,7 +129,7 @@ def stability_margins(sysdata, deg=True):
         wp = omega[min_mag_crossing_i]
         pm = crossover + phase[min_mag_crossing_i] 
         if pm < 0:
-            print "warning: system unstable: negative phase margin"
+            print("warning: system unstable: negative phase margin")
     
     # gain margin from minimum gain margin among all phase crossovers
     neg_phase_crossings_i = np.nonzero(np.diff(wrapped_phase < -crossover) > 0)[0]
@@ -133,7 +143,7 @@ def stability_margins(sysdata, deg=True):
         wg = omega[min_phase_crossing_i]
         gm = abs(1/mag[min_phase_crossing_i])
         if gm < 1: 
-            print "warning: system unstable: gain margin < 1"    
+            print("warning: system unstable: gain margin < 1")
 
     # stability margin from minimum abs distance from -1 point
     if deg:

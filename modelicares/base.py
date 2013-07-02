@@ -361,7 +361,7 @@ def color(ax, c, *args, **kwargs):
 
     - *c*: color- or c-axis data (2D array)
 
-    - *\*args*, *\*\*kwargs*: Propagated to :meth:`matplotlib.pyplot.imshow`
+    - *\*args*, *\*\*kwargs*: Additional arguments for  :meth:`matplotlib.pyplot.imshow`
 
     **Example:**
 
@@ -526,7 +526,7 @@ def figure(label='', *args, **kwargs):
 
     - *label*: String to apply to the figure's *label* property
 
-    - *\*args*, *\*\*kwargs*: Propagated to :meth:`matplotlib.pyplot.figure`
+    - *\*args*, *\*\*kwargs*: Additional arguments for  :meth:`matplotlib.pyplot.figure`
 
     **Example:**
 
@@ -719,7 +719,7 @@ def load_csv(fname, header_row=0, first_data_row=None,
          made to cast each column into :class:`int`, :class:`float`, and
          :class:`str` (in that order).
 
-    - *\*\*kwargs*: Propagated to :meth:`csv.reader`
+    - *\*\*kwargs*: Additional arguments for  :meth:`csv.reader`
 
     **Example:**
 
@@ -829,7 +829,7 @@ def plot(y, x=None, ax=None, label=None,
 
          .. Seealso:: http://matplotlib.sourceforge.net/api/collections_api.html
 
-    - *\*\*kwargs*: Propagated to :meth:`matplotlib.pyplot.plot`
+    - *\*\*kwargs*: Additional arguments for  :meth:`matplotlib.pyplot.plot`
 
     **Returns:** List of :class:`matplotlib.lines.Line2D` objects
 
@@ -933,7 +933,7 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
 
     - *pivot*: "tail" | "middle" | "tip" (see :meth:`matplotlib.pyplot.quiver`)
 
-    - *\*\*kwargs*: Propagated to :meth:`matplotlib.pyplot.quiver`
+    - *\*\*kwargs*: Additional arguments for  :meth:`matplotlib.pyplot.quiver`
 
     **Example:**
 
@@ -1548,7 +1548,7 @@ class ArrowLine(Line2D):
 
         - *arrowheadlength* (=\ *arrowsize*): Length of arrow head
 
-        - *\*args*, *\*\*kwargs*: Propagated to
+        - *\*args*, *\*\*kwargs*: Additional arguments for 
           :class:`matplotlib.lines.Line2D`
 
         **Example:**

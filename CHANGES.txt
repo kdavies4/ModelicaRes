@@ -44,3 +44,11 @@ Changelog
 0.6.1 (2013-7-2) -- Updates:
 
    - Fixed README file.
+
+0.6.3 (201*-*-*) -- Updates:
+
+   - Updated python-control to 0.6c.  The *mark* argument has been removed from
+     :meth:`linres.nyquist`.  Use *labelFreq* to label every *labelFreq*th
+     frequency.  The *w_min* and *w_max* arguments have been removed from
+     :meth:`linres.bode` and :meth:`linres.nyquist`.  Use *omega* with bounds or
+     a list of frequencies.

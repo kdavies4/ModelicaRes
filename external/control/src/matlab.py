@@ -55,7 +55,7 @@ Author: Richard M. Murray
 Date: 29 May 09
 Revised: Kevin K. Chen, Dec 10
 
-$Id: matlab.py 172 2011-08-07 15:12:58Z murrayrm $
+$Id: matlab.py 216 2012-11-03 03:23:13Z murrayrm $
 
 """
 
@@ -70,25 +70,26 @@ from scipy.signal import zpk2ss, ss2zpk, tf2zpk, zpk2tf
 from numpy import linspace, logspace
 
 # Control system library
-import ctrlutil
-import freqplot
-import timeresp
-import margins
-from statesp import StateSpace, _rss_generate, _convertToStateSpace
-from xferfcn import TransferFunction, _convertToTransferFunction
-from lti import Lti #base class of StateSpace, TransferFunction
-from exception import ControlArgument
+import control.ctrlutil as ctrlutil
+import control.freqplot as freqplot
+import control.timeresp as timeresp
+import control.margins as margins
+from control.statesp import StateSpace, _rss_generate, _convertToStateSpace
+from control.xferfcn import TransferFunction, _convertToTransferFunction
+from control.lti import Lti #base class of StateSpace, TransferFunction
+from control.dtime import sample_system
+from control.exception import ControlArgument
 
 # Import MATLAB-like functions that can be used as-is
-from ctrlutil import unwrap
-from freqplot import nyquist, gangof4
-from nichols import nichols
-from bdalg import series, parallel, negate, feedback
-from pzmap import pzmap
-from statefbk import ctrb, obsv, gram, place, lqr
-from delay import pade
-from modelsimp import hsvd, balred, modred
-from mateqn import lyap, dlyap, dare, care
+from control.ctrlutil import unwrap
+from control.freqplot import nyquist, gangof4
+from control.nichols import nichols
+from control.bdalg import series, parallel, negate, feedback
+from control.pzmap import pzmap
+from control.statefbk import ctrb, obsv, gram, place, lqr
+from control.delay import pade
+from control.modelsimp import hsvd, balred, modred
+from control.mateqn import lyap, dlyap, dare, care
 
 __doc__ += r"""
 The following tables give an overview of the module ``control.matlab``. 
@@ -478,6 +479,11 @@ def tf(*args):
         of array_like objects. (A 3 dimensional data structure in total.)
         (For details see note below.)
 
+    ``tf(num, den, dt)``
+        Create a discrete time transfer function system; dt can either be a
+        positive number indicating the sampling time or 'True' if no
+        specific timebase is given.
+
     Parameters
     ----------
     sys: Lti (StateSpace or TransferFunction)
@@ -537,8 +543,8 @@ def tf(*args):
 
     """
 
-    if len(args) == 2:
-       return TransferFunction(args[0], args[1])
+    if len(args) == 2 or len(args) == 3:
+       return TransferFunction(*args)
     elif len(args) == 1:
         sys = args[0]
         if isinstance(sys, StateSpace):
@@ -613,10 +619,10 @@ def ss2tf(*args):
 
     """
 
-    if len(args) == 4:
-        # Assume we were given the A, B, C, D matrix
-        return _convertToTransferFunction(StateSpace(args[0], args[1], args[2],
-            args[3]))
+    if len(args) == 4 or len(args) == 5:
+        # Assume we were given the A, B, C, D matrix and (optional) dt
+        return _convertToTransferFunction(StateSpace(*args))
+
     elif len(args) == 1:
         sys = args[0]
         if isinstance(sys, StateSpace):
@@ -683,9 +689,10 @@ def tf2ss(*args):
 
     """
 
-    if len(args) == 2:
+    if len(args) == 2 or len(args) == 3:
         # Assume we were given the num, den
-        return _convertToStateSpace(TransferFunction(args[0], args[1]))
+        return _convertToStateSpace(TransferFunction(*args))
+
     elif len(args) == 1:
         sys = args[0]
         if not isinstance(sys, TransferFunction):
@@ -984,6 +991,7 @@ def bode(*args, **keywords):
 
     # Warn about unimplemented plotstyles
     #! TODO: remove this when plot styles are implemented in bode()
+    #! TODO: uncomment unit test code that tests this out
     if (len(plotstyle) != 0):
         print("Warning (matabl.bode): plot styles not implemented");
 
@@ -991,7 +999,7 @@ def bode(*args, **keywords):
     return freqplot.bode(syslist, omega, **keywords)
 
 # Nichols chart grid
-from nichols import nichols_grid
+from control.nichols import nichols_grid
 def ngrid():
     nichols_grid()
 ngrid.__doc__ = re.sub('nichols_grid', 'ngrid', nichols_grid.__doc__)
@@ -1014,9 +1022,9 @@ def rlocus(sys, klist = None, **keywords):
     klist: 
         list of gains used to compute roots
     """
-    from rlocus import root_locus
-    if (klist == None):
-        #! TODO: update with a smart cacluation of the gains
+    from control.rlocus import root_locus
+    #! TODO: update with a smart calculation of the gains using sys poles/zeros
+    if klist == None:
         klist = logspace(-3, 3)
 
     rlist = root_locus(sys, klist, **keywords)
@@ -1337,3 +1345,51 @@ def lsim(sys, U=0., T=None, X0=0., **keywords):
     T, yout, xout = timeresp.forced_response(sys, T, U, X0,
                                              transpose = True, **keywords)
     return yout, T, xout
+
+# Return state space data as a tuple
+def ssdata(sys):
+    '''
+    Return state space data objects for a system
+
+    Parameters
+    ----------
+    sys: Lti (StateSpace, or TransferFunction)
+        LTI system whose data will be returned
+
+    Returns
+    -------
+    (A, B, C, D): list of matrices
+        State space data for the system
+    '''
+    ss = _convertToStateSpace(sys)
+    return (ss.A, ss.B, ss.C, ss.D)
+
+# Return transfer function data as a tuple
+def tfdata(sys, **kw):
+    '''
+    Return transfer function data objects for a system
+
+    Parameters
+    ----------
+    sys: Lti (StateSpace, or TransferFunction)
+        LTI system whose data will be returned
+
+    Keywords
+    --------
+    inputs = int; outputs = int
+        For MIMO transfer function, return num, den for given inputs, outputs
+
+    Returns
+    -------
+    (num, den): numerator and denominator arrays
+        Transfer function coefficients (SISO only)
+    '''
+    tf = _convertToTransferFunction(sys, **kw)
+
+    return (tf.num, tf.den)
+
+# Convert a continuous time system to a discrete time system
+def c2d(sysc, Ts, method):
+    # TODO: add docstring
+    #  Call the sample_system() function to do the work
+    return sample_system(sysc, Ts, method)

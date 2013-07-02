@@ -37,7 +37,7 @@
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 # 
-# $Id: exception.py 152 2011-04-03 04:55:51Z murrayrm $
+# $Id: exception.py 225 2012-11-03 21:03:39Z murrayrm $
 
 class ControlSlycot(Exception): 
     """Exception for Slycot import.  Used when we can't import a function
@@ -59,3 +59,12 @@ class ControlMIMONotImplemented(Exception):
 class ControlNotImplemented(Exception):
     """Functionality is not yet implemented"""
     pass
+
+# Utility function to see if slycot is installed
+def slycot_check():
+    try:
+        import slycot
+    except:
+        return False
+    else:
+        return True

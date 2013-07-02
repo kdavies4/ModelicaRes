@@ -37,14 +37,14 @@
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 # 
-# $Id: robust.py 149 2011-04-02 18:24:51Z murrayrm $
+# $Id: robust.py 216 2012-11-03 03:23:13Z murrayrm $
 
 # External packages and modules
 import numpy as np
-import ctrlutil
+import control.ctrlutil as ctrlutil
 from control.exception import *
-from statefbk import *
-from statesp import StateSpace
+from control.statesp import StateSpace
+from control.statefbk import *
 
 def h2syn(P,nmeas,ncon):
     """H_2 control synthesis for plant P.

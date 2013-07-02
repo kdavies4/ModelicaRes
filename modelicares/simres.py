@@ -174,7 +174,7 @@ class SimRes(object):
 
              If *leg_kwargs* is *None*, then no legend will be shown.
 
-        - *\*\*kwargs*: Propagated to :meth:`matplotlib.pyplot.bar`
+        - *\*\*kwargs*: Additional arguments for  :meth:`matplotlib.pyplot.bar`
 
         **Returns:**
 
@@ -843,7 +843,7 @@ class SimRes(object):
 
         - *use_paren*: Add parentheses around the suffix
 
-        - *\*\*kwargs*: Propagated to :meth:`base.plot` (and thus to
+        - *\*\*kwargs*: Additional arguments for  :meth:`base.plot` (and thus to
           :meth:`matplotlib.pyplot.plot`)
 
              If both y axes are used (primary and secondary), then the *dashes*
@@ -1048,7 +1048,7 @@ class SimRes(object):
         - *hspace*: The amount of height reserved for white space between
           subplots
 
-        - *\*\*kwargs*: Propagated to :class:`matplotlib.sankey.Sankey`
+        - *\*\*kwargs*: Additional arguments for  :class:`matplotlib.sankey.Sankey`
 
         **Returns:**
 
@@ -1146,7 +1146,7 @@ class SimRes(object):
              The default is :meth:`get_values`.  *action* may be a list or
              tuple, in which case the return value is a list or tuple.
 
-        - *\*args*, *\*\*kwargs*: Propagated to *action*
+        - *\*args*, *\*\*kwargs*: Additional arguments for  *action*
 
         **Examples:**
 

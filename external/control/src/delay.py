@@ -1,3 +1,4 @@
+#! TODO: add module docstring
 # delay.py - functions involving time delays
 #
 # Author: Sawyer Fuller
@@ -38,10 +39,10 @@
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 # 
-# $Id: delay.py 162 2011-06-22 06:02:02Z murrayrm $
+# $Id: delay.py 217 2012-11-03 04:22:53Z murrayrm $
 
-from __future__ import division
-
+# Python 3 compatability (needs to go here)
+from __future__ import print_function
 
 def pade(T, n=1):
     """ 
