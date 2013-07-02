@@ -10,7 +10,7 @@
 
 # Build and install
 ./setup.py build
-sudo python ./setup.py install
+sudo ./setup.py install
 
 # Run the doc tests and recreate the example images.
 cd modelicares

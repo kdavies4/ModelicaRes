@@ -12,13 +12,7 @@ exclude examples/ChuaCircuit_1.mat
 exclude examples/ChuaCircuit_2.mat
 
 # Documentation
-include doc/_images/*
-include doc/_images/math/*
-include doc/_static/*
-include doc/_sources/*
-include doc/*.html
-include doc/*.inv
-include doc/*.js
+include doc/online-documentation.html
 include doc/*.pdf
 
 # External packages

@@ -37,3 +37,10 @@ Changelog
 
    - Added :meth:`modelicares.base.save` to save the current figure
    - Added *use_paren* option to :meth:`SimRes.plot`
+   - Changed :meth:`modelicares.exps.write_script` to put results in folders
+     instead of special renaming scheme
+   - Improved organization of the *examples* folder
+
+0.6.1 (2013-7-2) -- Updates:
+
+   - Fixed README file.

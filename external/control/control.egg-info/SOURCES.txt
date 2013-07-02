@@ -2,6 +2,7 @@ ChangeLog
 MANIFEST.in
 Pending
 README
+setup.cfg
 setup.py
 control.egg-info/PKG-INFO
 control.egg-info/SOURCES.txt
@@ -43,6 +44,7 @@ src/bdalg.py
 src/ctrlutil.py
 src/delay.py
 src/exception.py
+src/frdata.py
 src/freqplot.py
 src/lti.py
 src/margins.py
@@ -61,6 +63,8 @@ src/timeresp.py
 src/xferfcn.py
 tests/bdalg_test.py
 tests/convert_test.py
+tests/discrete_test.py
+tests/frd_test.py
 tests/freqresp.py
 tests/margin_test.py
 tests/mateqn_test.py

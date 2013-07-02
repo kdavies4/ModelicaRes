@@ -1,5 +1,5 @@
 ModelicaRes
------------
+===========
 
 `ModelicaRes <http://kdavies4.github.io/ModelicaRes/>`_ is an
 open-source tool to manage `Modelica <http://www.modelica.org>`_
@@ -22,7 +22,7 @@ or run from a `Python <http://www.python.org>`_ interpreter with math
 and matrix functions from `NumPy <http://numpy.scipy.org>`_.
 
 For more information, please see the `main project
-site <http://kdavies4.github.io/ModelicaRes/>`_ or the `doc <doc>`_
+site <http://kdavies4.github.io/ModelicaRes/>`_ or the doc
 folder of the package for the full documentation and many examples. The
 development site is https://github.com/kdavies4/modelicares.
 
@@ -33,20 +33,16 @@ An installable copy of this package can be downloaded from the `main
 project site <http://kdavies4.github.io/ModelicaRes/>`_ or the `PyPI
 page <http://pypi.python.org/pypi/ModelicaRes>`_. To install the
 package, first download and extract it. Then run the set up script
-(`setup.py <setup.py>`_) from the base folder. On Windows, use the
-following command:
-
-::
+(setup.py) from the base folder. On Windows, use the
+following command::
 
     python setup.py install
 
-On Linux, use:
-
-::
+On Linux, use::
 
     sudo python setup.py install
 
-The `matplotlibrc <matplotlibrc>`_ file in the base folder has some
+The matplotlibrc file in the base folder has some
 recommended revisions to `matplotlib <http://www.matplotlib.org>`_'s
 defaults. To use it, copy or move the file to the working directory or
 `matplotlib <http://www.matplotlib.org>`_'s configuration directory. See
@@ -71,7 +67,7 @@ License terms
 ~~~~~~~~~~~~~
 
 `ModelicaRes <http://kdavies4.github.io/ModelicaRes/>`_ is published
-under the terms of the BSD license (see `LICENSE.txt <LICENSE.txt>`_).
+under the terms of the BSD license (see LICENSE.txt).
 Please share any modifications you make (preferably on a Github fork
 from https://github.com/kdavies4/ModelicaRes) so that others may benefit
 from your work.
