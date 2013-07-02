@@ -1,0 +1,127 @@
+// Modelica experiment script written by modelicares 2013-07-02
+import Modelica.Utilities.Files.copy;
+import Modelica.Utilities.Files.createDirectory;
+cd("/home/kld/Documents/Modelica");
+cd("/home/kld/Documents/Modelica");
+
+// Experiment 1
+ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), C1(C=8), L(L=18))");
+if ok then
+    createDirectory("/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/1");
+    copy("dsin.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/1/dsin.txt", true);
+    copy("dslog.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/1/dslog.txt", true);
+    copy("dsres.mat", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/1/dsres.mat", true);
+    copy("dymosim", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/1/dymosim", true);
+end if;
+
+// Experiment 2
+ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), C1(C=10), L(L=18))");
+if ok then
+    createDirectory("/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/2");
+    copy("dsin.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/2/dsin.txt", true);
+    copy("dslog.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/2/dslog.txt", true);
+    copy("dsres.mat", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/2/dsres.mat", true);
+    copy("dymosim", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/2/dymosim", true);
+end if;
+
+// Experiment 3
+ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), C1(C=8), L(L=18))");
+if ok then
+    createDirectory("/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/3");
+    copy("dsin.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/3/dsin.txt", true);
+    copy("dslog.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/3/dslog.txt", true);
+    copy("dsres.mat", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/3/dsres.mat", true);
+    copy("dymosim", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/3/dymosim", true);
+end if;
+
+// Experiment 4
+ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), C1(C=10), L(L=18))");
+if ok then
+    createDirectory("/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/4");
+    copy("dsin.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/4/dsin.txt", true);
+    copy("dslog.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/4/dslog.txt", true);
+    copy("dsres.mat", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/4/dsres.mat", true);
+    copy("dymosim", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/4/dymosim", true);
+end if;
+
+// Experiment 5
+ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), C1(C=8), L(L=18))");
+if ok then
+    createDirectory("/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/5");
+    copy("dsin.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/5/dsin.txt", true);
+    copy("dslog.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/5/dslog.txt", true);
+    copy("dsres.mat", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/5/dsres.mat", true);
+    copy("dymosim", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/5/dymosim", true);
+end if;
+
+// Experiment 6
+ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), C1(C=10), L(L=18))");
+if ok then
+    createDirectory("/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/6");
+    copy("dsin.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/6/dsin.txt", true);
+    copy("dslog.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/6/dslog.txt", true);
+    copy("dsres.mat", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/6/dsres.mat", true);
+    copy("dymosim", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/6/dymosim", true);
+end if;
+
+// Experiment 7
+ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), C1(C=8), L(L=20))");
+if ok then
+    createDirectory("/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/7");
+    copy("dsin.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/7/dsin.txt", true);
+    copy("dslog.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/7/dslog.txt", true);
+    copy("dsres.mat", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/7/dsres.mat", true);
+    copy("dymosim", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/7/dymosim", true);
+end if;
+
+// Experiment 8
+ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), C1(C=10), L(L=20))");
+if ok then
+    createDirectory("/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/8");
+    copy("dsin.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/8/dsin.txt", true);
+    copy("dslog.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/8/dslog.txt", true);
+    copy("dsres.mat", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/8/dsres.mat", true);
+    copy("dymosim", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/8/dymosim", true);
+end if;
+
+// Experiment 9
+ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), C1(C=8), L(L=20))");
+if ok then
+    createDirectory("/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/9");
+    copy("dsin.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/9/dsin.txt", true);
+    copy("dslog.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/9/dslog.txt", true);
+    copy("dsres.mat", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/9/dsres.mat", true);
+    copy("dymosim", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/9/dymosim", true);
+end if;
+
+// Experiment 10
+ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), C1(C=10), L(L=20))");
+if ok then
+    createDirectory("/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/10");
+    copy("dsin.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/10/dsin.txt", true);
+    copy("dslog.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/10/dslog.txt", true);
+    copy("dsres.mat", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/10/dsres.mat", true);
+    copy("dymosim", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/10/dymosim", true);
+end if;
+
+// Experiment 11
+ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), C1(C=8), L(L=20))");
+if ok then
+    createDirectory("/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/11");
+    copy("dsin.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/11/dsin.txt", true);
+    copy("dslog.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/11/dslog.txt", true);
+    copy("dsres.mat", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/11/dsres.mat", true);
+    copy("dymosim", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/11/dymosim", true);
+end if;
+
+// Experiment 12
+ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), C1(C=10), L(L=20))");
+if ok then
+    createDirectory("/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/12");
+    copy("dsin.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/12/dsin.txt", true);
+    copy("dslog.txt", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/12/dslog.txt", true);
+    copy("dsres.mat", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/12/dsres.mat", true);
+    copy("dymosim", "/media/Storage/Documents/Python/ModelicaRes/modelicares/examples/ChuaCircuit/12/dymosim", true);
+end if;
+
+exit();

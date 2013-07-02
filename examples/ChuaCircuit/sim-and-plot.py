@@ -1,6 +1,5 @@
 #!/usr/bin/python
-"""Demo script to set up and run simulations in Dymola, and then plot the
-results
+"""Set up and run simulations in Dymola, and then plot the results.
 """
 __author__ = "Kevin Davies"
 __version__ = "2012-10-11"
@@ -8,7 +7,6 @@ __version__ = "2012-10-11"
 import os
 import matplotlib.pyplot as plt
 
-from itertools import count
 from modelicares import gen_experiments, SimRes, write_script, saveall
 
 # Settings
@@ -47,7 +45,7 @@ if run:
                                        packages=packages, fname=fname)
 
     # Ask Dymola to run the script.
-    os.system('bash /opt/dymola/bin/dymola.sh ' + fname) # For Linux
+    os.system('dymola ' + fname) # For Linux
     # TODO: Add support for Windows.
     #os.system(r'C:\Program files\Dymola\bin\Dymola.exe ' + fname) # For Windows
 else:
@@ -58,9 +56,8 @@ else:
 # Create plots.
 # Begin customize--------------------------------------------------------------
 
-for i, model in zip(count(1), models):
-    result_file = '%s_%i.mat' % (model, i)
-    sim = SimRes(os.path.join(results_dir, result_file))
+for i, model in enumerate(models):
+    sim = SimRes(os.path.join(results_dir, str(i + 1), 'dsres.mat'))
     sim.plot(title="Chua Circuit with L = %.0f %s" % (sim.get_IV('L.L'),
                                                       sim.get_unit('L.L')),
              ynames1=['L.i'], ylabel1='Current',

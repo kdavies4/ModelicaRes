@@ -92,7 +92,7 @@ class SimRes(object):
         **Example:**
 
            >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit')
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
         """
         self._load(fname)
 
@@ -866,7 +866,7 @@ class SimRes(object):
 
            >>> from modelicares import SimRes, saveall
 
-           >>> sim = SimRes('examples/ChuaCircuit')
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
            >>> sim.plot(ynames1='L.i', ylabel1="Current",
            ...          ynames2='L.der(i)', ylabel2="Derivative of current",
            ...          title="Chua Circuit", label='examples/ChuaCircuit') # doctest: +ELLIPSIS

@@ -46,7 +46,7 @@ def multiload(locations):
        >>> from modelicares import *
 
        # By file:
-       >>> multiload(['examples/ChuaCircuit', 'examples/PID']) # doctest: +ELLIPSIS
+       >>> multiload(['examples/ChuaCircuit.mat', 'examples/PID']) # doctest: +ELLIPSIS
        Valid: SimRes('...ChuaCircuit.mat')
        Valid: LinRes('...PID.mat')
        ([SimRes('...ChuaCircuit.mat')], [LinRes('...PID.mat')])
@@ -54,9 +54,9 @@ def multiload(locations):
        # By directory:
        >>> multiload('examples') # doctest: +ELLIPSIS
        Valid: SimRes('...ChuaCircuit.mat')
-       Valid: SimRes('...ChuaCircuit2.mat')...
        Valid: LinRes('...PID.mat')...
-       ([SimRes('...ChuaCircuit.mat'), SimRes('...ChuaCircuit2.mat'), SimRes('...ThreeTanks.mat')], [LinRes('...PID.mat')])
+       Valid: SimRes('...ThreeTanks.mat')
+       ([SimRes('...ChuaCircuit.mat'), SimRes('...ThreeTanks.mat')], [LinRes('...PID.mat')])
     """
 
     # Make a list of files.
@@ -122,14 +122,16 @@ def multiplot(sims, suffixes='', dashes=[(1, 0), (3, 3), (1, 1), (3, 2, 1, 2)],
 
     .. code-block:: python
 
+       >>> from glob import glob
        >>> from modelicares import SimRes, multiplot, saveall
 
-       >>> sims = map(SimRes, ['examples/ChuaCircuit', 'examples/ChuaCircuit2'])
+       >>> sims = map(SimRes, glob('examples/ChuaCircuit/*/*.mat'))
        >>> multiplot(sims, title="Chua Circuit", label='examples/ChuaCircuits',
        ...           suffixes=['L.L = %.0f H' % sim.get_IV('L.L')
        ...                     for sim in sims], # Read legend parameters.
        ...           ynames1='L.i', ylabel1="Current") # doctest: +ELLIPSIS
        (<matplotlib.axes.AxesSubplot object at 0x...>, None)
+
        >>> saveall()
        Saved examples/ChuaCircuits.pdf
        Saved examples/ChuaCircuits.png
@@ -162,7 +164,6 @@ def multiplot(sims, suffixes='', dashes=[(1, 0), (3, 3), (1, 1), (3, 2, 1, 2)],
 
     # Generate the plots.
     try:
-        print sims[0]
         ax1, ax2 = sims[0].plot(suffix=suffixes[0], **kwargs)
         kwargs.update({'ax1': ax1, 'ax2': ax2})
         for sim, suffix in zip(sims[1:], suffixes[1:]):
