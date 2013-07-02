@@ -2,7 +2,6 @@
 import Modelica.Utilities.Files.copy;
 import Modelica.Utilities.Files.createDirectory;
 cd("/home/kld/Documents/Modelica");
-cd("/home/kld/Documents/Modelica");
 
 // Experiment 1
 ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), C1(C=8), L(L=18))");

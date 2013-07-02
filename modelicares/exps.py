@@ -4,7 +4,7 @@
 
 This module supports two approaches for managing simulations.  The first is to
 create a Modelica_ script (using :meth:`write_script`) and run it within
-a Modelica_ environment (see "examples/ChuaCircuit/sim-and-plot.py"), which
+a Modelica_ environment (see the scripts in "examples/ChuaCircuit/"), which
 translates and simulates the models with the prescribed settings.  The second
 approach is to execute pre-translated models.  The :meth:`run_models` method
 handles this by writing to initialization file(s) (e.g, "dsin.txt") and
@@ -599,23 +599,25 @@ def write_script(experiments=[(None, {}, {})], packages=[],
        ...                         params={},
        ...                         args=dict(stopTime=2500))
        >>> write_script(experiment,
-       ...              fname="examples/ChuaCircuit/sim-and-plot1.mos") # doctest: +ELLIPSIS
+       ...              fname="examples/ChuaCircuit/run-sims1.mos") # doctest: +ELLIPSIS
        (['ChuaCircuit'], '...examples/ChuaCircuit')
 
-    In "examples/run-sims1.mos":
+    In "examples/ChuaCircuit/run-sims1.mos":
 
     .. code-block:: modelica
 
        import Modelica.Utilities.Files.copy;
-       cd(".../Documents/Modelica")
+       import Modelica.Utilities.Files.createDirectory;
+       cd(".../Documents/Modelica");
 
        // Experiment 1
-       ok = simulateModel("Modelica.Electrical.Analog.Examples.ChuaCircuit", stopTime=2500);
+       ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit", stopTime=2500);
        if ok then
-          copy("dsin.txt", ".../examples/ChuaCircuit_1.in", true);
-          copy("dslog.txt", ".../examples/ChuaCircuit_1.log", true);
-          copy("dsres.mat", ".../examples/ChuaCircuit_1.mat", true);
-          copy("dymosim", ".../examples/ChuaCircuit_1"", true);
+           createDirectory(".../examples/ChuaCircuit/1");
+           copy("dsin.txt", ".../modelicares/examples/ChuaCircuit/1/dsin.txt", true);
+           copy("dslog.txt", ".../modelicares/examples/ChuaCircuit/1/dslog.txt", true);
+           copy("dsres.mat", ".../examples/ChuaCircuit/1/dsres.mat", true);
+           copy("dymosim", ".../examples/ChuaCircuit/1/dymosim", true);
        end if;
 
        exit();
@@ -633,10 +635,10 @@ def write_script(experiments=[(None, {}, {})], packages=[],
        ...     params={'L.L': [18, 20],
        ...             'C1.C': [8, 10],
        ...             'C2.C': [80, 100, 120]})
-       >>> write_script(experiments, fname="examples/ChuaCircuit/sim-and-plot2.mos") # doctest: +ELLIPSIS
+       >>> write_script(experiments, fname="examples/ChuaCircuit/run-sims2.mos") # doctest: +ELLIPSIS
        (['ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit'], '...examples/ChuaCircuit')
 
-    In "examples/ChuaCircuit/sim-and-plot2.mos", there are commands to run and
+    In "examples/ChuaCircuit/run-sims2.mos", there are commands to run and
     save results from 12 simulation experiments.
     """
     # Preprocess the arguments.
@@ -661,7 +663,8 @@ def write_script(experiments=[(None, {}, {})], packages=[],
             mos.write('openModel("%s");\n' % package)
         else:
             mos.write('openModel("%s");\n' % os.path.join(package, 'package.mo'))
-    mos.write('cd("%s");\n' % working_dir)
+    if packages:
+        mos.write('cd("%s");\n' % working_dir)
     mos.write('\n')
     # Sometimes Dymola opens with an error; simulate any model to clear the
     # error.

@@ -1,15 +1,12 @@
 include matplotlibrc
 include *.txt
-#include MANIFEST.in
-exclude 00-*
 
 # Examples
 include examples/*.csv
 include examples/*.mat
-include examples/*.py
 include examples/*.txt
-exclude examples/ChuaCircuit_1.mat
-exclude examples/ChuaCircuit_2.mat
+recursive-include examples *.md
+recursive-include examples *.py
 
 # Documentation
 include doc/_images/*
@@ -22,14 +19,15 @@ include doc/*.js
 include doc/*.pdf
 
 # External packages
-include external/*.txt
-recursive-include external/control *.py
-include external/control/README
-include external/control/PKG-INFO
+include external/*.md
+exclude external/control/doc/conf.py
 include external/control/ChangeLog
 include external/control/Pending
+include external/control/PKG-INFO
+include external/control/README
 exclude external/control/setup.py
-exclude external/control/doc/conf.py
+recursive-include external/control *.py
 
 # Development scripts
-exclude modelicares/00-*.py
+exclude 00-*
+exclude modelicares/00-*

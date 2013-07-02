@@ -16,7 +16,7 @@ from modelicares import gen_experiments, SimRes, write_script, saveall
 run = True
 
 # Name of the Modelica script (may include the path)
-fname = 'run-sims.mos'
+fname = 'sim-and-plot.mos'
 
 # Working directory
 working_dir = '~/Documents/Modelica'
@@ -62,7 +62,7 @@ for i, model in enumerate(models):
                                                       sim.get_unit('L.L')),
              ynames1=['L.i'], ylabel1='Current',
              ynames2=['L.der(i)'], ylabel2='Derivative of current',
-             label=model)
+             label=os.path.join(str(i + 1), model))
 
 # End customize----------------------------------------------------------------
 
