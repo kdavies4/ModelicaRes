@@ -16,7 +16,7 @@ from modelicares import gen_experiments, SimRes, write_script, saveall
 run = True
 
 # Name of the Modelica script (may include the path)
-fname = 'sim-and-plot.mos'
+fname = 'run-sims.mos'
 
 # Working directory
 working_dir = '~/Documents/Modelica'

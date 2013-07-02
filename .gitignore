@@ -7,20 +7,19 @@
 
 # Compiled files
 *.pyc
-/build
+build
 
 # Generated files
-/MANIFEST
-*.tar.gz
-*.zip
-*.html
-objects.inv
-/doc/build
-doc/searchindex.js
-*.mos
+/dist
 /examples/ChuaCircuit/1/*
 /examples/ChuaCircuit/2/*
-/dist
+/MANIFEST
+*.html
+*.tar.gz
+*.mos
+*.zip
+doc/searchindex.js
+objects.inv
 
 # Copied files
 /doc/_sources

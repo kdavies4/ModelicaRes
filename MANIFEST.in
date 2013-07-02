@@ -9,13 +9,7 @@ recursive-include examples *.md
 recursive-include examples *.py
 
 # Documentation
-include doc/_images/*
-include doc/_images/math/*
-include doc/_static/*
-include doc/_sources/*
-include doc/*.html
-include doc/*.inv
-include doc/*.js
+include doc/online-documentation.html
 include doc/*.pdf
 
 # External packages
