@@ -109,7 +109,7 @@ def multiplot(sims, suffixes='', dashes=[(1, 0), (3, 3), (1, 1), (3, 2, 1, 2)],
          If *suffixes* is None, then no suffix will be used.  If it is *None*,
          then the base filenames will be used.
 
-    - *\*\*kwargs*: Propagated to  :meth:`simres.SimRes.plot` (and thus to
+    - *\*\*kwargs*: Additional arguments for   :meth:`simres.SimRes.plot` (and thus to
       :meth:`base.plot` and finally :meth:`matplotlib.pyplot.plot`)
 
          The *dashes* sequence is iterated across all plots.

@@ -37,13 +37,14 @@
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 # 
-# $Id: statefbk.py 165 2011-06-26 02:44:09Z murrayrm $
+# $Id: statefbk.py 216 2012-11-03 03:23:13Z murrayrm $
 
 # External packages and modules
 import numpy as np
-import ctrlutil
-from exception import *
-import statesp
+import scipy as sp
+import control.statesp as statesp
+import control.ctrlutil as ctrlutil
+from control.exception import *
 
 # Pole placement
 def place(A, B, p):
@@ -93,11 +94,53 @@ def place(A, B, p):
 
     # Call SLICOT routine to place the eigenvalues
     A_z,w,nfp,nap,nup,F,Z = \
-        sb01bd(B_mat.shape[0], B_mat.shape[1], np.size(placed_eigs), alpha,
+        sb01bd(B_mat.shape[0], B_mat.shape[1], len(placed_eigs), alpha,
                A_mat, B_mat, placed_eigs, 'C');
 
     # Return the gain matrix, with MATLAB gain convention
     return -F
+
+# Contributed by Roberto Bucher <roberto.bucher@supsi.ch>
+def acker(A, B, poles):
+    """Pole placement using Ackermann method
+
+    Call:
+    K = acker(A, B, poles)
+
+    Parameters
+    ----------
+    A, B : 2-d arrays
+        State and input matrix of the system
+    poles: 1-d list
+        Desired eigenvalue locations
+
+    Returns
+    -------
+    K: matrix
+        Gains such that A - B K has given eigenvalues
+
+    """
+    # Convert the inputs to matrices
+    a = np.mat(A)
+    b = np.mat(B)
+
+    # Make sure the system is controllable
+    ct = ctrb(A, B)
+    if sp.linalg.det(ct) == 0:
+        raise ValueError("System not reachable; pole placement invalid")
+
+    # Compute the desired characteristic polynomial
+    p = np.real(np.poly(poles))
+
+    # Place the poles using Ackermann's method
+    n = np.size(p)
+    pmat = p[n-1]*a**0
+    for i in np.arange(1,n):
+        pmat = pmat + p[n-i-1]*a**i
+    K = sp.linalg.inv(ct) * pmat
+
+    K = K[-1][:]                # Extract the last row
+    return K
 
 def lqr(*args, **keywords):
     """Linear quadratic regulator design
@@ -295,7 +338,7 @@ def gram(sys,type):
 
     #Check for ss system object
     if not isinstance(sys,statesp.StateSpace):
-        raise ValueError, "System must be StateSpace!"
+        raise ValueError("System must be StateSpace!")
     
     #TODO: Check for continous or discrete, only continuous supported right now
         # if isCont():
@@ -310,7 +353,7 @@ def gram(sys,type):
     D,V = np.linalg.eig(sys.A)
     for e in D:
         if e.real >= 0:
-            raise ValueError, "Oops, the system is unstable!"
+            raise ValueError("Oops, the system is unstable!")
     if type=='c':
         tra = 'T'
         C = -np.dot(sys.B,sys.B.transpose())
@@ -318,7 +361,7 @@ def gram(sys,type):
         tra = 'N'
         C = -np.dot(sys.C.transpose(),sys.C)
     else:
-        raise ValueError, "Oops, neither observable, nor controllable!"
+        raise ValueError("Oops, neither observable, nor controllable!")
 
     #Compute Gramian by the Slycot routine sb03md
         #make sure Slycot is installed

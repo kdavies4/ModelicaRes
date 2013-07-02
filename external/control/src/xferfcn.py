@@ -26,6 +26,7 @@ TransferFunction.freqresp
 TransferFunction.pole
 TransferFunction.zero
 TransferFunction.feedback
+TransferFunction.minreal
 TransferFunction.returnScipySignalLti
 TransferFunction._common_den
 _tfpolyToString
@@ -33,6 +34,9 @@ _addSISO
 _convertToTransferFunction
 
 """
+
+# Python 3 compatability (needs to go here)
+from __future__ import print_function
 
 """Copyright (c) 2010 by California Institute of Technology
 All rights reserved.
@@ -70,25 +74,26 @@ Author: Richard M. Murray
 Date: 24 May 09
 Revised: Kevin K. Chewn, Dec 10
 
-$Id: xferfcn.py 181 2012-01-08 03:33:41Z murrayrm $
+$Id: xferfcn.py 225 2012-11-03 21:03:39Z murrayrm $
 
 """
 
 # External function declarations
 from numpy import angle, any, array, empty, finfo, insert, ndarray, ones, \
-    polyadd, polymul, polyval, roots, sort, sqrt, zeros, squeeze
+    polyadd, polymul, polyval, roots, sort, sqrt, zeros, squeeze, exp, pi, \
+    where, delete, real, poly
 from scipy.signal import lti
 from copy import deepcopy
-from lti import Lti
-import statesp
+from warnings import warn
+from control.lti import Lti, timebaseEqual, timebase, isdtime
 
 class TransferFunction(Lti):
 
     """The TransferFunction class represents TF instances and functions.
     
-    The TransferFunction class is derived from the Lti parent class.  It is used
-    throught the python-control library to represent systems in transfer
-    function form. 
+    The TransferFunction class is derived from the Lti parent class.  It
+    is used throught the python-control library to represent systems in
+    transfer function form.
     
     The main data members are 'num' and 'den', which are 2-D lists of arrays
     containing MIMO numerator and denominator coefficients.  For example,
@@ -97,22 +102,32 @@ class TransferFunction(Lti):
     
     means that the numerator of the transfer function from the 6th input to the
     3rd output is set to s^2 + 4s + 8.
-    
+
+    Discrete time transfer functions are implemented by using the 'dt' class
+    variable and setting it to something other than 'None'.  If 'dt' has a
+    non-zero value, then it must match whenever two transfer functions are
+    combined.  If 'dt' is set to True, the system will be treated as a
+    discrete time system with unspecified sampling time.
     """
     
     def __init__(self, *args):
         """Construct a transfer function.
         
-        The default constructor is TransferFunction(num, den), where num and den
-        are lists of lists of arrays containing polynomial coefficients.  To
-        call the copy constructor, call TransferFunction(sys), where sys is a
-        TransferFunction object.
+        The default constructor is TransferFunction(num, den), where num and
+        den are lists of lists of arrays containing polynomial coefficients.
+        To crete a discrete time transfer funtion, use TransferFunction(num,
+        den, dt).  To call the copy constructor, call TransferFunction(sys),
+        where sys is a TransferFunction object (continuous or discrete).
 
         """
 
         if len(args) == 2:
             # The user provided a numerator and a denominator.
             (num, den) = args
+            dt = None;
+        elif len(args) == 3:
+            # Discrete time transfer function
+            (num, den, dt) = args;
         elif len(args) == 1:
             # Use the copy constructor.
             if not isinstance(args[0], TransferFunction):
@@ -120,14 +135,18 @@ class TransferFunction(Lti):
 a TransferFunction object.  Received %s." % type(args[0]))
             num = args[0].num
             den = args[0].den
+            try:
+                dt = args[0].dt
+            except NameError:
+                dt = None;
         else:
-            raise ValueError("Needs 1 or 2 arguments; receivd %i." % len(args))
+            raise ValueError("Needs 1, 2 or 3 arguments; received %i." % len(args))
 
         # Make num and den into lists of lists of arrays, if necessary.  Beware:
         # this is a shallow copy!  This should be okay, but be careful.
         data = [num, den]
         for i in range(len(data)):
-            if isinstance(data[i], (int, float, long, complex)):
+            if isinstance(data[i], (int, float, complex)):
                 # Convert scalar to list of list of array.
                 if (isinstance(data[i], int)):
                     # Convert integers to floats at this point
@@ -135,7 +154,7 @@ a TransferFunction object.  Received %s." % type(args[0]))
                 else:
                     data[i] = [[array([data[i]])]]
             elif (isinstance(data[i], (list, tuple, ndarray)) and 
-                isinstance(data[i][0], (int, float, long, complex))):
+                isinstance(data[i][0], (int, float, complex))):
                 # Convert array to list of list of array.
                 if (isinstance(data[i][0], int)):
                     # Convert integers to floats at this point
@@ -146,7 +165,7 @@ a TransferFunction object.  Received %s." % type(args[0]))
             elif (isinstance(data[i], list) and 
                 isinstance(data[i][0], list) and 
                 isinstance(data[i][0][0], (list, tuple, ndarray)) and 
-                isinstance(data[i][0][0][0], (int, float, long, complex))):
+                isinstance(data[i][0][0][0], (int, float, complex))):
                 # We might already have the right format.  Convert the
                 # coefficient vectors to arrays, if necessary.
                 for j in range(len(data[i])):
@@ -207,9 +226,9 @@ denominator." % (j + 1, i + 1))
                 if zeronum:
                     den[i][j] = ones(1)
 
+        Lti.__init__(self, inputs, outputs, dt)
         self.num = num
         self.den = den
-        Lti.__init__(self, inputs, outputs)
         
         self._truncatecoeff()
         
@@ -242,10 +261,12 @@ denominator." % (j + 1, i + 1))
                         data[p][i][j] = data[p][i][j][nonzero:]        
         [self.num, self.den] = data
     
-    def __str__(self):
+    def __str__(self, var=None):
         """String representation of the transfer function."""
         
         mimo = self.inputs > 1 or self.outputs > 1  
+        if (var == None):
+            var = 's' if self.dt == None or self.dt == 0 else 'z'
         outstr = ""
         
         for i in range(self.inputs):
@@ -254,8 +275,8 @@ denominator." % (j + 1, i + 1))
                     outstr += "\nInput %i to output %i:" % (i + 1, j + 1)
                     
                 # Convert the numerator and denominator polynomials to strings.
-                numstr = _tfpolyToString(self.num[j][i]);
-                denstr = _tfpolyToString(self.den[j][i]);
+                numstr = _tfpolyToString(self.num[j][i], var = var);
+                denstr = _tfpolyToString(self.den[j][i], var = var);
 
                 # Figure out the length of the separating line
                 dashcount = max(len(numstr), len(denstr))
@@ -270,6 +291,11 @@ denominator." % (j + 1, i + 1))
                         denstr)
 
                 outstr += "\n" + numstr + "\n" + dashes + "\n" + denstr + "\n"
+
+        # See if this is a discrete time system with specific sampling time
+        if (not (self.dt is None) and type(self.dt) != bool and self.dt > 0):
+            outstr += "\ndt = " + self.dt.__str__() + "\n"
+
         return outstr
     
     def __neg__(self):
@@ -280,13 +306,14 @@ denominator." % (j + 1, i + 1))
             for j in range(self.inputs):
                 num[i][j] *= -1
         
-        return TransferFunction(num, self.den)
+        return TransferFunction(num, self.den, self.dt)
         
     def __add__(self, other):
         """Add two LTI objects (parallel connection)."""
+        from control.statesp import StateSpace
         
         # Convert the second argument to a transfer function.
-        if (isinstance(other, statesp.StateSpace)):
+        if (isinstance(other, StateSpace)):
             other = _convertToTransferFunction(other)
         elif not isinstance(other, TransferFunction):
             other = _convertToTransferFunction(other, inputs=self.inputs, 
@@ -300,6 +327,15 @@ second has %i." % (self.inputs, other.inputs))
             raise ValueError("The first summand has %i output(s), but the \
 second has %i." % (self.outputs, other.outputs))
 
+        # Figure out the sampling time to use
+        if (self.dt == None and other.dt != None):
+            dt = other.dt       # use dt from second argument
+        elif (other.dt == None and self.dt != None) or \
+                (timebaseEqual(self, other)):
+            dt = self.dt        # use dt from first argument
+        else:
+            raise ValueError("Systems have different sampling times")
+
         # Preallocate the numerator and denominator of the sum.
         num = [[[] for j in range(self.inputs)] for i in range(self.outputs)]
         den = [[[] for j in range(self.inputs)] for i in range(self.outputs)]
@@ -309,7 +345,7 @@ second has %i." % (self.outputs, other.outputs))
                 num[i][j], den[i][j] = _addSISO(self.num[i][j], self.den[i][j],
                     other.num[i][j], other.den[i][j])
 
-        return TransferFunction(num, den)
+        return TransferFunction(num, den, dt)
  
     def __radd__(self, other): 
         """Right add two LTI objects (parallel connection)."""
@@ -330,7 +366,7 @@ second has %i." % (self.outputs, other.outputs))
         """Multiply two LTI objects (serial connection)."""
         
         # Convert the second argument to a transfer function.
-        if isinstance(other, (int, float, long, complex)):
+        if isinstance(other, (int, float, complex)):
             other = _convertToTransferFunction(other, inputs=self.inputs, 
                 outputs=self.inputs)
         else:
@@ -344,6 +380,14 @@ has %i row(s)\n(output(s))." % (self.inputs, other.outputs))
         inputs = other.inputs
         outputs = self.outputs
         
+        # Figure out the sampling time to use
+        if (self.dt == None and other.dt != None):
+            dt = other.dt       # use dt from second argument
+        elif (other.dt == None and self.dt != None) or (self.dt == other.dt):
+            dt = self.dt        # use dt from first argument
+        else:
+            raise ValueError("Systems have different sampling times")
+
         # Preallocate the numerator and denominator of the sum.
         num = [[[0] for j in range(inputs)] for i in range(outputs)]
         den = [[[1] for j in range(inputs)] for i in range(outputs)]
@@ -361,7 +405,7 @@ has %i row(s)\n(output(s))." % (self.inputs, other.outputs))
                     num[i][j], den[i][j] = _addSISO(num[i][j], den[i][j],
                         num_summand[k], den_summand[k])
         
-        return TransferFunction(num, den)
+        return TransferFunction(num, den, dt)
 
     def __rmul__(self, other): 
         """Right multiply two LTI objects (serial connection)."""
@@ -372,7 +416,7 @@ has %i row(s)\n(output(s))." % (self.inputs, other.outputs))
     def __div__(self, other):
         """Divide two LTI objects."""
         
-        if isinstance(other, (int, float, long, complex)):
+        if isinstance(other, (int, float, complex)):
             other = _convertToTransferFunction(other, inputs=self.inputs, 
                 outputs=self.inputs)
         else:
@@ -384,15 +428,23 @@ has %i row(s)\n(output(s))." % (self.inputs, other.outputs))
             raise NotImplementedError("TransferFunction.__div__ is currently \
 implemented only for SISO systems.")
 
+        # Figure out the sampling time to use
+        if (self.dt == None and other.dt != None):
+            dt = other.dt       # use dt from second argument
+        elif (other.dt == None and self.dt != None) or (self.dt == other.dt):
+            dt = self.dt        # use dt from first argument
+        else:
+            raise ValueError("Systems have different sampling times")
+
         num = polymul(self.num[0][0], other.den[0][0])
         den = polymul(self.den[0][0], other.num[0][0])
         
-        return TransferFunction(num, den)
+        return TransferFunction(num, den, dt)
        
     # TODO: Division of MIMO transfer function objects is not written yet.
     def __rdiv__(self, other):
         """Right divide two LTI objects."""
-        if isinstance(other, (int, float, long, complex)):
+        if isinstance(other, (int, float, complex)):
             other = _convertToTransferFunction(other, inputs=self.inputs, 
                 outputs=self.inputs)
         else:
@@ -404,6 +456,7 @@ implemented only for SISO systems.")
 implemented only for SISO systems.")
 
         return other / self
+
     def __pow__(self,other):
         if not type(other) == int:
             raise ValueError("Exponent must be an integer")
@@ -413,7 +466,6 @@ implemented only for SISO systems.")
             return self * (self**(other-1))
         if other < 0:
             return (TransferFunction([1],[1]) / self) * (self**(other+1))
-            
         
     def evalfr(self, omega):
         """Evaluate a transfer function at a single angular frequency.
@@ -423,13 +475,23 @@ implemented only for SISO systems.")
 
         """
 
+        # TODO: implement for discrete time systems
+        if isdtime(self, strict=True):
+            # Convert the frequency to discrete time
+            dt = timebase(self)
+            s = exp(1.j * omega * dt)
+            if (omega * dt > pi):
+                warn("evalfr: frequency evaluation above Nyquist frequency")
+        else:
+            s = 1.j * omega
+
         # Preallocate the output.
         out = empty((self.outputs, self.inputs), dtype=complex)
 
         for i in range(self.outputs):
             for j in range(self.inputs):
-                out[i][j] = (polyval(self.num[i][j], omega * 1.j) / 
-                    polyval(self.den[i][j], omega * 1.j))
+                out[i][j] = (polyval(self.num[i][j], s) /
+                    polyval(self.den[i][j], s))
 
         return out
 
@@ -450,13 +512,22 @@ implemented only for SISO systems.")
         mag = empty((self.outputs, self.inputs, numfreq))
         phase = empty((self.outputs, self.inputs, numfreq))
 
-        omega.sort()
+        # Figure out the frequencies
+        omega.sort();
+        if isdtime(self, strict=True):
+            dt = timebase(self)
+            slist = map(lambda w: exp(1.j * w * dt), omega)
+            if (max(omega) * dt > pi):
+                warn("evalfr: frequency evaluation above Nyquist frequency")
+        else:
+            slist = map(lambda w: 1.j * w, omega)
 
+        # Compute frequency response for each input/output pair
         for i in range(self.outputs):
             for j in range(self.inputs):
-                fresp = map(lambda w: (polyval(self.num[i][j], w * 1.j) / 
-                    polyval(self.den[i][j], w * 1.j)), omega)
-                fresp = array(fresp)
+                fresp = map(lambda s: (polyval(self.num[i][j], s) /
+                    polyval(self.den[i][j], s)), slist)
+                fresp = array(list(fresp))
 
                 mag[i, j, :] = abs(fresp)
                 phase[i, j, :] = angle(fresp)
@@ -490,6 +561,14 @@ only implemented for SISO systems.")
             raise NotImplementedError("TransferFunction.feedback is currently \
 only implemented for SISO functions.")
 
+        # Figure out the sampling time to use
+        if (self.dt == None and other.dt != None):
+            dt = other.dt       # use dt from second argument
+        elif (other.dt == None and self.dt != None) or (self.dt == other.dt):
+            dt = self.dt        # use dt from first argument
+        else:
+            raise ValueError("Systems have different sampling times")
+
         num1 = self.num[0][0]
         den1 = self.den[0][0]
         num2 = other.num[0][0]
@@ -498,12 +577,52 @@ only implemented for SISO functions.")
         num = polymul(num1, den2)
         den = polyadd(polymul(den2, den1), -sign * polymul(num2, num1))
 
-        return TransferFunction(num, den)
+        return TransferFunction(num, den, dt)
 
         # For MIMO or SISO systems, the analytic expression is
         #     self / (1 - sign * other * self)
         # But this does not work correctly because the state size will be too
         # large.
+
+    def minreal(self, tol=None):
+        """Remove cancelling pole/zero pairs from a transfer function"""
+        # based on octave minreal
+
+        # default accuracy
+        from sys import float_info
+        sqrt_eps = sqrt(float_info.epsilon)
+
+        # pre-allocate arrays
+        num = [[[] for j in range(self.inputs)] for i in range(self.outputs)]
+        den = [[[] for j in range(self.inputs)] for i in range(self.outputs)]
+
+        for i in range(self.outputs):
+            for j in range(self.inputs):
+
+                # split up in zeros, poles and gain
+                newzeros = []
+                zeros = roots(self.num[i][j])
+                poles = roots(self.den[i][j])
+                gain = self.num[i][j][0] / self.den[i][j][0]
+
+                # check all zeros
+                for z in zeros:
+                    t = tol or \
+                        1000 * max(float_info.epsilon, abs(z) * sqrt_eps)
+                    idx = where(abs(z - poles) < t)[0]
+                    if len(idx):
+                        # cancel this zero against one of the poles
+                        poles = delete(poles, idx[0])
+                    else:
+                        # keep this zero
+                        newzeros.append(z)
+
+                # keep result
+                num[i][j] = gain * real(poly(newzeros))
+                den[i][j] = real(poly(poles))
+
+        # end result
+        return TransferFunction(num, den)
 
     def returnScipySignalLti(self):
         """Return a list of a list of scipy.signal.lti objects.
@@ -517,6 +636,10 @@ only implemented for SISO functions.")
         the 6th input to the 4th output.
         
         """
+
+        # TODO: implement for discrete time systems
+        if (self.dt != 0 and self.dt != None):
+            raise NotImplementedError("Function not implemented in discrete time")
 
         # Preallocate the output.
         out = [[[] for j in range(self.inputs)] for i in range(self.outputs)]
@@ -638,14 +761,34 @@ only implemented for SISO functions.")
             if abs(poles[n].imag) > 10 * eps:
                 # To prevent buildup of imaginary part error, handle complex
                 # pole pairs together.
-                quad = polymul([1., -poles[n]], [1., -poles[n+1]])
-                assert all(quad.imag < 10 * eps), \
-                    "The quadratic has a nontrivial imaginary part: %g" \
-                    % quad.imag.max()
-                quad = quad.real
+                #
+                # Because we might have repeated real parts of poles
+                # and the fact that we are using lexigraphical
+                # ordering, we can't just combine adjacent poles.
+                # Instead, we have to figure out the multiplicity
+                # first, then multiple the pairs from the outside in.
 
-                den = polymul(den, quad)
-                n += 2
+                # Figure out the multiplicity
+                m = 1;          # multiplicity count
+                while (n+m < len(poles) and
+                       poles[n].real == poles[n+m].real and
+                       poles[n].imag * poles[n+m].imag > 0):
+                    m += 1
+
+                if (m > 1):
+                    print("Found pole with multiplicity %d" % m)
+                    # print("Poles = ", poles)
+
+                # Multiple pairs from the outside in
+                for i in range(m):
+                    quad = polymul([1., -poles[n]], [1., -poles[n+2*(m-i)-1]])
+                    assert all(quad.imag < 10 * eps), \
+                        "Quadratic has a nontrivial imaginary part: %g" \
+                        % quad.imag.max()
+
+                    den = polymul(den, quad.real)
+                    n += 1      # move to next pair
+                n += m          # skip past conjugate pairs
             else:
                 den = polymul(den, [1., -poles[n].real])
                 n += 1
@@ -654,6 +797,7 @@ only implemented for SISO functions.")
         num = deepcopy(self.num)
         if isinstance(den,float):
             den = array([den])
+
         for i in range(self.outputs):
             for j in range(self.inputs):
                 # The common denominator has leading coefficient 1.  Scale out
@@ -661,9 +805,11 @@ only implemented for SISO functions.")
                 assert self.den[i][j][0], "The i = %i, j = %i denominator has \
 a zero leading coefficient." % (i, j)
                 num[i][j] = num[i][j] / self.den[i][j][0]
+
                 # Multiply in the missing poles.
                 for p in missingpoles[i][j]:
                     num[i][j] = polymul(num[i][j], [1., -p])
+
         # Pad all numerator polynomials with zeros so that the numerator arrays
         # are the same size as the denominator.
         for i in range(self.outputs):
@@ -672,11 +818,12 @@ a zero leading coefficient." % (i, j)
                 if(pad>0):
                     num[i][j] = insert(num[i][j], zeros(pad),
                         zeros(pad))
+
         # Finally, convert the numerator to a 3-D array.
         num = array(num)
         # Remove trivial imaginary parts.  Check for nontrivial imaginary parts.
         if any(abs(num.imag) > sqrt(eps)):
-            print ("Warning: The numerator has a nontrivial nontrivial part: %g"
+            print ("Warning: The numerator has a nontrivial imaginary part: %g"
                 % abs(num.imag).max())
         num = num.real
 
@@ -759,19 +906,20 @@ def _convertToTransferFunction(sys, **kw):
                                                               [1., 1., 1.]].
     
     """
-    
+    from control.statesp import StateSpace
+
     if isinstance(sys, TransferFunction):
         if len(kw):
-            raise TypeError("If sys is a TransferFunction, \
-_convertToTransferFunction cannot take keywords.")
+            raise TypeError("If sys is a TransferFunction, " +
+                    "_convertToTransferFunction cannot take keywords.")
 
         return sys
-    elif isinstance(sys, statesp.StateSpace):
+    elif isinstance(sys, StateSpace):
         try:
             from slycot import tb04ad
             if len(kw):
-                raise TypeError("If sys is a StateSpace, \
-                        _convertToTransferFunction cannot take keywords.")
+                raise TypeError("If sys is a StateSpace, " +
+                        "_convertToTransferFunction cannot take keywords.")
 
             # Use Slycot to make the transformation
             # Make sure to convert system matrices to numpy arrays
@@ -787,8 +935,8 @@ _convertToTransferFunction cannot take keywords.")
                     num[i][j] = list(tfout[6][i, j, :])
                     # Each transfer function matrix row has a common denominator.
                     den[i][j] = list(tfout[5][i, :])
-            # print num
-            # print den
+            # print(num)
+            # print(den)
         except ImportError:
             # If slycot is not available, use signal.lti (SISO only)
             if (sys.inputs != 1 or sys.outputs != 1):
@@ -797,11 +945,12 @@ _convertToTransferFunction cannot take keywords.")
             lti_sys = lti(sys.A, sys.B, sys.C, sys.D)
             num = squeeze(lti_sys.num)
             den = squeeze(lti_sys.den)
-            print num
-            print den
+            print(num)
+            print(den)
 
-        return TransferFunction(num, den)
-    elif isinstance(sys, (int, long, float, complex)):
+        return TransferFunction(num, den, sys.dt)
+
+    elif isinstance(sys, (int, float, complex)):
         if "inputs" in kw:
             inputs = kw["inputs"]
         else:

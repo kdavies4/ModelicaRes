@@ -23,6 +23,7 @@ doc/modsimp_strings.rst
 doc/modules.rst
 doc/synthesis.rst
 doc/timeresp.rst
+doc/utilities.rst
 examples/README
 examples/bdalg-matlab.py
 examples/genswitch.py
@@ -43,6 +44,7 @@ src/__init__.py
 src/bdalg.py
 src/ctrlutil.py
 src/delay.py
+src/dtime.py
 src/exception.py
 src/frdata.py
 src/freqplot.py
@@ -58,7 +60,6 @@ src/rlocus.py
 src/robust.py
 src/statefbk.py
 src/statesp.py
-src/test.py
 src/timeresp.py
 src/xferfcn.py
 tests/bdalg_test.py

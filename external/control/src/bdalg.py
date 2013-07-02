@@ -47,13 +47,13 @@ Author: Richard M. Murray
 Date: 24 May 09
 Revised: Kevin K. Chen, Dec 10
 
-$Id: bdalg.py 180 2012-01-08 02:57:46Z murrayrm $
+$Id: bdalg.py 226 2012-11-03 22:51:28Z murrayrm $
 
 """
 
 import scipy as sp
-import xferfcn as tf
-import statesp as ss
+import control.xferfcn as tf
+import control.statesp as ss
 
 def series(sys1, sys2):
     """Return the series connection sys2 * sys1 for --> sys1 --> sys2 -->.
@@ -71,6 +71,7 @@ def series(sys1, sys2):
     ------
     ValueError
         if `sys2.inputs` does not equal `sys1.outputs`
+        if `sys1.dt` is not compatible with `sys2.dt`
 
     See Also
     --------
@@ -82,6 +83,11 @@ def series(sys1, sys2):
     This function is a wrapper for the __mul__ function in the StateSpace and
     TransferFunction classes.  The output type is usually the type of `sys2`.
     If `sys2` is a scalar, then the output type is the type of `sys1`.
+
+    If both systems have a defined timebase (dt = 0 for continuous time,
+    dt > 0 for discrete time), then the timebase for both systems must
+    match.  If only one of the system has a timebase, the return
+    timebase will be set to match it.
 
     Examples
     --------
@@ -116,9 +122,15 @@ def parallel(sys1, sys2):
     
     Notes
     -----
-    This function is a wrapper for the __add__ function in the StateSpace and
-    TransferFunction classes.  The output type is usually the type of `sys1`.  If
-    `sys1` is a scalar, then the output type is the type of `sys2`.
+    This function is a wrapper for the __add__ function in the
+    StateSpace and TransferFunction classes.  The output type is usually
+    the type of `sys1`.  If `sys1` is a scalar, then the output type is
+    the type of `sys2`.
+
+    If both systems have a defined timebase (dt = 0 for continuous time,
+    dt > 0 for discrete time), then the timebase for both systems must
+    match.  If only one of the system has a timebase, the return
+    timebase will be set to match it.
 
     Examples
     --------
@@ -145,6 +157,11 @@ def negate(sys):
     This function is a wrapper for the __neg__ function in the StateSpace and
     TransferFunction classes.  The output type is the same as the input type.
 
+    If both systems have a defined timebase (dt = 0 for continuous time,
+    dt > 0 for discrete time), then the timebase for both systems must
+    match.  If only one of the system has a timebase, the return
+    timebase will be set to match it.
+
     Examples
     --------
     >>> sys2 = negate(sys1) # Same as sys2 = -sys1.
@@ -160,13 +177,13 @@ def feedback(sys1, sys2, sign=-1):
     Parameters
     ----------
     sys1: scalar, StateSpace, or TransferFunction
-    The primary plant.
+        The primary plant.
     sys2: scalar, StateSpace, or TransferFunction
-    The feedback plant (often a feedback controller).
+        The feedback plant (often a feedback controller).
     sign: scalar
-    The sign of feedback.  `sign` = -1 indicates negative feedback, and
-    `sign` = 1 indicates positive feedback.  `sign` is an optional argument; it
-    assumes a value of -1 if not specified.
+        The sign of feedback.  `sign` = -1 indicates negative feedback, and
+        `sign` = 1 indicates positive feedback.  `sign` is an optional
+        argument; it assumes a value of -1 if not specified.
 
     Returns
     -------
@@ -187,7 +204,7 @@ def feedback(sys1, sys2, sign=-1):
     parallel
 
     Notes
-    ----
+    -----
     This function is a wrapper for the feedback function in the StateSpace and
     TransferFunction classes.  It calls TransferFunction.feedback if `sys1` is a
     TransferFunction object, and StateSpace.feedback if `sys1` is a StateSpace
@@ -198,18 +215,18 @@ def feedback(sys1, sys2, sign=-1):
     """
 
     # Check for correct input types.
-    if not isinstance(sys1, (int, long, float, complex, tf.TransferFunction,
+    if not isinstance(sys1, (int, float, complex, tf.TransferFunction,
         ss.StateSpace)):
         raise TypeError("sys1 must be a TransferFunction or StateSpace object, \
 or a scalar.")
-    if not isinstance(sys2, (int, long, float, complex, tf.TransferFunction,
+    if not isinstance(sys2, (int, float, complex, tf.TransferFunction,
         ss.StateSpace)):
         raise TypeError("sys2 must be a TransferFunction or StateSpace object, \
 or a scalar.")
 
     # If sys1 is a scalar, convert it to the appropriate LTI type so that we can
     # its feedback member function.
-    if isinstance(sys1, (int, long, float, complex)):
+    if isinstance(sys1, (int, float, complex)):
         if isinstance(sys2, tf.TransferFunction):
             sys1 = tf._convertToTransferFunction(sys1)
         elif isinstance(sys2, ss.StateSpace):

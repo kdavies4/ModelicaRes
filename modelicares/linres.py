@@ -22,8 +22,8 @@ import modelicares.base as base
 from scipy.io import loadmat
 from matplotlib.cbook import iterable
 
-from control.matlab import ss, logspace
-from control.freqplot import bode, nyquist, nyquist_label
+from control.matlab import ss
+from control.freqplot import bode, nyquist
 
 
 class LinRes(object):
@@ -193,10 +193,10 @@ class LinRes(object):
         else:
             self.sys.outputName = []
 
-    def bode(self, ax=None, pairs=None, w_min=-1, w_max=3, label='bode',
+    def bode(self, ax=None, pairs=None, label='bode',
              title=None, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
              styles=[(100,0), (3,3), (1,1), (3,2,1,2)],**kwargs):
-        """Create a Bode plot of the system's response.
+        r"""Create a Bode plot of the system's response.
 
         **Arguments:**
 
@@ -208,10 +208,6 @@ class LinRes(object):
           function to be evaluated
 
              If not provided, all of the transfer functions will be plotted.
-
-        - *w_min*: Common logarithm of the minimum angular frequency
-
-        - *w_max*: Common logarithm of the maximum angular frequency
 
         - *label*: Label for the figure (ignored if ax is provided)
 
@@ -239,7 +235,7 @@ class LinRes(object):
              .. Seealso::
                 http://matplotlib.sourceforge.net/api/collections_api.html
 
-        - *\*\*kwargs*: Propagated to :meth:`control.matlab.bode`
+        - *\*\*kwargs*: Additional arguments for :meth:`control.matlab.bode`
 
         The Bode plots of a MIMO system are overlayed. This is different than
         MATLAB\ :sup:`®`, which creates an array of subplots.
@@ -249,10 +245,11 @@ class LinRes(object):
         .. code-block:: python
 
            >>> from modelicares import LinRes, saveall
+           >>> from numpy import pi, logspace
 
            >>> lin = LinRes('examples/PID.mat')
-           >>> lin.bode(label='examples/PID-bode',
-           ...          title="Bode Plot of Modelica.Blocks.Continuous.PID")
+           >>> lin.bode(label='examples/PID-bode', omega=2*pi*logspace(-2, 3),
+           ...          title="Bode Plot of Modelica.Blocks.Continuous.PID\n")
            >>> saveall()
            Saved examples/PID-bode.pdf
            Saved examples/PID-bode.png
@@ -279,7 +276,7 @@ class LinRes(object):
 
         # Create a title if necessary.
         if title is None:
-            title = "Bode Plot of " + self.fbase
+            title = r"Bode Plot of %s\n" % self.fbase
 
         # Set up the color(s) and line style(s).
         if not iterable(colors):
@@ -306,8 +303,7 @@ class LinRes(object):
             # Extract the SISO TF. TODO: Is there a better way to do this?
             sys = ss(self.sys.A, self.sys.B[:, i_u], self.sys.C[i_y, :],
                      self.sys.D[i_y, i_u])
-            bode(sys, logspace(w_min, w_max), Hz=True,
-                 label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
+            bode(sys, Hz=True, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
                  color=colors[np.mod(i, n_colors)],
                  style=styles[np.mod(i, n_styles)], **kwargs)
             # Note: controls.matlab.bode() is currently only implemented for
@@ -318,24 +314,17 @@ class LinRes(object):
             # subfigures like MATLAB does.
 
         # Decorate the figure.
+        plt.subplot(211)
         plt.title(title)
         if len(pairs) > 1:
             plt.legend()
             plt.subplot(211) # Go back to the magnitude plot.
             plt.legend()
 
-    #def nyquist(self, w_min=-12+np.log10(2*np.pi), w_max=-8+np.log10(2*np.pi),
-    #             inclLabel=True, fname="nyquist",
-    #              color=['b','g','r','c','m','y','k']):
-    #def nyquist(self, w_min=-3+np.log10(2*np.pi), w_max=0+np.log10(2*np.pi),
-    #            inclLabel=True, fname="nyquist",
-    #            color=['b','g','r','c','m','y','k']):
-    def nyquist(self, ax=None, pairs=None,
-                w_min=0+np.log10(2*np.pi), w_max=2+np.log10(2*np.pi),
-                label="nyquist", title=None,
-                xlabel="Real Axis", ylabel="Imaginary Axis", mark=True,
+    def nyquist(self, ax=None, pairs=None, label="nyquist", title=None,
+                xlabel="Real Axis", ylabel="Imaginary Axis",
                 colors=['b','g','r','c','m','y','k'], **kwargs):
-        """Create a Nyquist plot of the system's response.
+        r"""Create a Nyquist plot of the system's response.
 
         **Arguments:**
 
@@ -347,10 +336,6 @@ class LinRes(object):
           function to be evaluated
 
              If not provided, all of the transfer functions will be plotted.
-
-        - *w_min*: Common logarithm of the minimum angular frequency
-
-        - *w_max*: Common logarithm of the maximum angular frequency
 
         - *label*: Label for the figure (ignored if ax is provided)
 
@@ -366,17 +351,13 @@ class LinRes(object):
 
         - *ylabel*: y-axis label
 
-        - *mark*: *True* if frequencies should be labeled (with a dot and text
-          denoting the frequency)
-
         - *colors*: Color or list of colors that will be used sequentially
 
              Each may be a character, grayscale, or rgb value.
 
              .. Seealso:: http://matplotlib.sourceforge.net/api/colors_api.html
 
-        - *\*\*kwargs*: Propagated to :meth:`control.matlab.nyquist` **and**
-          :meth:`control.matlab.nyquist_label`
+        - *\*\*kwargs*: Additional arguments for :meth:`control.matlab.nyquist``
 
         The Nyquist plots of a MIMO system are overlayed. This is different
         than MATLAB\ :sup:`®`, which creates an array of subplots.
@@ -390,10 +371,12 @@ class LinRes(object):
         .. code-block:: python
 
            >>> from modelicares import LinRes, saveall
+           >>> from numpy import pi, logspace
 
            >>> lin = LinRes('examples/PID.mat')
            >>> lin.nyquist(label='examples/PID-nyquist',
-           ...             title="Nyquist Plot of Modelica.Blocks.Continuous.PID")
+           ...             omega=2*pi*logspace(0, 3, 61), labelFreq=20,
+           ...             title="Nyquist Plot of Modelica.Blocks.Continuous.PID\n")
            >>> saveall()
            Saved examples/PID-nyquist.pdf
            Saved examples/PID-nyquist.png
@@ -413,7 +396,7 @@ class LinRes(object):
         """
         # Create a title if necessary.
         if title is None:
-            title = "Nyquist Plot of " + self.fbase
+            title = r"Nyquist Plot of %s\n" % self.fbase
 
         # Set up the color(s).
         if not iterable(colors):
@@ -432,19 +415,10 @@ class LinRes(object):
             # Extract the SISO TF. TODO: Is there a better way to do this?
             sys = ss(self.sys.A, self.sys.B[:, i_u], self.sys.C[i_y, :],
                      self.sys.D[i_y, i_u])
-            nyquist(sys, logspace(w_min, w_max),
-                    label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
-                    color=colors[np.mod(i, n_colors)], mark=False, **kwargs)
-            if mark:
-                # Show text only for the 1st TF.
-                #nyquist_label(sys, logspace(w_min, w_max, 2),
-                #    color=colors[np.mod(i, n_colors)],
-                #    inclText=(i_u == 0 and i_y == 0), **kwargs)
-                nyquist_label(sys, logspace(w_min, w_max, 2),
-                              color=colors[np.mod(i, n_colors)], **kwargs)
-            # Note: controls.matlab.nyquist() and
-            # controls.matlab.nyquist_label() are currently only implemented
-            # for SISO systems.
+            nyquist(sys, mark=False, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
+                    color=colors[np.mod(i, n_colors)], **kwargs)
+            # Note: controls.matlab.nyquist() is currently only implemented for
+            # SISO systems.
 
         # Decorate the figure.
         if len(pairs) > 1:

@@ -14,16 +14,16 @@
 #
 # 1. Redistributions of source code must retain the above copyright
 #    notice, this list of conditions and the following disclaimer.
-# 
+#
 # 2. Redistributions in binary form must reproduce the above copyright
 #    notice, this list of conditions and the following disclaimer in the
 #    documentation and/or other materials provided with the distribution.
-# 
+#
 # 3. Neither the name of the California Institute of Technology nor
 #    the names of its contributors may be used to endorse or promote
 #    products derived from this software without specific prior
 #    written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 # "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 # LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -36,8 +36,8 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
-# 
-# $Id: __init__.py 172 2011-08-07 15:12:58Z murrayrm $
+#
+# $Id: __init__.py 225 2012-11-03 21:03:39Z murrayrm $
 
 """Control System Library
 
@@ -49,6 +49,7 @@ Common functions
 tf      create a transfer function from num, den coefficients
 ss      create a state space system from A, B, C, D matrices
 pzk     create a transfer function from pole, zero, gain
+frd     create a system description as frequency response
 bode    generate a Bode plot for a linear I/O system
 nyquist generate a Nyquist plot for a linear I/O system
 lqr     linear quadratic regulator
@@ -57,18 +58,30 @@ lqe     linear quadratic estimator
 
 # Import functions from within the control system library
 #! Should probably only import the exact functions we use...
-from bdalg import series, parallel, negate, feedback
-from delay import pade
-from freqplot import bode_plot, nyquist_plot, gangof4_plot
-from freqplot import bode, nyquist, gangof4
-from margins import stability_margins, phase_crossover_frequencies
-from mateqn import lyap, dlyap, care, dare
-from modelsimp import hsvd, modred, balred, era, markov
-from nichols import nichols_plot, nichols
-from phaseplot import phase_plot, box_grid
-from rlocus import root_locus
-from statefbk import place, lqr, ctrb, obsv, gram
-from statesp import StateSpace
-from timeresp import forced_response, initial_response, step_response, \
+from control.bdalg import series, parallel, negate, feedback
+from control.delay import pade
+from control.freqplot import bode_plot, nyquist_plot, gangof4_plot
+from control.freqplot import bode, nyquist, gangof4
+from control.lti import timebase, timebaseEqual, isdtime, isctime
+from control.margins import stability_margins, phase_crossover_frequencies
+from control.mateqn import lyap, dlyap, care, dare
+from control.modelsimp import hsvd, modred, balred, era, markov
+from control.nichols import nichols_plot, nichols
+from control.phaseplot import phase_plot, box_grid
+from control.rlocus import root_locus
+from control.statefbk import place, lqr, ctrb, obsv, gram, acker
+from control.statesp import StateSpace
+from control.timeresp import forced_response, initial_response, step_response, \
     impulse_response
-from xferfcn import TransferFunction
+from control.xferfcn import TransferFunction
+from control.ctrlutil import unwrap, issys
+from control.frdata import FRD
+
+# Import some of the more common (and benign) MATLAB shortcuts
+# By default, don't import conflicting commands here
+from control.matlab import ss, tf, ss2tf, tf2ss, drss
+from control.matlab import pole, zero, evalfr, freqresp, dcgain
+from control.matlab import nichols, rlocus, margin
+        # bode and nyquist come directly from freqplot.py
+from control.matlab import step, impulse, initial, lsim
+from control.matlab import ssdata, tfdata

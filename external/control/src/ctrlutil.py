@@ -38,12 +38,12 @@
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 # 
-# $Id: ctrlutil.py 162 2011-06-22 06:02:02Z murrayrm $
+# $Id: ctrlutil.py 221 2012-11-03 05:13:00Z murrayrm $
 
 # Packages that we need access to
 import scipy as sp
-import statesp
-import xferfcn 
+import control.statesp as statesp
+import control.xferfcn as xferfcn
 
 # Specific functions that we use
 from scipy import pi
@@ -96,6 +96,7 @@ def unwrap(angle, period=2*pi):
 # Determine if an object is a system
 def issys(object):
     # Check for a member of one of the classes that we define here
+    #! TODO: this should probably look for an LTI object instead??
     if (isinstance(object, (statesp.StateSpace, xferfcn.TransferFunction))): 
         return True
     

@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: control
-Version: 0.5b
+Version: 0.6c
 Summary: Python Control Systems Library
 Home-page: http://python-control.sourceforge.net
 Author: Richard Murray
@@ -8,5 +8,5 @@ Author-email: murray@cds.caltech.edu
 License: UNKNOWN
 Description: UNKNOWN
 Platform: UNKNOWN
-Requires: scipy
+Requires: scipy (>= 0.10.0)
 Requires: matplotlib

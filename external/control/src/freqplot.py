@@ -39,13 +39,15 @@
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $Id: freqplot.py 179 2012-01-08 02:56:24Z murrayrm $
+# $Id: freqplot.py 221 2012-11-03 05:13:00Z murrayrm $
 
 import matplotlib.pyplot as plt
 import scipy as sp
 import numpy as np
-from ctrlutil import unwrap
-from bdalg import feedback
+from warnings import warn
+from control.ctrlutil import unwrap
+from control.bdalg import feedback
+from control.lti import isdtime, timebaseEqual
 
 #
 # Main plotting functions
@@ -55,11 +57,10 @@ from bdalg import feedback
 #
 
 # Bode plot
-# ModelicaRes 7/30/12:
-#def bode_plot(syslist, omega=None, dB=False, Hz=False, deg=True,
-#        color=None, Plot=True):
 def bode_plot(syslist, omega=None, dB=False, Hz=False, deg=True,
-        color=None, style='-', Plot=True, label=None, *args, **kwargs):
+# ModelicaRes 7/2/13:
+#        Plot=True, *args, **kwargs):
+        Plot=True, style='-', label=None, *args, **kwargs):
     """Bode plot for a system
 
     Plots a Bode plot for the system over a (optional) frequency range.
@@ -74,17 +75,12 @@ def bode_plot(syslist, omega=None, dB=False, Hz=False, deg=True,
         If True, plot result in dB
     Hz : boolean
         If True, plot frequency in Hz (omega must be provided in rad/sec)
-    color : matplotlib color
-        Color of line in bode plot
-    # ModelicaRes 7/30/12:
-    style : matplotlib style
-        Style of line in bode plot
     deg : boolean
         If True, return phase in degrees (else radians)
     Plot : boolean
         If True, plot magnitude and phase
-    # ModelicaRes 7/30/12:
-    *args, **kwargs: Propagated to matplotlib.pyplot.semilogx AND matplotlib.pyplot.loglog
+    *args, **kwargs:
+        Additional options to matplotlib (color, linestyle, etc)
 
     Returns
     -------
@@ -97,13 +93,17 @@ def bode_plot(syslist, omega=None, dB=False, Hz=False, deg=True,
 
     Notes
     -----
-    1. Alternatively, you may use the lower-level method
-    (mag, phase, freq) = sys.freqresp(freq) to generate the frequency
-    response for a system, but it returns a MIMO response.
+    1. Alternatively, you may use the lower-level method (mag, phase, freq)
+    = sys.freqresp(freq) to generate the frequency response for a system,
+    but it returns a MIMO response.
+
+    2. If a discrete time model is given, the frequency response is plotted
+    along the upper branch of the unit circle, using the mapping z = exp(j
+    \omega dt) where omega ranges from 0 to pi/dt and dt is the discrete
+    time base.  If not timebase is specified (dt = True), dt is set to 1.
 
     Examples
     --------
-    >>> from matlab import ss
     >>> sys = ss("1. -2; 3. -4", "5.; 7", "6. 8", "9.")
     >>> mag, phase, omega = bode(sys)
     """
@@ -117,14 +117,14 @@ def bode_plot(syslist, omega=None, dB=False, Hz=False, deg=True,
             #TODO: Add MIMO bode plots.
             raise NotImplementedError("Bode is currently only implemented for SISO systems.")
         else:
-            # Select a default range if none is provided
             if (omega == None):
+                # Select a default range if none is provided
                 omega = default_frequency_range(syslist)
 
             # Get the magnitude and phase of the system
             mag_tmp, phase_tmp, omega = sys.freqresp(omega)
-            mag = np.squeeze(mag_tmp)
-            phase = np.squeeze(phase_tmp)
+            mag = np.atleast_1d(np.squeeze(mag_tmp))
+            phase = np.atleast_1d(np.squeeze(phase_tmp))
             phase = unwrap(phase)
             if Hz: omega = omega/(2*sp.pi)
             if dB: mag = 20*sp.log10(mag)
@@ -140,203 +140,58 @@ def bode_plot(syslist, omega=None, dB=False, Hz=False, deg=True,
                 # Magnitude plot
                 plt.subplot(211);
                 if dB:
-                    if color==None:
-                        # ModelicaRes 5/23/11:
-                        #plt.semilogx(omega, mag)
-                        if type(style)==str:
-                            plt.semilogx(omega, mag, linestyle=style, label=label, *args, **kwargs)
-                        else:
-                            plt.semilogx(omega, mag, dashes=style, label=label, *args, **kwargs)
+                    # ModelicaRes 7/2/13:
+                    #plt.semilogx(omega, mag, *args, **kwargs)
+                    if type(style) is str:
+                        plt.semilogx(omega, mag, linestyle=style, label=label, *args, **kwargs)
                     else:
-                        # ModelicaRes 5/23/11:
-                        #plt.semilogx(omega, mag, color=color)
-                        if type(style)==str:
-                            plt.semilogx(omega, mag, color=color, linestyle=style, label=label, *args, **kwargs)
-                        else:
-                            plt.semilogx(omega, mag, color=color, dashes=style, label=label, *args, **kwargs)
-                    plt.ylabel("Magnitude (dB)")
+                        plt.semilogx(omega, mag, dashes=style, label=label, *args, **kwargs)
                 else:
-                    if color==None:
-                        # ModelicaRes 5/23/11:
-                        #plt.loglog(omega, mag)
-                        if type(style)==str:
-                            plt.loglog(omega, mag, linestyle=style, label=label, *args, **kwargs)
-                        else:
-                            plt.loglog(omega, mag, dashes=style, label=label, *args, **kwargs)
+                    # ModelicaRes 7/2/13:
+                    #plt.loglog(omega, mag, *args, **kwargs)
+                    if type(style) is str:
+                        plt.loglog(omega, mag, linestyle=style, label=label, *args, **kwargs)
                     else:
-                        # ModelicaRes 5/23/11:
-                        #plt.loglog(omega, mag, color=color)
-                        if type(style)==str:
-                            plt.loglog(omega, mag, color=color, linestyle=style, label=label, *args, **kwargs)
-                        else:
-                            plt.loglog(omega, mag, color=color, dashes=style, label=label, *args, **kwargs)
-                    plt.ylabel("Magnitude")
+                        plt.loglog(omega, mag, dashes=style, label=label, *args, **kwargs)
+                plt.hold(True);
 
-                # Add a grid to the plot
+                # Add a grid to the plot + labeling
                 plt.grid(True)
                 plt.grid(True, which='minor')
-                plt.hold(True);
+                plt.ylabel("Magnitude (dB)" if dB else "Magnitude")
 
                 # Phase plot
                 plt.subplot(212);
-                if deg:
-                    phase_deg = phase
+                # ModelicaRes 7/2/13:
+                #plt.semilogx(omega, phase, *args, **kwargs)
+                if type(style) is str:
+                    plt.semilogx(omega, phase, linestyle=style, label=label, *args, **kwargs)
                 else:
-                    phase_deg = phase * 180 / sp.pi
-                if color==None:
-                    # ModelicaRes 5/23/11:
-                    #plt.semilogx(omega, phase_deg)
-                    if type(style)==str:
-                        plt.semilogx(omega, phase_deg, linestyle=style, label=label, *args, **kwargs)
-                    else:
-                        plt.semilogx(omega, phase_deg, dashes=style, label=label, *args, **kwargs)
-                else:
-                    # ModelicaRes 5/23/11:
-                    #plt.semilogx(omega, phase_deg, color=color)
-                    if type(style)==str:
-                        plt.semilogx(omega, phase_deg, color=color, linestyle=style, label=label, *args, **kwargs)
-                    else:
-                        plt.semilogx(omega, phase_deg, color=color, dashes=style, label=label, *args, **kwargs)
-                plt.hold(True)
+                    plt.semilogx(omega, phase, dashes=style, label=label, *args, **kwargs)
+                plt.hold(True);
 
-                # Add a grid to the plot
+                # Add a grid to the plot + labeling
                 plt.grid(True)
                 plt.grid(True, which='minor')
-                # ModelicaRes 5/23/11:
-                #plt.ylabel("Phase (deg)")
-                plt.ylabel("Phase / deg")
+                # ModelicaRes 7/2/13:
+                #plt.ylabel("Phase (deg)" if deg else "Phase (rad)")
+                plt.ylabel("Phase / deg" if deg else "Phase / rad")
 
                 # Label the frequency axis
-                if Hz:
-                    # ModelicaRes 5/23/11:
-                    #plt.xlabel("Frequency (Hz)")
-                    plt.xlabel("Frequency / Hz")
-                else:
-                    # ModelicaRes 5/23/11:
-                    #plt.xlabel("Frequency (rad/sec)")
-                    plt.xlabel(r'Frequency / rad s$^{-1}$')
+                # ModelicaRes 7/2/13:
+                #plt.xlabel("Frequency (Hz)" if Hz else "Frequency (rad/sec)")
+                plt.xlabel("Frequency / Hz" if Hz else "Frequency / rad s$^{-1}$")
 
     if len(syslist) == 1:
         return mags[0], phases[0], omegas[0]
     else:
         return mags, phases, omegas
 
-# ModelicaRes 5/23/11:
-# This function is also in res.py.  **Install res.py, import it here, and delete this copy.
-def get_pow1000(num):
-    '''Determine the exponent for which the significand of a number is within the
-    range [1, 1000).
-    '''
-    # Based on algorithm from http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html, accessed 2010/11/7
-    # by Jason Heeris 2009/11/18
-    from decimal import Decimal
-    from math import floor
-    dnum = Decimal(str(num))
-    if dnum == 0:
-        return 0
-    elif dnum < 0:
-        dnum = -dnum
-    return int(floor(dnum.log10()/3))
-
-# ModelicaRes 5/23/11:
-# This function is also in res.py.  **Install res.py, import it here, and delete this copy.
-def gen_prefix(pow1000):
-    '''Return the SI prefix for a power of 1000.
-    '''
-    # Prefixes according to Table 5 of [BIPM 2006] (excluding hecto, deca, deci, and centi).
-    if pow1000 < -8 or pow1000 > 8:
-        raise ValueError("Value is out of the range covered by the SI prefixes.")
-    return ['Y', # yotta (10^24)
-            'Z', # zetta (10^21)
-            'E', # exa (10^18)
-            'P', # peta (10^15)
-            'T', # tera (10^12)
-            'G', # giga (10^9)
-            'M', # mega (10^6)
-            'k', # kilo (10^3)
-            '', # (10^0)
-            'm', # milli (10^-3)
-            r'$\mu$', # micro (10^-6)
-            'n', # nano (10^-9)
-            'p', # pico (10^-12)
-            'f', # femto (10^-15)
-            'a', # atto (10^-18)
-            'z', # zepto (10^-21)
-            'y'][8 - pow1000] # yocto (10^-24)
-
-# ModelicaRes 5/23/11 copied and modified from nyquist():
-def nyquist_label(syslist, omega=None, inclText=True, color='b', *args, **kwargs):
-    """Denote frequencies on a Nyquist plot.
-
-    Usage
-    =====
-    real, imag, freq = nyquist(sys, omega=None)
-
-    Plots discrete points on a Nyquist diagram (at frequency decades) for the system
-    over a (optional) frequency range.  Labels the frequencies of those points
-    in Hz (optional).
-
-    Parameters
-    ----------
-    syslist : linsys
-        List of linear input/output systems (single system is OK)
-    omega : freq_range
-        Range of frequencies (list or bounds) in rad/s
-    *args, **kwargs: Propagated to matplotlib.pyplot.plot
-
-    Return values
-    -------------
-    real : real part of the frequency response array
-    imag : imaginary part of the frequency response array
-    freq : frequencies
-    """
-    # If argument was a singleton, turn it into a list
-    if (not getattr(syslist, '__iter__', False)):
-        syslist = (syslist,)
-
-    # Select a default range if none is provided
-    if (omega == None):
-        omega = default_frequency_range(syslist)
-        omega = (min(omega), max(omega))
-    # Interpolate between wmin and wmax if a tuple or list are provided
-    elif (isinstance(omega,list) | isinstance(omega,tuple)) and len(omega) != 2:
-        # Only accept tuple or list of length 2
-        raise ValueError("Supported frequency arguments are (wmin,wmax) tuple or list, or frequency vector. ")
-    w = (np.ceil(np.log10(omega[0]/(2*sp.pi))), np.ceil(np.log10(omega[1]/(2*sp.pi)))) # Find the log10 of the min and max decade frequencies that are within the range.
-    omega = 2*sp.pi*np.logspace(w[0],w[1],num=w[1]-w[0]+1,endpoint=True,base=10.0) # Create the array of angular frequencies.
-
-    for sys in syslist:
-        if (sys.inputs > 1 or sys.outputs > 1):
-            #TODO: Add MIMO nyquist plots.
-            raise NotImplementedError("Nyquist is currently only implemented for SISO systems.")
-        else:
-            # Get the magnitude and phase of the system
-            mag_tmp, phase_tmp, omega = sys.freqresp(omega)
-            mag = np.squeeze(mag_tmp)
-            phase = np.squeeze(phase_tmp)
-
-            # Compute the primary curve
-            x = sp.multiply(mag, sp.cos(phase));
-            y = sp.multiply(mag, sp.sin(phase));
-
-            # Plot the primary curve and mirror image
-            plt.plot(x, y, '.', color=color, *args, **kwargs);
-            plt.plot(x, -y, '.', color=color, *args, **kwargs);
-
-            # Label the frequencies of the points
-            if (inclText):
-                for xpt, ypt, omegapt in zip(x, y, omega):
-                    f = omegapt/(2*sp.pi) # Convert to Hz.
-                    pow1000 = max(min(get_pow1000(f),8),-8) # Factor out multiples of 1000 and limit the result to the range [-8, 8].
-                    prefix = gen_prefix(pow1000) # Get the SI prefix.
-                    plt.text(xpt, ypt, ' ' + str(int(np.round(f/1000**pow1000, 0))) + ' ' + prefix + 'Hz') # Apply the text. (Use a space before the text to prevent overlap with the data.)
-                    # np.round() is used because 0.99... appears instead of 1.0, and this would otherwise be truncated to 0.
-        return x, y, omega
-
 # Nyquist plot
-# ModelicaRes 5/23/11:
-#def nyquist_plot(syslist, omega=None, Plot=True):
-def nyquist_plot(syslist, omega=None, Plot=True, label=None, color='b', mark=True, *args, **kwargs):
+# ModelicaRes 7/2/13:
+#def nyquist_plot(syslist, omega=None, Plot=True, color='b',
+def nyquist_plot(syslist, omega=None, Plot=True, color='b', label=None, mark=True,
+                 labelFreq=0, *args, **kwargs):
     """Nyquist plot for a system
 
     Plots a Nyquist plot for the system over a (optional) frequency range.
@@ -348,9 +203,11 @@ def nyquist_plot(syslist, omega=None, Plot=True, label=None, color='b', mark=Tru
     omega : freq_range
         Range of frequencies (list or bounds) in rad/sec
     Plot : boolean
-        if True, plot magnitude
-    # ModelicaRes 7/30/12:
-    *args, **kwargs: Propagated to matplotlib.pyplot.plot
+        If True, plot magnitude
+    labelFreq : int
+        Label every nth frequency on the plot
+    *args, **kwargs:
+        Additional options to matplotlib (color, linestyle, etc)
 
     Returns
     -------
@@ -363,7 +220,6 @@ def nyquist_plot(syslist, omega=None, Plot=True, label=None, color='b', mark=Tru
 
     Examples
     --------
-    >>> from matlab import ss
     >>> sys = ss("1. -2; 3. -4", "5.; 7", "6. 8", "9.")
     >>> real, imag, freq = nyquist(sys)
     """
@@ -373,13 +229,16 @@ def nyquist_plot(syslist, omega=None, Plot=True, label=None, color='b', mark=Tru
 
     # Select a default range if none is provided
     if (omega == None):
+        #! TODO: think about doing something smarter for discrete
         omega = default_frequency_range(syslist)
+
     # Interpolate between wmin and wmax if a tuple or list are provided
     elif (isinstance(omega,list) | isinstance(omega,tuple)):
         # Only accept tuple or list of length 2
         if (len(omega) != 2):
             raise ValueError("Supported frequency arguments are (wmin,wmax) tuple or list, or frequency vector. ")
-        omega = np.logspace(np.log10(omega[0]),np.log10(omega[1]),num=50,endpoint=True,base=10.0)
+        omega = np.logspace(np.log10(omega[0]), np.log10(omega[1]),
+                            num=50, endpoint=True, base=10.0)
     for sys in syslist:
         if (sys.inputs > 1 or sys.outputs > 1):
             #TODO: Add MIMO nyquist plots.
@@ -396,18 +255,42 @@ def nyquist_plot(syslist, omega=None, Plot=True, label=None, color='b', mark=Tru
 
             if (Plot):
                 # Plot the primary curve and mirror image
-                # ModelicaRes 5/23/11:
-                #plt.plot(x, y, '-');
-                #plt.plot(x, -y, '--');
-                plt.plot(x, y, '-', label=label, color=color, *args, **kwargs);
+                # ModelicaRes 7/2/13:
+                #plt.plot(x, y, '-', color=color, *args, **kwargs);
+                plt.plot(x, y, '-', color=color, label=label, *args, **kwargs);
                 plt.plot(x, -y, '--', color=color, *args, **kwargs);
-
-                # ModelicaRes 5/25/11:
-                # plt.plot([-1], [0], 'r+')
-                if (mark):
-                    # Mark the -1 point
+                # Mark the -1 point
+                # ModelicaRes 7/2/13:
+                #plt.plot([-1], [0], 'r+')
+                if mark:
                     plt.plot([-1], [0], 'r+')
 
+            # Label the frequencies of the points
+            if (labelFreq):
+                for xpt, ypt, omegapt in zip(x, y, omega)[::labelFreq]:
+                    # Convert to Hz
+                    f = omegapt/(2*sp.pi)
+
+                    # Factor out multiples of 1000 and limit the
+                    # result to the range [-8, 8].
+                    pow1000 = max(min(get_pow1000(f),8),-8)
+
+                     # Get the SI prefix.
+                    prefix = gen_prefix(pow1000)
+
+                    # Apply the text. (Use a space before the text to
+                    # prevent overlap with the data.)
+                    #
+                    # np.round() is used because 0.99... appears
+                    # instead of 1.0, and this would otherwise be
+                    # truncated to 0.
+                    plt.text(xpt, ypt,
+                             ' ' + str(int(np.round(f/1000**pow1000, 0))) +
+                             ' ' + prefix + 'Hz')
+
+                    # ModelicaRes 7/3/13:
+                    # Plot a mark the freqencies with a dot.
+                    plt.plot(xpt, ypt, '.', color=color)
         return x, y, omega
 
 # Gang of Four
@@ -509,10 +392,14 @@ def default_frequency_range(syslist):
     # detect if single sys passed by checking if it is sequence-like
     if (not getattr(syslist, '__iter__', False)):
         syslist = (syslist,)
+
     for sys in syslist:
-        # Add new features to the list
-        features = np.concatenate((features, np.abs(sys.pole())))
-        features = np.concatenate((features, np.abs(sys.zero())))
+        try:
+            # Add new features to the list
+            features = np.concatenate((features, np.abs(sys.pole())))
+            features = np.concatenate((features, np.abs(sys.zero())))
+        except:
+            pass
 
     # Get rid of poles and zeros at the origin
     features = features[features != 0];
@@ -523,11 +410,56 @@ def default_frequency_range(syslist):
     # Take the log of the features
     features = np.log10(features)
 
+    #! TODO: Add a check in discrete case to make sure we don't get aliasing
+
     # Set the range to be an order of magnitude beyond any features
     omega = sp.logspace(np.floor(np.min(features))-1,
                         np.ceil(np.max(features))+1)
 
     return omega
+
+#
+# KLD 5/23/11: Two functions to create nice looking labels
+#
+def get_pow1000(num):
+    '''Determine the exponent for which the significand of a number is within the
+    range [1, 1000).
+    '''
+    # Based on algorithm from http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html, accessed 2010/11/7
+    # by Jason Heeris 2009/11/18
+    from decimal import Decimal
+    from math import floor
+    dnum = Decimal(str(num))
+    if dnum == 0:
+        return 0
+    elif dnum < 0:
+        dnum = -dnum
+    return int(floor(dnum.log10()/3))
+
+def gen_prefix(pow1000):
+    '''Return the SI prefix for a power of 1000.
+    '''
+    # Prefixes according to Table 5 of [BIPM 2006] (excluding hecto,
+    # deca, deci, and centi).
+    if pow1000 < -8 or pow1000 > 8:
+        raise ValueError("Value is out of the range covered by the SI prefixes.")
+    return ['Y', # yotta (10^24)
+            'Z', # zetta (10^21)
+            'E', # exa (10^18)
+            'P', # peta (10^15)
+            'T', # tera (10^12)
+            'G', # giga (10^9)
+            'M', # mega (10^6)
+            'k', # kilo (10^3)
+            '', # (10^0)
+            'm', # milli (10^-3)
+            r'$\mu$', # micro (10^-6)
+            'n', # nano (10^-9)
+            'p', # pico (10^-12)
+            'f', # femto (10^-15)
+            'a', # atto (10^-18)
+            'z', # zepto (10^-21)
+            'y'][8 - pow1000] # yocto (10^-24)
 
 # Function aliases
 bode = bode_plot

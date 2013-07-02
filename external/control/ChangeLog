@@ -1,3 +1,377 @@
+2012-11-03  Richard Murray  <murray@altura.local>
+
+	* doc/modules.rst: updated documentation format so that items are
+	broken down by functionality and not internal module name.  Still
+	not complete, but most functions should now show up in documentation.
+
+	* doc/index.rst: got rid of todos from documentation (not formatted
+	correctly and shouldn't show up in user documentation)
+
+	* src/lti.py: added missing docstrings
+
+	* doc/intro.rst: small tweaks to text, including adding a link to FBS
+
+2012-11-03  Richard Murray  <murray@altura.local>
+
+	* src/rlocus.py (_RLSortRoots): convert output of range() to
+	explicit list for python 3 compatability
+
+	* tests/modelsimp_test.py, tests/slycot_convert_test.py,
+	tests/mateqn_test.py, tests/statefbk_test.py: updated test suites to
+	skip specific tests that require slycot if it is not installed
+
+	* src/exception.py (slycot_check): added a function to check if
+	slycot is installed
+
+	* README: updated readme to include information about running
+	nosetests, which works in python3 (unlike the test_all.py script)
+
+	* tests/test_control_matlab.py, tests/test_all.py: set to executable
+	so that nosetests does not run this file (it already runs all unit
+	tests in this directory).  Add comments at top talking about tests.
+
+	* tests/discrete_test.py (TestDiscrete.test_discrete_bode):
+	explicitly create a list from map() output for python 3
+
+	* src/frdata.py: removed long data type from comparisons for
+	constant systems (not supported in python3)
+
+	* src/xferfcn.py (TransferFunction.freqresp): force frequencies to
+	be a list (map returns iterator in python3)
+
+	* src/lti.py (isdtime, isctime): updated timebase checking since
+	python3 won't allow dt to be compared to integer
+
+	* src/__init__.py: updated frdata import to python3 compatible form
+
+	* src/statesp.py (_convertToStateSpace): fixed exception syntax to
+	be python3 compatible
+
+	* examples/pvtol-nested.py: converted print statements to be python3
+	compatible
+
+	* doc/class_strings.rst: added FRD class to list of classes that
+	show up in the user documentation
+
+	* examples/rss-balred.py: fixed error in output argument order for
+	call to matlab.impulse
+
+	* ../README: updated readme file as a test of post-commit hook
+
+2012-11-02  Richard Murray  <murray@altura.local>
+
+	* doc/conf.py, setup.py: updated version number to 0.6c
+
+	* tests/frd_test.py: unit tests for FRD data type
+	(suite): added suite() function to allow test_all.py to work
+
+	* tests/xferfcn_test.py (TestXferFcn.testMinreal): new unit test
+
+	* src/xferfcn.py (TransferFunction.minreal): new function for
+	removing cancelling pole/zero pairs, contributed by M.M. (Rene) van
+	Paassen
+
+	* src/statesp.py (_convertToStateSpace): new functionality for
+	converting a matrix to a constant system
+
+	* src/modelsimp.py (minreal): removed extraneous code (moved to
+	xferfcn.py)
+
+	* src/frdata.py: new file implementing FRD data type, contributed by
+	M.M. (Rene) van Paassen
+
+	* src/xferfcn.py: resolved conflict between versions
+
+---- control-0.6b released -----
+
+2012-11-02  Richard Murray  <murray@altura.local>
+
+	* src/xferfcn.py, src/statesp.py, src/lti.py, src/bdalg.py:
+	constants must now be of type 'int' rather than 'long' (for python 3
+	compatibility)
+
+	* tests/statefbk_test.py, tests/slycot_convert_test.py,
+	tests/convert_test.py: added import __future__ calls for python 3
+	compatibility; updated print calls
+
+	* src/modelsimp.py, src/xferfcn.py, src/delay.py, src/phaseplot.py,
+	src/margins.py, src/statesp.py, src/mateqn.py: added import
+	__future__ calls for python 3 compatibility
+
+2012-11-02  Richard Murray  <murray@altura.local>
+
+	* src/xferfcn.py, src/timeresp.py, src/statesp.py, src/statefbk.py,
+	src/robust.py, src/rlocus.py, src/pzmap.py, src/phaseplot.py,
+	src/nichols.py, src/modelsimp.py, src/matlab.py, src/margins.py,
+	src/freqplot.py, src/ctrlutil.py, src/bdalg.py: globally referenced
+	import commands for python 3.x
+
+	* src/__init__.py: changed import commands to be global instead of
+	local ('from control.bdalg ...' instead of 'from bdalg ...')
+
+2012-10-31  Richard Murray  <murray@altura.local>
+
+	* src/xferfcn.py (TransferFunction._common_den): converted print
+	statements to python 3 compatible form and included
+	__future__.print_function
+
+	* src/phaseplot.py: converted print statements to python 3
+	compatible form and included __future__.print_function
+
+	* src/mateqn.py (lyap, dlyap): converted except T, E to except T(E)
+
+	* src/margins.py: converted print statements to python 3
+	compatible form and included __future__.print_function
+
+	* src/xferfcn.py (TransferFunction.__add__, __mul__, __div__,
+	feedback): converted raise T, E to raise T(E) for python 3
+
+	* src/xferfcn.py (TransferFunction.returnScipySignalLti): fixed
+	raise(T(E)) bug
+
+	* src/statesp.py (_rss_generate): fixed raise(T(E)) bug
+
+	* src/statefbk.py (acker, gram): converted raise T, E to raise T(E) for
+	python 3
+
+	* src/modelsimp.py (hsvd, modred, balred): fixed raise(T(E)) bug and
+	converted raise T, E to raise T(E) for python 3
+
+	* src/margins.py (stability_margins): fixed raise(T(E)) bug
+
+	* src/statesp.py: converted raise T, E to raise T(E) for python 3
+
+	* tests/test_all.py: converted print statements to python 3
+	compatible form and included __future__.print_function
+
+	* tests/statefbk_test.py (TestStatefbk.setUp): turned off debugging
+	flag (accidently left on)
+
+---- control-0.6a released -----
+
+2012-10-27  Richard Murray  <murray@altura.local>
+
+	* src/statefbk.py (acker): small updates to docstring
+
+	* src/bdalg.py (feedback): fixed up docstring formatting (for sphinx)
+
+	* tests/statefbk_test.py (TestStatefbk.testAcker): skip
+	ill-conditioned systems and loosened tolerances on acker() testing
+
+	* src/lti.py (timebaseEqual): replaced "type(sys.dt) == NoneType"
+	with "sys.dt is None", based on feedback from Luke Peterson that
+	NoneType is deprecated in python 3.
+
+2012-10-22  Richard Murray  <murray@altura.local>
+
+	* examples/genswitch.py (genswitch): updated calls to legend, fixing
+	problem pointed out by Scott Livingston
+
+2012-10-19  Richard Murray  <murray@dn0a1594a2.sunet>
+
+	* src/matlab.py (rlocus): reverted change in default argument
+	processing for klist.  This has some negative consequences:
+	http://www.deadlybloodyserious.com/2008/05/default-argument-blunders/
+
+2012-10-18  Richard Murray  <murray@dn0a1594a2.sunet>
+
+	* src/freqplot.py (gangof4_plot, nyquist_plot): discrete time
+	systems supported (through fresp)
+
+	* src/statesp.py (StateSpace.evalfr): added warning if discrete time
+	evaluation is above Nyquist frequency
+
+	* src/xferfcn.py (TransferFunction.evalfr, freqresp): : added
+	warning if discrete time evaluation is above Nyquist frequency
+
+	* tests/discrete_test.py (TestDiscrete.test_discrete_bode):
+	rudimentary unit test for discrete bode plot
+
+	* src/freqplot.py (bode_plot): fixed bug where input frequency list
+	was being overwritten by default frequency range
+
+	* src/xferfcn.py (TransferFunction.evalfr, freqresp): handles dtime
+
+	* src/statesp.py (StateSpace.evalfr): handles dtime
+
+	* src/lti.py (timebaseEqual): converted function to take systems as
+	inputs instead of dt as input (also affected functions in statesp.py
+	and xferfcn.py)
+
+	* src/lti.py (timebase): timebase now returns dt instead of
+	'ctime'/'dtime'
+
+2012-10-13  Richard Murray  <murray@dn0a1594a2.sunet>
+
+	* src/lti.py (timebase): new function to return timebase.  Doesn't
+	yet handle the case where dt == None.
+
+2012-10-07  Richard Murray  <murray@altura.local>
+
+	* src/matlab.py (c2d): MATLAB compatible function (just calls
+	sample_system)
+
+	* tests/discrete_test.py (TestDiscrete.test_sample_system): unit
+	test for sampling
+
+	* src/dtime.py (sample_system, _c2dmatched): new functions, based on
+	contributiosn from Benjamin White
+
+	* src/dtime.py: added back this file, this time with sampling routes
+	to convert from continuous to discrete time
+
+	* src/timeresp.py (forced_response): added discrete time simulator,
+	using dlsim from scipy.signal
+
+2012-10-07  Richard Murray  <murray@altura.local>
+
+	* doc/conf.py: fixed release number (0.6a instead of 0.6c)
+
+	* src/__init__.py: moved timebase functions from dtime to lti
+
+	* src/lti.py: moved isdtime, isctime, timebase, and timebaseEqual
+	from dtime.py to lti.py.  Moved initialization of dt to
+	Lti.__init__().
+
+	* src/statesp.py (StateSpace.__init__): Moved dt
+	initialization to Lti object initialization
+
+	* src/xferfcn.py (TransferFunction.__init__): Moved dt
+	initialization to Lti object initialization
+
+2012-10-06  Richard Murray  <murray@altura.local>
+
+	* tests/discrete_test.py: added additional tests for dt = True cases
+
+	* src/statesp.py (StateSpace.__str__): show sampling time as
+	'unspecified' if dt is a boolean and equal to True
+
+	* src/xferfcn.py (TransferFunction.__str__): don't print sampling
+	time (dt) if dt = True (discrete time with unspecified time base)
+
+	* src/dtime.py: added code to support dt = True for unspecified
+	sampling time for a discrete time system
+
+	* src/bdalg.py: much -> must in docstrings
+
+2012-10-06  Richard Murray  <murray@altura.local>
+
+	* src/dtime.py: new module with functions for operating on discrete
+	time systems
+
+	* src/modelsimp.py: added NotImplementedError for discrete time
+	* src/freqplot.py: added NotImplementedError for discrete time
+
+	* src/bdalg.py: added documentation about timebases (discrete versus
+	continuous)
+
+	* src/statesp.py (_mimo2siso): include sampling time
+
+	* src/xferfcn.py (TransferFunction.__str__): added optional var
+	keyword to allow any symbol to be used
+
+	* src/matlab.py (tf2ss): added code required to keep track of dt
+
+	* src/xferfcn.py (TransferFunction.__str__): added additional string for
+	discrete time system, plus use 'z' for polynomial variable
+	(TransferFunction.__neg__): set sampling time for negation
+	(TransferFunction.__add__): added test for same sampling time
+	(TransferFunction.__mul__): added test for same sampling time
+	(TransferFunction.__div__): added test for same sampling time
+	(TransferFunction.feedback): added test for same sampling time
+
+	* src/statesp.py (StateSpace.__str__): added additional string for
+	discrete time system
+	(StateSpace.__add__): added test for same sampling time
+	(StateSpace.__mul__): added test for same sampling time
+	(StateSpace.__rmul__): set sampling time for product
+	(StateSpace.__neg__): set sampling time for negation
+	(StateSpace.feedback): added test for same sampling time
+
+	* tests/discrete_test.py (TestDiscrete): unit tests for discrete
+	time systems
+
+	* src/xferfcn.py (TransferFunction.__init__): added dt class
+	variable for discrete time systems
+
+	* src/statesp.py (StateSpace.__init__): added dt class variable for
+	discrete time systems
+
+---- control-0.5c released -----
+
+2012-10-03  Richard Murray  <murray@altura.local>
+
+	* tests/matlab_test.py (TestMatlab.testSsdata): unit test
+
+	* src/matlab.py (ssdata, tfdata): new functions to return state
+	space and transfer function object data.  For transfer functions,
+	currenly requires SISO system
+
+	* src/freqplot.py (bode_plot):  Adding np.atleast_1d to the
+	np.squeeze calculations makes it possible to use a single value
+	frequency list (contributed by Benjamin White)
+
+2012-09-09  Richard Murray  <murray@altura.local>
+
+	* tests/statefbk_test.py (TestStatefbk.testAcker): unit test
+
+	* src/statefbk.py (acker): added acker() from Roberto Bucher.
+
+2012-08-29  Richard Murray  <murray@altura.local>
+
+	* src/xferfcn.py (TransferFunction._common_den): fixed up code for
+	case where poles have multiplicity > 1.  Set end limits of check to
+	avoid overruning the list + combine complex conjugate pole pairs
+	from the outside in to prevent small errors from growing.
+
+2012-08-26  Richard Murray  <murray@altura.local>
+
+	* tests/convert_test.py (TestConvert.testConvert): replaced previous
+	test of transfer function coefficients with a frequency response
+	test.  This is necessary because various degenerate conditions will
+	generate a situation where the transfer functions are of different
+	forms but still equal.  Eg 0/1 = 1e-17 s + 1e-16 / (s^2 + s + 1).
+	Still getting errors, but looks like actual problem in conversion.
+
+	* src/statesp.py (_mimo2siso): set default value for warn_conversion
+	to False
+
+	* tests/convert_test.py (TestConvert.testConvert): Added check to
+	make sure that we don't create problems with uncontrollable or
+	unobservable systems.
+
+2012-08-25  Richard Murray  <murray@altura.local>
+
+	* src/xferfcn.py (TransferFunction._common_den): identified bug in
+	the way that common denominators are computed; see comments in code
+	regarding complex conjugate pairs.
+
+	* src/statefbk.py (place): repalced nd.size(placed_eigs) with
+	len(placed_eigs) to fix intermittent problems pointed out by Roberto
+	Bucher in control-0.3c.
+
+	* tests/rlocus_test.py (TestRootLocus.testRootLocus): added sort()
+	to test to get rid of problems in which ordering was generating an
+	error.
+
+	* src/freqplot.py (nyquist_plot): added code from Kevin Davies to
+	label frequency points in Nyquist plot
+
+	* src/__init__.py: import non-conflicting MATLAB functions by default
+
+	* src/freqplot.py (bode_plot, nyquist_plot): simplified code and
+	removed unneeded options.  To set color, linestyle, etc use keywords
+	and pass to matplotlib.
+
+2012-08-24  Richard Murray  <murray@altura.local>
+
+	* src/freqplot.py: added in plot enhancements from Kevin Davies
+	(bode_plot): pass optional arguments and keywords to matplotlib
+	(get_pow1000): new function for determinine engineering exponent
+	(gen_prefix): new function to get SI prefix for power of 1000
+
+	* src/freqplot.py (bode_plot): removed extraneous phase_deg calculation
+
 2012-01-07  Richard Murray  <murray@malabar.local>
 
 	* doc/modules.rst: added new sections for analysis, synthesis,
