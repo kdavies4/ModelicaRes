@@ -30,7 +30,7 @@ __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
 __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
-__version__ = "0.5.3"
+__version__ = "0.6.0"
 
 
 import sys

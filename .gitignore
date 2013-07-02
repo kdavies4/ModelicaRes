@@ -17,10 +17,9 @@
 objects.inv
 /doc/build
 doc/searchindex.js
-/examples/*.svg
-/examples/*.mos
-/examples/ChuaCircuit_1*
-/examples/ChuaCircuit_2*
+*.mos
+/examples/ChuaCircuit/1/*
+/examples/ChuaCircuit/2/*
 /dist
 
 # Copied files
