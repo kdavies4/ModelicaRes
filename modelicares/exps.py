@@ -492,10 +492,8 @@ def write_params(params, fname='dsin.txt'):
 def write_script(experiments=[(None, {}, {})], packages=[],
                  working_dir="~/Documents/Dymola", fname="run-sims.mos",
                  command='simulateModel',
-                 filemap = {'dsin.txt': '%s_%i.in',
-                            'dslog.txt': '%s_%i.log',
-                            'dsres.mat': '%s_%i.mat',
-                            'dymosim%x': '%s_%i%x'}):
+                 results = ['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x',
+                            'dymolalg.txt']):
     """Write a Modelica_ script to run simulations.
 
     **Arguments**:
@@ -658,7 +656,9 @@ def write_script(experiments=[(None, {}, {})], packages=[],
     mos.write('// Modelica experiment script written by modelicares %s\n'
               % date.isoformat(date.today()))
     mos.write('import Modelica.Utilities.Files.copy;\n')
-    mos.write('cd("%s");\n' % base.expand_path(working_dir))
+    mos.write('import Modelica.Utilities.Files.createDirectory;\n')
+    mos.write('Advanced.TranslationInCommandLog = true "Also include translation log in command log";\n')
+    mos.write('cd("%s");\n' % working_dir)
     for package in packages:
         if package.endswith('.mo'):
             mos.write('openModel("%s");\n' % package)
@@ -687,12 +687,10 @@ def write_script(experiments=[(None, {}, {})], packages=[],
         else:
             mos.write('ok = %s();\n' % command)
         mos.write('if ok then\n')
-        for source, destination in filemap.items():
-            destination = destination.replace('%s', models[-1])
-            destination = destination.replace('%i', str(i))
-            exe = '.exe' if os.name == 'nt' else ''
-            source = source.replace('%x', exe)
-            destination = destination.replace('%x', exe)
+        destination = os.path.join(results_dir, str(i))
+        mos.write('    savelog();\n')
+        mos.write('    createDirectory("%s");\n' % destination)
+        for result in results:
             mos.write('    copy("%s", "%s", true);\n' %
                       (source, os.path.join(results_dir, destination)))
         mos.write('end if;\n\n')

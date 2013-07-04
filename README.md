@@ -4,11 +4,11 @@ ModelicaRes
 [ModelicaRes] is an open-source tool to manage [Modelica] simulations, interpret
 results, and create publishable figures.  It is currently possible to
 
- - Auto-generate simulation scripts,
- - Run model executables with varying parameters,
- - Browse data,
- - Perform custom calculations, and
- - Produce various plots and diagrams.
+- Auto-generate simulation scripts,
+- Run model executables with varying parameters,
+- Browse data,
+- Perform custom calculations, and
+- Produce various plots and diagrams.
 
 The figures are generated via [matplotlib], which
 offers a rich set of plotting routines.  [ModelicaRes] includes convenient
