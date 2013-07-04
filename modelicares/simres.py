@@ -79,7 +79,7 @@ class SimRes(object):
     those results
     """
 
-    def __init__(self, fname='dsres.mat'):
+    def __init__(self, fname='dsres.mat', constants_only=False):
         """On initialization, load Modelica_ simulation results from a
         MATLAB\ :sup:`®` file in Dymola\ :sup:`®` format.
 
@@ -89,12 +89,20 @@ class SimRes(object):
 
              The file extension ('.mat') is optional.
 
+        - *constants_only*: *True*, if only the variables from the first data
+          table should be loaded
+
+            The first data table typically contains all of the constants,
+            parameters, and variables that don't vary.  If only that information
+            is needed, it will save some time and memory to set *constants_only*
+            to *True*.
+
         **Example:**
 
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
         """
-        self._load(fname)
+        self._load(fname, constants_only)
 
         # Save the base filename and the directory.
         self.dir, self.fbase = os.path.split(fname)
@@ -217,12 +225,20 @@ class SimRes(object):
                 plt.figlegend(ax[0].lines, **leg_kwargs)
         return ax
 
-    def _load(self, fname='dsres.mat'):
+    def _load(self, fname='dsres.mat', constants_only=False):
         """Load Modelica_ results from a MATLAB\ :sup:`®` file.
 
         **Arguments:**
 
         - *fname*: Name of the file (may include the path)
+
+        - *constants_only*: *True*, if only the variables from the first data
+          table should be loaded
+
+            The first data table typically contains all of the constants,
+            parameters, and variables that don't vary.  If only that information
+            is needed, it will save some time and memory to set *constants_only*
+            to *True*.
 
         The results are stored within this class as *_traj* and *_data*.
         *_traj* is a dictionary with keywords that correspond to each variable
@@ -305,31 +321,39 @@ class SimRes(object):
                     data_set, sign_ind = dsres['dataInfo'][0:2, i]
                     description, unit, displayUnit = _parse_description(str(
                         _chars_to_str(dsres['description'][:, i])).rstrip())
-                    self._traj[name] = TrajEntry(data_set=data_set-1,
-                                                 sign=np.sign(sign_ind),
-                                                 data_row=abs(sign_ind)-1,
-                                                 description=description,
-                                                 unit=unit,
-                                                 displayUnit=displayUnit)
+                    if data_set == 1 or not constants_only:
+                        self._traj[name] = TrajEntry(data_set=data_set-1,
+                                                     sign=np.sign(sign_ind),
+                                                     data_row=abs(sign_ind)-1,
+                                                     description=description,
+                                                     unit=unit,
+                                                     displayUnit=displayUnit)
                     if data_set > n_data_sets: n_data_sets = data_set
-                self._data = [dsres['data_%i' % (i+1)]
-                              for i in range(n_data_sets)]
+                if constants_only:
+                    self._data = [dsres['data_1']]
+                else:
+                    self._data = [dsres['data_%i' % (i+1)]
+                                  for i in range(n_data_sets)]
             else:
                 for i in range(dsres['dataInfo'].shape[0]):
                     name = _chars_to_str(dsres['name'][i, :]).rstrip()
                     data_set, sign_ind = dsres['dataInfo'][i, 0:2]
                     description, unit, displayUnit = _parse_description(str(
                         _chars_to_str(dsres['description'][i, :])).rstrip())
-                    self._traj[name] = TrajEntry(data_set=data_set-1,
-                                                 sign=np.sign(sign_ind),
-                                                 data_row=abs(sign_ind)-1,
-                                                 description=description,
-                                                 unit=unit,
-                                                 displayUnit=displayUnit)
+                    if data_set == 1 or not constants_only:
+                        self._traj[name] = TrajEntry(data_set=data_set-1,
+                                                     sign=np.sign(sign_ind),
+                                                     data_row=abs(sign_ind)-1,
+                                                     description=description,
+                                                     unit=unit,
+                                                     displayUnit=displayUnit)
                     if data_set > n_data_sets:
                         n_data_sets = data_set
-                self._data = [dsres['data_%i' % (i+1)].T
-                              for i in range(n_data_sets)]
+                if constants_only:
+                    self._data = [dsres['data_1'].T]
+                else:
+                    self._data = [dsres['data_%i' % (i+1)].T
+                                  for i in range(n_data_sets)]
             # Note 1: The indices are converted from Modelica (1-based) to
             # Python (0-based).
             # Note 2:  Dymola 7.4 uses the transposed version, so it is the
