@@ -52,3 +52,6 @@ Changelog
      frequency.  The *w_min* and *w_max* arguments have been removed from
      :meth:`linres.bode` and :meth:`linres.nyquist`.  Use *omega* with bounds or
      a list of frequencies.
+   - :meth:`exps.write_script` now saves the Dymola command log with translation
+     information.
+   - Fixed error in *loadres* script in loading from a folder.

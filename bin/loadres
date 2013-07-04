@@ -75,7 +75,7 @@ if __name__ == '__main__':
             print loc
         elif choice == 1: # Folder
             loc = diropenbox("Choose a folder with data file(s).",
-                             default=default_path)
+                             default=DEFAULT_PATH)
             #app = App()
             #loc = DirSelector("Choose a folder with data file(s).",
             #                  defaultPath=DEFAULT_PATH)

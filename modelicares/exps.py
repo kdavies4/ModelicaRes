@@ -492,7 +492,8 @@ def write_params(params, fname='dsin.txt'):
 def write_script(experiments=[(None, {}, {})], packages=[],
                  working_dir="~/Documents/Modelica", fname="run-sims.mos",
                  command='simulateModel',
-                 results = ['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x']):
+                 results = ['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x',
+                            'dymolalg.txt']):
     """Write a Modelica_ script to run simulations.
 
     **Arguments**:
@@ -657,6 +658,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
               % date.isoformat(date.today()))
     mos.write('import Modelica.Utilities.Files.copy;\n')
     mos.write('import Modelica.Utilities.Files.createDirectory;\n')
+    mos.write('Advanced.TranslationInCommandLog = true "Also include translation log in command log";\n')
     mos.write('cd("%s");\n' % working_dir)
     for package in packages:
         if package.endswith('.mo'):
@@ -688,6 +690,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
             mos.write('ok = %s();\n' % command)
         mos.write('if ok then\n')
         destination = os.path.join(results_dir, str(i))
+        mos.write('    savelog();\n')
         mos.write('    createDirectory("%s");\n' % destination)
         for result in results:
             mos.write('    copy("%s", "%s", true);\n' %
