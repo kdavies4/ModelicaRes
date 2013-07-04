@@ -45,7 +45,7 @@ Changelog
 
    - Fixed README file.
 
-0.6.3 (201*-*-*) -- Updates:
+0.6.2 (2013-7-4) -- Updates:
 
    - Updated python-control to 0.6c.  The *mark* argument has been removed from
      :meth:`linres.nyquist`.  Use *labelFreq* to label every *labelFreq*th
@@ -54,9 +54,8 @@ Changelog
      a list of frequencies.
    - :meth:`exps.write_script` now saves the Dymola command log with translation
      information.
-   - Fixed error in *loadres* script in loading from a folder.
+   - Fixed error in *loadres* script in loading from a folder
    - Added option to :class:`SimRes` (*constants_only*) to load only constants
    - Added :meth:`SimRes.keys` method to list variable names (same as
      :meth:`SimRes.names`)
-   - Moved methods from :class:`simres.Info` to `simres.info` submodule; now
-     easier to use
+   - Added methods from :class:`simres.Info` to `simres.info` submodule

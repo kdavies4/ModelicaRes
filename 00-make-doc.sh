@@ -19,7 +19,8 @@ cd modelicares
 ./exps.py
 ./linres.py
 ./multi.py
-./simres.py
+./simres/__init__.py
+python -m simres.info
 ./texunit.py
 cd ../examples
 ./00-crop-png.sh

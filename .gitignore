@@ -11,6 +11,7 @@ build
 
 # Generated files
 /dist
+/external/control/dist
 /examples/ChuaCircuit/1/*
 /examples/ChuaCircuit/2/*
 /MANIFEST

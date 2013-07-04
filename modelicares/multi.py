@@ -89,7 +89,7 @@ def multiload(locations):
     return sims, lins
 
 
-def multiplot(sims, suffixes='', dashes=[(1, 0), (3, 3), (1, 1), (3, 2, 1, 2)],
+def multiplot(sims, suffixes='', dashes=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)],
               **kwargs):
     """Plot data from multiple simulations in 2D Cartesian coordinates.
 
@@ -130,7 +130,7 @@ def multiplot(sims, suffixes='', dashes=[(1, 0), (3, 3), (1, 1), (3, 2, 1, 2)],
        ...           suffixes=['L.L = %.0f H' % sim.get_IV('L.L')
        ...                     for sim in sims], # Read legend parameters.
        ...           ynames1='L.i', ylabel1="Current") # doctest: +ELLIPSIS
-       (<matplotlib.axes.AxesSubplot object at 0x...>, None)
+       (<matplotlib.axes._subplots.AxesSubplot object at 0x...>, None)
 
        >>> saveall()
        Saved examples/ChuaCircuits.pdf
