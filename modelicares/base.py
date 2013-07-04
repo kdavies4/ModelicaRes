@@ -410,7 +410,9 @@ def closeall():
     """
     from matplotlib._pylab_helpers import Gcf
     Gcf.destroy_all()
-
+    #for manager in Gcf.get_all_fig_managers():
+    #    manager.canvas.figure.close()
+    #plt.close("all")
 
 def convert(quantity):
     """Convert the expression of a physical quantity between units.
@@ -777,7 +779,7 @@ def load_csv(fname, header_row=0, first_data_row=None,
 def plot(y, x=None, ax=None, label=None,
          color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
          marker=None,
-         dashes=[(1,0), (3,3), (1,1), (3,2,1,2)],
+         dashes=[(None, None), (3,3), (1,1), (3,2,1,2)],
          **kwargs):
     """Plot 1D scalar data as points and/or line segments in 2D Cartesian
     coordinates.
@@ -1239,7 +1241,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
        >>> from modelicares import *
 
        >>> setup_subplots(4, 2, label='examples/setup_subplots') # doctest: +ELLIPSIS
-       ([<matplotlib.axes.AxesSubplot object at 0x...>, <matplotlib.axes.AxesSubplot object at 0x...>, <matplotlib.axes.AxesSubplot object at 0x...>, <matplotlib.axes.AxesSubplot object at 0x...>], 2)
+       ([<matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>], 2)
        >>> saveall()
        Saved examples/setup_subplots.pdf
        Saved examples/setup_subplots.png
@@ -1548,7 +1550,7 @@ class ArrowLine(Line2D):
 
         - *arrowheadlength* (=\ *arrowsize*): Length of arrow head
 
-        - *\*args*, *\*\*kwargs*: Additional arguments for 
+        - *\*args*, *\*\*kwargs*: Additional arguments for
           :class:`matplotlib.lines.Line2D`
 
         **Example:**

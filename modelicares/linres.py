@@ -195,7 +195,7 @@ class LinRes(object):
 
     def bode(self, ax=None, pairs=None, label='bode',
              title=None, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
-             styles=[(100,0), (3,3), (1,1), (3,2,1,2)],**kwargs):
+             styles=[(None,None), (3,3), (1,1), (3,2,1,2)],**kwargs):
         r"""Create a Bode plot of the system's response.
 
         **Arguments:**
