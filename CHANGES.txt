@@ -29,16 +29,16 @@ Changelog
 
 0.5.2 (2013-6-30) -- Updates:
 
-   - Fixed error so that by default :meth:`modelicares.SimRes.get_values` and
-     :meth:`modelicares.SimRes.get_times` now include the final value and time.
+   - Fixed error so that by default :meth:`SimRes.get_values` and
+     :meth:`SimRes.get_times` now include the final value and time.
    - Added function to scale time
 
 0.6.0 (2013-7-2) -- Updates:
 
-   - Added :meth:`modelicares.base.save` to save the current figure
+   - Added :meth:`base.save` to save the current figure
    - Added *use_paren* option to :meth:`SimRes.plot`
-   - Changed :meth:`modelicares.exps.write_script` to put results in folders
-     instead of special renaming scheme
+   - Changed :meth:`exps.write_script` to put results in folders instead of
+     special renaming scheme
    - Improved organization of the *examples* folder
 
 0.6.1 (2013-7-2) -- Updates:
@@ -55,3 +55,8 @@ Changelog
    - :meth:`exps.write_script` now saves the Dymola command log with translation
      information.
    - Fixed error in *loadres* script in loading from a folder.
+   - Added option to :class:`SimRes` (*constants_only*) to load only constants
+   - Added :meth:`SimRes.keys` method to list variable names (same as
+     :meth:`SimRes.names`)
+   - Moved methods from :class:`simres.Info` to `simres.info` submodule; now
+     easier to use

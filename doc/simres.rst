@@ -1,5 +1,5 @@
 :mod:`modelicares.simres`
-==========================
+=========================
 
 .. automodule:: modelicares.simres
    :members:
