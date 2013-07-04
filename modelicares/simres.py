@@ -772,6 +772,18 @@ class SimRes(object):
         """
         return self._traj.keys()
 
+    def keys(self):
+        """Return a list of all variable names.
+
+        **Example:**
+
+           >>> from modelicares import SimRes
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim.keys()  # doctest: +ELLIPSIS
+           [u'L.p.i', u'Ro.alpha', ... u'Ro.LossPower']
+        """
+        return self._traj.keys()
+
     def nametree(self):
         """Return a tree of all variable names with respect to the path names.
 
