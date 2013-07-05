@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Shortcuts to the "get" methods in :class:`SimRes`
+"""Aliases to the "get" methods in :class:`modelicares.SimRes`
 
 **Example:**
 

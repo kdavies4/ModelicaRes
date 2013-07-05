@@ -195,7 +195,7 @@ class LinRes(object):
 
     def bode(self, ax=None, pairs=None, label='bode',
              title=None, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
-             styles=[(None,None), (3,3), (1,1), (3,2,1,2)],**kwargs):
+             styles=[(None,None), (3,3), (1,1), (3,2,1,2)], **kwargs):
         r"""Create a Bode plot of the system's response.
 
         **Arguments:**
@@ -235,7 +235,7 @@ class LinRes(object):
              .. Seealso::
                 http://matplotlib.sourceforge.net/api/collections_api.html
 
-        - *\*\*kwargs*: Additional arguments for :meth:`control.matlab.bode`
+        - *\*\*kwargs*: Additional arguments for :meth:`control.freqplot.bode`
 
         The Bode plots of a MIMO system are overlayed. This is different than
         MATLAB\ :sup:`®`, which creates an array of subplots.
@@ -306,19 +306,19 @@ class LinRes(object):
             bode(sys, Hz=True, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
                  color=colors[np.mod(i, n_colors)],
                  style=styles[np.mod(i, n_styles)], **kwargs)
-            # Note: controls.matlab.bode() is currently only implemented for
+            # Note: controls.freqplot.bode() is currently only implemented for
             # SISO systems.
-            # 5/23/11: Since controls.matlab.bode() already uses subplots for
+            # 5/23/11: Since controls.freqplot.bode() already uses subplots for
             # the magnitude and phase plots, it would be difficult to modify
             # the code to put the Bode plots of a MIMO system into an array of
             # subfigures like MATLAB does.
 
         # Decorate the figure.
-        plt.subplot(211)
+        plt.subplot(211) # Go back to the magnitude plot.
         plt.title(title)
         if len(pairs) > 1:
             plt.legend()
-            plt.subplot(211) # Go back to the magnitude plot.
+            plt.subplot(212)
             plt.legend()
 
     def nyquist(self, ax=None, pairs=None, label="nyquist", title=None,
@@ -357,7 +357,8 @@ class LinRes(object):
 
              .. Seealso:: http://matplotlib.sourceforge.net/api/colors_api.html
 
-        - *\*\*kwargs*: Additional arguments for :meth:`control.matlab.nyquist``
+        - *\*\*kwargs*: Additional arguments for
+          :meth:`control.freqplot.nyquist`
 
         The Nyquist plots of a MIMO system are overlayed. This is different
         than MATLAB\ :sup:`®`, which creates an array of subplots.
@@ -417,8 +418,8 @@ class LinRes(object):
                      self.sys.D[i_y, i_u])
             nyquist(sys, mark=False, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
                     color=colors[np.mod(i, n_colors)], **kwargs)
-            # Note: controls.matlab.nyquist() is currently only implemented for
-            # SISO systems.
+            # Note: controls.freqplot.nyquist() is currently only implemented
+            # for SISO systems.
 
         # Decorate the figure.
         if len(pairs) > 1:

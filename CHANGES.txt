@@ -59,3 +59,8 @@ Changelog
    - Added :meth:`SimRes.keys` method to list variable names (same as
      :meth:`SimRes.names`)
    - Added methods from :class:`simres.Info` to `simres.info` submodule
+
+0.6.x (201x-x-x) -- Updates:
+
+   - Added :meth:`multi.multibode` and :meth:`multi.multinyquist` to create
+     Bode and Nyquist diagrams of multiple linearizations.
