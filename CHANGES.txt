@@ -64,3 +64,7 @@ Changelog
 
    - Added :meth:`multi.multibode` and :meth:`multi.multinyquist` to create
      Bode and Nyquist diagrams of multiple linearizations.
+   - Fixed and improved specifcation of axes in :meth:`linres.bode` and
+     :meth:`linres.nyquist`.  The argument *ax* argument to :meth:`linres.bode`
+     is now *axes* instead -- a tuple (pair) of axes.
+   - Fixed error with chosen directory in :meth:`base.save`

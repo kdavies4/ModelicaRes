@@ -23,7 +23,7 @@ math and matrix functions from NumPy_.
 
   .. image:: _static/browse.png
      :scale: 45 %
-     :alt: variable browser
+     :alt: Variable browser
 
   .. image:: examples/ThreeTanks.png
      :scale: 35 %
@@ -33,11 +33,11 @@ math and matrix functions from NumPy_.
 
   .. image:: examples/ChuaCircuit.png
      :scale: 35 %
-     :alt: plot of Chua circuit
+     :alt: Plot of Chua circuit
 
-  .. image:: examples/PID-nyquist.png
+  .. image:: examples/PIDs-nyquist.png
      :scale: 35 %
-     :alt: example for modelicares.LinRes.nyquist()
+     :alt: Nyquist plot of PID with varying differential time constant
 
   The links below describe the components of ModelicaRes.  The top-level module,
   :mod:`modelicares`, provides direct access to the most important classes and
@@ -64,7 +64,7 @@ math and matrix functions from NumPy_.
   .. figure:: examples/ThreeTanks.pdf
      :scale: 50 %
 
-  .. figure:: examples/PID-nyquist.pdf
+  .. figure:: examples/PIDs-nyquist.pdf
      :scale: 50 %
 
   The following chapters describe the components of ModelicaRes.  The top-level

@@ -10,6 +10,9 @@ results, and create publishable figures.  It is currently possible to
 - Perform custom calculations, and
 - Produce various plots and diagrams.
 
+![Plot of Chua circuit with varying parameters](examples/ChuaCircuit.png)
+![Sankey diagram of three tanks example](examples/ThreeTanks.png)
+
 The figures are generated via [matplotlib], which
 offers a rich set of plotting routines.  [ModelicaRes] includes convenient
 functions to automatically pre-format and label some figures, like xy plots,

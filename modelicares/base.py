@@ -1040,22 +1040,19 @@ def save(formats=['pdf', 'png'], fbase='1'):
 
     # Save the figures, creating folders as necessary.
     (directory, fbase_fig) = os.path.split(plt.getp(fig, 'label'))
-    if fbase_fig == '':
-        if directory == '':
-            if chosen_directory is None:
-                # Initialize a dummy wx.App instance.  Dialogs can only be
-                # called after this is done
-                # [http://code.google.com/p/easywx/, accessed 10/7/2012].
-                #app = App()
-                chosen_directory = DirSelector(
-                    "Choose a directory for the images.",
-                    defaultPath=os.path.join(*['..']*4))
-                if chosen_directory == '':
-                    return
-            directory = chosen_directory
+    if not fbase_fig:
+        if not directory:
+            # Initialize a dummy wx.App instance.  Dialogs can only be
+            # called after this is done
+            # [http://code.google.com/p/easywx/, accessed 10/7/2012].
+            #app = App()
+            directory = DirSelector("Choose a directory for the images.",
+                                    defaultPath=os.path.join(*['..']*4))
+            if not directory:
+                return
     else:
         fbase = fbase_fig
-    if directory != '' and not os.path.isdir(directory):
+    if directory and not os.path.isdir(directory):
         os.mkdir(directory)
     for format in formats:
         fname = os.path.join(directory, fbase + '.' + format)
@@ -1119,10 +1116,10 @@ def saveall(formats=['pdf', 'png']):
     i = 0
     for fig in figs:
         (directory, fbase) = os.path.split(plt.getp(fig, 'label'))
-        if fbase == '':
+        if not fbase:
             fbase = str(i)
             i += 1
-            if directory == '':
+            if not directory:
                 if chosen_directory is None:
                     # Initialize a dummy wx.App instance.  Dialogs can only be
                     # called after this is done
@@ -1131,10 +1128,10 @@ def saveall(formats=['pdf', 'png']):
                     chosen_directory = DirSelector(
                         "Choose a directory for the images.",
                         defaultPath=os.path.join(*['..']*4))
-                    if chosen_directory == '':
+                    if not chosen_directory:
                         return
                 directory = chosen_directory
-        if directory != '' and not os.path.isdir(directory):
+        if directory and not os.path.isdir(directory):
             os.mkdir(directory)
         for format in formats:
             fname = os.path.join(directory, fbase + '.' + format)

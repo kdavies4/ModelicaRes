@@ -15,7 +15,6 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 
 import os
 import numpy as np
-import matplotlib.pyplot as plt
 
 import modelicares.base as base
 
@@ -193,23 +192,27 @@ class LinRes(object):
         else:
             self.sys.outputName = []
 
-    def bode(self, ax=None, pairs=None, label='bode',
+    def bode(self, axes=None, pairs=None, label='bode',
              title=None, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
              styles=[(None,None), (3,3), (1,1), (3,2,1,2)], **kwargs):
-        r"""Create a Bode plot of the system's response.
+        """Create a Bode plot of the system's response.
+
+        The Bode plots of a MIMO system are overlayed. This is different than
+        MATLAB\ :sup:`®`, which creates an array of subplots.
 
         **Arguments:**
 
-        - *ax*: Axis onto which the data should be plotted.
+        - *axes*: Tuple (pair) of axes for the magnitude and phase plots
 
-             If not provided, an axis will be created (in a new figure).
+             If *axes* is not provided, then axes will be created in a new
+             figure.
 
         - *pairs*: List of (input index, output index) tuples of each transfer
           function to be evaluated
 
              If not provided, all of the transfer functions will be plotted.
 
-        - *label*: Label for the figure (ignored if ax is provided)
+        - *label*: Label for the figure (ignored if axes is provided)
 
              This will be used as the base filename if the figure is saved.
 
@@ -237,8 +240,9 @@ class LinRes(object):
 
         - *\*\*kwargs*: Additional arguments for :meth:`control.freqplot.bode`
 
-        The Bode plots of a MIMO system are overlayed. This is different than
-        MATLAB\ :sup:`®`, which creates an array of subplots.
+        **Returns:**
+
+        1. *axes*: Tuple (pair) of axes for the magnitude and phase plots
 
         **Example:**
 
@@ -249,10 +253,9 @@ class LinRes(object):
 
            >>> lin = LinRes('examples/PID.mat')
            >>> lin.bode(label='examples/PID-bode', omega=2*pi*logspace(-2, 3),
-           ...          title="Bode Plot of Modelica.Blocks.Continuous.PID\n")
+           ...          title="Bode Plot of Modelica.Blocks.Continuous.PID") # doctest: +ELLIPSIS
+           (<matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>)
            >>> saveall()
-           Saved examples/PID-bode.pdf
-           Saved examples/PID-bode.png
            Saved examples/PID-bode.pdf
            Saved examples/PID-bode.png
 
@@ -270,13 +273,13 @@ class LinRes(object):
               Results of example for :meth:`LinRes.bode`.
         """
         # Create axes if necessary.
-        if not ax:
+        if axes is None or (None, None):
             fig = base.figure(label)
-            ax = fig.add_subplot(111)
+            axes = (fig.add_subplot(211), fig.add_subplot(212))
 
         # Create a title if necessary.
         if title is None:
-            title = r"Bode Plot of %s\n" % self.fbase
+            title = r"Bode Plot of %s" % self.fbase
 
         # Set up the color(s) and line style(s).
         if not iterable(colors):
@@ -295,16 +298,15 @@ class LinRes(object):
         # pairs.
         if not pairs:
             pairs = [(i_u, i_y) for i_u in range(self.sys.inputs)
-               for i_y in range(self.sys.outputs)]
+                     for i_y in range(self.sys.outputs)]
 
         # Create the plots.
-        base.figure(label)
         for i, (i_u, i_y) in enumerate(pairs):
             # Extract the SISO TF. TODO: Is there a better way to do this?
             sys = ss(self.sys.A, self.sys.B[:, i_u], self.sys.C[i_y, :],
                      self.sys.D[i_y, i_u])
             bode(sys, Hz=True, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
-                 color=colors[np.mod(i, n_colors)],
+                 color=colors[np.mod(i, n_colors)], axes=axes,
                  style=styles[np.mod(i, n_styles)], **kwargs)
             # Note: controls.freqplot.bode() is currently only implemented for
             # SISO systems.
@@ -313,24 +315,26 @@ class LinRes(object):
             # the code to put the Bode plots of a MIMO system into an array of
             # subfigures like MATLAB does.
 
-        # Decorate the figure.
-        plt.subplot(211) # Go back to the magnitude plot.
-        plt.title(title)
+        # Decorate and finish.
+        axes[0].set_title(title)
         if len(pairs) > 1:
-            plt.legend()
-            plt.subplot(212)
-            plt.legend()
+            axes[0].legend()
+            axes[1].legend()
+        return axes
 
     def nyquist(self, ax=None, pairs=None, label="nyquist", title=None,
                 xlabel="Real Axis", ylabel="Imaginary Axis",
                 colors=['b','g','r','c','m','y','k'], **kwargs):
-        r"""Create a Nyquist plot of the system's response.
+        """Create a Nyquist plot of the system's response.
+
+        The Nyquist plots of a MIMO system are overlayed. This is different
+        than MATLAB\ :sup:`®`, which creates an array of subplots.
 
         **Arguments:**
 
-        - *ax*: Axis onto which the data should be plotted.
+        - *ax*: Axes onto which the Nyquist diagram should be plotted
 
-             If not provided, an axis will be created (in a new figure).
+             If *ax* is not provided, then axes will be created in a new figure.
 
         - *pairs*: List of (input index, output index) tuples of each transfer
           function to be evaluated
@@ -360,8 +364,9 @@ class LinRes(object):
         - *\*\*kwargs*: Additional arguments for
           :meth:`control.freqplot.nyquist`
 
-        The Nyquist plots of a MIMO system are overlayed. This is different
-        than MATLAB\ :sup:`®`, which creates an array of subplots.
+        **Returns:**
+
+        1. *ax*: Axes of the Nyquist plot
 
         **Example:**
 
@@ -377,7 +382,8 @@ class LinRes(object):
            >>> lin = LinRes('examples/PID.mat')
            >>> lin.nyquist(label='examples/PID-nyquist',
            ...             omega=2*pi*logspace(0, 3, 61), labelFreq=20,
-           ...             title="Nyquist Plot of Modelica.Blocks.Continuous.PID\n")
+           ...             title="Nyquist Plot of Modelica.Blocks.Continuous.PID") # doctest: +ELLIPSIS
+           <matplotlib.axes._subplots.AxesSubplot object at 0x...>
            >>> saveall()
            Saved examples/PID-nyquist.pdf
            Saved examples/PID-nyquist.png
@@ -395,13 +401,19 @@ class LinRes(object):
 
               Results of example for :meth:`LinRes.nyquist`.
         """
+        # Create axes if necessary.
+        if not ax:
+            fig = base.figure(label)
+            ax = fig.add_subplot(111)
+
         # Create a title if necessary.
         if title is None:
-            title = r"Nyquist Plot of %s\n" % self.fbase
+            title = r"Nyquist Plot of %s" % self.fbase
 
         # Set up the color(s).
         if not iterable(colors):
-            colors = (colors,) # use its value for all of the plots.
+            # Use the single color for all plots.
+            colors = (colors,)
         n_colors = len(colors)
 
         # If input/output pair(s) aren't specified, generate a list of all
@@ -411,28 +423,26 @@ class LinRes(object):
                      for i_y in range(self.sys.outputs)]
 
         # Create the plots.
-        base.figure(label)
         for i, (i_u, i_y) in enumerate(pairs):
             # Extract the SISO TF. TODO: Is there a better way to do this?
             sys = ss(self.sys.A, self.sys.B[:, i_u], self.sys.C[i_y, :],
                      self.sys.D[i_y, i_u])
             nyquist(sys, mark=False, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
-                    color=colors[np.mod(i, n_colors)], **kwargs)
+                    color=colors[np.mod(i, n_colors)], ax=ax, **kwargs)
             # Note: controls.freqplot.nyquist() is currently only implemented
             # for SISO systems.
 
-        # Decorate the figure.
+        # Decorate and finish.
         if len(pairs) > 1:
-            plt.legend()
-        ax = plt.gca()
+            ax.legend()
         base.add_hlines(ax, color='k', linestyle='--', linewidth=0.5)
         base.add_vlines(ax, color='k', linestyle='--', linewidth=0.5)
-        plt.title(title)
+        ax.set_title(title)
         if xlabel: # Without this check, xlabel=None will give a label of "None".
-            plt.xlabel(xlabel)
-        if ylabel: # Check required for same reason.
-            plt.ylabel(ylabel)
-
+            ax.set_xlabel(xlabel)
+        if ylabel: # Same purpose
+            ax.set_ylabel(ylabel)
+        return ax
 
 if __name__ == '__main__':
     """Test the contents of this file."""

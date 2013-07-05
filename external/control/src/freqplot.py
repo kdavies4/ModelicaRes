@@ -60,7 +60,8 @@ from control.lti import isdtime, timebaseEqual
 def bode_plot(syslist, omega=None, dB=False, Hz=False, deg=True,
 # ModelicaRes 7/2/13:
 #        Plot=True, *args, **kwargs):
-        Plot=True, style='-', label=None, *args, **kwargs):
+        Plot=True, style='-', label=None, axes=None, *args, **kwargs):
+# ModelicaRes 7/5/13: Added description of axes argument and output
     """Bode plot for a system
 
     Plots a Bode plot for the system over a (optional) frequency range.
@@ -79,6 +80,8 @@ def bode_plot(syslist, omega=None, dB=False, Hz=False, deg=True,
         If True, return phase in degrees (else radians)
     Plot : boolean
         If True, plot magnitude and phase
+    axes : tuple (pair) of axes to plot into
+        If None or (None, None), then axes are created
     *args, **kwargs:
         Additional options to matplotlib (color, linestyle, etc)
 
@@ -90,6 +93,8 @@ def bode_plot(syslist, omega=None, dB=False, Hz=False, deg=True,
         phase
     omega : array (list if len(syslist) > 1)
         frequency
+    axes
+        tuple (pair) of axes for the magnitude and phase plots
 
     Notes
     -----
@@ -137,61 +142,83 @@ def bode_plot(syslist, omega=None, dB=False, Hz=False, deg=True,
             #! TODO: Not current implemented; just use subplot for now
 
             if (Plot):
+                # ModelicaRes 7/5/13:
+                # Create axes if necessary.
+                if axes is None or (None, None):
+                    axes = (plt.subplot(211), plt.subplot(212))
+
                 # Magnitude plot
-                plt.subplot(211);
+                # ModelicaRes 7/5/13:
+                #plt.subplot(211);
                 if dB:
-                    # ModelicaRes 7/2/13:
+                    # ModelicaRes 7/5/13:
                     #plt.semilogx(omega, mag, *args, **kwargs)
                     if type(style) is str:
-                        plt.semilogx(omega, mag, linestyle=style, label=label, *args, **kwargs)
+                        axes[0].semilogx(omega, mag, linestyle=style, label=label, *args, **kwargs)
                     else:
-                        plt.semilogx(omega, mag, dashes=style, label=label, *args, **kwargs)
+                        axes[0].semilogx(omega, mag, dashes=style, label=label, *args, **kwargs)
                 else:
-                    # ModelicaRes 7/2/13:
+                    # ModelicaRes 7/5/13:
                     #plt.loglog(omega, mag, *args, **kwargs)
                     if type(style) is str:
-                        plt.loglog(omega, mag, linestyle=style, label=label, *args, **kwargs)
+                        axes[0].loglog(omega, mag, linestyle=style, label=label, *args, **kwargs)
                     else:
-                        plt.loglog(omega, mag, dashes=style, label=label, *args, **kwargs)
-                plt.hold(True);
+                        axes[0].loglog(omega, mag, dashes=style, label=label, *args, **kwargs)
+                # ModelicaRes 7/5/13:
+                #plt.hold(True);
 
                 # Add a grid to the plot + labeling
-                plt.grid(True)
-                plt.grid(True, which='minor')
-                plt.ylabel("Magnitude (dB)" if dB else "Magnitude")
+                # ModelicaRes 7/5/13:
+                #plt.grid(True)
+                #plt.grid(True, which='minor')
+                #plt.ylabel("Magnitude (dB)" if dB else "Magnitude")
+                axes[0].grid(True)
+                axes[0].grid(True, which='minor')
+                axes[0].set_ylabel("Magnitude in dB" if dB else "Magnitude")
 
                 # Phase plot
-                plt.subplot(212);
-                # ModelicaRes 7/2/13:
+                # ModelicaRes 7/5/13:
+                #plt.subplot(212);
+                # ModelicaRes 7/5/13:
                 #plt.semilogx(omega, phase, *args, **kwargs)
                 if type(style) is str:
-                    plt.semilogx(omega, phase, linestyle=style, label=label, *args, **kwargs)
+                    axes[1].semilogx(omega, phase, linestyle=style, label=label, *args, **kwargs)
                 else:
-                    plt.semilogx(omega, phase, dashes=style, label=label, *args, **kwargs)
-                plt.hold(True);
+                    axes[1].semilogx(omega, phase, dashes=style, label=label, *args, **kwargs)
+                # ModelicaRes 7/5/13:
+                #plt.hold(True);
 
                 # Add a grid to the plot + labeling
-                plt.grid(True)
-                plt.grid(True, which='minor')
                 # ModelicaRes 7/2/13:
+                #plt.grid(True)
+                #plt.grid(True, which='minor')
                 #plt.ylabel("Phase (deg)" if deg else "Phase (rad)")
-                plt.ylabel("Phase / deg" if deg else "Phase / rad")
+                axes[1].grid(True)
+                axes[1].grid(True, which='minor')
+                axes[1].set_ylabel("Phase / deg" if deg else "Phase / rad")
 
                 # Label the frequency axis
-                # ModelicaRes 7/2/13:
+                # ModelicaRes 7/5/13:
                 #plt.xlabel("Frequency (Hz)" if Hz else "Frequency (rad/sec)")
-                plt.xlabel("Frequency / Hz" if Hz else "Frequency / rad s$^{-1}$")
+                axes[1].set_xlabel("Frequency / Hz" if Hz else "Frequency / rad s$^{-1}$")
 
     if len(syslist) == 1:
-        return mags[0], phases[0], omegas[0]
+        # ModelicaRes 7/5/13:
+        #return mags[0], phases[0], omegas[0]
+        return mags[0], phases[0], omegas[0], axes
     else:
-        return mags, phases, omegas
+        # ModelicaRes 7/5/13:
+        #return mags, phases, omegas
+        return mags, phases, omegas, axes
 
 # Nyquist plot
-# ModelicaRes 7/2/13:
+# ModelicaRes 7/5/13:
 #def nyquist_plot(syslist, omega=None, Plot=True, color='b',
+#                 labelFreq=0, *args, **kwargs):
 def nyquist_plot(syslist, omega=None, Plot=True, color='b', label=None, mark=True,
-                 labelFreq=0, *args, **kwargs):
+                 labelFreq=0, textFreq=True, ax=None, *args, **kwargs):
+# ModelicaRes 7/5/13: Added description of ax argument and output, textFreq,
+# argument
     """Nyquist plot for a system
 
     Plots a Nyquist plot for the system over a (optional) frequency range.
@@ -206,6 +233,10 @@ def nyquist_plot(syslist, omega=None, Plot=True, color='b', label=None, mark=Tru
         If True, plot magnitude
     labelFreq : int
         Label every nth frequency on the plot
+    textFreq : bool
+        Include text with the label (otherwise just dots)
+    ax : axes to plot into
+        If None, then axes are created.
     *args, **kwargs:
         Additional options to matplotlib (color, linestyle, etc)
 
@@ -217,6 +248,8 @@ def nyquist_plot(syslist, omega=None, Plot=True, color='b', label=None, mark=Tru
         imaginary part of the frequency response array
     freq : array
         frequencies
+    ax
+        Axes of the Nyquist plot
 
     Examples
     --------
@@ -231,6 +264,11 @@ def nyquist_plot(syslist, omega=None, Plot=True, color='b', label=None, mark=Tru
     if (omega == None):
         #! TODO: think about doing something smarter for discrete
         omega = default_frequency_range(syslist)
+
+    # ModelicaRes 7/5/13:
+    # Create axes if necessary.
+    if ax is None:
+        ax = plt.axes()
 
     # Interpolate between wmin and wmax if a tuple or list are provided
     elif (isinstance(omega,list) | isinstance(omega,tuple)):
@@ -255,15 +293,16 @@ def nyquist_plot(syslist, omega=None, Plot=True, color='b', label=None, mark=Tru
 
             if (Plot):
                 # Plot the primary curve and mirror image
-                # ModelicaRes 7/2/13:
+                # ModelicaRes 7/5/13:
                 #plt.plot(x, y, '-', color=color, *args, **kwargs);
-                plt.plot(x, y, '-', color=color, label=label, *args, **kwargs);
-                plt.plot(x, -y, '--', color=color, *args, **kwargs);
+                #plt.plot(x, -y, '--', color=color, *args, **kwargs);
+                ax.plot(x, y, '-', color=color, label=label, *args, **kwargs);
+                ax.plot(x, -y, '--', color=color, *args, **kwargs);
                 # Mark the -1 point
                 # ModelicaRes 7/2/13:
                 #plt.plot([-1], [0], 'r+')
                 if mark:
-                    plt.plot([-1], [0], 'r+')
+                    ax.plot([-1], [0], 'r+')
 
             # Label the frequencies of the points
             if (labelFreq):
@@ -284,14 +323,21 @@ def nyquist_plot(syslist, omega=None, Plot=True, color='b', label=None, mark=Tru
                     # np.round() is used because 0.99... appears
                     # instead of 1.0, and this would otherwise be
                     # truncated to 0.
-                    plt.text(xpt, ypt,
-                             ' ' + str(int(np.round(f/1000**pow1000, 0))) +
-                             ' ' + prefix + 'Hz')
+                    # ModelicaRes 7/5/13:
+                    #plt.text(xpt, ypt,
+                    #         ' ' + str(int(np.round(f/1000**pow1000, 0))) +
+                    #         ' ' + prefix + 'Hz')
+                    if textFreq:
+                        ax.text(xpt, ypt,
+                                 ' ' + str(int(np.round(f/1000**pow1000, 0))) +
+                                 ' ' + prefix + 'Hz')
 
-                    # ModelicaRes 7/3/13:
-                    # Plot a mark the freqencies with a dot.
-                    plt.plot(xpt, ypt, '.', color=color)
-        return x, y, omega
+                    # ModelicaRes 7/5/13:
+                    # Mark the freqencies with a dot.
+                    ax.plot(xpt, ypt, '.', color=color)
+        # ModelicaRes 7/5/13:
+        #return x, y, omega
+        return x, y, omega, ax
 
 # Gang of Four
 #! TODO: think about how (and whether) to handle lists of systems

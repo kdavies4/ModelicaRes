@@ -18,10 +18,9 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 
 import os
 import numpy as np
-import matplotlib.pyplot as plt
-
 import modelicares.base as base
 
+from matplotlib.pyplot import figlegend
 from matplotlib import rcParams
 from collections import namedtuple
 from scipy.io import loadmat
@@ -178,7 +177,7 @@ class SimRes(object):
           subplots
 
         - *leg_kwargs*: Dictionary of keyword arguments for
-          matplotlib.pyplot.legend
+          :meth:`matplotlib.pyplot.legend`
 
              If *leg_kwargs* is *None*, then no legend will be shown.
 
@@ -222,7 +221,7 @@ class SimRes(object):
             if len(ax) == 1:
                 ax[0].legend(loc=loc, **leg_kwargs)
             else:
-                plt.figlegend(ax[0].lines, **leg_kwargs)
+                figlegend(ax[0].lines, **leg_kwargs)
         return ax
 
     def _load(self, fname='dsres.mat', constants_only=False):
@@ -823,8 +822,6 @@ class SimRes(object):
              title=None, label="xy", incl_prefix=False, suffix=None,
              use_paren=True, **kwargs):
         """Plot data as points and/or curves in 2D Cartesian coordinates.
-
-        A new figure is created if necessary.
 
         **Arguments:**
 
