@@ -12,8 +12,7 @@ build
 # Generated files
 /dist
 /external/control/dist
-/examples/ChuaCircuit/1/*
-/examples/ChuaCircuit/2/*
+/examples/*/*/*
 /MANIFEST
 *.html
 *.tar.gz
@@ -31,3 +30,6 @@ objects.inv
 
 # Internal links
 /modelicares/examples
+
+# Work in progress
+examples/00-make-small-samples.py

@@ -235,10 +235,6 @@ backend      : GTKCairo
                        # Can be any of the LaTeX font names, including
                        # the special name "regular" for the same font
                        # used in regular text.
-mathtext.default : regular # The default font to use for math.
-# KLD 12/11/2012:  regular is used because LaTeX math is used to typeset the
-# units in the axis labels, and units should usually be regular instead of
-# italic (e.g., SI units).
 
 ### AXES
 # default face and edge color, default tick sizes,
