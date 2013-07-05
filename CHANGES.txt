@@ -1,49 +1,14 @@
 Changelog
 =========
 
-0.1 (2012-11-8) -- Initial release
+0.6.x (201x-x-x) -- Updates:
 
-0.2 (2012-11-20) -- Updates:
-
-   - Fixed bug when file or folder selection is canceled.
-   - Updated documentation.
-
-0.3 (2012-12-4) -- Updates:
-
-   - Added support for Windows.  :mod:`modelicares.aux` is now
-     :mod:`modelicares.base`.
-
-0.4 (2012-12-10) -- Updates:
-
-   - Added default of label='' to :meth:`modelicares.base.figure`.
-   - Updated documentation for Windows.
-   - Added check for proper Python version (currently requires 2.7).
-
-0.5 (2013-6-5) -- Updates:
-
-   - Updated README.txt.
-
-0.5.1 (2013-6-18) -- Updates:
-
-   - Fixed errors in base.load_csv().
-
-0.5.2 (2013-6-30) -- Updates:
-
-   - Fixed error so that by default :meth:`SimRes.get_values` and
-     :meth:`SimRes.get_times` now include the final value and time.
-   - Added function to scale time
-
-0.6.0 (2013-7-2) -- Updates:
-
-   - Added :meth:`base.save` to save the current figure
-   - Added *use_paren* option to :meth:`SimRes.plot`
-   - Changed :meth:`exps.write_script` to put results in folders instead of
-     special renaming scheme
-   - Improved organization of the *examples* folder
-
-0.6.1 (2013-7-2) -- Updates:
-
-   - Fixed README file.
+   - Added :meth:`multi.multibode` and :meth:`multi.multinyquist` to create
+     Bode and Nyquist diagrams of multiple linearizations.
+   - Fixed and improved specifcation of axes in :meth:`linres.bode` and
+     :meth:`linres.nyquist`.  The argument *ax* argument to :meth:`linres.bode`
+     is now *axes* instead -- a tuple (pair) of axes.
+   - Fixed error with chosen directory in :meth:`base.save`
 
 0.6.2 (2013-7-4) -- Updates:
 
@@ -60,11 +25,46 @@ Changelog
      :meth:`SimRes.names`)
    - Added methods from :class:`simres.Info` to `simres.info` submodule
 
-0.6.x (201x-x-x) -- Updates:
+0.6.1 (2013-7-2) -- Updates:
 
-   - Added :meth:`multi.multibode` and :meth:`multi.multinyquist` to create
-     Bode and Nyquist diagrams of multiple linearizations.
-   - Fixed and improved specifcation of axes in :meth:`linres.bode` and
-     :meth:`linres.nyquist`.  The argument *ax* argument to :meth:`linres.bode`
-     is now *axes* instead -- a tuple (pair) of axes.
-   - Fixed error with chosen directory in :meth:`base.save`
+   - Fixed README file.
+
+0.6.0 (2013-7-2) -- Updates:
+
+   - Added :meth:`base.save` to save the current figure
+   - Added *use_paren* option to :meth:`SimRes.plot`
+   - Changed :meth:`exps.write_script` to put results in folders instead of
+     special renaming scheme
+   - Improved organization of the *examples* folder
+
+0.5.2 (2013-6-30) -- Updates:
+
+   - Fixed error so that by default :meth:`SimRes.get_values` and
+     :meth:`SimRes.get_times` now include the final value and time.
+   - Added function to scale time
+
+0.5.1 (2013-6-18) -- Updates:
+
+   - Fixed errors in base.load_csv().
+
+0.5 (2013-6-5) -- Updates:
+
+   - Updated README.txt.
+
+0.4 (2012-12-10) -- Updates:
+
+   - Added default of label='' to :meth:`modelicares.base.figure`.
+   - Updated documentation for Windows.
+   - Added check for proper Python version (currently requires 2.7).
+
+0.3 (2012-12-4) -- Updates:
+
+   - Added support for Windows.  :mod:`modelicares.aux` is now
+     :mod:`modelicares.base`.
+
+0.2 (2012-11-20) -- Updates:
+
+   - Fixed bug when file or folder selection is canceled.
+   - Updated documentation.
+
+0.1 (2012-11-8) -- Initial release
