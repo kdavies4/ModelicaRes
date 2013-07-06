@@ -93,7 +93,7 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
 
          This is a function that returns a iterable object that contains or
          generates the simulation settings.  Several options are available in
-         :mod:`modelicres.doe`.
+         :mod:`modelicares.doe`.
 
     **Example 1 (element-wise list of experiments):**
 

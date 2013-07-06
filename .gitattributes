@@ -25,7 +25,6 @@ doc/conf.py merge=ours
 doc/examples merge=ours
 doc/make.py merge=ours
 doc/_templates merge=ours
-doc/*.rst merge=ours
 doc/sphinxext merge=ours
 README.rst merge=ours
 .travis.yml merge=ours

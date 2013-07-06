@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.x.x (201x-x-x) -- Updates:
+0.7.8 (2013-7-7) -- Updates:
 
    - Added :meth:`multi.multibode` and :meth:`multi.multinyquist` to create
      Bode and Nyquist diagrams of multiple linearizations.

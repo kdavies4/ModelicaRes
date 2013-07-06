@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>ModelicaRes &mdash; ModelicaRes v0.6.x Documentation</title>
+    <title>ModelicaRes &mdash; ModelicaRes v0.7.0 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.6.x',
+        VERSION:     '0.7.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,11 +27,15 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.6.x Documentation"
+          title="Search within ModelicaRes v0.7.0 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.6.x Documentation" href="#" />
-    <link rel="next" title="modelicares" href="modelicares.html" /> 
+    <link rel="top" title="ModelicaRes v0.7.0 Documentation" href="#" />
+    <link rel="next" title="modelicares" href="modelicares.html" />
+    <meta name="description" content="Python module to set up, plot, and analyze Modelica simulations">
+    <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
+ 
+
   </head>
   <body>
     <div class="related">
@@ -46,7 +50,7 @@
         <li class="right" >
           <a href="modelicares.html" title="modelicares"
              accesskey="N">next</a> |</li>
-        <li><a href="#">ModelicaRes v0.6.x Documentation</a> &raquo;</li> 
+        <li><a href="#">ModelicaRes v0.7.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -92,8 +96,8 @@
   <div class="section" id="modelicares">
 <h1>ModelicaRes<a class="headerlink" href="#modelicares" title="Permalink to this headline">¶</a></h1>
 <p><strong>Python utilities to set up and analyze Modelica simulation experiments</strong></p>
-<p>ModelicaRes is an open-source tool to manage <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulations, interpret
-results, and create publishable figures.  It is currently possible to</p>
+<p>ModelicaRes is a free, open-source tool to manage <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulations,
+interpret results, and create publishable figures.  It is currently possible to</p>
 <ul class="simple">
 <li>Auto-generate simulation scripts,</li>
 <li>Run model executables with varying parameters,</li>
@@ -107,12 +111,12 @@ and label some figures, like xy plots, Bode and Nyquist plots, and Sankey
 diagrams.  ModelicaRes can be scripted or run from a <a class="reference external" href="http://www.python.org/">Python</a> interpreter with
 math and matrix functions from <a class="reference external" href="http://numpy.scipy.org/">NumPy</a>.</p>
 <a class="reference internal image-reference" href="_images/browse.png"><img alt="Variable browser" src="_images/browse.png" style="width: 362.7px; height: 186.75px;" /></a>
-<a class="reference internal image-reference" href="_images/ThreeTanks.png"><img alt="Sankey digarams of three tanks model" src="_images/ThreeTanks.png" style="width: 260.05px; height: 203.0px;" /></a>
+<a class="reference internal image-reference" href="_images/PIDs-nyquist.png"><img alt="Nyquist plot of PID with varying differential time constant" src="_images/PIDs-nyquist.png" style="width: 200.55px; height: 196.7px;" /></a>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
 <a class="reference internal image-reference" href="_images/ChuaCircuit.png"><img alt="Plot of Chua circuit" src="_images/ChuaCircuit.png" style="width: 271.25px; height: 199.5px;" /></a>
-<a class="reference internal image-reference" href="_images/PIDs-nyquist.png"><img alt="Nyquist plot of PID with varying differential time constant" src="_images/PIDs-nyquist.png" style="width: 200.55px; height: 196.7px;" /></a>
+<a class="reference internal image-reference" href="_images/ThreeTanks.png"><img alt="Sankey digarams of three tanks model" src="_images/ThreeTanks.png" style="width: 260.05px; height: 203.0px;" /></a>
 <p>The links below describe the components of ModelicaRes.  The top-level module,
 <a class="reference internal" href="modelicares.html#module-modelicares" title="modelicares"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares</span></tt></a>, provides direct access to the most important classes and
 functions.  Others must be accessed through their submodules.  The
@@ -143,9 +147,8 @@ submodule, <a class="reference internal" href="base.html#module-modelicares.base
 <p>A PDF version of this documentation is available <a class="reference external" href="ModelicaRes.pdf">here</a>.</p>
 <p><strong>Installation</strong></p>
 <p>An installable copy of this package can be downloaded from the <a class="reference external" href="http://kdavies4.github.io/ModelicaRes/">main site</a> or
-the <a class="reference external" href="http://pypi.python.org/pypi/ModelicaRes">PyPI page</a>.  To install the package, first download and extract it.
-Then run the set up script (setup.py) from the base folder.  On Windows, use
-the following command:</p>
+the <a class="reference external" href="http://pypi.python.org/pypi/ModelicaRes">PyPI page</a>.  After extracting the package, run the set-up script
+(setup.py) from the base folder.  On Windows, use the following command:</p>
 <div class="highlight-python"><pre>python setup.py install</pre>
 </div>
 <p>On Linux, use:</p>
@@ -167,13 +170,16 @@ LICENSE.txt).  Please share any modifications you make (preferably on a Github
 fork from <a class="reference external" href="https://github.com/kdavies4/ModelicaRes">https://github.com/kdavies4/ModelicaRes</a>) so that others may benefit
 from your work.</p>
 <p><strong>See also</strong></p>
-<p>The <a class="reference external" href="https://code.google.com/p/pysimulator/">pysimulator</a>, <a class="reference external" href="http://simulationresearch.lbl.gov/modelica/buildingspy/">BuildingsPy</a>, <a class="reference external" href="http://www.j-raedler.de/projects/dymat/">DyMat</a>, and <a class="reference external" href="https://github.com/saroele/awesim">awesim</a> projects provide
-related <a class="reference external" href="http://www.python.org/">Python</a> modules.  <a class="reference external" href="https://code.google.com/p/pysimulator/">pysimulator</a> includes an elaborate GUI and supports
-the Functional Model Interface (FMI).  <a class="reference external" href="http://simulationresearch.lbl.gov/modelica/buildingspy/">BuildingsPy</a> has a <tt class="xref py py-class docutils literal"><span class="pre">Tester</span></tt>
-class that can be used for unit testing.  <a class="reference external" href="http://www.j-raedler.de/projects/dymat/">DyMat</a> has functions to export
-<a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation data to comma separated values (CSV), <a class="reference external" href="http://www.gnuplot.info/">Gnuplot</a>,
-MATLAB<sup>®</sup>, and <a class="reference external" href="http://www.unidata.ucar.edu/software/netcdf/">Network Common Data Form (netCDF)</a>.  <a class="reference external" href="https://github.com/saroele/awesim">awesim</a> provides
-tools to help run simulation experiments and organize the results.</p>
+<p>The following <a class="reference external" href="http://www.python.org/">Python</a> projects are related:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/saroele/awesim">awesim</a>: helps run simulation experiments and organize results</li>
+<li><a class="reference external" href="http://simulationresearch.lbl.gov/modelica/buildingspy/">BuildingsPy</a>: supports unit testing</li>
+<li><a class="reference external" href="http://www.j-raedler.de/projects/dymat/">DyMat</a>: exports <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation data to comma separated values
+(CSV), <a class="reference external" href="http://www.gnuplot.info/">Gnuplot</a>, MATLAB®, and <a class="reference external" href="http://www.unidata.ucar.edu/software/netcdf/">Network Common
+Data Form (netCDF)</a></li>
+<li><a class="reference external" href="https://code.google.com/p/pysimulator/">pysimulator</a>: elaborate GUI; supports the Functional Mock-up Interface
+(FMI)</li>
+</ul>
 </div>
 
 
@@ -194,12 +200,12 @@ tools to help run simulation experiments and organize the results.</p>
         <li class="right" >
           <a href="modelicares.html" title="modelicares"
              >next</a> |</li>
-        <li><a href="#">ModelicaRes v0.6.x Documentation</a> &raquo;</li> 
+        <li><a href="#">ModelicaRes v0.7.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Jul 06, 2013.
+      Last updated on Jul 07, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
