@@ -13,6 +13,7 @@ Changelog
      *permute* argument to :meth:`exps.gen_experiments` is now generalized to
      *design*, as in design of experiments.  Now, assign a function from
      :mod:`exps.doe` to that argument.
+   - Using square axes by default for Nyquist plots
 
 0.6.2 (2013-7-4) -- Updates:
 

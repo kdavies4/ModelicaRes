@@ -404,7 +404,7 @@ class LinRes(object):
         # Create axes if necessary.
         if not ax:
             fig = base.figure(label)
-            ax = fig.add_subplot(111)
+            ax = fig.add_subplot(111, aspect='equal')
 
         # Create a title if necessary.
         if title is None:
