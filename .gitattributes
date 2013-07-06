@@ -17,5 +17,13 @@
 
 # Keep the development files on the development branch.
 00-* merge=ours
-.*.pws
-modelicares/examples
+.*.pws merge=ours
+modelicares/examples merge=ours
+doc/Makefile merge=ours
+doc/README.md merge=ours
+doc/conf.py merge=ours
+doc/examples merge=ours
+doc/make.py merge=ours
+doc/_templates merge=ours
+doc/*.rst merge=ours
+doc/sphinxext merge=ours

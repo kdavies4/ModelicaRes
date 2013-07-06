@@ -14,15 +14,9 @@ build
 /external/control/dist
 /examples/*/*/*
 /MANIFEST
-*.html
 *.tar.gz
 *.mos
 *.zip
-doc/searchindex.js
-objects.inv
-
-# Copied files
-/doc/_sources
 
 # Backup files
 *.py.bak
@@ -30,4 +24,3 @@ objects.inv
 
 # Internal links
 /modelicares/examples
-

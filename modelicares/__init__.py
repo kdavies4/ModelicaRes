@@ -9,7 +9,7 @@ from its submodules.  These are:
   :class:`base.ArrowLine`, :meth:`base.closeall`, :meth:`base.figure`,
   :meth:`base.load_csv`, :meth:`base.save`, :meth:`base.saveall`, :meth:`base.setup_subplots`
 
-- To manage simulation experiments:  :class:`exps.Experiment`, :mod:`doe`,
+- To manage simulation experiments:  :class:`exps.Experiment`, :mod:`exps.doe`,
   :meth:`exps.gen_experiments`, :class:`exps.ParamDict`,
   :meth:`exps.read_params`, :meth:`exps.run_models`, :meth:`exps.write_params`,
   :meth:`exps.write_script`

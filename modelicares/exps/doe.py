@@ -1,5 +1,7 @@
 #!/usr/bin/python
 """Functions to design experiments (i.e., design of experiments (DOE))
+
+These can be passed to the *design* argument of :meth:`exps.gen_experiments`.
 """
 
 from itertools import product

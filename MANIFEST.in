@@ -1,5 +1,6 @@
 include matplotlibrc
 include *.txt
+include *.rst
 #include MANIFEST.in
 exclude 00-*
 
@@ -10,7 +11,7 @@ include examples/*.py
 include examples/*.txt
 
 # Documentation
-include doc/online-documentation.html
+include doc/*.html
 include doc/*.pdf
 
 # External packages
