@@ -876,7 +876,7 @@ class SimRes(object):
 
         - *use_paren*: Add parentheses around the suffix
 
-        - *\*\*kwargs*: Additional arguments for  :meth:`base.plot` (and thus to
+        - *\*\*kwargs*: Propagated to :meth:`base.plot` (and thus to
           :meth:`matplotlib.pyplot.plot`)
 
              If both y axes are used (primary and secondary), then the *dashes*
@@ -1179,7 +1179,7 @@ class SimRes(object):
              The default is :meth:`get_values`.  *action* may be a list or
              tuple, in which case the return value is a list or tuple.
 
-        - *\*args*, *\*\*kwargs*: Additional arguments for  *action*
+        - *\*args*, *\*\*kwargs*: Additional arguments for *action*
 
         **Examples:**
 

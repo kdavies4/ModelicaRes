@@ -707,7 +707,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
         mos.write('    createDirectory("%s");\n' % destination)
         for result in results:
             mos.write('    copy("%s", "%s", true);\n' %
-                      (source, os.path.join(results_dir, destination)))
+                      (result, os.path.join(results_dir, destination)))
         mos.write('end if;\n\n')
 
     # Exit the simulation environment.

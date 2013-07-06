@@ -6,7 +6,6 @@ from itertools import product
 
 
 def fullfact(*space):
-#permute = product
     """Full-factorial DOE.
 
     **Example**

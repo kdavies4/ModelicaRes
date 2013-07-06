@@ -212,7 +212,7 @@ class LinRes(object):
 
              If not provided, all of the transfer functions will be plotted.
 
-        - *label*: Label for the figure (ignored if axes is provided)
+        - *label*: Label for the figure (ignored if *axes* is provided)
 
              This will be used as the base filename if the figure is saved.
 

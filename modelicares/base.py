@@ -728,7 +728,7 @@ def load_csv(fname, header_row=0, first_data_row=None,
     **Example:**
 
     >>> from modelicares import *
-    >>> data = load_csv("examples/load_csv.csv", header_row=2)
+    >>> data = load_csv("examples/load-csv.csv", header_row=2)
     >>> print("The keys are: %s" % data.keys())
     The keys are: ['Price', 'Description', 'Make', 'Model', 'Year']
     """

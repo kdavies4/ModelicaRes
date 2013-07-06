@@ -8,15 +8,13 @@ include examples/*.csv
 include examples/*.mat
 include examples/*.py
 include examples/*.txt
-exclude examples/ChuaCircuit_1.mat
-exclude examples/ChuaCircuit_2.mat
 
 # Documentation
 include doc/online-documentation.html
 include doc/*.pdf
 
 # External packages
-include external/*.txt
+include external/*.md
 recursive-include external/control *.py
 include external/control/README
 include external/control/PKG-INFO
