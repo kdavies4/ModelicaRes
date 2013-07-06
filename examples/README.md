@@ -30,4 +30,3 @@ Scripts and folders:
 
 
 [Modelica Standard Library]: https://github.com/modelica/ModelicaStandardLibrary
-                             https://github.com/modelica/ModelicaStandardLibrary
