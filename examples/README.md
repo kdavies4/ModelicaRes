@@ -17,16 +17,21 @@ Example data files:
  5. [ThreeTanks.mat](ThreeTanks.mat): Simulation result of
     Modelica.Fluid.Examples.ThreeTanks.
 
-Scripts and folders:
- 1. [ChuaCircuit](ChuaCircuit):  Contains an example
+Scripts:
+ 1. [control-demo.py](control-demo.py): Demo from the *control* module
+    (included external library; see [../external/control](../external/control)).
+ 2. [load-csv.py](load-csv.py): Example of using *modelicares.load_csv()*.
+
+Folders:
+ 1. [ChuaCircuit](ChuaCircuit):  Contains an example script
     ([ChuaCircuit/sim-and-plot.py](ChuaCircuit/sim-and-plot.py)) to run
     Modelica.Electrical.Analog.Examples.ChuaCircuit with various settings and
     plot the results.  The results and plots are also saved there.
- 3. [control-demo.py](control-demo.py): Demo from the *control* module
-    (included external library; see [../external/control](../external/control)).
- 2. [load-csv.py](load-csv.py): Example of using *modelicares.load_csv()*.
- 4. Images from the examples in the modelicares documentation are generated
-    here.
+ 2. [PID](PID):  Contains an example script ([PID/lin.py](PID/lin.py)) to
+    linearize Modelica.Blocks.Continuous.PID with various settings and plot the
+    results.  The results and plots are also saved there.
+
+Images from the examples in the ModelicaRes documentation are generated here.
 
 
 [Modelica Standard Library]: https://github.com/modelica/ModelicaStandardLibrary

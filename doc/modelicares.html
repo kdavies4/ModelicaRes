@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares &mdash; ModelicaRes v0.6.x Documentation</title>
+    <title>modelicares &mdash; ModelicaRes v0.7.0 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.6.x',
+        VERSION:     '0.7.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,12 +27,16 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.6.x Documentation"
+          title="Search within ModelicaRes v0.7.0 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.6.x Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.7.0 Documentation" href="index.html" />
     <link rel="next" title="loadres" href="loadres.html" />
-    <link rel="prev" title="ModelicaRes" href="index.html" /> 
+    <link rel="prev" title="ModelicaRes" href="index.html" />
+    <meta name="description" content="Python module to set up, plot, and analyze Modelica simulations">
+    <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
+ 
+
   </head>
   <body>
     <div class="related">
@@ -50,7 +54,7 @@
         <li class="right" >
           <a href="index.html" title="ModelicaRes"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.6.x Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.7.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -103,7 +107,7 @@ from its submodules.  These are:</p>
 <a class="reference internal" href="base.html#modelicares.base.add_hlines" title="modelicares.base.add_hlines"><tt class="xref py py-meth docutils literal"><span class="pre">base.add_hlines()</span></tt></a>, <a class="reference internal" href="base.html#modelicares.base.add_vlines" title="modelicares.base.add_vlines"><tt class="xref py py-meth docutils literal"><span class="pre">base.add_vlines()</span></tt></a>, <a class="reference internal" href="base.html#modelicares.base.animate" title="modelicares.base.animate"><tt class="xref py py-meth docutils literal"><span class="pre">base.animate()</span></tt></a>,
 <a class="reference internal" href="base.html#modelicares.base.ArrowLine" title="modelicares.base.ArrowLine"><tt class="xref py py-class docutils literal"><span class="pre">base.ArrowLine</span></tt></a>, <a class="reference internal" href="base.html#modelicares.base.closeall" title="modelicares.base.closeall"><tt class="xref py py-meth docutils literal"><span class="pre">base.closeall()</span></tt></a>, <a class="reference internal" href="base.html#modelicares.base.figure" title="modelicares.base.figure"><tt class="xref py py-meth docutils literal"><span class="pre">base.figure()</span></tt></a>,
 <a class="reference internal" href="base.html#modelicares.base.load_csv" title="modelicares.base.load_csv"><tt class="xref py py-meth docutils literal"><span class="pre">base.load_csv()</span></tt></a>, <a class="reference internal" href="base.html#modelicares.base.save" title="modelicares.base.save"><tt class="xref py py-meth docutils literal"><span class="pre">base.save()</span></tt></a>, <a class="reference internal" href="base.html#modelicares.base.saveall" title="modelicares.base.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">base.saveall()</span></tt></a>, <a class="reference internal" href="base.html#modelicares.base.setup_subplots" title="modelicares.base.setup_subplots"><tt class="xref py py-meth docutils literal"><span class="pre">base.setup_subplots()</span></tt></a></li>
-<li>To manage simulation experiments:  <a class="reference internal" href="exps.html#modelicares.exps.Experiment" title="modelicares.exps.Experiment"><tt class="xref py py-class docutils literal"><span class="pre">exps.Experiment</span></tt></a>, <tt class="xref py py-mod docutils literal"><span class="pre">doe</span></tt>,
+<li>To manage simulation experiments:  <a class="reference internal" href="exps.html#modelicares.exps.Experiment" title="modelicares.exps.Experiment"><tt class="xref py py-class docutils literal"><span class="pre">exps.Experiment</span></tt></a>, <tt class="xref py py-mod docutils literal"><span class="pre">exps.doe</span></tt>,
 <a class="reference internal" href="exps.html#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-meth docutils literal"><span class="pre">exps.gen_experiments()</span></tt></a>, <a class="reference internal" href="exps.html#modelicares.exps.ParamDict" title="modelicares.exps.ParamDict"><tt class="xref py py-class docutils literal"><span class="pre">exps.ParamDict</span></tt></a>,
 <a class="reference internal" href="exps.html#modelicares.exps.read_params" title="modelicares.exps.read_params"><tt class="xref py py-meth docutils literal"><span class="pre">exps.read_params()</span></tt></a>, <a class="reference internal" href="exps.html#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-meth docutils literal"><span class="pre">exps.run_models()</span></tt></a>, <a class="reference internal" href="exps.html#modelicares.exps.write_params" title="modelicares.exps.write_params"><tt class="xref py py-meth docutils literal"><span class="pre">exps.write_params()</span></tt></a>,
 <a class="reference internal" href="exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">exps.write_script()</span></tt></a></li>
@@ -137,12 +141,12 @@ from its submodules.  These are:</p>
         <li class="right" >
           <a href="index.html" title="ModelicaRes"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.6.x Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.7.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Jul 06, 2013.
+      Last updated on Jul 07, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
