@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.6.x (201x-x-x) -- Updates:
+0.x.x (201x-x-x) -- Updates:
 
    - Added :meth:`multi.multibode` and :meth:`multi.multinyquist` to create
      Bode and Nyquist diagrams of multiple linearizations.
@@ -9,6 +9,10 @@ Changelog
      :meth:`linres.nyquist`.  The argument *ax* argument to :meth:`linres.bode`
      is now *axes* instead -- a tuple (pair) of axes.
    - Fixed error with chosen directory in :meth:`base.save`
+   - Added function to generate one-factor-at-a-time experiments.  The old
+     *permute* argument to :meth:`exps.gen_experiments` is now generalized to
+     *design*, as in design of experiments.  Now, assign a function from
+     :mod:`exps.doe` to that argument.
 
 0.6.2 (2013-7-4) -- Updates:
 

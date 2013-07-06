@@ -31,10 +31,9 @@ Installation
 
 An installable copy of this package can be downloaded from the `main
 project site <http://kdavies4.github.io/ModelicaRes/>`_ or the `PyPI
-page <http://pypi.python.org/pypi/ModelicaRes>`_. To install the
-package, first download and extract it. Then run the set up script
-(setup.py) from the base folder. On Windows, use the
-following command::
+page <http://pypi.python.org/pypi/ModelicaRes>`_. After extracting the
+package, run the set up script (setup.py) from the base folder. On Windows, use
+the following command::
 
     python setup.py install
 

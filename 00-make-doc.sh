@@ -16,7 +16,8 @@ sudo ./setup.py install
 cd modelicares
 ./__init__.py
 ./base.py
-./exps.py
+./exps/__init__.py
+python -m exps.doe
 ./linres.py
 ./multi.py
 ./simres/__init__.py

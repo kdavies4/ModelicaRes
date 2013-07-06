@@ -9,7 +9,7 @@ from its submodules.  These are:
   :class:`base.ArrowLine`, :meth:`base.closeall`, :meth:`base.figure`,
   :meth:`base.load_csv`, :meth:`base.save`, :meth:`base.saveall`, :meth:`base.setup_subplots`
 
-- To manage simulation experiments:  :class:`exps.Experiment`,
+- To manage simulation experiments:  :class:`exps.Experiment`, :mod:`doe`,
   :meth:`exps.gen_experiments`, :class:`exps.ParamDict`,
   :meth:`exps.read_params`, :meth:`exps.run_models`, :meth:`exps.write_params`,
   :meth:`exps.write_script`
@@ -55,6 +55,7 @@ from base import (add_arrows, add_hlines, add_vlines, animate, ArrowLine,
                  closeall, figure, load_csv, save, saveall, setup_subplots)
 from exps import (Experiment, gen_experiments, ParamDict, read_params,
                   run_models, write_params, write_script)
+import exps.doe as doe
 from linres import LinRes
 from multi import multiload, multiplot, multibode, multinyquist
 from simres import SimRes

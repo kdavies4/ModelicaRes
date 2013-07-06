@@ -27,10 +27,8 @@ development site is https://github.com/kdavies4/modelicares.
 
 An installable copy of this package can be downloaded from the
 [main project site] or the
-[PyPI page](http://pypi.python.org/pypi/ModelicaRes).  To install the package,
-first download and extract it.  Then run the set up script
-([setup.py](setup.py)) from the base folder.  On Windows, use the following
-command:
+[PyPI page](http://pypi.python.org/pypi/ModelicaRes).  After extracting the
+package, run the set up script ([setup.py](setup.py)) from the base folder.  On Windows, use the following command:
 
     python setup.py install
 

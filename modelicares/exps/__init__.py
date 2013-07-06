@@ -34,10 +34,10 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import re
 import numpy as np
-
 import modelicares.base as base
+import doe
 
-from itertools import count, product
+from itertools import count
 from collections import namedtuple
 from datetime import date
 from types import GeneratorType
@@ -61,8 +61,7 @@ differences in the entries (see those functions for details).
    'ChuaCircuit'
 """
 
-
-def gen_experiments(models=None, params={}, args={}, permute = True):
+def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
     """Return a generator for a set of simulation experiments using permutation
     or simple element-wise grouping.
 
@@ -89,12 +88,12 @@ def gen_experiments(models=None, params={}, args={}, permute = True):
 
          Each key is an argument name and each entry is a list of settings.
 
-    - *permute*: *True*, if the lists of values (for *model* and the entries
-      in *params* and *args*) should be permuted to generate a full-factorial
-      design of experiments (DOE)
+    - *design*: Method of generating the simulation experiments (i.e., design of
+      experiments)
 
-         If *permute* is *False*, then the lists of values will be iterated
-         jointly (element-wise), terminating at end of the shortest list.
+         This is a function that returns a iterable object that contains or
+         generates the simulation settings.  Several options are available in
+         :mod:`modelicres.doe`.
 
     **Example 1 (element-wise list of experiments):**
 
@@ -102,26 +101,46 @@ def gen_experiments(models=None, params={}, args={}, permute = True):
 
        >>> from modelicares import *
 
-       >>> doe = gen_experiments(['Modelica.Electrical.Analog.Examples.ChuaCircuit']*3,
-       ...                       {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
-       ...                       permute=False)
-       >>> for experiment in doe:
+       >>> experiments = gen_experiments(
+       ...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit']*3,
+       ...                  {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
+       ...                  design=doe.aslisted)
+       >>> for experiment in experiments:
        ...     print(experiment.model + str(experiment.params))
        Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=16))
        Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=18))
        Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=20))
        >>> # Note that the model name must be repeated in the models argument.
 
-    **Example 2 (permutation---full-factorial design of experiments):**
+    **Example 2 (one-factor-at-a-time; first entries are baseline):**
 
     .. code-block:: python
 
        >>> from modelicares import *
 
-       >>> doe = gen_experiments(['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
-       ...                       {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
-       ...                       permute=True)
-       >>> for experiment in doe:
+       >>> experiments = gen_experiments(
+       ...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
+       ...                  {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
+       ...                  design=doe.ofat)
+       >>> for experiment in experiments:
+       ...     print(experiment.model + str(experiment.params))
+       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=16))
+       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=18))
+       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=20))
+       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=16))
+       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=16))
+
+    **Example 3 (permutation---full-factorial design of experiments):**
+
+    .. code-block:: python
+
+       >>> from modelicares import *
+
+       >>> experiments = gen_experiments(
+       ...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
+       ...                  {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
+       ...                  design=doe.fullfact)
+       >>> for experiment in experiments:
        ...     print(experiment.model + str(experiment.params))
        Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=16))
        Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=16))
@@ -133,7 +152,7 @@ def gen_experiments(models=None, params={}, args={}, permute = True):
        Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=20))
        Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=20))
 
-    **Example 3 (parameters given in nested form):**
+    **Example 4 (parameters given in nested form):**
 
     .. code-block:: python
 
@@ -167,12 +186,8 @@ def gen_experiments(models=None, params={}, args={}, permute = True):
                              params=ParamDict(zip(params.keys(), x[1:i_args])),
                              args=dict(zip(args.keys(), x[i_args:])))
     try:
-        if permute:
-            return (experiment(x) for x in
-                        product(*([models] + params.values() + args.values())))
-        else:
-            return (experiment(x) for x in
-                        zip(*([models] + params.values() + args.values())))
+        return (experiment(x) for x in
+                    design(*([models] + params.values() + args.values())))
     except TypeError:
         print("Error in call to gen_experiments(): models and all of the "
               "entries in params and args must be lists.")

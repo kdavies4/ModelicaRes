@@ -84,9 +84,9 @@ math and matrix functions from NumPy_.
   **Installation**
 
   An installable copy of this package can be downloaded from the `main site
-  <http://kdavies4.github.io/ModelicaRes/>`_ or the `PyPI page`_.  To install
-  the package, first download and extract it.  Then run the set up script
-  (setup.py) from the base folder.  On Windows, use the following command::
+  <http://kdavies4.github.io/ModelicaRes/>`_ or the `PyPI page`_.  After
+  extracting the package, run the set up script (setup.py) from the base folder.
+  On Windows, use the following command::
 
      python setup.py install
 
@@ -140,6 +140,7 @@ math and matrix functions from NumPy_.
   linres
   multi
   exps
+  exps.doe
   texunit
   base
 
