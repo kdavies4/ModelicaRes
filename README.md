@@ -1,8 +1,8 @@
 ModelicaRes
 -----------
 
-[ModelicaRes] is an open-source tool to manage [Modelica] simulations, interpret
-results, and create publishable figures.  It is currently possible to
+[ModelicaRes] is a free, open-source tool to manage [Modelica] simulations,
+interpret results, and create publishable figures.  It is currently possible to
 
 - Auto-generate simulation scripts,
 - Run model executables with varying parameters,
@@ -43,15 +43,17 @@ http://matplotlib.org/users/customizing.html for details.
 
 ### Credits
 
-The main author is Kevin Davies.  Kevin Bandy also helped in the development of
-this package.  Third-party code has been included
-from Jason Grout
-([ArrowLine](http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html)
-class), Jason Heeris
-([efficient base-10 logarithm](http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html)),
-Richard Murray
-([python-control](http://sourceforge.net/apps/mediawiki/python-control)), and
-Joerg Raedler (method to expand a [Modelica] variable tree - from [DyMat]).
+The main author is Kevin Davies.  Kevin Bandy also helped with the development.
+Third-party code has been included from:
+
+- Jason Grout
+  ([ArrowLine](http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html)
+  class),
+- Jason Heeris
+  ([efficient base-10 logarithm](http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html)),
+- Richard Murray
+  ([python-control](http://sourceforge.net/apps/mediawiki/python-control)), and
+- Joerg Raedler (method to expand a [Modelica] variable tree - from [DyMat])
 
 ### License terms
 
@@ -62,15 +64,14 @@ that others may benefit from your work.
 
 ### See also
 
-The [pysimulator], [BuildingsPy], [DyMat], and [awesim] projects provide related
-[Python] modules.  [pysimulator] includes an elaborate GUI and supports the
-Functional Model Interface (FMI).  [BuildingsPy] has a **Tester** class that can
-be used for unit testing.  [DyMat] has functions to export [Modelica] simulation
-data to comma separated values (CSV), [Gnuplot](http://www.gnuplot.info/),
-MATLAB&reg;, and
-[Network Common Data Form (netCDF)](http://www.unidata.ucar.edu/software/netcdf/).
-[awesim] provides tools to help run simulation experiments and organize the
-results.
+The following [Python] projects are related:
+
+- [awesim]\: helps run simulation experiments and organize results
+- [BuildingsPy]\: supports unit testing
+- [DyMat]\: exports `Modelica`_ simulation data to comma separated values (CSV),
+  [Gnuplot](http://www.gnuplot.info/), MATLAB&reg;, and
+  [Network Common Data Form (netCDF)](http://www.unidata.ucar.edu/software/netcdf/)
+- [pysimulator]\: elaborate GUI; supports the Functional Mock-up Interface (FMI)
 
 
 [main project site]: http://kdavies4.github.io/ModelicaRes/
