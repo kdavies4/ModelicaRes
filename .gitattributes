@@ -14,3 +14,8 @@
 # Denote all files that are truly binary and should not be modified.
 #*.png binary
 #*.pyc binary
+
+# Keep the development files on the development branch.
+00-* merge=ours
+.*.pws
+modelicares/examples
