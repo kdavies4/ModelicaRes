@@ -25,17 +25,17 @@ math and matrix functions from NumPy_.
      :scale: 45 %
      :alt: Variable browser
 
-  .. image:: examples/PIDs-nyquist.png
+  .. image:: ../examples/PIDs-nyquist.png
      :scale: 35 %
      :alt: Nyquist plot of PID with varying differential time constant
 
   |
 
-  .. image:: examples/ChuaCircuit.png
+  .. image:: ../examples/ChuaCircuit.png
      :scale: 35 %
      :alt: Plot of Chua circuit
 
-  .. image:: examples/ThreeTanks.png
+  .. image:: ../examples/ThreeTanks.png
      :scale: 35 %
      :alt: Sankey digarams of three tanks model
 
@@ -55,16 +55,16 @@ math and matrix functions from NumPy_.
 
 .. only:: latex
 
-  .. figure:: _static/browse.png
+  .. image:: _static/browse.png
      :scale: 60 %
 
-  .. figure:: examples/PIDs-nyquist.pdf
+  .. image:: ../examples/PIDs-nyquist.pdf
      :scale: 50 %
 
-  .. figure:: examples/ThreeTanks.pdf
+  .. image:: ../examples/ThreeTanks.pdf
      :scale: 50 %
 
-  .. figure:: examples/ChuaCircuit.pdf
+  .. image:: ../examples/ChuaCircuit.pdf
      :scale: 50 %
 
   The following chapters describe the components of ModelicaRes.  The top-level

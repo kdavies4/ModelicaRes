@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.exps &mdash; ModelicaRes v0.7.0 Documentation</title>
+    <title>modelicares.exps &mdash; ModelicaRes v0.7.1 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.7.0',
+        VERSION:     '0.7.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,10 +27,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.7.0 Documentation"
+          title="Search within ModelicaRes v0.7.1 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.7.0 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.7.1 Documentation" href="index.html" />
     <link rel="next" title="modelicares.exps.doe" href="exps.doe.html" />
     <link rel="prev" title="modelicares.multi" href="multi.html" />
     <meta name="description" content="Python module to set up, plot, and analyze Modelica simulations">
@@ -54,7 +54,7 @@
         <li class="right" >
           <a href="multi.html" title="modelicares.multi"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.7.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.7.1 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -102,15 +102,15 @@
 <p>Set up and help run <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation experiments.</p>
 <p>This module supports two approaches for managing simulations.  The first is to
 create a <a class="reference external" href="http://www.modelica.org/">Modelica</a> script (using <a class="reference internal" href="#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a>) and run it within
-a <a class="reference external" href="http://www.modelica.org/">Modelica</a> environment (see &#8220;examples/ChuaCircuit.py&#8221;), which translates and
-simulates the models with the prescribed settings.  The second approach is to
-execute pre-translated models.  The <a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-meth docutils literal"><span class="pre">run_models()</span></tt></a> method handles this
-by writing to initialization file(s) (e.g, &#8220;dsin.txt&#8221;) and launching the
-appropriate model executables.  The advantage of the first approach is that
-formal parameters (those that are hard-coded during translation) can be
-adjusted.  However, the second approach is faster because it does not require a
-model to be recompiled when only tunable parameters (those that are not
-hard-coded during translation) are changed.</p>
+a <a class="reference external" href="http://www.modelica.org/">Modelica</a> environment (see the scripts in &#8220;examples/ChuaCircuit/&#8221;), which
+translates and simulates the models with the prescribed settings.  The second
+approach is to execute pre-translated models.  The <a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-meth docutils literal"><span class="pre">run_models()</span></tt></a> method
+handles this by writing to initialization file(s) (e.g, &#8220;dsin.txt&#8221;) and
+launching the appropriate model executables.  The advantage of the first
+approach is that formal parameters (those that are hard-coded during
+translation) can be adjusted.  However, the second approach is faster because it
+does not require a model to be recompiled when only tunable parameters (those
+that are not hard-coded during translation) are changed.</p>
 <p>The first step in either case is to create a dictionary to specify model
 parameters and other settings for simulation experiment.  A single model
 parameter may have multiple possible values.  The dictionary is passed to the
@@ -212,7 +212,7 @@ included for instance names that contain symbols (e.g., &#8220;&#8216;H+&#8217;&
 
 <dl class="function">
 <dt id="modelicares.exps.gen_experiments">
-<tt class="descclassname">modelicares.exps.</tt><tt class="descname">gen_experiments</tt><big>(</big><em>models=None</em>, <em>params={}</em>, <em>args={}</em>, <em>design=&lt;function fullfact at 0xb40902c&gt;</em><big>)</big><a class="headerlink" href="#modelicares.exps.gen_experiments" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modelicares.exps.</tt><tt class="descname">gen_experiments</tt><big>(</big><em>models=None</em>, <em>params={}</em>, <em>args={}</em>, <em>design=&lt;function fullfact at 0xb38e02c&gt;</em><big>)</big><a class="headerlink" href="#modelicares.exps.gen_experiments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a generator for a set of simulation experiments using permutation
 or simple element-wise grouping.</p>
 <p>The generator yields instances of <a class="reference internal" href="#modelicares.exps.Experiment" title="modelicares.exps.Experiment"><tt class="xref py py-class docutils literal"><span class="pre">Experiment</span></tt></a>&#8212;named tuples of
@@ -476,7 +476,7 @@ supported.</p>
 
 <dl class="function">
 <dt id="modelicares.exps.write_script">
-<tt class="descclassname">modelicares.exps.</tt><tt class="descname">write_script</tt><big>(</big><em>experiments=[(None, {}, {})], packages=[], working_dir='~/Documents/Dymola', fname='run-sims.mos', command='simulateModel', results=['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x', 'dymolalg.txt']</em><big>)</big><a class="headerlink" href="#modelicares.exps.write_script" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modelicares.exps.</tt><tt class="descname">write_script</tt><big>(</big><em>experiments=[(None, {}, {})], packages=[], working_dir='~/Documents/Modelica', fname='run-sims.mos', command='simulateModel', results=['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x', 'dymolalg.txt']</em><big>)</big><a class="headerlink" href="#modelicares.exps.write_script" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a <a class="reference external" href="http://www.modelica.org/">Modelica</a> script to run simulations.</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -502,7 +502,7 @@ argument.</p>
 <p>Items with values of <em>None</em> in <em>params</em> and <em>args</em> are skipped.</p>
 </div></blockquote>
 </li>
-<li><p class="first"><em>working_dir</em> (&#8220;~/Documents/Dymola&#8221;): Working directory (for the
+<li><p class="first"><em>working_dir</em>: Working directory (for the
 executable, log files, etc.)</p>
 <blockquote>
 <div><p>&#8216;~&#8217; may be included to represent the user directory.</p>
@@ -536,17 +536,14 @@ environment</p>
 &#8216;translateModel&#8217; to create model executables without running them.</p>
 </div></blockquote>
 </li>
-<li><p class="first"><em>filemap</em>: Dictionary of result file mappings</p>
+<li><p class="first"><em>results</em>: List of files to copy to the results folder</p>
 <blockquote>
-<div><p>Each key is the path/name of a file that is generated during
-simulation (source) and each value is the path/name it will be copied
-as (destination).  The sources are relative to the working directory
-and the destinations are relative to the results directory (implied
-by <em>fname</em>).  &#8216;%s&#8217; may be included in the destination to indicate the
-model name (<em>model</em>) without the full path.  &#8216;%i&#8217; may be included
-to indicate the simulation number in the sequence of experiments.
-&#8216;%x&#8217; may be included in the source or destination to represent &#8216;.exe&#8217;
-if the operating system is Windows and &#8216;&#8217; otherwise.</p>
+<div><p>Each entry is the path/name of a file that is generated during
+simulation.  The path is relative to the working directory.  &#8216;%x&#8217; may
+be included in the filename to represent &#8216;.exe&#8217; if the operating
+system is Windows and &#8216;&#8217; otherwise.  The result folders are named by
+the number of the simulation run and placed within the folder that
+contains the simulation script (<em>fname</em>).</p>
 </div></blockquote>
 </li>
 </ul>
@@ -576,22 +573,26 @@ will be simulated.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">experiment</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s">&#39;Modelica.Electrical.Analog.Examples.ChuaCircuit&#39;</span><span class="p">,</span>
-<span class="gp">... </span>                        <span class="n">params</span><span class="o">=</span><span class="p">{},</span> <span class="n">args</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">stopTime</span><span class="o">=</span><span class="mi">2500</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">write_script</span><span class="p">(</span><span class="n">experiment</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s">&quot;examples/run-sims1.mos&quot;</span><span class="p">)</span> 
-<span class="go">([&#39;ChuaCircuit&#39;], &#39;...examples&#39;)</span>
+<span class="gp">... </span>                        <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
+<span class="gp">... </span>                        <span class="n">args</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">stopTime</span><span class="o">=</span><span class="mi">2500</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_script</span><span class="p">(</span><span class="n">experiment</span><span class="p">,</span>
+<span class="gp">... </span>             <span class="n">fname</span><span class="o">=</span><span class="s">&quot;examples/ChuaCircuit/run-sims1.mos&quot;</span><span class="p">)</span> 
+<span class="go">([&#39;ChuaCircuit&#39;], &#39;...examples/ChuaCircuit&#39;)</span>
 </pre></div>
 </div>
-<p>In &#8220;examples/run-sims1.mos&#8221;:</p>
+<p>In &#8220;examples/ChuaCircuit/run-sims1.mos&#8221;:</p>
 <div class="highlight-modelica"><div class="highlight"><pre><span class="k">import</span> <span class="nc">Modelica.Utilities.Files.copy</span><span class="p">;</span>
-<span class="n">cd</span><span class="p">(</span><span class="s">&quot;.../Documents/Dymola&quot;</span><span class="p">)</span>
+<span class="k">import</span> <span class="nc">Modelica.Utilities.Files.createDirectory</span><span class="p">;</span>
+<span class="n">cd</span><span class="p">(</span><span class="s">&quot;.../Documents/Modelica&quot;</span><span class="p">);</span>
 
 <span class="c">// Experiment 1</span>
-<span class="n">ok</span> <span class="o">=</span> <span class="n">simulateModel</span><span class="p">(</span><span class="s">&quot;Modelica.Electrical.Analog.Examples.ChuaCircuit&quot;</span><span class="p">,</span> <span class="n">stopTime</span><span class="o">=</span><span class="mi">2500</span><span class="p">);</span>
+<span class="n">ok</span> <span class="o">=</span> <span class="n">simulateModel</span><span class="p">(</span><span class="n">problem</span><span class="o">=</span><span class="s">&quot;Modelica.Electrical.Analog.Examples.ChuaCircuit&quot;</span><span class="p">,</span> <span class="n">stopTime</span><span class="o">=</span><span class="mi">2500</span><span class="p">);</span>
 <span class="k">if</span> <span class="n">ok</span> <span class="k">then</span>
-   <span class="n">copy</span><span class="p">(</span><span class="s">&quot;dsin.txt&quot;</span><span class="p">,</span> <span class="s">&quot;.../examples/ChuaCircuit_1.in&quot;</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
-   <span class="n">copy</span><span class="p">(</span><span class="s">&quot;dslog.txt&quot;</span><span class="p">,</span> <span class="s">&quot;.../examples/ChuaCircuit_1.log&quot;</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
-   <span class="n">copy</span><span class="p">(</span><span class="s">&quot;dsres.mat&quot;</span><span class="p">,</span> <span class="s">&quot;.../examples/ChuaCircuit_1.mat&quot;</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
-   <span class="n">copy</span><span class="p">(</span><span class="s">&quot;dymosim&quot;</span><span class="p">,</span> <span class="s">&quot;.../examples/ChuaCircuit_1&quot;&quot;, true);</span>
+    <span class="n">createDirectory</span><span class="p">(</span><span class="s">&quot;.../examples/ChuaCircuit/1&quot;</span><span class="p">);</span>
+    <span class="n">copy</span><span class="p">(</span><span class="s">&quot;dsin.txt&quot;</span><span class="p">,</span> <span class="s">&quot;.../modelicares/examples/ChuaCircuit/1/dsin.txt&quot;</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+    <span class="n">copy</span><span class="p">(</span><span class="s">&quot;dslog.txt&quot;</span><span class="p">,</span> <span class="s">&quot;.../modelicares/examples/ChuaCircuit/1/dslog.txt&quot;</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+    <span class="n">copy</span><span class="p">(</span><span class="s">&quot;dsres.mat&quot;</span><span class="p">,</span> <span class="s">&quot;.../examples/ChuaCircuit/1/dsres.mat&quot;</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+    <span class="n">copy</span><span class="p">(</span><span class="s">&quot;dymosim&quot;</span><span class="p">,</span> <span class="s">&quot;.../examples/ChuaCircuit/1/dymosim&quot;</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
 <span class="k">end</span> <span class="k">if</span><span class="p">;</span>
 
 <span class="k">exit</span><span class="p">();</span>
@@ -606,12 +607,12 @@ will be simulated.</p>
 <span class="gp">... </span>    <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;L.L&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">18</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
 <span class="gp">... </span>            <span class="s">&#39;C1.C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
 <span class="gp">... </span>            <span class="s">&#39;C2.C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">120</span><span class="p">]})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">write_script</span><span class="p">(</span><span class="n">experiments</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s">&quot;examples/run-sims2.mos&quot;</span><span class="p">)</span> 
-<span class="go">([&#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;], &#39;...examples&#39;)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_script</span><span class="p">(</span><span class="n">experiments</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s">&quot;examples/ChuaCircuit/run-sims2.mos&quot;</span><span class="p">)</span> 
+<span class="go">([&#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;, &#39;ChuaCircuit&#39;], &#39;...examples/ChuaCircuit&#39;)</span>
 </pre></div>
 </div>
-<p>In &#8220;examples/run-sims2.mos&#8221;, there are commands to run and save results
-from 12 simulation experiments.</p>
+<p>In &#8220;examples/ChuaCircuit/run-sims2.mos&#8221;, there are commands to run and
+save results from 12 simulation experiments.</p>
 </dd></dl>
 
 </div>
@@ -637,7 +638,7 @@ from 12 simulation experiments.</p>
         <li class="right" >
           <a href="multi.html" title="modelicares.multi"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.7.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.7.1 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

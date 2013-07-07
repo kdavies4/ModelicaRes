@@ -1,5 +1,7 @@
 #!/usr/bin/python
 """Update the ReST README from the Markdown README.
+
+Note that some manual manipulation is necessary afterwards.
 """
 
 import pypandoc

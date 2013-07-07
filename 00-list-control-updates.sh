@@ -3,7 +3,9 @@
 #
 # Kevin Davies, 8/3/12
 
-cd control/src
+cd external/control
+grep --color ModelicaRes *.py
+cd src
 grep --color ModelicaRes *.py
 echo
 read -p "Press [Enter] to exit."

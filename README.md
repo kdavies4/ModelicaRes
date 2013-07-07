@@ -36,9 +36,9 @@ On Linux, use:
 
     sudo python setup.py install
 
-The [matplotlibrc](matplotlibrc) file in the base folder has some recommended
-revisions to [matplotlib]'s defaults.  To use it, copy or move the file to the
-working directory or [matplotlib]'s configuration directory.  See
+The [matplotlibrc](bin/matplotlibrc) file has some recommended revisions to
+[matplotlib]'s defaults.  To use it, move or copy the file to the working
+directory or [matplotlib]'s configuration directory.  See
 http://matplotlib.org/users/customizing.html for details.
 
 ### Credits

@@ -29,6 +29,15 @@ def setup(app):
     app.connect("autodoc-skip-member", skip)
     app.add_javascript('copybutton.js')
 
+    # KLD 7/7/13: Doesn't work:
+    # Copy the example images (will lag by one build loop).
+    #for f in glob('../examples/*.png'):
+    #    print '------------------%s--to %s-------' (%f, os.path.join('_static', os.path.basename(f)))
+    #    copyfile(f, os.path.join('_static', os.path.basename(f)))
+    #for f in glob('../examples/*.pdf'):
+    #    print '------------------%s--to %s-------' (%f, os.path.join('_static', os.path.basename(f)))
+    #    copyfile(f, os.path.join('_static', os.path.basename(f)))
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.

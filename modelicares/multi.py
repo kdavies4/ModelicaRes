@@ -149,13 +149,13 @@ def multiplot(sims, suffixes='',
 
     .. only:: html
 
-       .. image:: examples/ChuaCircuits.png
+       .. image:: ../examples/ChuaCircuits.png
           :scale: 70 %
           :alt: plot of Chua circuit with varying inductance
 
     .. only:: latex
 
-       .. figure:: examples/ChuaCircuits.pdf
+       .. figure:: ../examples/ChuaCircuits.pdf
           :scale: 70 %
 
           Plot of Chua circuit with varying inductance
@@ -271,13 +271,13 @@ def multibode(lins, axes=None, pair=(0, 0), label='bode', title="Bode Plot",
 
     .. only:: html
 
-       .. image:: examples/PIDs-bode.png
+       .. image:: ../examples/PIDs-bode.png
           :scale: 70 %
           :alt: Bode plot of PID with varying parameters
 
     .. only:: latex
 
-       .. figure:: examples/PIDs-bode.pdf
+       .. figure:: ../examples/PIDs-bode.pdf
           :scale: 70 %
 
           Bode plot of PID with varying parameters
@@ -416,13 +416,13 @@ def multinyquist(lins, ax=None, pair=(0, 0), label='nyquist',
 
     .. only:: html
 
-       .. image:: examples/PIDs-nyquist.png
+       .. image:: ../examples/PIDs-nyquist.png
           :scale: 70 %
           :alt: Nyquist plot of PID with varying parameters
 
     .. only:: latex
 
-       .. figure:: examples/PIDs-nyquist.pdf
+       .. figure:: ../examples/PIDs-nyquist.pdf
           :scale: 70 %
 
           Nyquist plot of PID with varying parameters

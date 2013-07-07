@@ -83,13 +83,13 @@ def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
 
     .. only:: html
 
-       .. image:: examples/add_arrows.png
+       .. image:: ../examples/add_arrows.png
           :scale: 70 %
           :alt: example of add_arrows()
 
     .. only:: latex
 
-       .. figure:: examples/add_arrows.pdf
+       .. figure:: ../examples/add_arrows.pdf
           :scale: 70 %
 
           Example of add_arrows()
@@ -185,13 +185,13 @@ def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
 
     .. only:: html
 
-       .. image:: examples/add_hlines.png
+       .. image:: ../examples/add_hlines.png
           :scale: 70 %
           :alt: example of add_hlines()
 
     .. only:: latex
 
-       .. figure:: examples/add_hlines.pdf
+       .. figure:: ../examples/add_hlines.pdf
           :scale: 70 %
 
           Example of add_hlines()
@@ -257,13 +257,13 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
 
     .. only:: html
 
-       .. image:: examples/add_vlines.png
+       .. image:: ../examples/add_vlines.png
           :scale: 70 %
           :alt: example of add_vlines()
 
     .. only:: latex
 
-       .. figure:: examples/add_vlines.pdf
+       .. figure:: ../examples/add_vlines.pdf
           :scale: 70 %
 
           Example of add_vlines()
@@ -387,13 +387,13 @@ def color(ax, c, *args, **kwargs):
 
     .. only:: html
 
-       .. image:: examples/color.png
+       .. image:: ../examples/color.png
           :scale: 70 %
           :alt: example of color()
 
     .. only:: latex
 
-       .. figure:: examples/color.pdf
+       .. figure:: ../examples/color.pdf
           :scale: 70 %
 
           Example of color()
@@ -860,13 +860,13 @@ def plot(y, x=None, ax=None, label=None,
 
     .. only:: html
 
-       .. image:: examples/plot.png
+       .. image:: ../examples/plot.png
           :scale: 70 %
           :alt: example of plot()
 
     .. only:: latex
 
-       .. figure:: examples/plot.pdf
+       .. figure:: ../examples/plot.pdf
           :scale: 70 %
 
           Example of plot()
@@ -963,13 +963,13 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
 
     .. only:: html
 
-       .. image:: examples/quiver.png
+       .. image:: ../examples/quiver.png
           :scale: 70 %
           :alt: example of quiver()
 
     .. only:: latex
 
-       .. figure:: examples/quiver.pdf
+       .. figure:: ../examples/quiver.pdf
           :scale: 70 %
 
           Example of quiver()
@@ -1248,13 +1248,13 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
 
     .. only:: html
 
-       .. image:: examples/setup_subplots.png
+       .. image:: ../examples/setup_subplots.png
           :scale: 70 %
           :alt: example of setup_subplots()
 
     .. only:: latex
 
-       .. figure:: examples/setup_subplots.pdf
+       .. figure:: ../examples/setup_subplots.pdf
           :scale: 70 %
 
        Example of setup_subplots()
@@ -1414,13 +1414,13 @@ def shift_scale_x(ax, eagerness=0.325):
 
     .. only:: html
 
-       .. image:: examples/shift_scale_x.png
+       .. image:: ../examples/shift_scale_x.png
           :scale: 70 %
           :alt: example of shift_scale_x()
 
     .. only:: latex
 
-       .. figure:: examples/shift_scale_x.pdf
+       .. figure:: ../examples/shift_scale_x.pdf
           :scale: 70 %
 
           Example of shift_scale_x()
@@ -1490,13 +1490,13 @@ def shift_scale_y(ax, eagerness=0.325):
 
     .. only:: html
 
-       .. image:: examples/shift_scale_y.png
+       .. image:: ../examples/shift_scale_y.png
           :scale: 70 %
           :alt: example of shift_scale_y()
 
     .. only:: latex
 
-       .. figure:: examples/shift_scale_y.pdf
+       .. figure:: ../examples/shift_scale_y.pdf
           :scale: 70 %
 
           Example of shift_scale_y()
@@ -1578,13 +1578,13 @@ class ArrowLine(Line2D):
 
         .. only:: html
 
-           .. image:: examples/ArrowLine.png
+           .. image:: ../examples/ArrowLine.png
               :scale: 70 %
               :alt: example of ArrowLine
 
         .. only:: latex
 
-           .. figure:: examples/ArrowLine.pdf
+           .. figure:: ../examples/ArrowLine.pdf
               :scale: 70 %
 
               Example of ArrowLine

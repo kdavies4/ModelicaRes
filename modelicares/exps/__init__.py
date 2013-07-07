@@ -4,15 +4,15 @@
 
 This module supports two approaches for managing simulations.  The first is to
 create a Modelica_ script (using :meth:`write_script`) and run it within
-a Modelica_ environment (see "examples/ChuaCircuit.py"), which translates and
-simulates the models with the prescribed settings.  The second approach is to
-execute pre-translated models.  The :meth:`run_models` method handles this
-by writing to initialization file(s) (e.g, "dsin.txt") and launching the
-appropriate model executables.  The advantage of the first approach is that
-formal parameters (those that are hard-coded during translation) can be
-adjusted.  However, the second approach is faster because it does not require a
-model to be recompiled when only tunable parameters (those that are not
-hard-coded during translation) are changed.
+a Modelica_ environment (see the scripts in "examples/ChuaCircuit/"), which
+translates and simulates the models with the prescribed settings.  The second
+approach is to execute pre-translated models.  The :meth:`run_models` method
+handles this by writing to initialization file(s) (e.g, "dsin.txt") and
+launching the appropriate model executables.  The advantage of the first
+approach is that formal parameters (those that are hard-coded during
+translation) can be adjusted.  However, the second approach is faster because it
+does not require a model to be recompiled when only tunable parameters (those
+that are not hard-coded during translation) are changed.
 
 The first step in either case is to create a dictionary to specify model
 parameters and other settings for simulation experiment.  A single model
@@ -505,10 +505,10 @@ def write_params(params, fname='dsin.txt'):
 
 
 def write_script(experiments=[(None, {}, {})], packages=[],
-                 working_dir="~/Documents/Dymola", fname="run-sims.mos",
+                 working_dir="~/Documents/Modelica", fname="run-sims.mos",
                  command='simulateModel',
-                 results = ['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x',
-                            'dymolalg.txt']):
+                 results=['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x',
+                          'dymolalg.txt']):
     """Write a Modelica_ script to run simulations.
 
     **Arguments**:
@@ -538,7 +538,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
 
          Items with values of *None* in *params* and *args* are skipped.
 
-    - *working_dir* ("~/Documents/Dymola"): Working directory (for the
+    - *working_dir*: Working directory (for the
       executable, log files, etc.)
 
          '~' may be included to represent the user directory.
@@ -565,17 +565,14 @@ def write_script(experiments=[(None, {}, {})], packages=[],
          'linearizeModel' to create a state space representation or
          'translateModel' to create model executables without running them.
 
-    - *filemap*: Dictionary of result file mappings
+    - *results*: List of files to copy to the results folder
 
-          Each key is the path/name of a file that is generated during
-          simulation (source) and each value is the path/name it will be copied
-          as (destination).  The sources are relative to the working directory
-          and the destinations are relative to the results directory (implied
-          by *fname*).  '%s' may be included in the destination to indicate the
-          model name (*model*) without the full path.  '%i' may be included
-          to indicate the simulation number in the sequence of experiments.
-          '%x' may be included in the source or destination to represent '.exe'
-          if the operating system is Windows and '' otherwise.
+         Each entry is the path/name of a file that is generated during
+         simulation.  The path is relative to the working directory.  '%x' may
+         be included in the filename to represent '.exe' if the operating
+         system is Windows and '' otherwise.  The result folders are named by
+         the number of the simulation run and placed within the folder that
+         contains the simulation script (*fname*).
 
     If *command* is 'simulateModel' and the Modelica_ environment is
     Dymola\ :sup:`®`, then the following keywords may be used in *args*
@@ -615,24 +612,28 @@ def write_script(experiments=[(None, {}, {})], packages=[],
        >>> from modelicares import *
 
        >>> experiment = Experiment(model='Modelica.Electrical.Analog.Examples.ChuaCircuit',
-       ...                         params={}, args=dict(stopTime=2500))
-       >>> write_script(experiment, fname="examples/run-sims1.mos") # doctest: +ELLIPSIS
-       (['ChuaCircuit'], '...examples')
+       ...                         params={},
+       ...                         args=dict(stopTime=2500))
+       >>> write_script(experiment,
+       ...              fname="examples/ChuaCircuit/run-sims1.mos") # doctest: +ELLIPSIS
+       (['ChuaCircuit'], '...examples/ChuaCircuit')
 
-    In "examples/run-sims1.mos":
+    In "examples/ChuaCircuit/run-sims1.mos":
 
     .. code-block:: modelica
 
        import Modelica.Utilities.Files.copy;
-       cd(".../Documents/Dymola")
+       import Modelica.Utilities.Files.createDirectory;
+       cd(".../Documents/Modelica");
 
        // Experiment 1
-       ok = simulateModel("Modelica.Electrical.Analog.Examples.ChuaCircuit", stopTime=2500);
+       ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit", stopTime=2500);
        if ok then
-          copy("dsin.txt", ".../examples/ChuaCircuit_1.in", true);
-          copy("dslog.txt", ".../examples/ChuaCircuit_1.log", true);
-          copy("dsres.mat", ".../examples/ChuaCircuit_1.mat", true);
-          copy("dymosim", ".../examples/ChuaCircuit_1"", true);
+           createDirectory(".../examples/ChuaCircuit/1");
+           copy("dsin.txt", ".../modelicares/examples/ChuaCircuit/1/dsin.txt", true);
+           copy("dslog.txt", ".../modelicares/examples/ChuaCircuit/1/dslog.txt", true);
+           copy("dsres.mat", ".../examples/ChuaCircuit/1/dsres.mat", true);
+           copy("dymosim", ".../examples/ChuaCircuit/1/dymosim", true);
        end if;
 
        exit();
@@ -650,21 +651,22 @@ def write_script(experiments=[(None, {}, {})], packages=[],
        ...     params={'L.L': [18, 20],
        ...             'C1.C': [8, 10],
        ...             'C2.C': [80, 100, 120]})
-       >>> write_script(experiments, fname="examples/run-sims2.mos") # doctest: +ELLIPSIS
-       (['ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit'], '...examples')
+       >>> write_script(experiments, fname="examples/ChuaCircuit/run-sims2.mos") # doctest: +ELLIPSIS
+       (['ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit'], '...examples/ChuaCircuit')
 
-    In "examples/run-sims2.mos", there are commands to run and save results
-    from 12 simulation experiments.
+    In "examples/ChuaCircuit/run-sims2.mos", there are commands to run and
+    save results from 12 simulation experiments.
     """
     # Preprocess the arguments.
     if not isinstance(experiments, (list, GeneratorType)):
         experiments = [experiments]
     fname = base.expand_path(fname)
 
-    # If neccessary, make a folder for the results.
+    working_dir = base.expand_path(working_dir)
     results_dir = os.path.split(fname)[0]
-    if results_dir and not os.path.exists(results_dir):
-        os.mkdir(results_dir)
+    exe = '.exe' if os.name == 'nt' else ''
+    for i, result in enumerate(results):
+        results[i] = result.replace('%x', exe)
 
     # Create the Modelica script and write its header.
     mos = open(fname, 'w')
@@ -678,8 +680,9 @@ def write_script(experiments=[(None, {}, {})], packages=[],
         if package.endswith('.mo'):
             mos.write('openModel("%s");\n' % package)
         else:
-            mos.write('openModel("%s");\n' % os.path.join(package,
-                                                          'package.mo'))
+            mos.write('openModel("%s");\n' % os.path.join(package, 'package.mo'))
+    if packages:
+        mos.write('cd("%s");\n' % working_dir)
     mos.write('\n')
     # Sometimes Dymola opens with an error; simulate any model to clear the
     # error.
@@ -707,7 +710,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
         mos.write('    createDirectory("%s");\n' % destination)
         for result in results:
             mos.write('    copy("%s", "%s", true);\n' %
-                      (result, os.path.join(results_dir, destination)))
+                      (result, os.path.join(destination, result)))
         mos.write('end if;\n\n')
 
     # Exit the simulation environment.
