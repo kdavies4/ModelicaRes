@@ -261,13 +261,13 @@ class LinRes(object):
 
         .. only:: html
 
-           .. image:: examples/PID-bode.png
+           .. image:: ../examples/PID-bode.png
               :scale: 70 %
               :alt: example for LinRes.bode()
 
         .. only:: latex
 
-           .. figure:: examples/PID-bode.pdf
+           .. figure:: ../examples/PID-bode.pdf
               :scale: 80 %
 
               Results of example for :meth:`LinRes.bode`.
@@ -390,13 +390,13 @@ class LinRes(object):
 
         .. only:: html
 
-           .. image:: examples/PID-nyquist.png
+           .. image:: ../examples/PID-nyquist.png
               :scale: 70 %
               :alt: example for LinRes.nyquist()
 
         .. only:: latex
 
-           .. figure:: examples/PID-nyquist.pdf
+           .. figure:: ../examples/PID-nyquist.pdf
               :scale: 70 %
 
               Results of example for :meth:`LinRes.nyquist`.

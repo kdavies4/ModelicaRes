@@ -163,9 +163,10 @@ math and matrix functions from NumPy_.
 
   **Installation**
 
-  An installable copy of this package can be downloaded from the `main site`_ or
-  the `PyPI page`_.  After extracting the package, run the set-up script
-  (setup.py) from the base folder.  On Windows, use the following command::
+  An installable copy of this package can be downloaded using the link to the
+  right or from the `PyPI page`_.  After extracting the package, run the set-up
+  script (setup.py) from the base folder.  On Windows, use the
+  following command::
 
      python setup.py install
 

@@ -911,13 +911,13 @@ class SimRes(object):
 
         .. only:: html
 
-           .. image:: examples/ChuaCircuit.png
+           .. image:: ../examples/ChuaCircuit.png
               :scale: 70 %
               :alt: plot of Chua circuit
 
         .. only:: latex
 
-           .. figure:: examples/ChuaCircuit.pdf
+           .. figure:: ../examples/ChuaCircuit.pdf
               :scale: 70 %
 
               Plot of Chua circuit
@@ -1113,13 +1113,13 @@ class SimRes(object):
 
         .. only:: html
 
-           .. image:: examples/ThreeTanks.png
+           .. image:: ../examples/ThreeTanks.png
               :scale: 70 %
               :alt: Sankey digarams of three-tank model
 
         .. only:: latex
 
-           .. figure:: examples/ThreeTanks.pdf
+           .. figure:: ../examples/ThreeTanks.pdf
               :scale: 70 %
 
               Sankey digarams of three-tank model

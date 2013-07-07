@@ -1,0 +1,40 @@
+include matplotlibrc
+include *.txt
+include *.rst
+include MANIFEST.in
+exclude 00-*
+
+# Examples
+include examples/*.md
+include examples/*.csv
+include examples/*.mat
+include examples/*.py
+include examples/*.txt
+examples/ChuaCircuit/*.md
+examples/ChuaCircuit/*.py
+examples/PID/*.md
+examples/PID/*.py
+
+# Documentation (built version)
+include doc/_sources/*
+include doc/_static/*
+include doc/*.html
+include doc/*.rst
+include doc/*.pdf
+include doc/objects.inv
+include doc/searchindex.js
+
+# External packages
+include external/*.md
+recursive-include external/control *.py
+include external/control/README
+include external/control/PKG-INFO
+include external/control/ChangeLog
+include external/control/Pending
+include external/control/examples/*
+include external/control/doc/*
+include external/control/control.egg-info/*
+
+# Development scripts
+exclude examples/00-*
+exclude modelicares/00-*
