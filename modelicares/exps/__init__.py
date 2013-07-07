@@ -683,6 +683,8 @@ def write_script(experiments=[(None, {}, {})], packages=[],
             mos.write('openModel("%s");\n' % os.path.join(package, 'package.mo'))
     if packages:
         mos.write('cd("%s");\n' % working_dir)
+    mos.write('destination = "%s";\n'
+              % (os.path.normpath(results_dir) + os.path.sep))
     mos.write('\n')
     # Sometimes Dymola opens with an error; simulate any model to clear the
     # error.
@@ -705,12 +707,12 @@ def write_script(experiments=[(None, {}, {})], packages=[],
         else:
             mos.write('ok = %s();\n' % command)
         mos.write('if ok then\n')
-        destination = os.path.join(results_dir, str(i))
         mos.write('    savelog();\n')
-        mos.write('    createDirectory("%s");\n' % destination)
+        folder = str(i)
+        mos.write('    createDirectory(destination + "%s");\n' % folder)
         for result in results:
-            mos.write('    copy("%s", "%s", true);\n' %
-                      (result, os.path.join(destination, result)))
+            mos.write('    copy("%s", destination + "%s", true);\n' %
+                      (result, os.path.join(folder, result)))
         mos.write('end if;\n\n')
 
     # Exit the simulation environment.

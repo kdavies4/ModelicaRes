@@ -2,13 +2,8 @@
 # Release this package.
 #
 # Before running this script:
-# 1.  Address the to do (TODO) items in the code (or as many as possible).  Run
-#     modelicares/00-list-TODO.sh to list the occurrences of that tag.
-# 7/7/13 KD
-# 2.  Run 00-spellcheck.sh on the html files and fix the spelling errors in the
-#     source.
-# 3.  Finalize the entries in CHANGES.txt.
-# 4.  Update the version number in modelicares/__init__.py and
+# 1.  Finalize the entries in CHANGES.txt.
+# 2.  Update the version number in modelicares/__init__.py and
 #     doc/_templates/download.html.
 #
 # Afterward running this script:
@@ -28,7 +23,7 @@
 # 8.  Push everything to github (git push --tags origin master;
 #     git push origin development).
 # 9.  Replace the version number in modelicares/__init__.py with x's as
-#     necessary.
+#     necessary (for the next version).
 #
 # Kevin Davies, 7/7/13
 
@@ -82,7 +77,7 @@ rm -r $name
 cd ..
 
 # Make the web documentation.
-git commit -am "Auto-update documentation"
+git commit -am "Auto-updated documentation"
 branch=`git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3` # Original branch
 #stash_msg=`git stash save "Work in progress while running 00-release.sh"`
 git checkout gh-pages

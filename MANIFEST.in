@@ -10,10 +10,10 @@ include examples/*.csv
 include examples/*.mat
 include examples/*.py
 include examples/*.txt
-examples/ChuaCircuit/*.md
-examples/ChuaCircuit/*.py
-examples/PID/*.md
-examples/PID/*.py
+include examples/ChuaCircuit/*.md
+include examples/ChuaCircuit/*.py
+include examples/PID/*.md
+include examples/PID/*.py
 
 # Documentation (built version)
 include doc/_sources/*
