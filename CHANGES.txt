@@ -4,6 +4,8 @@ Changelog
 0.7.x (201x-x-x) -- Updates:
 
    - :meth:`exps.write_script` now writes scripts that are more readable.
+   - Warning message in :meth:`SimRes.plot` if y-axis variable descriptions
+     are different.
 
 0.7.1 (2013-7-7) -- Updates:
 

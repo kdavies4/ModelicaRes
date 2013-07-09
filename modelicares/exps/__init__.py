@@ -624,16 +624,20 @@ def write_script(experiments=[(None, {}, {})], packages=[],
 
        import Modelica.Utilities.Files.copy;
        import Modelica.Utilities.Files.createDirectory;
+       Advanced.TranslationInCommandLog = true "Also include translation log in command log";
        cd(".../Documents/Modelica");
+       destination = ".../examples/ChuaCircuit/";
 
        // Experiment 1
        ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit", stopTime=2500);
        if ok then
-           createDirectory(".../examples/ChuaCircuit/1");
-           copy("dsin.txt", ".../modelicares/examples/ChuaCircuit/1/dsin.txt", true);
-           copy("dslog.txt", ".../modelicares/examples/ChuaCircuit/1/dslog.txt", true);
-           copy("dsres.mat", ".../examples/ChuaCircuit/1/dsres.mat", true);
-           copy("dymosim", ".../examples/ChuaCircuit/1/dymosim", true);
+           savelog();
+           createDirectory(destination + "1");
+           copy("dsin.txt", destination + "1/dsin.txt", true);
+           copy("dslog.txt", destination + "1/dslog.txt", true);
+           copy("dsres.mat", destination + "1/dsres.mat", true);
+           copy("dymosim", destination + "1/dymosim", true);
+           copy("dymolalg.txt", destination + "1/dymolalg.txt", true);
        end if;
 
        exit();

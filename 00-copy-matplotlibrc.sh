@@ -3,4 +3,4 @@
 #
 # Kevin Davies, 10/31/2012
 
-cp -f ~/.matplotlib/matplotlibrc ./
+cp -f ~/.config/matplotlib/matplotlibrc ./

@@ -29,6 +29,10 @@
 # You can also deploy your own backend outside of matplotlib by
 # referring to the module name (which must be in the PYTHONPATH) as
 # 'module://my_backend'
+# KLD 7/8/13:  New, not tested:
+#backend      : QtAgg 
+#backend      : Qt4Agg
+#backend      : FltkAgg
 # KLD 10/9/2012:  Works:
 #backend      : GTKAgg
 backend      : GTKCairo
@@ -113,11 +117,12 @@ backend      : GTKCairo
 # information on font properties.  The 6 font properties used for font
 # matching are given below with their default values.
 #
-# The font.family property has five values: 'serif' (e.g. Times),
-# 'sans-serif' (e.g. Helvetica), 'cursive' (e.g. Zapf-Chancery),
-# 'fantasy' (e.g. Western), and 'monospace' (e.g. Courier).  Each of
+# The font.family property has five values: 'serif' (e.g., Times),
+# 'sans-serif' (e.g., Helvetica), 'cursive' (e.g., Zapf-Chancery),
+# 'fantasy' (e.g., Western), and 'monospace' (e.g., Courier).  Each of
 # these font families has a default list of font names in decreasing
-# order of priority associated with them.
+# order of priority associated with them.  When text.usetex is False,
+# font.family may also be one or more concrete font names.
 #
 # The font.style property has three values: normal (or roman), italic
 # or oblique.  The oblique style will be used for italic, if it is not
@@ -142,7 +147,6 @@ backend      : GTKCairo
 # 12pt is the standard value.
 #
 #font.family         : sans-serif
-#font.family         : serif
 #font.style          : normal
 #font.variant        : normal
 #font.weight         : medium
@@ -272,6 +276,8 @@ mathtext.default : regular # The default font to use for math.
                                             # as list of string colorspecs:
                                             # single letter, long name, or
                                             # web-style hex
+#axes.xmargin        : 0  # x margin.  See `axes.Axes.margins`
+#axes.ymargin        : 0  # y margin See `axes.Axes.margins`
 
 #polaraxes.grid      : True    # display grid on polar axes
 #axes3d.grid         : True    # display grid on 3d axes
@@ -312,22 +318,18 @@ mathtext.default : regular # The default font to use for math.
 #legend.numpoints     : 2      # the number of points in the legend line
 #legend.fontsize      : large
 legend.fontsize      : medium
-#legend.pad           : 0.0    # deprecated; the fractional whitespace inside the legend border
 #legend.borderpad     : 0.5    # border whitespace in fontsize units
 #legend.markerscale   : 1.0    # the relative size of legend markers vs. original
 # the following dimensions are in axes coords
-#legend.labelsep      : 0.010  # deprecated; the vertical space between the legend entries
 #legend.labelspacing  : 0.5    # the vertical space between the legend entries in fraction of fontsize
-#legend.handlelen     : 0.05   # deprecated; the length of the legend lines
 #legend.handlelength  : 2.     # the length of the legend lines in fraction of fontsize
 #legend.handleheight  : 0.7     # the height of the legend handle in fraction of fontsize
-#legend.handletextsep : 0.02   # deprecated; the space between the legend line and legend text
 #legend.handletextpad : 0.8    # the space between the legend line and legend text in fraction of fontsize
-#legend.axespad       : 0.02   # deprecated; the border between the axes and legend edge
 #legend.borderaxespad : 0.5   # the border between the axes and legend edge in fraction of fontsize
 #legend.columnspacing : 2.    # the border between the axes and legend edge in fraction of fontsize
 #legend.shadow        : False
 #legend.frameon       : True   # whether or not to draw a frame around legend
+#legend.scatterpoints : 3 # number of scatter points
 
 ### FIGURE
 # See http://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure
@@ -339,6 +341,9 @@ figure.figsize   : 8.1, 5     # figure size in inches
 #figure.edgecolor : white   # figure edgecolor
 #figure.autolayout : False  # When True, automatically adjust subplot
                             # parameters to make the plot fit the figure
+#figure.max_open_warning : 20  # The maximum number of figures to open through
+                               # the pyplot interface before emitting a warning.
+                               # If less than one this feature is disabled.
 
 # The figure subplot parameters.  All dimensions are a fraction of the
 # figure width or height
@@ -392,9 +397,16 @@ image.cmap   : hot               # gray | jet etc... (bone, gist_earth, gist_gra
 #path.snap : True # When True, rectilinear axis-aligned paths will be snapped to
                   # the nearest pixel when certain criteria are met.  When False,
                   # paths will never be snapped.
+#path.sketch : None # May be none, or a 3-tuple of the form (scale, length,
+                    # randomness).
+                    # *scale* is the amplitude of the wiggle
+                    # perpendicular to the line (in pixels).  *length*
+                    # is the length of the wiggle along the line (in
+                    # pixels).  *randomness* is the factor by which
+                    # the length is randomly scaled.
 
 # the default savefig params can be different from the display params
-# Eg, you may want a higher resolution, or to make the figure
+# e.g., you may want a higher resolution, or to make the figure
 # background white
 #savefig.dpi        : 100      # figure dots per inch
 #savefig.facecolor  : white    # figure facecolor when saving
@@ -464,7 +476,7 @@ image.cmap   : hot               # gray | jet etc... (bone, gist_earth, gist_gra
 #keymap.pan : p                      # pan mnemonic
 #keymap.zoom : o                     # zoom mnemonic
 #keymap.save : s                     # saving current figure
-#keymap.quit : ctrl+w                # close the current figure
+#keymap.quit : ctrl+w, cmd+w         # close the current figure
 #keymap.grid : g                     # switching on/off a grid in current axes
 #keymap.yscale : l                   # toggle scaling of y-axes ('log'/'linear')
 #keymap.xscale : L, k                # toggle scaling of x-axes ('log'/'linear')
