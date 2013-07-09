@@ -543,13 +543,16 @@ def write_script(experiments=[(None, {}, {})], packages=[],
 
          '~' may be included to represent the user directory.
 
-    - *packages*: List of Modelica_ packages that should be preloaded
+    - *packages*: List of Modelica_ packages that should be preloaded or scipts
+      that should be run
 
-         Each may be a "\*.mo" file or a folder that contains a "package.mo"
-         file.  The path may be absolute or relative to *working_dir*.  It may
-         be necessary to include in *packages* the file or folder that contains
-         the model specified by the *model* subargument, but the Modelica
-         Standard Library generally does not need to be included.
+         Each may be a "\*.mo" file, a folder that contains a "package.mo" file,
+         or a "\*.mos" file.  The path may be absolute or relative to
+         *working_dir*.  It may be necessary to include in *packages* the file
+         or folder that contains the model specified by the *model* subargument,
+         but the Modelica Standard Library generally does not need to be
+         included.  If an entry is a script ("\*.mos"), it is run from its
+         folder.
 
     - *fname*: Name of the script file to be written (usually in the form
        "\*.mos")
@@ -681,12 +684,16 @@ def write_script(experiments=[(None, {}, {})], packages=[],
     mos.write('Advanced.TranslationInCommandLog = true "Also include translation log in command log";\n')
     mos.write('cd("%s");\n' % working_dir)
     for package in packages:
-        if package.endswith('.mo'):
-            mos.write('openModel("%s");\n' % package)
+        if package.endswith('.mos'):
+            mos.write('cd("%s");\n' % os.path.dirname(package))
+            mos.write('RunScript("%s");\n' % os.path.basename(package))
         else:
-            mos.write('openModel("%s");\n' % os.path.join(package, 'package.mo'))
+            if package.endswith('.mo'):
+                mos.write('openModel("%s");\n' % package)
+            else:
+                mos.write('openModel("%s");\n' % os.path.join(package, 'package.mo'))
+            mos.write('cd("%s");\n' % working_dir)
     if packages:
-        mos.write('cd("%s");\n' % working_dir)
     mos.write('destination = "%s";\n'
               % (os.path.normpath(results_dir) + os.path.sep))
     mos.write('\n')
