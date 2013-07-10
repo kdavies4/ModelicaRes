@@ -41,7 +41,7 @@ If a variable cannot be found, then suggestions are given:
 .. code-block:: python
 
    >>> sims[0].get_description('L.vv')
-   "L.vv" is not a valid variable name.
+   L.vv is not a valid variable name.
    <BLANKLINE>
    Did you mean one of the these?
           L.v

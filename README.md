@@ -5,7 +5,6 @@ ModelicaRes
 interpret results, and create publishable figures.  It is currently possible to
 
 - Auto-generate simulation scripts,
-- Run model executables with varying parameters,
 - Browse data,
 - Perform custom calculations, and
 - Produce various plots and diagrams.
@@ -20,8 +19,7 @@ Bode and Nyquist plots, and Sankey diagrams.  [ModelicaRes] can be scripted or
 run from a [Python] interpreter with math and matrix functions from [NumPy].
 
 For more information, please see the [main project site] or the [doc](doc)
-folder of the package for the full documentation and many examples.  The
-development site is https://github.com/kdavies4/modelicares.
+folder for the full documentation and many examples.
 
 ### Installation
 
@@ -55,12 +53,15 @@ Third-party code has been included from:
   ([python-control](http://sourceforge.net/apps/mediawiki/python-control)), and
 - Joerg Raedler (method to expand a [Modelica] variable tree - from [DyMat])
 
-### License terms
+### License terms and development
 
 [ModelicaRes] is published under the terms of the BSD license (see
 [LICENSE.txt](LICENSE.txt)).  Please share any modifications you make
 (preferably on a Github fork from https://github.com/kdavies4/ModelicaRes) so
-that others may benefit from your work.
+that others may benefit from your work.  If you find a bug, please
+[report it](https://github.com/kdavies4/ModelicaRes/issues/new).  If you have
+suggestions for improvements, please
+[share them here](https://github.com/kdavies4/ModelicaRes/wiki/Possible-Enhancements).
 
 ### See also
 
@@ -68,7 +69,7 @@ The following [Python] projects are related:
 
 - [awesim]\: helps run simulation experiments and organize results
 - [BuildingsPy]\: supports unit testing
-- [DyMat]\: exports `Modelica`_ simulation data to comma separated values (CSV),
+- [DyMat]\: exports [Modelica] simulation data to comma separated values (CSV),
   [Gnuplot](http://www.gnuplot.info/), MATLAB&reg;, and
   [Network Common Data Form (netCDF)](http://www.unidata.ucar.edu/software/netcdf/)
 - [pysimulator]\: elaborate GUI; supports the Functional Mock-up Interface (FMI)

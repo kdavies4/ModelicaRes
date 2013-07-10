@@ -450,8 +450,8 @@ class SimRes(object):
                         attrs.append(a)
                 return attrs
         except KeyError:
-            print('"%s" is not a valid variable name.\n' % names)
-            print("Did you mean one of the these?")
+            print('%s is not a valid variable name.\n' % names)
+            print("Did you mean one of these?")
             for close_match in get_close_matches(names, self._traj.keys()):
                 print("       " + close_match)
             return
@@ -713,7 +713,7 @@ class SimRes(object):
         .. code-block:: python
 
            >>> sim.get_values(['L.vv']) # doctest: +ELLIPSIS
-           "L.vv" is not a valid variable name.
+           L.vv is not a valid variable name.
            <BLANKLINE>
            Did you mean one of the these?
                   L.v
