@@ -1,6 +1,15 @@
 Changelog
 =========
 
+0.7.2 (2013-7-9) -- Updates:
+
+   - When a variable cannot be found, suggestions are now given.  See the
+     example in :meth:`SimRes.get_values`.
+   - :meth:`exps.write_script` now allows initialization scripts.
+   - Warning message in :meth:`SimRes.plot` if y-axis variable descriptions
+     are different.
+   - :meth:`exps.write_script` now writes scripts that are more readable.
+
 0.7.1 (2013-7-7) -- Updates:
 
    - Added missing files to MANIFEST

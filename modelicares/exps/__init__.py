@@ -543,13 +543,16 @@ def write_script(experiments=[(None, {}, {})], packages=[],
 
          '~' may be included to represent the user directory.
 
-    - *packages*: List of Modelica_ packages that should be preloaded
+    - *packages*: List of Modelica_ packages that should be preloaded or scipts
+      that should be run
 
-         Each may be a "\*.mo" file or a folder that contains a "package.mo"
-         file.  The path may be absolute or relative to *working_dir*.  It may
-         be necessary to include in *packages* the file or folder that contains
-         the model specified by the *model* subargument, but the Modelica
-         Standard Library generally does not need to be included.
+         Each may be a "\*.mo" file, a folder that contains a "package.mo" file,
+         or a "\*.mos" file.  The path may be absolute or relative to
+         *working_dir*.  It may be necessary to include in *packages* the file
+         or folder that contains the model specified by the *model* subargument,
+         but the Modelica Standard Library generally does not need to be
+         included.  If an entry is a script ("\*.mos"), it is run from its
+         folder.
 
     - *fname*: Name of the script file to be written (usually in the form
        "\*.mos")
@@ -624,16 +627,20 @@ def write_script(experiments=[(None, {}, {})], packages=[],
 
        import Modelica.Utilities.Files.copy;
        import Modelica.Utilities.Files.createDirectory;
+       Advanced.TranslationInCommandLog = true "Also include translation log in command log";
        cd(".../Documents/Modelica");
+       destination = ".../examples/ChuaCircuit/";
 
        // Experiment 1
        ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit", stopTime=2500);
        if ok then
-           createDirectory(".../examples/ChuaCircuit/1");
-           copy("dsin.txt", ".../modelicares/examples/ChuaCircuit/1/dsin.txt", true);
-           copy("dslog.txt", ".../modelicares/examples/ChuaCircuit/1/dslog.txt", true);
-           copy("dsres.mat", ".../examples/ChuaCircuit/1/dsres.mat", true);
-           copy("dymosim", ".../examples/ChuaCircuit/1/dymosim", true);
+           savelog();
+           createDirectory(destination + "1");
+           copy("dsin.txt", destination + "1/dsin.txt", true);
+           copy("dslog.txt", destination + "1/dslog.txt", true);
+           copy("dsres.mat", destination + "1/dsres.mat", true);
+           copy("dymosim", destination + "1/dymosim", true);
+           copy("dymolalg.txt", destination + "1/dymolalg.txt", true);
        end if;
 
        exit();
@@ -677,12 +684,17 @@ def write_script(experiments=[(None, {}, {})], packages=[],
     mos.write('Advanced.TranslationInCommandLog = true "Also include translation log in command log";\n')
     mos.write('cd("%s");\n' % working_dir)
     for package in packages:
-        if package.endswith('.mo'):
-            mos.write('openModel("%s");\n' % package)
+        if package.endswith('.mos'):
+            mos.write('cd("%s");\n' % os.path.dirname(package))
+            mos.write('RunScript("%s");\n' % os.path.basename(package))
         else:
-            mos.write('openModel("%s");\n' % os.path.join(package, 'package.mo'))
-    if packages:
-        mos.write('cd("%s");\n' % working_dir)
+            if package.endswith('.mo'):
+                mos.write('openModel("%s");\n' % package)
+            else:
+                mos.write('openModel("%s");\n' % os.path.join(package, 'package.mo'))
+            mos.write('cd("%s");\n' % working_dir)
+    mos.write('destination = "%s";\n'
+              % (os.path.normpath(results_dir) + os.path.sep))
     mos.write('\n')
     # Sometimes Dymola opens with an error; simulate any model to clear the
     # error.
@@ -705,12 +717,12 @@ def write_script(experiments=[(None, {}, {})], packages=[],
         else:
             mos.write('ok = %s();\n' % command)
         mos.write('if ok then\n')
-        destination = os.path.join(results_dir, str(i))
         mos.write('    savelog();\n')
-        mos.write('    createDirectory("%s");\n' % destination)
+        folder = str(i)
+        mos.write('    createDirectory(destination + "%s");\n' % folder)
         for result in results:
-            mos.write('    copy("%s", "%s", true);\n' %
-                      (result, os.path.join(destination, result)))
+            mos.write('    copy("%s", destination + "%s", true);\n' %
+                      (result, os.path.join(folder, result)))
         mos.write('end if;\n\n')
 
     # Exit the simulation environment.

@@ -781,7 +781,7 @@ def load_csv(fname, header_row=0, first_data_row=None,
 def plot(y, x=None, ax=None, label=None,
          color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
          marker=None,
-         dashes=[(None, None), (3,3), (1,1), (3,2,1,2)],
+         dashes=[(None,None), (3,3), (1,1), (3,2,1,2)],
          **kwargs):
     """Plot 1D scalar data as points and/or line segments in 2D Cartesian
     coordinates.
@@ -829,7 +829,7 @@ def plot(y, x=None, ax=None, label=None,
       that will be used sequentially
 
          Each style is a tuple of on/off lengths representing dashes.  Use
-         (0,1) for no line and (1,0) for a solid line.
+         (0,1) for no line and (None,None) for a solid line.
 
          .. Seealso:: http://matplotlib.sourceforge.net/api/collections_api.html
 

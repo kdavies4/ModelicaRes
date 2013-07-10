@@ -1,6 +1,6 @@
-##############
+#############
  ModelicaRes
-##############
+#############
 
 `ModelicaRes`_ is a free, open-source tool to manage `Modelica`_ simulations,
 interpret results, and create publishable figures. It is currently possible to
