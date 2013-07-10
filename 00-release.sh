@@ -32,15 +32,7 @@
 sudo ./setup.py install
 
 # Run the doc tests and recreate the example images.
-./modelicares/__init__.py
-./modelicares/base.py
-./modelicares/exps/__init__.py
-python -m modelicares.exps.doe
-./modelicares/linres.py
-./modelicares/multi.py
-./modelicares/simres/__init__.py
-python -m modelicares.simres.info
-./modelicares/texunit.py
+./test.sh
 cd examples
 ./00-crop-png.sh
 cd ..

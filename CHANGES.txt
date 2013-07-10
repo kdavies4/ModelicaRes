@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.8.x (201x-x-x) -- Updates:
+
+   - Removed the `simres.info` submodule.  It is better to used the methods of
+     :class:`simres.SimRes` directly.
+
+
 0.7.2 (2013-7-9) -- Updates:
 
    - When a variable cannot be found, suggestions are now given.  See the

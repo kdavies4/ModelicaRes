@@ -143,7 +143,6 @@ math and matrix functions from NumPy_.
   loadres
   modelicares
   simres
-  simres.info
   linres
   multi
   exps
