@@ -24,6 +24,7 @@ from matplotlib.pyplot import figlegend
 from matplotlib import rcParams
 from collections import namedtuple
 from scipy.io import loadmat
+from difflib import get_close_matches
 
 from modelicares.gui import Browser
 from modelicares.texunit import unit2tex, label_number
@@ -449,7 +450,10 @@ class SimRes(object):
                         attrs.append(a)
                 return attrs
         except KeyError:
-            print('"%s" is not a valid variable name.' % names)
+            print('"%s" is not a valid variable name.\n' % names)
+            print("Did you mean one of the these?")
+            for close_match in get_close_matches(names, self._traj.keys()):
+                print("       " + close_match)
             return
 
     def get_description(self, names):
@@ -703,6 +707,21 @@ class SimRes(object):
            >>> sim = SimRes('examples/ChuaCircuit.mat')
            >>> sim.get_values('L.v') # doctest: +ELLIPSIS
            array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)
+
+        If the variable cannot be found, then possible matches are listed:
+
+        .. code-block:: python
+
+           >>> sim.get_values(['L.vv']) # doctest: +ELLIPSIS
+           "L.vv" is not a valid variable name.
+           <BLANKLINE>
+           Did you mean one of the these?
+                  L.v
+                  L.p.v
+                  L.n.v
+
+        The other *get_*\* methods also give this message when a variable cannot
+        be found.
         """
         def _get_value(entry):
             """Return the values of a variable given its *_traj* entry.

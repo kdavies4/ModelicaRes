@@ -693,7 +693,6 @@ def write_script(experiments=[(None, {}, {})], packages=[],
             else:
                 mos.write('openModel("%s");\n' % os.path.join(package, 'package.mo'))
             mos.write('cd("%s");\n' % working_dir)
-    if packages:
     mos.write('destination = "%s";\n'
               % (os.path.normpath(results_dir) + os.path.sep))
     mos.write('\n')
