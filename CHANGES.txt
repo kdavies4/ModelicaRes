@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.7.x (201x-x-x) -- Updates:
+0.7.2 (2013-7-9) -- Updates:
 
    - When a variable cannot be found, suggestions are now given.  See the
      example in :meth:`SimRes.get_values`.
