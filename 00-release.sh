@@ -17,7 +17,7 @@
 # 4.  Rebase this development branch to squash extra commits
 #     (git rebase -i origin/development).
 # 5.  Merge this development branch into master (git checkout master;
-#     git merge development).
+#     git merge --squash development).
 # 6.  Tag the master branch with the version number (git tag vx.x.x)
 # 7.  Upload the release to PyPI (./setup.py sdist upload).
 # 8.  Push everything to github (git push --tags origin master;
