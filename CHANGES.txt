@@ -3,6 +3,7 @@ Changelog
 
 0.8.x (201x-x-x) -- Updates:
 
+   - Added :meth:`simres.SimRes.glob` to return variables that match a pattern.
    - Removed the `simres.info` submodule.  It is better to used the methods of
      :class:`simres.SimRes` directly.
 

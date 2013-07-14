@@ -68,6 +68,12 @@ To see all the methods, use
 
    >>> help(sims[0])
 
+To search for variables, use :meth:`modelicares.simres.SimRes.glob` with
+wildcards:
+
+   >>> sims[0].glob('L.p*')
+   [u'L.p.i', u'L.p.v']
+
 Likewise, you can explore the linearization result or create diagrams using the
 methods in :class:`modelicares.linres.LinRes`:
 
