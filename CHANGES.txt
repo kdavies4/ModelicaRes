@@ -3,6 +3,8 @@ Changelog
 
 0.8.x (201x-x-x) -- Updates:
 
+   - :meth:`texunit.unit2tex` now automatically formats some symbols.
+   - Added *color* option to :meth:`multi.multiplot`.
    - Added :meth:`SimRes.variables` method to list variable names (same as
      :meth:`SimRes.keys` and :meth:`SimRes.names`)
    - Added :meth:`simres.SimRes.glob` to return variables that match a pattern.

@@ -230,6 +230,9 @@ def unit2tex(unit, times='\,', roman=False):
                   '!',    # Used in inserting a negative 3/18 quad space
                   ]
 
+    # Symbols that should be prefixed by '\' as a LaTeX math command.
+    SYMBOLS = ['alpha', 'Phi', 'pi', 'mu', 'epsilon', '%']
+
     def _simple_unit2tex(unit, is_numerator=True, times=r'\,'):
         """Convert the numerator or denominator of a Modelica_ unit to LaTeX.
         """
@@ -239,7 +242,7 @@ def unit2tex(unit, times='\,', roman=False):
         exponent = ''
         pointer = 0
         while pointer < len(unit):
-            # Skip the exceptions.
+            # Skip the unit (including exceptions).
             while (pointer < len(unit) and (unit[pointer].isalpha() or
                                             unit[pointer] in EXCEPTIONS)):
                 tex += unit[pointer]
@@ -289,6 +292,11 @@ def unit2tex(unit, times='\,', roman=False):
             unit = _simple_unit2tex(unit, times=times)
         if roman:
             unit = '\mathrm{%s}' % unit
+
+        # Add the LaTeX math command to symbols.
+        for symbol in SYMBOLS:
+            unit = unit.replace(symbol, "\\" + symbol)
+
     return unit
 
 
