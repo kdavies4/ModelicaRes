@@ -3,14 +3,17 @@ Changelog
 
 0.8.x (201x-x-x) -- Updates:
 
-   - :meth:`texunit.unit2tex` now automatically formats some symbols.
+   - :meth:`texunit.label_number` now uses "in" instead of "/" to denote a
+     quantity in a unit that involves a function other than simple scaling
+     (e.g., degC, dB).
+   - :meth:`texunit.unit2tex` now automatically formats some units and
+     constants.
    - Added *color* option to :meth:`multi.multiplot`.
    - Added :meth:`SimRes.variables` method to list variable names (same as
      :meth:`SimRes.keys` and :meth:`SimRes.names`)
    - Added :meth:`simres.SimRes.glob` to return variables that match a pattern.
    - Removed the `simres.info` submodule.  It is better to used the methods of
      :class:`simres.SimRes` directly.
-
 
 0.7.2 (2013-7-9) -- Updates:
 

@@ -9,6 +9,23 @@ __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
 
+import re
+
+
+# Special replacements for unit strings in tex
+rpls = [(re.compile(rpl[0]), rpl[1])
+        for rpl in
+        [('degC', '^{\circ}\!C'),
+         ('degF', '^{\circ}\!F'),
+         ('%', r'\!\%'),
+         ('ohm', r'\Omega'),
+         ('angstrom', r'\AA'),
+         ('pi', r'\pi'),
+         ('alpha', r'\alpha'),
+         ('Phi', r'\Phi'),
+         ('mu', r'\mu'),
+         ('epsilon', r'\epsilon')]]
+
 def label_number(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
     r"""Generate text to label a number as a quantity expressed in a unit.
 
@@ -37,6 +54,12 @@ def label_number(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
          division associated with the units on the denominator is always
          indicated by a negative exponential.
 
+         If the unit is not a simple scaling factor, then "in" is used instead.
+         For example,
+
+            >>> label_number("Gain", "dB")
+            'Gain in $dB$'
+
     - *roman*: *True*, if the units should be typeset in Roman text (rather
       than italics)
 
@@ -52,14 +75,15 @@ def label_number(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
 
     .. _Modelica: http://www.modelica.org/
     """
+    if unit in ['dB', 'degC', 'degF', 'kPag']:
+        return "%s in $%s$" % (quantity, unit2tex(unit, times, roman))
     if unit and unit != '1':
         return quantity + '$' + per + unit2tex(unit, times, roman) + '$'
     else:
         return quantity
 
-
 def label_quantity(number, unit='', format='%G', times='\,', roman=False):
-    r"""Generate text to label a quantity as a number times a unit.
+    r"""Generate text to write a quantity as a number times a unit.
 
     If an exponent is present, then either a LaTeX-formatted exponential or a
     System International (SI) prefix is applied.
@@ -197,13 +221,6 @@ def unit2tex(unit, times='\,', roman=False):
            enclosed in parentheses and begins with a '/'.  Exponents directly
            follow the significand (e.g., no carat ('^')).
 
-       Here, the unit may also contain LaTeX_ math mode commands.  For example,
-       '\\Omega' becomes :math:`\Omega`.  Use '\\%' for percent, '\\$' for
-       dollar, and '\\mathrm{^{\\circ}C}' for degree Celsius
-       (:math:`\mathrm{^{\circ}C}`).  Use '$' in pairs (without a leading '\\')
-       to escape and then return to the LaTeX_ math mode later in the string.
-       Use '\\!' to cancel a 3/18 quad space ('\\,').
-
     - *times*: LaTeX_ math string to indicate multiplication
 
          *times* is applied between the number and the first unit and between
@@ -219,83 +236,59 @@ def unit2tex(unit, times='\,', roman=False):
 
        which will render in LaTeX_ math as :math:`\mathrm{m\,s^{-2}}`
     """
-    # Special characters that should be passed through directly
-    EXCEPTIONS = ['%',    # Percent
-                  '$',    # US dollar or beginning/end of LaTeX math string
-                  '^',    # Used in degree Celcius
-                  '\x5c', # Beginning of LaTeX command, "\"
-                  '{',    # Beginning of LaTeX math group
-                  '}',    # End of LaTeX math group
-                  ',',    # Used in inserting a positive 3/18 quad space
-                  '!',    # Used in inserting a negative 3/18 quad space
-                  ]
+    splitter = re.compile('([^0-9+-]*)(.*)')
 
-    # Symbols that should be prefixed by '\' as a LaTeX math command.
-    SYMBOLS = ['alpha', 'Phi', 'pi', 'mu', 'epsilon', '%']
+    def _process_unit(unit, is_numerator):
+        """Convert a simple Modelica_ unit to LaTeX.
+        """
+        matches = splitter.match(unit)
+        tex = matches.group(1)
+        exponent = matches.group(2)
+        if exponent:
+            if is_numerator:
+                tex += '^{%s}' % exponent
+            else:
+                tex += '^{-%s}' % exponent
+        elif not is_numerator:
+            tex += '^{-1}'
+        return tex
 
-    def _simple_unit2tex(unit, is_numerator=True, times=r'\,'):
+    def _process_group(unit, times=r'\,', is_numerator=True):
         """Convert the numerator or denominator of a Modelica_ unit to LaTeX.
         """
         if unit == '1':
             return ''
-        tex = ''
-        exponent = ''
-        pointer = 0
-        while pointer < len(unit):
-            # Skip the unit (including exceptions).
-            while (pointer < len(unit) and (unit[pointer].isalpha() or
-                                            unit[pointer] in EXCEPTIONS)):
-                tex += unit[pointer]
-                pointer += 1
-            # Handle the exponents.
-            while pointer < len(unit) and unit[pointer].isdigit():
-                exponent += unit[pointer]
-                pointer += 1
-            if exponent:
-                if is_numerator:
-                    tex += '^{' + exponent + '}'
-                else:
-                    tex += '^{-' + exponent + '}'
-                exponent = ''
-            elif not is_numerator:
-                tex += '^{-1}'
-                exponent = ''
-            # Replace the next dot ('.') with times.
-            if pointer < len(unit) - 1:
-                if unit[pointer] == '.':
-                    tex += times
-                else:
-                    print('The unit part %s has an unexpected character '
-                          '"%s".  It will be skipped.' % (unit, unit[pointer]))
-                pointer += 1
-            elif pointer == len(unit) - 1:
-                print('The unit part "%s" is terminated by an unexpected '
-                      'character.  It will be skipped.' % unit)
-                break
-        return tex
+        if unit.startswith('('):
+            assert unit.endswith(')'), ("The unit group %s starts with '(' but "
+                                        "does not end with ')'." % unit)
+            unit = unit[1:-1]
+        texs = [_process_unit(u, is_numerator) for u in unit.split('.')]
+        return times.join(texs)
 
     if unit:
         while '..' in unit:
-            print('There are double dots in unit "%s".  Only one '
-                  'muliplication string will be added.' % unit)
+            print('There are double dots in unit "%s".  Only one muliplication '
+                  'string will be added.' % unit)
             unit = unit.replace('..', '.')
 
         # Split the numerator and the denominator.
         if '/' in unit:
-            numerator, denominator = unit.split('/', 1)
-            if denominator.startswith('(') and denominator.endswith(')'):
-                denominator = denominator[1:-1]
-            unit = (_simple_unit2tex(numerator, times=times) + times +
-                    _simple_unit2tex(denominator, is_numerator=False,
-                                     times=times))
+            try:
+                numerator, denominator = unit.split('/')
+            except ValueError:
+                print("Check that the unit string %s has at most one division "
+                      "sign." % unit)
+            unit = (_process_group(numerator, times) + times +
+                    _process_group(denominator, times, is_numerator=False))
         else:
-            unit = _simple_unit2tex(unit, times=times)
+            unit = _process_group(unit, times)
+
+        # Make the special replacements.
+        for rpl in rpls:
+            unit = rpl[0].sub(rpl[1], unit)
+
         if roman:
             unit = '\mathrm{%s}' % unit
-
-        # Add the LaTeX math command to symbols.
-        for symbol in SYMBOLS:
-            unit = unit.replace(symbol, "\\" + symbol)
 
     return unit
 
