@@ -3,6 +3,8 @@ Changelog
 
 0.8.x (201x-x-x) -- Updates:
 
+   - Fixed bug so that :meth:`simres.SimRes.plot` keeps the axis labels blank
+     when *xlabel* = "", *ylabel1* = "", or *ylabel2* = "".
    - :meth:`texunit.label_number` now uses "in" instead of "/" to denote a
      quantity in a unit that involves a function other than simple scaling
      (e.g., degC, dB).

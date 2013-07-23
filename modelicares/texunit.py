@@ -75,7 +75,7 @@ def label_number(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
 
     .. _Modelica: http://www.modelica.org/
     """
-    if unit in ['dB', 'degC', 'degF', 'kPag']:
+    if unit in ['dB', 'degC', 'degF', 'Pag', 'kPag']:
         return "%s in $%s$" % (quantity, unit2tex(unit, times, roman))
     if unit and unit != '1':
         return quantity + '$' + per + unit2tex(unit, times, roman) + '$'
