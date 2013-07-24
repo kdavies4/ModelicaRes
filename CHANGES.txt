@@ -3,6 +3,8 @@ Changelog
 
 0.8.x (201x-x-x) -- Updates:
 
+   - Added patterns to :meth:`exps.write_params` match more entries in a dsin
+     file.
    - :meth:`exps.write_script` now clears the log between runs.
    - Fixed bug so that :meth:`simres.SimRes.plot` keeps the axis labels blank
      when *xlabel* = "", *ylabel1* = "", or *ylabel2* = "".

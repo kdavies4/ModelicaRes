@@ -424,7 +424,7 @@ def write_params(params, fname='dsin.txt'):
     - *params*: Dictionary of parameters
 
          Each key is a parameter name (including the full model path in
-         Modelica_ dot notation ) and each entry is a parameter value.  The
+         Modelica_ dot notation) and each entry is a parameter value.  The
          parameter name includes array indices (if any) in Modelica_
          representation (1-bases indexing).  The values must be representable
          as scalar numbers (integer or floating point).  *True* and *False*
@@ -473,6 +473,8 @@ def write_params(params, fname='dsin.txt'):
     patterns = [# Dymola 1- or 2-line parameter specification
                 (r'(^ *%s *) %s ( *%s +%s *\n? +%s +%s +# +%s *)$'
                  % (i, f, f, f, u, u, '%s')),
+                (r'(^ *) %s ( *# *%s *)' % (i, '%s')),
+                (r'(^ *) %s ( *# *%s *)' % (f, '%s')),
                 # See read_params() for descriptions of the columns.
                ]
     # These are tried in order until there is a match.  The first group or pair
