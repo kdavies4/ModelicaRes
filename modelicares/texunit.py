@@ -17,7 +17,7 @@ rpls = [(re.compile(rpl[0]), rpl[1])
         for rpl in
         [('degC', '^{\circ}\!C'),
          ('degF', '^{\circ}\!F'),
-         ('%', r'\!\%'),
+         ('%', r'\%'),
          ('ohm', r'\Omega'),
          ('angstrom', r'\AA'),
          ('pi', r'\pi'),
@@ -241,14 +241,11 @@ def unit2tex(unit, times='\,', roman=False):
     def _process_unit(unit, is_numerator):
         """Convert a simple Modelica_ unit to LaTeX.
         """
-        matches = splitter.match(unit)
-        tex = matches.group(1)
-        exponent = matches.group(2)
+        if unit == '1' or not unit:
+            return ''
+        tex, exponent = splitter.match(unit).groups()
         if exponent:
-            if is_numerator:
-                tex += '^{%s}' % exponent
-            else:
-                tex += '^{-%s}' % exponent
+            tex += ('^{%s}' if is_numerator else '^{-%s}') % exponent
         elif not is_numerator:
             tex += '^{-1}'
         return tex
@@ -256,8 +253,6 @@ def unit2tex(unit, times='\,', roman=False):
     def _process_group(unit, times=r'\,', is_numerator=True):
         """Convert the numerator or denominator of a Modelica_ unit to LaTeX.
         """
-        if unit == '1':
-            return ''
         if unit.startswith('('):
             assert unit.endswith(')'), ("The unit group %s starts with '(' but "
                                         "does not end with ')'." % unit)
@@ -266,11 +261,6 @@ def unit2tex(unit, times='\,', roman=False):
         return times.join(texs)
 
     if unit:
-        while '..' in unit:
-            print('There are double dots in unit "%s".  Only one muliplication '
-                  'string will be added.' % unit)
-            unit = unit.replace('..', '.')
-
         # Split the numerator and the denominator.
         if '/' in unit:
             try:
