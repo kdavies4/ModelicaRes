@@ -3,6 +3,7 @@ Changelog
 
 0.8.x (201x-x-x) -- Updates:
 
+   - :meth:`exps.write_script` now clears the log between runs.
    - Fixed bug so that :meth:`simres.SimRes.plot` keeps the axis labels blank
      when *xlabel* = "", *ylabel1* = "", or *ylabel2* = "".
    - :meth:`texunit.label_number` now uses "in" instead of "/" to denote a

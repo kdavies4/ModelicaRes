@@ -632,7 +632,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
        destination = ".../examples/ChuaCircuit/";
 
        // Experiment 1
-       ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit", stopTime=2500);
+       ok = simulateModel("Modelica.Electrical.Analog.Examples.ChuaCircuit", stopTime=2500);
        if ok then
            savelog();
            createDirectory(destination + "1");
@@ -723,7 +723,8 @@ def write_script(experiments=[(None, {}, {})], packages=[],
         for result in results:
             mos.write('    copy("%s", destination + "%s", true);\n' %
                       (result, os.path.join(folder, result)))
-        mos.write('end if;\n\n')
+        mos.write('end if;\n')
+        mos.write('clearlog();\n\n')
 
     # Exit the simulation environment.
     # Otherwise, the script will hang until it is closed manually.
