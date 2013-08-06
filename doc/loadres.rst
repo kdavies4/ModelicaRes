@@ -41,7 +41,7 @@ If a variable cannot be found, then suggestions are given:
 .. code-block:: python
 
    >>> sims[0].get_description('L.vv')
-   "L.vv" is not a valid variable name.
+   L.vv is not a valid variable name.
    <BLANKLINE>
    Did you mean one of the these?
           L.v
@@ -67,6 +67,12 @@ or an argument:
 To see all the methods, use
 
    >>> help(sims[0])
+
+To search for variables, use :meth:`modelicares.simres.SimRes.glob` with
+wildcards:
+
+   >>> sims[0].glob('L.p*')
+   [u'L.p.i', u'L.p.v']
 
 Likewise, you can explore the linearization result or create diagrams using the
 methods in :class:`modelicares.linres.LinRes`:

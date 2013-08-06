@@ -424,7 +424,7 @@ def write_params(params, fname='dsin.txt'):
     - *params*: Dictionary of parameters
 
          Each key is a parameter name (including the full model path in
-         Modelica_ dot notation ) and each entry is a parameter value.  The
+         Modelica_ dot notation) and each entry is a parameter value.  The
          parameter name includes array indices (if any) in Modelica_
          representation (1-bases indexing).  The values must be representable
          as scalar numbers (integer or floating point).  *True* and *False*
@@ -473,6 +473,8 @@ def write_params(params, fname='dsin.txt'):
     patterns = [# Dymola 1- or 2-line parameter specification
                 (r'(^ *%s *) %s ( *%s +%s *\n? +%s +%s +# +%s *)$'
                  % (i, f, f, f, u, u, '%s')),
+                (r'(^ *) %s ( *# *%s *)' % (i, '%s')),
+                (r'(^ *) %s ( *# *%s *)' % (f, '%s')),
                 # See read_params() for descriptions of the columns.
                ]
     # These are tried in order until there is a match.  The first group or pair
@@ -632,7 +634,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
        destination = ".../examples/ChuaCircuit/";
 
        // Experiment 1
-       ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit", stopTime=2500);
+       ok = simulateModel("Modelica.Electrical.Analog.Examples.ChuaCircuit", stopTime=2500);
        if ok then
            savelog();
            createDirectory(destination + "1");
@@ -723,7 +725,8 @@ def write_script(experiments=[(None, {}, {})], packages=[],
         for result in results:
             mos.write('    copy("%s", destination + "%s", true);\n' %
                       (result, os.path.join(folder, result)))
-        mos.write('end if;\n\n')
+        mos.write('end if;\n')
+        mos.write('clearlog();\n\n')
 
     # Exit the simulation environment.
     # Otherwise, the script will hang until it is closed manually.

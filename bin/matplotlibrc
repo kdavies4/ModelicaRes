@@ -30,12 +30,16 @@
 # referring to the module name (which must be in the PYTHONPATH) as
 # 'module://my_backend'
 # KLD 7/8/13:  New, not tested:
+<<<<<<< HEAD:bin/matplotlibrc
 #backend      : QtAgg 
+=======
+#backend      : QtAgg
+>>>>>>> development:matplotlibrc
 #backend      : Qt4Agg
 #backend      : FltkAgg
 # KLD 10/9/2012:  Works:
-#backend      : GTKAgg
-backend      : GTKCairo
+backend      : GTKAgg
+#backend      : GTKCairo # KLD 7/21/13: Much, much slower than GTKAgg.
 # KLD 10/9/2012:  Not good:
 #backend      : Agg # No onscreen plots
 #backend      : WX # Doesn't seem to support TeX
@@ -348,17 +352,12 @@ figure.figsize   : 8.1, 5     # figure size in inches
 # The figure subplot parameters.  All dimensions are a fraction of the
 # figure width or height
 #figure.subplot.left    : 0.125  # the left side of the subplots of the figure
-figure.subplot.left     : 0.1  # the left side of the subplots of the figure
-# KLD 3/24/2011:  This is about the narrowest the margins can be without clipping.
 #figure.subplot.right   : 0.9    # the right side of the subplots of the figure
-# KLD 3/24/2011:  This is about the narrowest the margins can be without clipping the
-# secondary y axes.
 #figure.subplot.bottom  : 0.1    # the bottom of the subplots of the figure
-# KLD 3/24/2011:  This is about the narrowest the margins can be without clipping a
-# Bode plot in python-control.
-figure.subplot.top      : 0.9    # the top of the subplots of the figure
-# KLD 5/21/2011:  This is about the narrowest the margins can be without clipping a
-# 2-line title.
+#figure.subplot.top      : 0.9    # the top of the subplots of the figure
+figure.subplot.top      : 0.875    # the top of the subplots of the figure
+# KLD 5/21/2011:  This is about the narrowest the margins can be without
+# clipping a 2-line title.
 #figure.subplot.wspace  : 0.2    # the amount of width reserved for blank space between subplots
 #figure.subplot.hspace  : 0.2    # the amount of height reserved for white space between subplots
 

@@ -11,19 +11,15 @@ __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
 
-#TODO:
-#  1. Add support to convert units from the data space to the axis space
-#     (utilize the displayUnit value from the trajectory entries).
-
-
 import os
 import numpy as np
 import modelicares.base as base
 
+from scipy.io import loadmat
 from matplotlib.pyplot import figlegend
 from matplotlib import rcParams
 from collections import namedtuple
-from scipy.io import loadmat
+from fnmatch import fnmatchcase
 from difflib import get_close_matches
 
 from modelicares.gui import Browser
@@ -436,8 +432,8 @@ class SimRes(object):
         """
         try:
             if isinstance(names, basestring):
-                # Note:  This test is explicit (not duck-typing) since a string
-                # is iterable.
+                # This test is explicit (not duck-typing) since a string is
+                # iterable.
                 return attr(names)
             else:
                 attrs = []
@@ -450,8 +446,8 @@ class SimRes(object):
                         attrs.append(a)
                 return attrs
         except KeyError:
-            print('"%s" is not a valid variable name.\n' % names)
-            print("Did you mean one of the these?")
+            print('%s is not a valid variable name.\n' % names)
+            print("Did you mean one of these?")
             for close_match in get_close_matches(names, self._traj.keys()):
                 print("       " + close_match)
             return
@@ -713,9 +709,9 @@ class SimRes(object):
         .. code-block:: python
 
            >>> sim.get_values(['L.vv']) # doctest: +ELLIPSIS
-           "L.vv" is not a valid variable name.
+           L.vv is not a valid variable name.
            <BLANKLINE>
-           Did you mean one of the these?
+           Did you mean one of these?
                   L.v
                   L.p.v
                   L.n.v
@@ -735,6 +731,8 @@ class SimRes(object):
     def get_values_at_times(self, names, times, f=lambda x: x):
         """Return vector(s) of the values of the samples of variable(s) (at
         optionally given times).
+
+        **Arguments:**
 
         - *names*: String or (possibly nested) list of strings of the variable
           names
@@ -778,8 +776,24 @@ class SimRes(object):
 
         return self._get(names, _get_value_at_times)
 
+    def keys(self):
+        """Return a list of all variable names.
+
+        This is the same as :meth:`names` and :meth:`variables`.
+
+        **Example:**
+
+           >>> from modelicares import SimRes
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim.keys()  # doctest: +ELLIPSIS
+           [u'L.p.i', u'Ro.alpha', ... u'Ro.LossPower']
+        """
+        return self._traj.keys()
+
     def names(self):
         """Return a list of all variable names.
+
+        This is the same as :meth:`keys` and :meth:`variables`.
 
         **Example:**
 
@@ -790,17 +804,40 @@ class SimRes(object):
         """
         return self._traj.keys()
 
-    def keys(self):
+    def variables(self):
         """Return a list of all variable names.
+
+        This is the same as :meth:`keys` and :meth:`names`.
 
         **Example:**
 
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.keys()  # doctest: +ELLIPSIS
+           >>> sim.variables()  # doctest: +ELLIPSIS
            [u'L.p.i', u'Ro.alpha', ... u'Ro.LossPower']
         """
         return self._traj.keys()
+
+    def glob(self, pattern):
+        """Return a list of variable names that match *pattern*.
+
+        Patterns are Unix shell style:
+
+        *       matches everything
+        ?       matches any single character
+        [seq]   matches any character in seq
+        [!seq]  matches any char not in seq
+
+        The matches are case-sensitive.
+
+        **Example:**
+
+           >>> from modelicares import SimRes
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim.glob('L.p*')  # doctest: +ELLIPSIS
+           [u'L.p.i', u'L.p.v']
+        """
+        return [key for key in self._traj.keys() if fnmatchcase(key, pattern)]
 
     def nametree(self):
         """Return a tree of all variable names with respect to the path names.
@@ -968,7 +1005,8 @@ class SimRes(object):
                 units = self.get_unit(ynames)
                 if len(set(units)) == 1:
                     # The  units are the same, so show the 1st one on the axis.
-                    ylabel = label_number(ylabel, units[0])
+                    if ylabel <> "":
+                        ylabel = label_number(ylabel, units[0])
                 else:
                     # Show the units in the legend.
                     if legends:
@@ -999,7 +1037,8 @@ class SimRes(object):
             xlabel = 'Time' if xname == 'Time' else self.get_description(xname)
             # With Dymola 7.4, the description of the time variable will be
             # "Time in", which isn't good.
-        xlabel = label_number(xlabel, self.get_unit(xname))
+        if xlabel <> "":
+            xlabel = label_number(xlabel, self.get_unit(xname))
 
         # Generate the y-axis labels and sets of legend entries.
         ylabel1, legends1 = _ystrings(ynames1, ylabel1, legends1)

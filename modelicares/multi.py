@@ -15,17 +15,17 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import numpy as np
 
-from modelicares.linres import LinRes
-from modelicares.simres import SimRes
-from modelicares.base import figure, add_hlines, add_vlines
-from control.freqplot import bode, nyquist
-
 from glob import glob
 from matplotlib.cbook import iterable
 from itertools import cycle
 
+from control.freqplot import bode, nyquist
+from linres import LinRes
+from simres import SimRes
+from base import figure, add_hlines, add_vlines
 
-def multiload(locations):
+
+def multiload(locations='*'):
     """Load multiple Modelica_ simulation and/or linearization results.
 
     **Arguments:**
@@ -93,8 +93,7 @@ def multiload(locations):
                       "'%s'." % fname)
     return sims, lins
 
-
-def multiplot(sims, suffixes='',
+def multiplot(sims, suffixes='', color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
               dashes=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)], **kwargs):
     """Plot data from multiple simulations in 2D Cartesian coordinates.
 
@@ -114,10 +113,23 @@ def multiplot(sims, suffixes='',
          If *suffixes* is *None*, then no suffix will be used.  If it is an
          empty string (''), then the base filenames will be used.
 
+    - *color*: Single entry, list, or :class:`itertools.cycle` of colors that
+      will be used sequentially
+
+         Each entry may be a character, grayscale, or rgb value.
+
+         .. Seealso:: http://matplotlib.sourceforge.net/api/colors_api.html
+
+    - *dashes*: Single entry, list, or :class:`itertools.cycle` of dash styles
+      that will be used sequentially
+
+         Each style is a tuple of on/off lengths representing dashes.  Use
+         (0, 1) for no line and (None ,None) for a solid line.
+
+         .. Seealso:: http://matplotlib.sourceforge.net/api/collections_api.html
+
     - *\*\*kwargs*: Propagated to :meth:`simres.SimRes.plot` (and thus to
       :meth:`base.plot` and finally :meth:`matplotlib.pyplot.plot`)
-
-         The *dashes* sequence is iterated across all plots.
 
     **Returns:**
 
@@ -160,8 +172,14 @@ def multiplot(sims, suffixes='',
 
           Plot of Chua circuit with varying inductance
     """
-    # Cycle the dashes to make the lines unique.
-    if not isinstance(dashes, type(cycle([]))):
+    # Set up the color(s) and dash style(s).
+    cyc = type(cycle([]))
+    if not isinstance(color, cyc):
+        if not iterable(color):
+            color = [color]
+        color = cycle(color)
+    kwargs['color'] = color
+    if not isinstance(dashes, cyc):
         if not iterable(dashes[0]):
             dashes = [dashes]
         dashes = cycle(dashes)

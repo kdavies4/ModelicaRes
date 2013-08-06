@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.exps &mdash; ModelicaRes v0.7.2 Documentation</title>
+    <title>modelicares.exps &mdash; ModelicaRes v0.8.0 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.7.2',
+        VERSION:     '0.8.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,10 +27,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.7.2 Documentation"
+          title="Search within ModelicaRes v0.8.0 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.7.2 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.8.0 Documentation" href="index.html" />
     <link rel="next" title="modelicares.exps.doe" href="exps.doe.html" />
     <link rel="prev" title="modelicares.multi" href="multi.html" />
     <meta name="description" content="Python module to set up, plot, and analyze Modelica simulations">
@@ -54,7 +54,7 @@
         <li class="right" >
           <a href="multi.html" title="modelicares.multi"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.7.2 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -67,7 +67,6 @@
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="simres.info.html"><tt class="docutils literal"><span class="pre">modelicares.simres.info</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
@@ -212,7 +211,7 @@ included for instance names that contain symbols (e.g., &#8220;&#8216;H+&#8217;&
 
 <dl class="function">
 <dt id="modelicares.exps.gen_experiments">
-<tt class="descclassname">modelicares.exps.</tt><tt class="descname">gen_experiments</tt><big>(</big><em>models=None</em>, <em>params={}</em>, <em>args={}</em>, <em>design=&lt;function fullfact at 0xa92809c&gt;</em><big>)</big><a class="headerlink" href="#modelicares.exps.gen_experiments" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modelicares.exps.</tt><tt class="descname">gen_experiments</tt><big>(</big><em>models=None</em>, <em>params={}</em>, <em>args={}</em>, <em>design=&lt;function fullfact at 0xa7085dc&gt;</em><big>)</big><a class="headerlink" href="#modelicares.exps.gen_experiments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a generator for a set of simulation experiments using permutation
 or simple element-wise grouping.</p>
 <p>The generator yields instances of <a class="reference internal" href="#modelicares.exps.Experiment" title="modelicares.exps.Experiment"><tt class="xref py py-class docutils literal"><span class="pre">Experiment</span></tt></a>&#8212;named tuples of
@@ -448,7 +447,7 @@ simulation number in the sequence of experiments.</p>
 <li><p class="first"><em>params</em>: Dictionary of parameters</p>
 <blockquote>
 <div><p>Each key is a parameter name (including the full model path in
-<a class="reference external" href="http://www.modelica.org/">Modelica</a> dot notation ) and each entry is a parameter value.  The
+<a class="reference external" href="http://www.modelica.org/">Modelica</a> dot notation) and each entry is a parameter value.  The
 parameter name includes array indices (if any) in <a class="reference external" href="http://www.modelica.org/">Modelica</a>
 representation (1-bases indexing).  The values must be representable
 as scalar numbers (integer or floating point).  <em>True</em> and <em>False</em>
@@ -591,7 +590,7 @@ will be simulated.</p>
 <span class="n">destination</span> <span class="o">=</span> <span class="s">&quot;.../examples/ChuaCircuit/&quot;</span><span class="p">;</span>
 
 <span class="c">// Experiment 1</span>
-<span class="n">ok</span> <span class="o">=</span> <span class="n">simulateModel</span><span class="p">(</span><span class="n">problem</span><span class="o">=</span><span class="s">&quot;Modelica.Electrical.Analog.Examples.ChuaCircuit&quot;</span><span class="p">,</span> <span class="n">stopTime</span><span class="o">=</span><span class="mi">2500</span><span class="p">);</span>
+<span class="n">ok</span> <span class="o">=</span> <span class="n">simulateModel</span><span class="p">(</span><span class="s">&quot;Modelica.Electrical.Analog.Examples.ChuaCircuit&quot;</span><span class="p">,</span> <span class="n">stopTime</span><span class="o">=</span><span class="mi">2500</span><span class="p">);</span>
 <span class="k">if</span> <span class="n">ok</span> <span class="k">then</span>
     <span class="n">savelog</span><span class="p">();</span>
     <span class="n">createDirectory</span><span class="p">(</span><span class="n">destination</span> <span class="o">+</span> <span class="s">&quot;1&quot;</span><span class="p">);</span>
@@ -645,12 +644,12 @@ save results from 12 simulation experiments.</p>
         <li class="right" >
           <a href="multi.html" title="modelicares.multi"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.7.2 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Jul 09, 2013.
+      Last updated on Aug 06, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

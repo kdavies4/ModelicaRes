@@ -8,7 +8,6 @@ ModelicaRes is a free, open-source tool to manage Modelica_ simulations,
 interpret results, and create publishable figures.  It is currently possible to
 
 - Auto-generate simulation scripts,
-- Run model executables with varying parameters,
 - Browse data,
 - Perform custom calculations, and
 - Produce various plots and diagrams.
@@ -107,12 +106,15 @@ math and matrix functions from NumPy_.
   - Joerg Raedler (method to expand a `Modelica`_ variable tree - from
     `DyMat`_).
 
-  **License terms**
+  **License terms and development**
 
-  ModelicaRes_ is published under the terms of the BSD license (see LICENSE.txt).
-  Please share any modifications you make (preferably on a Github fork from
-  https://github.com/kdavies4/ModelicaRes) so that others may benefit from your
-  work.
+  ModelicaRes_ is published under the terms of the BSD license (see
+  LICENSE.txt).  Please share any modifications you make (preferably on a Github
+  fork from https://github.com/kdavies4/ModelicaRes) so that others may benefit
+  from your work.  If you find a bug, please `report it
+  <https://github.com/kdavies4/ModelicaRes/issues/new>`_.  If you have
+  suggestions for improvements, please `share them here
+  <https://github.com/kdavies4/ModelicaRes/wiki/Possible-Enhancements>`_.
 
   **See also**
 
@@ -141,7 +143,6 @@ math and matrix functions from NumPy_.
   loadres
   modelicares
   simres
-  simres.info
   linres
   multi
   exps
@@ -195,12 +196,15 @@ math and matrix functions from NumPy_.
   (method to expand a Modelica_ variable tree - from `DyMat
   <http://www.j-raedler.de/projects/dymat/>`_).
 
-  **License terms**
+  **License terms and development**
 
   ModelicaRes_ is published under the terms of the BSD license (see
   LICENSE.txt).  Please share any modifications you make (preferably on a Github
   fork from https://github.com/kdavies4/ModelicaRes) so that others may benefit
-  from your work.
+  from your work.  If you find a bug, please `report it
+  <https://github.com/kdavies4/ModelicaRes/issues/new>`_.  If you have
+  suggestions for improvements, please `share them here
+  <https://github.com/kdavies4/ModelicaRes/wiki/Possible-Enhancements>`_.
 
   **See also**
 

@@ -1,6 +1,26 @@
 Changelog
 =========
 
+0.8.0 (2013-8-6) -- Updates:
+
+   - Updates to *matplotlibrc* (default formatting)
+   - Added patterns to :meth:`exps.write_params` match more entries in a dsin
+     file.
+   - :meth:`exps.write_script` now clears the log between runs.
+   - Fixed bug so that :meth:`simres.SimRes.plot` keeps the axis labels blank
+     when *xlabel* = "", *ylabel1* = "", or *ylabel2* = "".
+   - :meth:`texunit.label_number` now uses "in" instead of "/" to denote a
+     quantity in a unit that involves a function other than simple scaling
+     (e.g., degC, dB).
+   - :meth:`texunit.unit2tex` now automatically formats some units and
+     constants.
+   - Added *color* option to :meth:`multi.multiplot`.
+   - Added :meth:`SimRes.variables` method to list variable names (same as
+     :meth:`SimRes.keys` and :meth:`SimRes.names`)
+   - Added :meth:`simres.SimRes.glob` to return variables that match a pattern.
+   - Removed the `simres.info` submodule.  It is better to used the methods of
+     :class:`simres.SimRes` directly.
+
 0.7.2 (2013-7-9) -- Updates:
 
    - When a variable cannot be found, suggestions are now given.  See the

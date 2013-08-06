@@ -212,7 +212,6 @@ def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
         ax.text(xpos, positions[i], label, backgroundcolor='w',
                 horizontalalignment='center', verticalalignment='center')
 
-
 def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
     """Add vertical lines to a set of axes with optional labels.
 
@@ -829,7 +828,7 @@ def plot(y, x=None, ax=None, label=None,
       that will be used sequentially
 
          Each style is a tuple of on/off lengths representing dashes.  Use
-         (0,1) for no line and (None,None) for a solid line.
+         (0, 1) for no line and (None, None) for a solid line.
 
          .. Seealso:: http://matplotlib.sourceforge.net/api/collections_api.html
 
