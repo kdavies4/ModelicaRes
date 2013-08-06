@@ -1,8 +1,9 @@
 Changelog
 =========
 
-0.8.x (201x-x-x) -- Updates:
+0.8.0 (2013-8-6) -- Updates:
 
+   - Updates to *matplotlibrc* (default formatting)
    - Added patterns to :meth:`exps.write_params` match more entries in a dsin
      file.
    - :meth:`exps.write_script` now clears the log between runs.

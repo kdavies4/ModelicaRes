@@ -32,7 +32,7 @@
 sudo ./setup.py install
 
 # Run the doc tests and recreate the example images.
-./test.sh
+./00-test.sh
 cd examples
 ./00-crop-png.sh
 cd ..

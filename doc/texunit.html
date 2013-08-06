@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.texunit &mdash; ModelicaRes v0.7.2 Documentation</title>
+    <title>modelicares.texunit &mdash; ModelicaRes v0.8.0 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.7.2',
+        VERSION:     '0.8.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,10 +27,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.7.2 Documentation"
+          title="Search within ModelicaRes v0.8.0 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.7.2 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.8.0 Documentation" href="index.html" />
     <link rel="next" title="modelicares.base" href="base.html" />
     <link rel="prev" title="modelicares.exps.doe" href="exps.doe.html" />
     <meta name="description" content="Python module to set up, plot, and analyze Modelica simulations">
@@ -54,7 +54,7 @@
         <li class="right" >
           <a href="exps.doe.html" title="modelicares.exps.doe"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.7.2 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -67,7 +67,6 @@
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="simres.info.html"><tt class="docutils literal"><span class="pre">modelicares.simres.info</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
@@ -129,6 +128,12 @@ the significand and the exponent is always indicated by
 3/18 quad space followed by &#8216;/; and another 3/18 quad space.  The
 division associated with the units on the denominator is always
 indicated by a negative exponential.</p>
+<p>If the unit is not a simple scaling factor, then &#8220;in&#8221; is used instead.
+For example,</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">label_number</span><span class="p">(</span><span class="s">&quot;Gain&quot;</span><span class="p">,</span> <span class="s">&quot;dB&quot;</span><span class="p">)</span>
+<span class="go">&#39;Gain in $dB$&#39;</span>
+</pre></div>
+</div>
 </div></blockquote>
 </li>
 <li><p class="first"><em>roman</em>: <em>True</em>, if the units should be typeset in Roman text (rather
@@ -152,7 +157,7 @@ than italics)</p>
 <dl class="function">
 <dt id="modelicares.texunit.label_quantity">
 <tt class="descclassname">modelicares.texunit.</tt><tt class="descname">label_quantity</tt><big>(</big><em>number</em>, <em>unit=''</em>, <em>format='%G'</em>, <em>times='\\</em>, <em>'</em>, <em>roman=False</em><big>)</big><a class="headerlink" href="#modelicares.texunit.label_quantity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate text to label a quantity as a number times a unit.</p>
+<dd><p>Generate text to write a quantity as a number times a unit.</p>
 <p>If an exponent is present, then either a LaTeX-formatted exponential or a
 System International (SI) prefix is applied.</p>
 <p><strong>Arguments:</strong></p>
@@ -222,7 +227,6 @@ than italics)</p>
 <ul>
 <li><p class="first"><em>unit</em>: Unit string in extended <a class="reference external" href="http://www.modelica.org/">Modelica</a> notation</p>
 <blockquote>
-<div><blockquote>
 <div><div class="admonition-see-also admonition seealso">
 <p class="first admonition-title">See also</p>
 <p>Modelica Specification, version 3.2, p. 209
@@ -231,13 +235,6 @@ than italics)</p>
 enclosed in parentheses and begins with a &#8216;/&#8217;.  Exponents directly
 follow the significand (e.g., no carat (&#8216;^&#8217;)).</p>
 </div>
-</div></blockquote>
-<p>Here, the unit may also contain <a class="reference external" href="http://www.latex-project.org/">LaTeX</a> math mode commands.  For example,
-&#8216;\Omega&#8217; becomes <img class="math" src="_images/math/9e2b196e9b7e57d1ec99f6534c581ea9759d2170.png" alt="\Omega"/>.  Use &#8216;\%&#8217; for percent, &#8216;\$&#8217; for
-dollar, and &#8216;\mathrm{^{\circ}C}&#8217; for degree Celsius
-(<img class="math" src="_images/math/2b1c753052554b41f11b90570f2abeec71bf3bb8.png" alt="\mathrm{^{\circ}C}"/>).  Use &#8216;$&#8217; in pairs (without a leading &#8216;\&#8217;)
-to escape and then return to the <a class="reference external" href="http://www.latex-project.org/">LaTeX</a> math mode later in the string.
-Use &#8216;\!&#8217; to cancel a 3/18 quad space (&#8216;\,&#8217;).</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>times</em>: <a class="reference external" href="http://www.latex-project.org/">LaTeX</a> math string to indicate multiplication</p>
@@ -283,12 +280,12 @@ than italics)</p>
         <li class="right" >
           <a href="exps.doe.html" title="modelicares.exps.doe"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.7.2 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Jul 09, 2013.
+      Last updated on Aug 06, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

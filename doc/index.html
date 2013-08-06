@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>ModelicaRes &mdash; ModelicaRes v0.7.2 Documentation</title>
+    <title>ModelicaRes &mdash; ModelicaRes v0.8.0 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.7.2',
+        VERSION:     '0.8.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,10 +27,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.7.2 Documentation"
+          title="Search within ModelicaRes v0.8.0 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.7.2 Documentation" href="#" />
+    <link rel="top" title="ModelicaRes v0.8.0 Documentation" href="#" />
     <link rel="next" title="loadres" href="loadres.html" />
     <meta name="description" content="Python module to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
@@ -50,7 +50,7 @@
         <li class="right" >
           <a href="loadres.html" title="loadres"
              accesskey="N">next</a> |</li>
-        <li><a href="#">ModelicaRes v0.7.2 Documentation</a> &raquo;</li> 
+        <li><a href="#">ModelicaRes v0.8.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -63,7 +63,6 @@
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="simres.info.html"><tt class="docutils literal"><span class="pre">modelicares.simres.info</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
@@ -100,7 +99,6 @@
 interpret results, and create publishable figures.  It is currently possible to</p>
 <ul class="simple">
 <li>Auto-generate simulation scripts,</li>
-<li>Run model executables with varying parameters,</li>
 <li>Browse data,</li>
 <li>Perform custom calculations, and</li>
 <li>Produce various plots and diagrams.</li>
@@ -111,12 +109,12 @@ and label some figures, like xy plots, Bode and Nyquist plots, and Sankey
 diagrams.  ModelicaRes can be scripted or run from a <a class="reference external" href="http://www.python.org/">Python</a> interpreter with
 math and matrix functions from <a class="reference external" href="http://numpy.scipy.org/">NumPy</a>.</p>
 <a class="reference internal image-reference" href="_images/browse.png"><img alt="Variable browser" src="_images/browse.png" style="width: 371.7px; height: 182.25px;" /></a>
-<a class="reference internal image-reference" href="_images/PIDs-nyquist.png"><img alt="Nyquist plot of PID with varying differential time constant" src="_images/PIDs-nyquist.png" style="width: 177.1px; height: 168.7px;" /></a>
+<a class="reference internal image-reference" href="_images/PIDs-nyquist.png"><img alt="Nyquist plot of PID with varying differential time constant" src="_images/PIDs-nyquist.png" style="width: 174.65px; height: 164.15px;" /></a>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<a class="reference internal image-reference" href="_images/ChuaCircuit.png"><img alt="Plot of Chua circuit" src="_images/ChuaCircuit.png" style="width: 279.65px; height: 168.7px;" /></a>
-<a class="reference internal image-reference" href="_images/ThreeTanks.png"><img alt="Sankey digarams of three tanks model" src="_images/ThreeTanks.png" style="width: 263.2px; height: 170.1px;" /></a>
+<a class="reference internal image-reference" href="_images/ChuaCircuit.png"><img alt="Plot of Chua circuit" src="_images/ChuaCircuit.png" style="width: 271.95px; height: 164.85px;" /></a>
+<a class="reference internal image-reference" href="_images/ThreeTanks.png"><img alt="Sankey digarams of three tanks model" src="_images/ThreeTanks.png" style="width: 263.2px; height: 170.45px;" /></a>
 <p>The links below and in the sidebar describe the components of ModelicaRes.
 For an introduction see <tt class="xref py py-mod docutils literal"><span class="pre">loadres</span></tt>, which loads data files and provides a
 <a class="reference external" href="http://www.python.org/">Python</a> interpreter to help analyze them.</p>
@@ -125,7 +123,6 @@ For an introduction see <tt class="xref py py-mod docutils literal"><span class=
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="simres.info.html"><tt class="docutils literal"><span class="pre">modelicares.simres.info</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
@@ -166,11 +163,12 @@ Third-party code has been included from Jason Grout (<a class="reference externa
 class), Jason Heeris (<a class="reference external" href="http://www.mail-archive.com/matplotlib-users&#64;lists.sourceforge.net/msg14433.html">efficient base-10 logarithm</a>),
 Richard Murray (<a class="reference external" href="http://sourceforge.net/apps/mediawiki/python-control">python-control</a>), and Joerg Raedler
 (method to expand a <a class="reference external" href="http://www.modelica.org/">Modelica</a> variable tree - from <a class="reference external" href="http://www.j-raedler.de/projects/dymat/">DyMat</a>).</p>
-<p><strong>License terms</strong></p>
+<p><strong>License terms and development</strong></p>
 <p><a class="reference internal" href="#modelicares">ModelicaRes</a> is published under the terms of the BSD license (see
 LICENSE.txt).  Please share any modifications you make (preferably on a Github
 fork from <a class="reference external" href="https://github.com/kdavies4/ModelicaRes">https://github.com/kdavies4/ModelicaRes</a>) so that others may benefit
-from your work.</p>
+from your work.  If you find a bug, please <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/issues/new">report it</a>.  If you have
+suggestions for improvements, please <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/wiki/Possible-Enhancements">share them here</a>.</p>
 <p><strong>See also</strong></p>
 <p>The following <a class="reference external" href="http://www.python.org/">Python</a> projects are related:</p>
 <ul class="simple">
@@ -202,12 +200,12 @@ Data Form (netCDF)</a></li>
         <li class="right" >
           <a href="loadres.html" title="loadres"
              >next</a> |</li>
-        <li><a href="#">ModelicaRes v0.7.2 Documentation</a> &raquo;</li> 
+        <li><a href="#">ModelicaRes v0.8.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Jul 09, 2013.
+      Last updated on Aug 06, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
