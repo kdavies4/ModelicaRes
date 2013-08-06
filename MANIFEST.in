@@ -2,6 +2,7 @@ include matplotlibrc
 include *.txt
 include *.rst
 include MANIFEST.in
+include bin/loadres
 exclude 00-*
 
 # Examples

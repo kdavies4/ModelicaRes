@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.8.1 (2013-8-6) -- Updates:
+
+   - Added missing *bin/loadres* script.
+
 0.8.0 (2013-8-6) -- Updates:
 
    - Updates to *matplotlibrc* (default formatting)
