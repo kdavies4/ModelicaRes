@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """Load, analyze, and plot the result of linearizing a Modelica_ model.
 
-This module relies on python-control_, which is included in the distribution.
+This module contains one class: :class:`LinRes`.  It relies on python-control_,
+which is included in the distribution.
 
 .. _Modelica: http://www.modelica.org/
 .. _python-control: http://sourceforge.net/apps/mediawiki/python-control
@@ -28,6 +29,12 @@ from control.freqplot import bode, nyquist
 class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze
     those results
+
+    This class contains two user-accessible methods:
+
+    - :meth:`bode` - Creates a Bode plot of the system's response
+
+    - :meth:`nyquist` - Creates a Nyquist plot of the system's response
     """
 
     def __init__(self, fname='dslin.mat'):

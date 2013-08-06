@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.texunit &mdash; ModelicaRes v0.8.1 Documentation</title>
+    <title>modelicares.texunit &mdash; ModelicaRes v0.8.x Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.1',
+        VERSION:     '0.8.x',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,10 +27,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.8.1 Documentation"
+          title="Search within ModelicaRes v0.8.x Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.8.1 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.8.x Documentation" href="index.html" />
     <link rel="next" title="modelicares.base" href="base.html" />
     <link rel="prev" title="modelicares.exps.doe" href="exps.doe.html" />
     <meta name="description" content="Python module to set up, plot, and analyze Modelica simulations">
@@ -54,7 +54,7 @@
         <li class="right" >
           <a href="exps.doe.html" title="modelicares.exps.doe"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.8.1 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.x Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -99,6 +99,14 @@
   <div class="section" id="module-modelicares.texunit">
 <span id="modelicares-texunit"></span><h1><a class="reference internal" href="#module-modelicares.texunit" title="modelicares.texunit"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.texunit</span></tt></a><a class="headerlink" href="#module-modelicares.texunit" title="Permalink to this headline">¶</a></h1>
 <p>Methods to format numbers to support <a class="reference external" href="http://www.latex-project.org/">LaTeX</a></p>
+<p>This module contains three main functions:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#modelicares.texunit.label_number" title="modelicares.texunit.label_number"><tt class="xref py py-meth docutils literal"><span class="pre">label_number()</span></tt></a> - Generates text to label a number as a quantity
+expressed in a unit</li>
+<li><a class="reference internal" href="#modelicares.texunit.label_quantity" title="modelicares.texunit.label_quantity"><tt class="xref py py-meth docutils literal"><span class="pre">label_quantity()</span></tt></a> - Generates text to write a quantity as a number times
+a unit</li>
+<li><a class="reference internal" href="#modelicares.texunit.unit2tex" title="modelicares.texunit.unit2tex"><tt class="xref py py-meth docutils literal"><span class="pre">unit2tex()</span></tt></a> - Converts a <a class="reference external" href="http://www.modelica.org/">Modelica</a> unit string to <a class="reference external" href="http://www.latex-project.org/">LaTeX</a></li>
+</ul>
 <dl class="function">
 <dt id="modelicares.texunit.label_number">
 <tt class="descclassname">modelicares.texunit.</tt><tt class="descname">label_number</tt><big>(</big><em>quantity=''</em>, <em>unit=None</em>, <em>times='\\</em>, <em>'</em>, <em>per='\\</em>, <em>/\\</em>, <em>'</em>, <em>roman=False</em><big>)</big><a class="headerlink" href="#modelicares.texunit.label_number" title="Permalink to this definition">¶</a></dt>
@@ -222,7 +230,7 @@ than italics)</p>
 <dl class="function">
 <dt id="modelicares.texunit.unit2tex">
 <tt class="descclassname">modelicares.texunit.</tt><tt class="descname">unit2tex</tt><big>(</big><em>unit</em>, <em>times='\\</em>, <em>'</em>, <em>roman=False</em><big>)</big><a class="headerlink" href="#modelicares.texunit.unit2tex" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a <a class="reference external" href="http://www.modelica.org/">Modelica</a> unit string to LaTeX.</p>
+<dd><p>Convert a <a class="reference external" href="http://www.modelica.org/">Modelica</a> unit string to <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><p class="first"><em>unit</em>: Unit string in extended <a class="reference external" href="http://www.modelica.org/">Modelica</a> notation</p>
@@ -280,12 +288,12 @@ than italics)</p>
         <li class="right" >
           <a href="exps.doe.html" title="modelicares.exps.doe"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.8.1 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.x Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Aug 06, 2013.
+      Last updated on Aug 08, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

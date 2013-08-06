@@ -3,6 +3,19 @@
 """Functions to load and plot data from multiple simulation and linearization
 files at once
 
+This module contains four functions:
+
+- :meth:`multiload` - Loads multiple Modelica_ simulation and/or linearization
+  results
+
+- :meth:`multiplot` - Plots data from multiple simulations in 2D Cartesian
+  coordinates
+
+- :meth:`multibode` - Plots multiple linearizations onto a single Bode diagram
+
+- :meth:`multinyquist` - Plots multiple linearizations onto a single Nyquist
+  diagram
+
 .. _Modelica: http://www.modelica.org/
 """
 __author__ = "Kevin Davies"

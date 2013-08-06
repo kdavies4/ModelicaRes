@@ -1,6 +1,71 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Basic methods to help plot and interpret experimental data
+
+This module contains the following classes:
+
+- :class:`ArrowLine` - A matplotlib subclass to draw an arrowhead on a line
+
+- :class:`Quantity` - Named tuple class for a constant physical quantity
+
+and the following functions:
+
+- :meth:`add_arrows` - Overlays arrows with annotations on top of a pre-plotted
+  line
+
+- :meth:`add_hlines` - Adds horizontal lines to a set of axes with optional
+  labels
+
+- :meth:`add_vlines` - Adds vertical lines to a set of axes with optional
+  labels
+
+- :meth:`animate` - Encodes a series of PNG images as a MPG movie
+
+- :meth:`color` - Plots 2D scalar data on a color axis in 2D Cartesian
+  coordinates
+
+- :meth:`closeall` - Closes all open figures
+
+- :meth:`convert` - Converts the expression of a physical quantity between units
+
+- :meth:`expand_path` - Expands a file path by replacing '~' with the user
+  directory and makes the path absolute
+
+- :meth:`flatten_dict` - Flattens a nested dictionary
+
+- :meth:`flatten_list` - Flattens a nested list
+
+- :meth:`figure` - Creates a figure and set its label
+
+- :meth:`get_indices` - Returns the the pair of indices that bound a target
+  value in a monotonically increasing vector
+
+- :meth:`get_pow10` - Returns the exponent of 10 for which the significand
+  of a number is within the range [1, 10)
+
+- :meth:`get_pow1000` - Returns the exponent of 1000 for which the
+  significand of a number is within the range [1, 1000)
+
+- :meth:`load_csv` - Loads a CSV file into a dictionary.
+
+- :meth:`plot` - Plots 1D scalar data as points and/or line segments in 2D
+  Cartesian coordinates
+
+- :meth:`quiver` - Plots 2D vector data as arrows in 2D Cartesian coordinates
+
+- :meth:`save` - Saves the current figures as images in a format or list of
+  formats
+
+- :meth:`saveall` - Saves all open figures as images in a format or list of
+  formats
+
+- :meth:`setup_subplots` - Creates an array of subplots and return their axes
+
+- :meth:`shift_scale_x` - Applies an offset and a factor as necessary to the x
+  axis
+
+- :meth:`shift_scale_y` - Applies an offset and a factor as necessary to the y
+  axis
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"

@@ -1,6 +1,16 @@
 #!/usr/bin/python
 """Methods to format numbers to support LaTeX_
 
+This module contains three main functions:
+
+- :meth:`label_number` - Generates text to label a number as a quantity
+  expressed in a unit
+
+- :meth:`label_quantity` - Generates text to write a quantity as a number times
+  a unit
+
+- :meth:`unit2tex` - Converts a Modelica_ unit string to LaTeX_
+
 .. _LaTeX: http://www.latex-project.org/
 """
 __author__ = "Kevin Davies"
@@ -208,7 +218,7 @@ def label_quantity(number, unit='', format='%G', times='\,', roman=False):
 
 
 def unit2tex(unit, times='\,', roman=False):
-    r"""Convert a Modelica_ unit string to LaTeX.
+    r"""Convert a Modelica_ unit string to LaTeX_.
 
     **Arguments:**
 

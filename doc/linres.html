@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.linres &mdash; ModelicaRes v0.8.1 Documentation</title>
+    <title>modelicares.linres &mdash; ModelicaRes v0.8.x Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.1',
+        VERSION:     '0.8.x',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,10 +27,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.8.1 Documentation"
+          title="Search within ModelicaRes v0.8.x Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.8.1 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.8.x Documentation" href="index.html" />
     <link rel="next" title="modelicares.multi" href="multi.html" />
     <link rel="prev" title="modelicares.simres" href="simres.html" />
     <meta name="description" content="Python module to set up, plot, and analyze Modelica simulations">
@@ -54,7 +54,7 @@
         <li class="right" >
           <a href="simres.html" title="modelicares.simres"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.8.1 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.x Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -99,13 +99,19 @@
   <div class="section" id="module-modelicares.linres">
 <span id="modelicares-linres"></span><h1><a class="reference internal" href="#module-modelicares.linres" title="modelicares.linres"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.linres</span></tt></a><a class="headerlink" href="#module-modelicares.linres" title="Permalink to this headline">¶</a></h1>
 <p>Load, analyze, and plot the result of linearizing a <a class="reference external" href="http://www.modelica.org/">Modelica</a> model.</p>
-<p>This module relies on <a class="reference external" href="http://sourceforge.net/apps/mediawiki/python-control">python-control</a>, which is included in the distribution.</p>
+<p>This module contains one class: <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>.  It relies on <a class="reference external" href="http://sourceforge.net/apps/mediawiki/python-control">python-control</a>,
+which is included in the distribution.</p>
 <dl class="class">
 <dt id="modelicares.linres.LinRes">
 <em class="property">class </em><tt class="descclassname">modelicares.linres.</tt><tt class="descname">LinRes</tt><big>(</big><em>fname='dslin.mat'</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinRes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
 <p>Class for <a class="reference external" href="http://www.modelica.org/">Modelica</a>-based linearization results and methods to analyze
 those results</p>
+<p>This class contains two user-accessible methods:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#modelicares.linres.LinRes.bode" title="modelicares.linres.LinRes.bode"><tt class="xref py py-meth docutils literal"><span class="pre">bode()</span></tt></a> - Creates a Bode plot of the system&#8217;s response</li>
+<li><a class="reference internal" href="#modelicares.linres.LinRes.nyquist" title="modelicares.linres.LinRes.nyquist"><tt class="xref py py-meth docutils literal"><span class="pre">nyquist()</span></tt></a> - Creates a Nyquist plot of the system&#8217;s response</li>
+</ul>
 <p>On initialization, load and preprocess a linearized <a class="reference external" href="http://www.modelica.org/">Modelica</a> model
 (MATLAB<sup>®</sup> format).  The model is in state space:</p>
 <div class="highlight-modelica"><div class="highlight"><pre><span class="nb">der</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">A</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">B</span><span class="o">*</span><span class="n">u</span><span class="p">;</span>
@@ -335,12 +341,12 @@ Use &#8216;&#8217; for no title.</p>
         <li class="right" >
           <a href="simres.html" title="modelicares.simres"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.8.1 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.x Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Aug 06, 2013.
+      Last updated on Aug 08, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

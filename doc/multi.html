@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.multi &mdash; ModelicaRes v0.8.1 Documentation</title>
+    <title>modelicares.multi &mdash; ModelicaRes v0.8.x Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.1',
+        VERSION:     '0.8.x',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,10 +27,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.8.1 Documentation"
+          title="Search within ModelicaRes v0.8.x Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.8.1 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.8.x Documentation" href="index.html" />
     <link rel="next" title="modelicares.exps" href="exps.html" />
     <link rel="prev" title="modelicares.linres" href="linres.html" />
     <meta name="description" content="Python module to set up, plot, and analyze Modelica simulations">
@@ -54,7 +54,7 @@
         <li class="right" >
           <a href="linres.html" title="modelicares.linres"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.8.1 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.x Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -100,6 +100,16 @@
 <span id="modelicares-multi"></span><h1><a class="reference internal" href="#module-modelicares.multi" title="modelicares.multi"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.multi</span></tt></a><a class="headerlink" href="#module-modelicares.multi" title="Permalink to this headline">¶</a></h1>
 <p>Functions to load and plot data from multiple simulation and linearization
 files at once</p>
+<p>This module contains four functions:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#modelicares.multi.multiload" title="modelicares.multi.multiload"><tt class="xref py py-meth docutils literal"><span class="pre">multiload()</span></tt></a> - Loads multiple <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation and/or linearization
+results</li>
+<li><a class="reference internal" href="#modelicares.multi.multiplot" title="modelicares.multi.multiplot"><tt class="xref py py-meth docutils literal"><span class="pre">multiplot()</span></tt></a> - Plots data from multiple simulations in 2D Cartesian
+coordinates</li>
+<li><a class="reference internal" href="#modelicares.multi.multibode" title="modelicares.multi.multibode"><tt class="xref py py-meth docutils literal"><span class="pre">multibode()</span></tt></a> - Plots multiple linearizations onto a single Bode diagram</li>
+<li><a class="reference internal" href="#modelicares.multi.multinyquist" title="modelicares.multi.multinyquist"><tt class="xref py py-meth docutils literal"><span class="pre">multinyquist()</span></tt></a> - Plots multiple linearizations onto a single Nyquist
+diagram</li>
+</ul>
 <dl class="function">
 <dt id="modelicares.multi.multibode">
 <tt class="descclassname">modelicares.multi.</tt><tt class="descname">multibode</tt><big>(</big><em>lins, axes=None, pair=(0, 0), label='bode', title='Bode Plot', labels='', colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'], styles=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)], leg_kwargs={}, **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.multi.multibode" title="Permalink to this definition">¶</a></dt>
@@ -413,12 +423,12 @@ that will be used sequentially</p>
         <li class="right" >
           <a href="linres.html" title="modelicares.linres"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.8.1 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.x Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Aug 06, 2013.
+      Last updated on Aug 08, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

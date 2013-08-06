@@ -74,7 +74,9 @@ The following `Python`_ projects are related:
 - `DyMat`_: exports `Modelica`_ simulation data to comma separated values (CSV),
   `Gnuplot <http://www.gnuplot.info/>`_, MATLAB®, and `Network Common Data Form
   (netCDF) <http://www.unidata.ucar.edu/software/netcdf/>`_
-- `pysimulator`_: elaborate GUI; supports the Functional Mock-up Interface (FMI)
+- `PyFMI`_: tools to work with models through the Functional Mock-Up Interface
+  (FMI) standard
+- `pysimulator`_: elaborate GUI; supports FMI
 
 
 .. _ModelicaRes: http://kdavies4.github.io/ModelicaRes/
@@ -87,4 +89,5 @@ The following `Python`_ projects are related:
 .. _awesim: https://github.com/saroele/awesim
 .. _BuildingsPy: http://simulationresearch.lbl.gov/modelica/buildingspy/
 .. _DyMat: http://www.j-raedler.de/projects/dymat/
+.. _PyFMI: https://pypi.python.org/pypi/PyFMI
 .. _pysimulator: https://code.google.com/p/pysimulator/

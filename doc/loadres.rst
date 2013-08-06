@@ -27,7 +27,7 @@ classes and functions of ModelicaRes are directly available as well.
 where '...' depends on the local system.
 
 You can now explore the simulation results or create plots using the methods in
-:class:`modelicares.simres.SimRes`.  For example,
+:class:`~modelicares.simres.SimRes`.  For example,
 
 .. code-block:: python
 
@@ -68,14 +68,14 @@ To see all the methods, use
 
    >>> help(sims[0])
 
-To search for variables, use :meth:`modelicares.simres.SimRes.glob` with
+To search for variables, use :meth:`~modelicares.simres.SimRes.glob` with
 wildcards:
 
    >>> sims[0].glob('L.p*')
    [u'L.p.i', u'L.p.v']
 
 Likewise, you can explore the linearization result or create diagrams using the
-methods in :class:`modelicares.linres.LinRes`:
+methods in :class:`~modelicares.linres.LinRes`:
 
 .. code-block:: python
 
