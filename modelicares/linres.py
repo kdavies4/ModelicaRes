@@ -255,14 +255,14 @@ class LinRes(object):
 
         .. code-block:: python
 
-           >>> from modelicares import LinRes, saveall
+           >>> from modelicares import LinRes, save
            >>> from numpy import pi, logspace
 
            >>> lin = LinRes('examples/PID.mat')
            >>> lin.bode(label='examples/PID-bode', omega=2*pi*logspace(-2, 3),
            ...          title="Bode Plot of Modelica.Blocks.Continuous.PID") # doctest: +ELLIPSIS
            (<matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>)
-           >>> saveall()
+           >>> save()
            Saved examples/PID-bode.pdf
            Saved examples/PID-bode.png
 
@@ -383,7 +383,7 @@ class LinRes(object):
 
         .. code-block:: python
 
-           >>> from modelicares import LinRes, saveall
+           >>> from modelicares import LinRes, save
            >>> from numpy import pi, logspace
 
            >>> lin = LinRes('examples/PID.mat')
@@ -391,7 +391,7 @@ class LinRes(object):
            ...             omega=2*pi*logspace(0, 3, 61), labelFreq=20,
            ...             title="Nyquist Plot of Modelica.Blocks.Continuous.PID") # doctest: +ELLIPSIS
            <matplotlib.axes._subplots.AxesSubplot object at 0x...>
-           >>> saveall()
+           >>> save()
            Saved examples/PID-nyquist.pdf
            Saved examples/PID-nyquist.png
 

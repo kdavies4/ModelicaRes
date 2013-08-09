@@ -93,7 +93,7 @@ class SimRes(object):
     - :meth:`get_indices_wi_times` - Returns the widest index pair(s) for which
       the time of signal(s) is within given limits
 
-    - :meth:`get_IV` - Returns the initial values of variable(s)
+    - :meth:`get_IV` - Returns the initial value(s) of variable(s)
 
     - :meth:`get_FV` - Returns the final value(s) of variable(s)
 
@@ -609,7 +609,7 @@ class SimRes(object):
         return self._get(names, _get_indices_wi_times)
 
     def get_IV(self, names, f=lambda x: x):
-        """Return the initial values of variable(s).
+        """Return the initial value(s) of variable(s).
 
         **Arguments:**
 
@@ -873,10 +873,14 @@ class SimRes(object):
 
         Patterns are Unix shell style:
 
-        *       matches everything
-        ?       matches any single character
-        [seq]   matches any character in seq
-        [!seq]  matches any char not in seq
+        ============   ============================
+        Character(s)   Role
+        ============   ============================
+        *              Matches everything
+        ?              Matches any single character
+        [seq]          Matches any character in seq
+        [!seq]         Matches any char not in seq
+        ============   ============================
 
         The matches are case-sensitive.
 
@@ -1003,7 +1007,7 @@ class SimRes(object):
 
         .. code-block:: python
 
-           >>> from modelicares import SimRes, saveall
+           >>> from modelicares import SimRes, save
 
            >>> sim = SimRes('examples/ChuaCircuit.mat')
            >>> sim.plot(ynames1='L.i', ylabel1="Current",
@@ -1011,7 +1015,7 @@ class SimRes(object):
            ...          title="Chua Circuit", label='examples/ChuaCircuit') # doctest: +ELLIPSIS
            (<matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>)
 
-           >>> saveall()
+           >>> save()
            Saved examples/ChuaCircuit.pdf
            Saved examples/ChuaCircuit.png
 
@@ -1206,19 +1210,19 @@ class SimRes(object):
 
         .. code-block:: python
 
-           >>> from modelicares import SimRes, saveall
+           >>> from modelicares import SimRes, save
 
            >>> sim = SimRes('examples/ThreeTanks')
            >>> sankeys = sim.sankey(label='examples/ThreeTanks',
            ...     title="Sankey Diagrams of Modelica.Fluid.Examples.Tanks.ThreeTanks",
            ...     times=[0, 50, 100, 150], n_rows=2, format='%.1f ',
            ...     names=['tank1.ports[1].m_flow', 'tank2.ports[1].m_flow',
-           ...           'tank3.ports[1].m_flow'],
+           ...            'tank3.ports[1].m_flow'],
            ...     labels=['Tank 1', 'Tank 2', 'Tank 3'],
            ...     orientations=[-1, 0, 1],
-           ...     scale=0.100, margin=6, offset=1.5,
+           ...     scale=0.1, margin=6, offset=1.5,
            ...     pathlengths=2, trunklength=10)
-           >>> saveall()
+           >>> save()
            Saved examples/ThreeTanks.pdf
            Saved examples/ThreeTanks.png
 

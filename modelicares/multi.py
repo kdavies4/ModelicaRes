@@ -159,7 +159,7 @@ def multiplot(sims, suffixes='', color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
     .. code-block:: python
 
        >>> from glob import glob
-       >>> from modelicares import SimRes, multiplot, saveall
+       >>> from modelicares import SimRes, multiplot, save
 
        >>> sims = map(SimRes, glob('examples/ChuaCircuit/*/*.mat'))
        >>> multiplot(sims, title="Chua Circuit", label='examples/ChuaCircuits',
@@ -168,7 +168,7 @@ def multiplot(sims, suffixes='', color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
        ...           ynames1='L.i', ylabel1="Current") # doctest: +ELLIPSIS
        (<matplotlib.axes._subplots.AxesSubplot object at 0x...>, None)
 
-       >>> saveall()
+       >>> save()
        Saved examples/ChuaCircuits.pdf
        Saved examples/ChuaCircuits.png
 
@@ -284,7 +284,7 @@ def multibode(lins, axes=None, pair=(0, 0), label='bode', title="Bode Plot",
        >>> import os
 
        >>> from glob import glob
-       >>> from modelicares import LinRes, multibode, saveall, read_params
+       >>> from modelicares import LinRes, multibode, save, read_params
        >>> from numpy import pi, logspace
 
        >>> lins = map(LinRes, glob('examples/PID/*/*.mat'))
@@ -296,7 +296,7 @@ def multibode(lins, axes=None, pair=(0, 0), label='bode', title="Bode Plot",
        ...           labels=labels, leg_kwargs=dict(loc='lower right')) # doctest: +ELLIPSIS
        (<matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>)
 
-       >>> saveall()
+       >>> save()
        Saved examples/PIDs-bode.pdf
        Saved examples/PIDs-bode.png
 
@@ -428,7 +428,7 @@ def multinyquist(lins, ax=None, pair=(0, 0), label='nyquist',
        >>> import os
 
        >>> from glob import glob
-       >>> from modelicares import LinRes, multinyquist, saveall, read_params
+       >>> from modelicares import LinRes, multinyquist, save, read_params
        >>> from numpy import pi, logspace
 
        >>> lins = map(LinRes, glob('examples/PID/*/*.mat'))
@@ -441,7 +441,7 @@ def multinyquist(lins, ax=None, pair=(0, 0), label='nyquist',
        ...              labels=labels) # doctest: +ELLIPSIS
        <matplotlib.axes._subplots.AxesSubplot object at 0x...>
 
-       >>> saveall()
+       >>> save()
        Saved examples/PIDs-nyquist.pdf
        Saved examples/PIDs-nyquist.png
 

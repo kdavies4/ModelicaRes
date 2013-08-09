@@ -39,8 +39,8 @@ math and matrix functions from NumPy_.
      :alt: Sankey digarams of three tanks model
 
   The links below and in the sidebar describe the components of ModelicaRes.
-  For an introduction see :mod:`loadres`, which loads data files and provides a
-  Python_ interpreter to help analyze them.
+  For an introduction, please see :mod:`loadres`, which loads data files and
+  provides a Python_ interpreter to help analyze them.
 
 .. only:: latex
 
@@ -57,8 +57,8 @@ math and matrix functions from NumPy_.
      :scale: 50 %
 
   The following chapters describe the components of ModelicaRes.  For an
-  introduction see :mod:`loadres`, which loads data files and provides a Python_
-  interpreter to help analyze them.
+  introduction, please see :mod:`loadres`, which loads data files and provides a
+  Python_ interpreter to help analyze them.
 
   The top-level module, :mod:`modelicares`, provides direct access to the most
   important classes and functions.  Others must be accessed through their
@@ -121,23 +121,12 @@ math and matrix functions from NumPy_.
 
   - `awesim`_: helps run simulation experiments and organize results
   - `BuildingsPy`_: supports unit testing
-  - `DyMat`_: exports `Modelica`_ simulation data to comma separated values (CSV),
+  - `DyMat`_: exports `Modelica`_ simulation data to comma-separated values (CSV),
     `Gnuplot <http://www.gnuplot.info/>`_, MATLAB®, and `Network Common Data Form
     (netCDF) <http://www.unidata.ucar.edu/software/netcdf/>`_
   - `PyFMI`_: tools to work with models through the Functional Mock-Up Interface
     (FMI) standard
   - `pysimulator`_: elaborate GUI; supports FMI
-
-  The `pysimulator <https://code.google.com/p/pysimulator/>`_, `BuildingsPy
-  <http://simulationresearch.lbl.gov/modelica/buildingspy/>`_, DyMat_, and
-  `awesim <https://github.com/saroele/awesim>`_ projects provide related Python_
-  modules.  pysimulator_ includes an elaborate GUI and supports the Functional
-  Model Interface (FMI).  BuildingsPy_ has a :class:`Tester` class that can be
-  used for unit testing.  DyMat_ has functions to export Modelica_ simulation
-  data to comma separated values (CSV), `Gnuplot <http://www.gnuplot.info/>`_,
-  MATLAB\ :sup:`®`, and `Network Common Data Form (netCDF)
-  <http://www.unidata.ucar.edu/software/netcdf/>`_.  awesim_ provides tools to
-  help run simulation experiments and organize the results.
 
 .. toctree::
 
@@ -213,7 +202,7 @@ math and matrix functions from NumPy_.
 
   - `awesim`_: helps run simulation experiments and organize results
   - `BuildingsPy`_: supports unit testing
-  - `DyMat`_: exports `Modelica`_ simulation data to comma separated values
+  - `DyMat`_: exports `Modelica`_ simulation data to comma-separated values
     (CSV), `Gnuplot <http://www.gnuplot.info/>`_, MATLAB®, and `Network Common
     Data Form (netCDF) <http://www.unidata.ucar.edu/software/netcdf/>`_
   - `PyFMI`_: tools to work with models through the Functional Mock-Up Interface

@@ -545,7 +545,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
 
          '~' may be included to represent the user directory.
 
-    - *packages*: List of Modelica_ packages that should be preloaded or scipts
+    - *packages*: List of Modelica_ packages that should be preloaded or scripts
       that should be run
 
          Each may be a "\*.mo" file, a folder that contains a "package.mo" file,

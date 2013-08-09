@@ -33,8 +33,9 @@
     <link rel="top" title="ModelicaRes v0.8.x Documentation" href="index.html" />
     <link rel="next" title="modelicares.exps" href="exps.html" />
     <link rel="prev" title="modelicares.linres" href="linres.html" />
-    <meta name="description" content="Python module to set up, plot, and analyze Modelica simulations">
+    <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
+    <meta name="author" content="Kevin L. Davies">
  
 
   </head>
@@ -181,7 +182,7 @@ and &#8220;-&#8221; for a solid line.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">LinRes</span><span class="p">,</span> <span class="n">multibode</span><span class="p">,</span> <span class="n">saveall</span><span class="p">,</span> <span class="n">read_params</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">LinRes</span><span class="p">,</span> <span class="n">multibode</span><span class="p">,</span> <span class="n">save</span><span class="p">,</span> <span class="n">read_params</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">logspace</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lins</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">LinRes</span><span class="p">,</span> <span class="n">glob</span><span class="p">(</span><span class="s">&#39;examples/PID/*/*.mat&#39;</span><span class="p">))</span>
@@ -193,7 +194,7 @@ and &#8220;-&#8221; for a solid line.</p>
 <span class="gp">... </span>          <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">leg_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s">&#39;lower right&#39;</span><span class="p">))</span> 
 <span class="go">(&lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;, &lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;)</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/PIDs-bode.pdf</span>
 <span class="go">Saved examples/PIDs-bode.png</span>
 </pre></div>
@@ -311,7 +312,7 @@ first system will have text labels.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">LinRes</span><span class="p">,</span> <span class="n">multinyquist</span><span class="p">,</span> <span class="n">saveall</span><span class="p">,</span> <span class="n">read_params</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">LinRes</span><span class="p">,</span> <span class="n">multinyquist</span><span class="p">,</span> <span class="n">save</span><span class="p">,</span> <span class="n">read_params</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">logspace</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lins</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">LinRes</span><span class="p">,</span> <span class="n">glob</span><span class="p">(</span><span class="s">&#39;examples/PID/*/*.mat&#39;</span><span class="p">))</span>
@@ -324,7 +325,7 @@ first system will have text labels.</p>
 <span class="gp">... </span>             <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span> 
 <span class="go">&lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/PIDs-nyquist.pdf</span>
 <span class="go">Saved examples/PIDs-nyquist.png</span>
 </pre></div>
@@ -383,7 +384,7 @@ that will be used sequentially</p>
 </ol>
 <p><strong>Example:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span><span class="p">,</span> <span class="n">multiplot</span><span class="p">,</span> <span class="n">saveall</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span><span class="p">,</span> <span class="n">multiplot</span><span class="p">,</span> <span class="n">save</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">SimRes</span><span class="p">,</span> <span class="n">glob</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit/*/*.mat&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">multiplot</span><span class="p">(</span><span class="n">sims</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Chua Circuit&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&#39;examples/ChuaCircuits&#39;</span><span class="p">,</span>
@@ -392,7 +393,7 @@ that will be used sequentially</p>
 <span class="gp">... </span>          <span class="n">ynames1</span><span class="o">=</span><span class="s">&#39;L.i&#39;</span><span class="p">,</span> <span class="n">ylabel1</span><span class="o">=</span><span class="s">&quot;Current&quot;</span><span class="p">)</span> 
 <span class="go">(&lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;, None)</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/ChuaCircuits.pdf</span>
 <span class="go">Saved examples/ChuaCircuits.png</span>
 </pre></div>
@@ -428,7 +429,7 @@ that will be used sequentially</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Aug 08, 2013.
+      Last updated on Aug 09, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

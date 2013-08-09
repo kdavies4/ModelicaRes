@@ -78,3 +78,4 @@ git checkout $branch
 #if [ "$stash_msg" != "No local changes to save" ]; then
 #   git stash pop
 #fi
+rm temp_plot.*

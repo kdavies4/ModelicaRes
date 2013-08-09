@@ -37,8 +37,8 @@ and the following functions:
 
 - :meth:`figure` - Creates a figure and set its label
 
-- :meth:`get_indices` - Returns the the pair of indices that bound a target
-  value in a monotonically increasing vector
+- :meth:`get_indices` - Returns the pair of indices that bound a target value in
+  a monotonically increasing vector
 
 - :meth:`get_pow10` - Returns the exponent of 10 for which the significand
   of a number is within the range [1, 10)
@@ -46,7 +46,7 @@ and the following functions:
 - :meth:`get_pow1000` - Returns the exponent of 1000 for which the
   significand of a number is within the range [1, 1000)
 
-- :meth:`load_csv` - Loads a CSV file into a dictionary.
+- :meth:`load_csv` - Loads a CSV file into a dictionary
 
 - :meth:`plot` - Plots 1D scalar data as points and/or line segments in 2D
   Cartesian coordinates
@@ -141,7 +141,7 @@ def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
        >>> # Add arrows and annotations.
        >>> add_arrows(p[0], x_locs=x.take(np.arange(20,100,20)),
        ...            label="Incr. time", xstar_offset=-0.15)
-       >>> saveall()
+       >>> save()
        Saved examples/add_arrows.pdf
        Saved examples/add_arrows.png
        >>> plt.show()
@@ -243,7 +243,7 @@ def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
        >>> # Add horizontal lines and labels.
        >>> add_hlines(positions=[min(y), max(y)], labels=["min", "max"],
        ...            color='r', ls='--')
-       >>> saveall()
+       >>> save()
        Saved examples/add_hlines.pdf
        Saved examples/add_hlines.png
        >>> plt.show()
@@ -314,7 +314,7 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
        >>> # Add horizontal lines and labels.
        >>> add_vlines(positions=[25, 50, 75], labels=["A", "B", "C"],
        ...            color='k', ls='--')
-       >>> saveall()
+       >>> save()
        Saved examples/add_vlines.pdf
        Saved examples/add_vlines.png
        >>> plt.show()
@@ -395,7 +395,6 @@ def animate(imagebase='_tmp', fname="animation", fps=10, clean=False):
        animate(clean=True)
     """
     # Note:  The output of the code above is too large for inline doctest.
-    # TODO:  Add a example/test.
     # TODO:  Consider using the animation module from matplotlib.  Should it
     # supercede this function?
     # TODO:  Add support for Windows.
@@ -444,7 +443,7 @@ def color(ax, c, *args, **kwargs):
        >>> ax = plt.subplot(111)
        >>> color(ax, c) # doctest: +ELLIPSIS
        <matplotlib.image.AxesImage object at 0x...>
-       >>> saveall()
+       >>> save()
        Saved examples/color.pdf
        Saved examples/color.png
        >>> plt.show()
@@ -689,8 +688,8 @@ def _gen_offset_factor(label, tick_lo, tick_up, eagerness=0.325):
 
 
 def get_indices(x, target):
-    """Return the the pair of indices that bound a target value in a
-    monotonically increasing vector.
+    """Return the pair of indices that bound a target value in a monotonically
+    increasing vector.
 
     **Arguments:**
 
@@ -763,8 +762,7 @@ def get_pow1000(num):
     return int(floor(dnum.log10()/3))
 
 
-def load_csv(fname, header_row=0, first_data_row=None,
-             types=None, **kwargs):
+def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
     """Load a CSV file into a dictionary.
 
     The strings from the header row are used as dictionary keys.
@@ -917,7 +915,7 @@ def plot(y, x=None, ax=None, label=None,
        >>> ax = plt.subplot(111)
        >>> plot([range(11), range(10, -1, -1)], ax=ax) # doctest: +ELLIPSIS
        [[<matplotlib.lines.Line2D object at 0x...>], [<matplotlib.lines.Line2D object at 0x...>]]
-       >>> saveall()
+       >>> save()
        Saved examples/plot.pdf
        Saved examples/plot.png
        >>> plt.show()
@@ -1020,7 +1018,7 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
        >>> ax = plt.subplot(111)
        >>> quiver(ax, u, v) # doctest: +ELLIPSIS
        <matplotlib.quiver.Quiver object at 0x...>
-       >>> saveall()
+       >>> save()
        Saved examples/quiver.pdf
        Saved examples/quiver.png
        >>> plt.show()
@@ -1154,7 +1152,7 @@ def saveall(formats=['pdf', 'png']):
        <matplotlib.figure.Figure object at 0x...>
        >>> plt.plot(range(10)) # doctest: +ELLIPSIS
        [<matplotlib.lines.Line2D object at 0x...>]
-       >>> saveall()
+       >>> save()
        Saved temp_plot.pdf
        Saved temp_plot.png
 
@@ -1305,7 +1303,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
 
        >>> setup_subplots(4, 2, label='examples/setup_subplots') # doctest: +ELLIPSIS
        ([<matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>], 2)
-       >>> saveall()
+       >>> save()
        Saved examples/setup_subplots.pdf
        Saved examples/setup_subplots.png
        >>> plt.show()
@@ -1471,7 +1469,7 @@ def shift_scale_x(ax, eagerness=0.325):
        >>> ax[1].set_title('After applying offset and factor') # doctest: +ELLIPSIS
        <matplotlib.text.Text object at 0x...>
        >>> shift_scale_x(ax[1])
-       >>> saveall()
+       >>> save()
        Saved examples/shift_scale_x.pdf
        Saved examples/shift_scale_x.png
        >>> plt.show()
@@ -1547,7 +1545,7 @@ def shift_scale_y(ax, eagerness=0.325):
        >>> ax[1].set_title('After applying offset and factor') # doctest: +ELLIPSIS
        <matplotlib.text.Text object at 0x...>
        >>> shift_scale_y(ax[1])
-       >>> saveall()
+       >>> save()
        Saved examples/shift_scale_y.pdf
        Saved examples/shift_scale_y.png
        >>> plt.show()
@@ -1597,9 +1595,7 @@ class ArrowLine(Line2D):
 
         **Arguments:**
 
-        - *arrow* (=\ *None*): Type of arrow (e.g., '>')
-
-          .. TODO: Confirm this
+        - *arrow* (='-'): Type of arrow ('<' | '-' | '>')
 
         - *arrowsize* (=2*4): Size of arrow
 
@@ -1635,7 +1631,7 @@ class ArrowLine(Line2D):
            (-3, 3)
            >>> ax.set_ylim(-3, 3)
            (-3, 3)
-           >>> saveall()
+           >>> save()
            Saved examples/ArrowLine.pdf
            Saved examples/ArrowLine.png
            >>> plt.show()
@@ -1653,7 +1649,7 @@ class ArrowLine(Line2D):
 
               Example of ArrowLine
         """
-        self._arrow = kwargs.pop('arrow', None)
+        self._arrow = kwargs.pop('arrow', '-')
         self._arrowsize = kwargs.pop('arrowsize', 2*4)
         self._arrowedgecolor = kwargs.pop('arrowedgecolor', 'b')
         self._arrowfacecolor = kwargs.pop('arrowfacecolor', 'b')
@@ -1702,7 +1698,6 @@ class ArrowLine(Line2D):
         length = renderer.points_to_pixels(self._arrowheadlength)
         transform = Affine2D().scale(length, halfwidth).rotate(angle)\
                                                        .translate(endx, endy)
-
         rgbFace = self._get_rgb_arrowface()
         renderer.draw_path(gc, self._arrow_path, transform, rgbFace)
 

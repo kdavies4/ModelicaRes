@@ -32,8 +32,9 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="top" title="ModelicaRes v0.8.x Documentation" href="index.html" />
     <link rel="prev" title="modelicares.texunit" href="texunit.html" />
-    <meta name="description" content="Python module to set up, plot, and analyze Modelica simulations">
+    <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
+    <meta name="author" content="Kevin L. Davies">
  
 
   </head>
@@ -118,13 +119,13 @@ directory and makes the path absolute</li>
 <li><a class="reference internal" href="#modelicares.base.flatten_dict" title="modelicares.base.flatten_dict"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_dict()</span></tt></a> - Flattens a nested dictionary</li>
 <li><a class="reference internal" href="#modelicares.base.flatten_list" title="modelicares.base.flatten_list"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_list()</span></tt></a> - Flattens a nested list</li>
 <li><a class="reference internal" href="#modelicares.base.figure" title="modelicares.base.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> - Creates a figure and set its label</li>
-<li><a class="reference internal" href="#modelicares.base.get_indices" title="modelicares.base.get_indices"><tt class="xref py py-meth docutils literal"><span class="pre">get_indices()</span></tt></a> - Returns the the pair of indices that bound a target
-value in a monotonically increasing vector</li>
+<li><a class="reference internal" href="#modelicares.base.get_indices" title="modelicares.base.get_indices"><tt class="xref py py-meth docutils literal"><span class="pre">get_indices()</span></tt></a> - Returns the pair of indices that bound a target value in
+a monotonically increasing vector</li>
 <li><a class="reference internal" href="#modelicares.base.get_pow10" title="modelicares.base.get_pow10"><tt class="xref py py-meth docutils literal"><span class="pre">get_pow10()</span></tt></a> - Returns the exponent of 10 for which the significand
 of a number is within the range [1, 10)</li>
 <li><a class="reference internal" href="#modelicares.base.get_pow1000" title="modelicares.base.get_pow1000"><tt class="xref py py-meth docutils literal"><span class="pre">get_pow1000()</span></tt></a> - Returns the exponent of 1000 for which the
 significand of a number is within the range [1, 1000)</li>
-<li><a class="reference internal" href="#modelicares.base.load_csv" title="modelicares.base.load_csv"><tt class="xref py py-meth docutils literal"><span class="pre">load_csv()</span></tt></a> - Loads a CSV file into a dictionary.</li>
+<li><a class="reference internal" href="#modelicares.base.load_csv" title="modelicares.base.load_csv"><tt class="xref py py-meth docutils literal"><span class="pre">load_csv()</span></tt></a> - Loads a CSV file into a dictionary</li>
 <li><a class="reference internal" href="#modelicares.base.plot" title="modelicares.base.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a> - Plots 1D scalar data as points and/or line segments in 2D
 Cartesian coordinates</li>
 <li><a class="reference internal" href="#modelicares.base.quiver" title="modelicares.base.quiver"><tt class="xref py py-meth docutils literal"><span class="pre">quiver()</span></tt></a> - Plots 2D vector data as arrows in 2D Cartesian coordinates</li>
@@ -207,7 +208,7 @@ the text</li>
 <span class="gp">&gt;&gt;&gt; </span><span class="c"># Add arrows and annotations.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">add_arrows</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_locs</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">20</span><span class="p">)),</span>
 <span class="gp">... </span>           <span class="n">label</span><span class="o">=</span><span class="s">&quot;Incr. time&quot;</span><span class="p">,</span> <span class="n">xstar_offset</span><span class="o">=-</span><span class="mf">0.15</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/add_arrows.pdf</span>
 <span class="go">Saved examples/add_arrows.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -253,7 +254,7 @@ the text</li>
 <span class="gp">&gt;&gt;&gt; </span><span class="c"># Add horizontal lines and labels.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">add_hlines</span><span class="p">(</span><span class="n">positions</span><span class="o">=</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="p">)],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;min&quot;</span><span class="p">,</span> <span class="s">&quot;max&quot;</span><span class="p">],</span>
 <span class="gp">... </span>           <span class="n">color</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s">&#39;--&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/add_hlines.pdf</span>
 <span class="go">Saved examples/add_hlines.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -299,7 +300,7 @@ the text</li>
 <span class="gp">&gt;&gt;&gt; </span><span class="c"># Add horizontal lines and labels.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">add_vlines</span><span class="p">(</span><span class="n">positions</span><span class="o">=</span><span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">75</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;A&quot;</span><span class="p">,</span> <span class="s">&quot;B&quot;</span><span class="p">,</span> <span class="s">&quot;C&quot;</span><span class="p">],</span>
 <span class="gp">... </span>           <span class="n">color</span><span class="o">=</span><span class="s">&#39;k&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s">&#39;--&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/add_vlines.pdf</span>
 <span class="go">Saved examples/add_vlines.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -393,7 +394,7 @@ function is not supported on Windows.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">color</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> 
 <span class="go">&lt;matplotlib.image.AxesImage object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/color.pdf</span>
 <span class="go">Saved examples/color.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -504,8 +505,8 @@ names</li>
 <dl class="function">
 <dt id="modelicares.base.get_indices">
 <tt class="descclassname">modelicares.base.</tt><tt class="descname">get_indices</tt><big>(</big><em>x</em>, <em>target</em><big>)</big><a class="headerlink" href="#modelicares.base.get_indices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the the pair of indices that bound a target value in a
-monotonically increasing vector.</p>
+<dd><p>Return the pair of indices that bound a target value in a monotonically
+increasing vector.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li><em>x</em>: Vector</li>
@@ -655,7 +656,7 @@ that will be used sequentially</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plot</span><span class="p">([</span><span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span> 
 <span class="go">[[&lt;matplotlib.lines.Line2D object at 0x...&gt;], [&lt;matplotlib.lines.Line2D object at 0x...&gt;]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/plot.pdf</span>
 <span class="go">Saved examples/plot.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -693,7 +694,7 @@ field)</li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">quiver</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> 
 <span class="go">&lt;matplotlib.quiver.Quiver object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/quiver.pdf</span>
 <span class="go">Saved examples/quiver.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -773,7 +774,7 @@ in memory.</p>
 <span class="go">&lt;matplotlib.figure.Figure object at 0x...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> 
 <span class="go">[&lt;matplotlib.lines.Line2D object at 0x...&gt;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved temp_plot.pdf</span>
 <span class="go">Saved temp_plot.png</span>
 </pre></div>
@@ -878,7 +879,7 @@ on the left column)</p>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">setup_subplots</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&#39;examples/setup_subplots&#39;</span><span class="p">)</span> 
 <span class="go">([&lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;, &lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;, &lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;, &lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;], 2)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/setup_subplots.pdf</span>
 <span class="go">Saved examples/setup_subplots.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -932,7 +933,7 @@ before the label will be recentered</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">&#39;After applying offset and factor&#39;</span><span class="p">)</span> 
 <span class="go">&lt;matplotlib.text.Text object at 0x...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shift_scale_x</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/shift_scale_x.pdf</span>
 <span class="go">Saved examples/shift_scale_x.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -989,7 +990,7 @@ before the label will be recentered</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">&#39;After applying offset and factor&#39;</span><span class="p">)</span> 
 <span class="go">&lt;matplotlib.text.Text object at 0x...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shift_scale_y</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/shift_scale_y.pdf</span>
 <span class="go">Saved examples/shift_scale_y.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -1005,7 +1006,7 @@ before the label will be recentered</p>
 <p>Initialize the line and arrow.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li><em>arrow</em> (=<em>None</em>): Type of arrow (e.g., &#8216;&gt;&#8217;)</li>
+<li><em>arrow</em> (=&#8217;-&#8216;): Type of arrow (&#8216;&lt;&#8217; | &#8216;-&#8216; | &#8216;&gt;&#8217;)</li>
 <li><em>arrowsize</em> (=2*4): Size of arrow</li>
 <li><em>arrowedgecolor</em> (=&#8217;b&#8217;): Color of arrow edge</li>
 <li><em>arrowfacecolor</em> (=&#8217;b&#8217;): Color of arrow face</li>
@@ -1031,7 +1032,7 @@ before the label will be recentered</p>
 <span class="go">(-3, 3)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="go">(-3, 3)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/ArrowLine.pdf</span>
 <span class="go">Saved examples/ArrowLine.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -1065,7 +1066,7 @@ before the label will be recentered</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Aug 08, 2013.
+      Last updated on Aug 09, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
