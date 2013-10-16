@@ -8,7 +8,7 @@ from distutils.core import setup
 from glob import glob
 
 setup(name='ModelicaRes',
-      version="0.8.2",
+      version="0.9.0",
       author='Kevin Davies',
       author_email='kdavies4@gmail.com',
       #credits=['Kevin Bandy', 'Jason Grout', 'Jason Heeris', 'Joerg Raedler'],
@@ -19,7 +19,7 @@ setup(name='ModelicaRes',
       description='Utilities to set up and analyze Modelica simulation experiments',
       long_description=open('README.txt').read(),
       provides=['modelicares'],
-      requires=['python (==2.7)', 'scipy', 'matplotlib', 'numpy', 'wx'],
+      requires=['python (==2.7)', 'scipy', 'matplotlib', 'numpy', 'wx', 'easygui'],
       package_dir={'control': 'external/control/src'},
       keywords=['Modelica', 'Dymola', 'plot', 'matplotlib', 'simulation',
                 'experiment', 'results'],

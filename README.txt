@@ -41,7 +41,10 @@ http://matplotlib.org/users/customizing.html for details.
 Credits
 ~~~~~~~
 
-The main author is Kevin Davies.  Kevin Bandy also helped with the development.
+The main author is Kevin Davies.  Improvements and bug fixes have been provided 
+by Arnout Aertgeerts, Kevin Bandy, Thomas Beutlich, Martin Sjölund, and Mike 
+Tiller.  
+
 Third-party code has been included from:
 
 - Jason Grout (`ArrowLine
@@ -76,7 +79,7 @@ The following `Python`_ projects are related:
   (netCDF) <http://www.unidata.ucar.edu/software/netcdf/>`_
 - `PyFMI`_: tools to work with models through the Functional Mock-Up Interface
   (FMI) standard
-- `pysimulator`_: elaborate GUI; supports FMI
+- `PySimulator`_: elaborate GUI; supports FMI
 
 
 .. _ModelicaRes: http://kdavies4.github.io/ModelicaRes/
@@ -90,4 +93,4 @@ The following `Python`_ projects are related:
 .. _BuildingsPy: http://simulationresearch.lbl.gov/modelica/buildingspy/
 .. _DyMat: http://www.j-raedler.de/projects/dymat/
 .. _PyFMI: https://pypi.python.org/pypi/PyFMI
-.. _pysimulator: https://code.google.com/p/pysimulator/
+.. _PySimulator: https://github.com/PySimulator/PySimulator

@@ -13,6 +13,9 @@ classes and functions of ModelicaRes are directly available as well.
 
 **Example:**
 
+To begin this example, copy this script (**loadres**) to the current directory 
+along with the **examples** folder.  
+
 .. code-block:: sh
 
    $ loadres examples
@@ -170,12 +173,17 @@ if __name__ == '__main__':
     from pylab import *
     from modelicares import *
     try:
-        from IPython.Shell import IPShellEmbed
-        IPShellEmbed(argv=['-noconfirm_exit'])()
-        # Note: The -pylab option cannot be embedded (see
-        # http://article.gmane.org/gmane.comp.python.ipython.user/1190/match=pylab),
-        # so man
+        from IPython import embed
+        embed()
     except ImportError:
-        from code import InteractiveConsole
-        # Calling this with globals ensures that we can see the environment.
-        InteractiveConsole(globals()).interact()
+        try:
+            # Old version
+            from IPython.Shell import IPShellEmbed
+            IPShellEmbed(argv=['-noconfirm_exit'])()
+            # Note: The -pylab option cannot be embedded (see
+            # http://article.gmane.org/gmane.comp.python.ipython.user/1190/match=pylab),
+            # so man
+        except ImportError:
+            from code import InteractiveConsole
+            # Calling this with globals ensures that we can see the environment.
+            InteractiveConsole(globals()).interact()

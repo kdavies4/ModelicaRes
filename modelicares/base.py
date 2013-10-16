@@ -601,7 +601,7 @@ def figure(label='', *args, **kwargs):
 
        >>> fig = figure("velocity_vs_time") # doctest: +ELLIPSIS
        >>> plt.getp(fig, 'label')
-       'velocity_vs_time'
+       u'velocity_vs_time'
 
     .. Note::  The *label* property is used as the base filename in the
        :meth:`saveall` method.
@@ -1302,7 +1302,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
        >>> from modelicares import *
 
        >>> setup_subplots(4, 2, label='examples/setup_subplots') # doctest: +ELLIPSIS
-       ([<matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>], 2)
+       ([<matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>], 2)
        >>> save()
        Saved examples/setup_subplots.pdf
        Saved examples/setup_subplots.png

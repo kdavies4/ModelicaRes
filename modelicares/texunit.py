@@ -25,8 +25,8 @@ import re
 # Special replacements for unit strings in tex
 rpls = [(re.compile(rpl[0]), rpl[1])
         for rpl in
-        [('degC', '^{\circ}\!C'),
-         ('degF', '^{\circ}\!F'),
+        [('degC', '^{\circ}C'),
+         ('degF', '^{\circ}F'),
          ('%', r'\%'),
          ('ohm', r'\Omega'),
          ('angstrom', r'\AA'),

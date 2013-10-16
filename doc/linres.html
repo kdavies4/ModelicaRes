@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.linres &mdash; ModelicaRes v0.8.2 Documentation</title>
+    <title>modelicares.linres &mdash; ModelicaRes v0.9.0 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.2',
+        VERSION:     '0.9.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,10 +27,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.8.2 Documentation"
+          title="Search within ModelicaRes v0.9.0 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.8.2 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.9.0 Documentation" href="index.html" />
     <link rel="next" title="modelicares.multi" href="multi.html" />
     <link rel="prev" title="modelicares.simres" href="simres.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
@@ -55,7 +55,7 @@
         <li class="right" >
           <a href="simres.html" title="modelicares.simres"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.8.2 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.9.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -239,13 +239,13 @@ and &#8220;-&#8221; for a solid line.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lin</span> <span class="o">=</span> <span class="n">LinRes</span><span class="p">(</span><span class="s">&#39;examples/PID.mat&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lin</span><span class="o">.</span><span class="n">bode</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&#39;examples/PID-bode&#39;</span><span class="p">,</span> <span class="n">omega</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
 <span class="gp">... </span>         <span class="n">title</span><span class="o">=</span><span class="s">&quot;Bode Plot of Modelica.Blocks.Continuous.PID&quot;</span><span class="p">)</span> 
-<span class="go">(&lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;, &lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;)</span>
+<span class="go">(&lt;matplotlib.axes...AxesSubplot object at 0x...&gt;, &lt;matplotlib.axes...AxesSubplot object at 0x...&gt;)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/PID-bode.pdf</span>
 <span class="go">Saved examples/PID-bode.png</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/PID-bode.png"><img alt="example for LinRes.bode()" src="_images/PID-bode.png" style="width: 504.7px; height: 335.3px;" /></a>
+<a class="reference internal image-reference" href="_images/PID-bode.png"><img alt="example for LinRes.bode()" src="_images/PID-bode.png" style="width: 513.1px; height: 335.3px;" /></a>
 </dd></dl>
 
 <dl class="method">
@@ -308,13 +308,13 @@ Use &#8216;&#8217; for no title.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lin</span><span class="o">.</span><span class="n">nyquist</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&#39;examples/PID-nyquist&#39;</span><span class="p">,</span>
 <span class="gp">... </span>            <span class="n">omega</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">logspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">61</span><span class="p">),</span> <span class="n">labelFreq</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
 <span class="gp">... </span>            <span class="n">title</span><span class="o">=</span><span class="s">&quot;Nyquist Plot of Modelica.Blocks.Continuous.PID&quot;</span><span class="p">)</span> 
-<span class="go">&lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;</span>
+<span class="go">&lt;matplotlib.axes...AxesSubplot object at 0x...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/PID-nyquist.pdf</span>
 <span class="go">Saved examples/PID-nyquist.png</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/PID-nyquist.png"><img alt="example for LinRes.nyquist()" src="_images/PID-nyquist.png" style="width: 349.3px; height: 325.5px;" /></a>
+<a class="reference internal image-reference" href="_images/PID-nyquist.png"><img alt="example for LinRes.nyquist()" src="_images/PID-nyquist.png" style="width: 349.3px; height: 328.3px;" /></a>
 </dd></dl>
 
 </dd></dl>
@@ -342,12 +342,12 @@ Use &#8216;&#8217; for no title.</p>
         <li class="right" >
           <a href="simres.html" title="modelicares.simres"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.8.2 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.9.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Oct 16, 2013.
+      Last updated on Mar 17, 2014.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

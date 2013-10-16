@@ -266,14 +266,14 @@ def read_params(names, fname='dsin.txt'):
        [18.0, 10.0]
     """
     # Aliases for some regular subexpressions
-    f = '[+-]?\d+(?:\.\d+)?(?:[Ee][+-]\d+)?' # Floating point number
-    i = '[+-]?\d+' # Integer
     u = '\d+' # Unsigned integer
+    i = '[+-]?' + u # Integer
+    f = i + '(?:\.' + u + ')?(?:[Ee][+-]' + u + ')?' # Floating point number
 
     # Possible regular expressions for a parameter specification (with '%s' for
     # the parameter name)
     patterns = [# Dymola 1- or 2-line parameter specification
-                (r'^ *%s +(%s) +%s +%s *\n? +%s +%s +# +%s *$'
+                (r'^\s*%s\s+(%s)\s+%s\s+%s\s+%s\s+%s\s*#\s*%s\s*$'
                  % (i, f, f, f, u, u, '%s')),
                 # From Dymola:
                 # column 1: Type of initial value
@@ -309,14 +309,13 @@ def read_params(names, fname='dsin.txt'):
     # parentheses contains the parameter value.
 
     # Read the file.
-    src = open(fname, 'r')
-    text = src.read()
-    src.close()
+    with open(fname, 'r') as src:
+        text = src.read()
 
     # Read the parameters.
     def _read_param(name):
         """Read a single parameter"""
-        namere = name.replace('.', '\.') # Escape the dots.
+        namere = re.escape(name) # Escape the dots, square brackets, etc.
         for pattern in patterns:
             try:
                 return float(re.search(pattern % namere, text,
@@ -464,18 +463,18 @@ def write_params(params, fname='dsin.txt'):
             "used as values in the simulation initialization file.")
 
     # Aliases for some regular subexpressions
-    f = '[+-]?\d+(?:\.\d+)?(?:[Ee][+-]\d+)?' # Floating point number
-    i = '[+-]?\d+' # Integer
     u = '\d+' # Unsigned integer
+    i = '[+-]?' + u # Integer
+    f = i + '(?:\.' + u + ')?(?:[Ee][+-]' + u + ')?' # Floating point number
 
     # Possible regular expressions for a parameter specification (with '%s' for
     # the parameter name)
     patterns = [# Dymola 1- or 2-line parameter specification
-                (r'(^ *%s *) %s ( *%s +%s *\n? +%s +%s +# +%s *)$'
+                (r'(^\s*%s\s+)%s(\s+%s\s+%s\s+%s\s+%s\s*#\s*%s\s*$)'
                  % (i, f, f, f, u, u, '%s')),
-                (r'(^ *) %s ( *# *%s *)' % (i, '%s')),
-                (r'(^ *) %s ( *# *%s *)' % (f, '%s')),
-                # See read_params() for descriptions of the columns.
+                (r'(^\s*)' + i + '(\s*#\s*%s)'),
+                (r'(^\s*)' + f + '(\s*#\s*%s)'),
+                # See read_params() for a description of the columns.
                ]
     # These are tried in order until there is a match.  The first group or pair
     # of parentheses contains the text before the parameter value and the
@@ -483,15 +482,14 @@ def write_params(params, fname='dsin.txt'):
     # clarity).
 
     # Read the file.
-    src = open(fname, 'r')
-    text = src.read()
-    src.close()
+    with open(fname, 'r') as src:
+        text = src.read()
 
     # Set the parameters.
     for name, value in params.items():
-        namere = name.replace('.', '\.') # Escape the dots.
+        namere = re.escape(name) # Escape the dots, square brackets, etc.
         for pattern in patterns:
-            text, n = re.subn(pattern % namere, r'\1 %s \2' % value, text, 1,
+            text, n = re.subn(pattern % namere, r'\g<1>%s\2' % value, text, 1,
                               re.MULTILINE)
             if n == 1:
                 break
@@ -501,9 +499,8 @@ def write_params(params, fname='dsin.txt'):
                 "in %s." % (name, fname))
 
     # Re-write the file.
-    src = open(fname, 'w')
-    src.write(text)
-    src.close()
+    with open(fname, 'w') as src:
+        src.write(text)
 
 
 def write_script(experiments=[(None, {}, {})], packages=[],
@@ -677,61 +674,61 @@ def write_script(experiments=[(None, {}, {})], packages=[],
     for i, result in enumerate(results):
         results[i] = result.replace('%x', exe)
 
-    # Create the Modelica script and write its header.
-    mos = open(fname, 'w')
-    mos.write('// Modelica experiment script written by modelicares %s\n'
-              % date.isoformat(date.today()))
-    mos.write('import Modelica.Utilities.Files.copy;\n')
-    mos.write('import Modelica.Utilities.Files.createDirectory;\n')
-    mos.write('Advanced.TranslationInCommandLog = true "Also include translation log in command log";\n')
-    mos.write('cd("%s");\n' % working_dir)
-    for package in packages:
-        if package.endswith('.mos'):
-            mos.write('cd("%s");\n' % os.path.dirname(package))
-            mos.write('RunScript("%s");\n' % os.path.basename(package))
-        else:
-            if package.endswith('.mo'):
-                mos.write('openModel("%s");\n' % package)
+    with open(fname, 'w') as mos:
+        # Write the header.
+        mos.write('// Modelica experiment script written by modelicares %s\n'
+                  % date.isoformat(date.today()))
+        mos.write('import Modelica.Utilities.Files.copy;\n')
+        mos.write('import Modelica.Utilities.Files.createDirectory;\n')
+        mos.write('Advanced.TranslationInCommandLog = true "Also include translation log in command log";\n')
+        mos.write('cd("%s");\n' % working_dir)
+        for package in packages:
+            if package.endswith('.mos'):
+                mos.write('cd("%s");\n' % os.path.dirname(package))
+                mos.write('RunScript("%s");\n' % os.path.basename(package))
             else:
-                mos.write('openModel("%s");\n' % os.path.join(package, 'package.mo'))
-            mos.write('cd("%s");\n' % working_dir)
-    mos.write('destination = "%s";\n'
-              % (os.path.normpath(results_dir) + os.path.sep))
-    mos.write('\n')
-    # Sometimes Dymola opens with an error; simulate any model to clear the
-    # error.
-    #mos.write('simulateModel("Modelica.Electrical.Analog.Examples.'
-    #          'ChuaCircuit");\n\n')
+                if package.endswith('.mo'):
+                    mos.write('openModel("%s");\n' % package)
+                else:
+                    mos.write('openModel("%s");\n' % os.path.join(package, 'package.mo'))
+                mos.write('cd("%s");\n' % working_dir)
+        mos.write('destination = "%s";\n'
+                  % (os.path.normpath(results_dir) + os.path.sep))
+        mos.write('\n')
+        # Sometimes Dymola opens with an error; simulate any model to clear the
+        # error.
+        #mos.write('simulateModel("Modelica.Electrical.Analog.Examples.'
+        #          'ChuaCircuit");\n\n')
 
-    # Write commands to run the experiments.
-    models = []
-    for i, (model, params, args) in zip(count(1), experiments):
-        # Create an abbreviated name for the model.
-        models.append(model[model.rfind('.')+1:])
+        # Write commands to run the experiments.
+        models = []
+        for i, (model, params, args) in zip(count(1), experiments):
+            # Create an abbreviated name for the model.
+            models.append(model[model.rfind('.')+1:])
 
-        # Write to the Modelica script.
-        mos.write('// Experiment %i\n' % i)
-        if model:
-            params = ParamDict(base.flatten_dict(params))
-            args['problem'] =  '"%s%s"' % (model, params)
-        if args:
-            mos.write('ok = %s%s;\n' % (command, ParamDict(args)))
-        else:
-            mos.write('ok = %s();\n' % command)
-        mos.write('if ok then\n')
-        mos.write('    savelog();\n')
-        folder = str(i)
-        mos.write('    createDirectory(destination + "%s");\n' % folder)
-        for result in results:
-            mos.write('    copy("%s", destination + "%s", true);\n' %
-                      (result, os.path.join(folder, result)))
-        mos.write('end if;\n')
-        mos.write('clearlog();\n\n')
+            # Write to the Modelica script.
+            mos.write('// Experiment %i\n' % i)
+            if model:
+                params = ParamDict(base.flatten_dict(params))
+                args['problem'] =  '"%s%s"' % (model, params)
+            if args:
+                mos.write('ok = %s%s;\n' % (command, ParamDict(args)))
+            else:
+                mos.write('ok = %s();\n' % command)
+            mos.write('if ok then\n')
+            mos.write('    savelog();\n')
+            folder = str(i)
+            mos.write('    createDirectory(destination + "%s");\n' % folder)
+            for result in results:
+                mos.write('    copy("%s", destination + "%s", true);\n' %
+                          (result, os.path.join(folder, result)))
+            mos.write('end if;\n')
+            mos.write('clearlog();\n\n')
 
-    # Exit the simulation environment.
-    # Otherwise, the script will hang until it is closed manually.
-    mos.write("exit();\n")
-    mos.close()
+        # Exit the simulation environment.
+        # Otherwise, the script will hang until it is closed manually.
+        mos.write("exit();\n")
+
     return models, results_dir
 
 

@@ -261,7 +261,7 @@ class LinRes(object):
            >>> lin = LinRes('examples/PID.mat')
            >>> lin.bode(label='examples/PID-bode', omega=2*pi*logspace(-2, 3),
            ...          title="Bode Plot of Modelica.Blocks.Continuous.PID") # doctest: +ELLIPSIS
-           (<matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>)
+           (<matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>)
            >>> save()
            Saved examples/PID-bode.pdf
            Saved examples/PID-bode.png
@@ -390,7 +390,7 @@ class LinRes(object):
            >>> lin.nyquist(label='examples/PID-nyquist',
            ...             omega=2*pi*logspace(0, 3, 61), labelFreq=20,
            ...             title="Nyquist Plot of Modelica.Blocks.Continuous.PID") # doctest: +ELLIPSIS
-           <matplotlib.axes._subplots.AxesSubplot object at 0x...>
+           <matplotlib.axes...AxesSubplot object at 0x...>
            >>> save()
            Saved examples/PID-nyquist.pdf
            Saved examples/PID-nyquist.png

@@ -130,7 +130,7 @@ backend      : GTKAgg
 #
 # The font.variant property has two values: normal or small-caps.  For
 # TrueType fonts, which are scalable fonts, small-caps is equivalent
-# to using a font size of 'smaller', or about 83% of the current font
+# to using a font size of 'smaller', or about 83%% of the current font
 # size.
 #
 # The font.weight property has effectively 13 values: normal, bold,
@@ -201,7 +201,7 @@ backend      : GTKAgg
                              # correction off.  None will try and
                              # guess based on your dvipng version
 
-#text.hinting : 'auto' # May be one of the following:
+#text.hinting : auto   # May be one of the following:
                        #   'none': Perform no hinting
                        #   'auto': Use freetype's autohinter
                        #   'native': Use the hinting information in the
@@ -268,6 +268,11 @@ mathtext.default : regular # The default font to use for math.
                                    # separator in the fr_FR locale.
 #axes.formatter.use_mathtext : False # When True, use mathtext for scientific
                                      # notation.
+#axes.formatter.useoffset      : True    # If True, the tick label formatter 
+                                         # will default to labeling ticks relative 
+                                         # to an offset when the data range is very 
+                                         # small compared to the minimum absolute 
+                                         # value of the data.
 #axes.unicode_minus  : True    # use unicode for the minus symbol
 
                                # rather than hyphen.  See
@@ -408,7 +413,16 @@ image.cmap   : hot               # gray | jet etc... (bone, gist_earth, gist_gra
 #savefig.edgecolor  : white    # figure edgecolor when saving
 #savefig.format     : png      # png, ps, pdf, svg
 #savefig.bbox       : standard # 'tight' or 'standard'.
+                                # 'tight' is incompatible with pipe-based animation
+                                # backends but will workd with temporary file based ones:
+                                # e.g. setting animation.writer to ffmpeg will not work,
+                                # use ffmpeg_file instead
 #savefig.pad_inches : 0.1      # Padding to be used when bbox is set to 'tight'
+#savefig.jpeg_quality: 95       # when a jpeg is saved, the default quality parameter.
+#savefig.directory   : ~        # default directory in savefig dialog box,
+                                # leave empty to always use current working directory
+#savefig.transparent : False    # setting that controls whether figures are saved with a 
+                                # transparent background by default
 
 # tk backend params
 #tk.window_focus   : False    # Maintain shell focus for TkAgg
