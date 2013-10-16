@@ -3,7 +3,7 @@ Changelog
 
 0.8.2 (2013-10-16) -- Updates:
 
-   - Fixed installation issues (`setup.py`).
+   - Fixed installation issues (:mod:`setup.py`).
 
 0.8.1 (2013-8-6) -- Updates:
 
