@@ -24,3 +24,4 @@ doc/examples merge=ours
 doc/make.py merge=ours
 .travis.yml merge=ours
 doc/_templates/download.html merge=ours
+

@@ -13,7 +13,7 @@ interpret results, and create publishable figures. It is currently possible to
 The figures are generated via `matplotlib`_, which offers a rich set of plotting
 routines.  `ModelicaRes`_ includes convenient functions to automatically
 pre-format and label some figures, like xy plots, Bode and Nyquist plots, and
-Sankey diagrams.  `ModelicaRes` can be scripted or run from a `Python`_
+Sankey diagrams.  `ModelicaRes`_ can be scripted or run from a `Python`_
 interpreter with math and matrix functions from `NumPy`_.
 
 For more information, please see the `main project site`_ or the doc folder of
@@ -25,7 +25,7 @@ Installation
 
 An installable copy of this package can be downloaded from the `main project
 site`_ or the `PyPI page`_.  After extracting the package, run the set up script
-(setup.py) from the base folder.  On Windows, use the following command::
+(*setup.py*) from the base folder.  On Windows, use the following command::
 
     python setup.py install
 
@@ -71,10 +71,12 @@ The following `Python`_ projects are related:
 
 - `awesim`_: helps run simulation experiments and organize results
 - `BuildingsPy`_: supports unit testing
-- `DyMat`_: exports `Modelica`_ simulation data to comma separated values (CSV),
+- `DyMat`_: exports `Modelica`_ simulation data to comma-separated values (CSV),
   `Gnuplot <http://www.gnuplot.info/>`_, MATLAB®, and `Network Common Data Form
   (netCDF) <http://www.unidata.ucar.edu/software/netcdf/>`_
-- `pysimulator`_: elaborate GUI; supports the Functional Mock-up Interface (FMI)
+- `PyFMI`_: tools to work with models through the Functional Mock-Up Interface
+  (FMI) standard
+- `pysimulator`_: elaborate GUI; supports FMI
 
 
 .. _ModelicaRes: http://kdavies4.github.io/ModelicaRes/
@@ -87,4 +89,5 @@ The following `Python`_ projects are related:
 .. _awesim: https://github.com/saroele/awesim
 .. _BuildingsPy: http://simulationresearch.lbl.gov/modelica/buildingspy/
 .. _DyMat: http://www.j-raedler.de/projects/dymat/
+.. _PyFMI: https://pypi.python.org/pypi/PyFMI
 .. _pysimulator: https://code.google.com/p/pysimulator/

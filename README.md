@@ -26,7 +26,8 @@ folder for the full documentation and many examples.
 An installable copy of this package can be downloaded from the
 [main project site] or the
 [PyPI page](http://pypi.python.org/pypi/ModelicaRes).  After extracting the
-package, run the set up script ([setup.py](setup.py)) from the base folder.  On Windows, use the following command:
+package, run the set up script ([setup.py](setup.py)) from the base folder.  On
+Windows, use the following command:
 
     python setup.py install
 
@@ -69,10 +70,12 @@ The following [Python] projects are related:
 
 - [awesim]\: helps run simulation experiments and organize results
 - [BuildingsPy]\: supports unit testing
-- [DyMat]\: exports [Modelica] simulation data to comma separated values (CSV),
+- [DyMat]\: exports [Modelica] simulation data to comma-separated values (CSV),
   [Gnuplot](http://www.gnuplot.info/), MATLAB&reg;, and
   [Network Common Data Form (netCDF)](http://www.unidata.ucar.edu/software/netcdf/)
-- [pysimulator]\: elaborate GUI; supports the Functional Mock-up Interface (FMI)
+- [PyFMI]\: tools to work with models through the Functional Mock-Up Interface
+  (FMI) standard
+- [pysimulator]\: elaborate GUI; supports the FMI
 
 
 [main project site]: http://kdavies4.github.io/ModelicaRes/
@@ -81,7 +84,8 @@ The following [Python] projects are related:
 [Python]: http://www.python.org
 [NumPy]: http://numpy.scipy.org
 [matplotlib]: http://www.matplotlib.org
-[DyMat]: http://www.j-raedler.de/projects/dymat/
-[pysimulator]: https://code.google.com/p/pysimulator/
-[BuildingsPy]: http://simulationresearch.lbl.gov/modelica/buildingspy/
 [awesim]: https://github.com/saroele/awesim
+[BuildingsPy]: http://simulationresearch.lbl.gov/modelica/buildingspy/
+[DyMat]: http://www.j-raedler.de/projects/dymat/
+[PyFMI]: https://pypi.python.org/pypi/PyFMI
+[pysimulator]: https://code.google.com/p/pysimulator/

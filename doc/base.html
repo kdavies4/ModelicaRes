@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.base &mdash; ModelicaRes v0.8.1 Documentation</title>
+    <title>modelicares.base &mdash; ModelicaRes v0.8.2 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.1',
+        VERSION:     '0.8.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,13 +27,14 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.8.1 Documentation"
+          title="Search within ModelicaRes v0.8.2 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.8.1 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.8.2 Documentation" href="index.html" />
     <link rel="prev" title="modelicares.texunit" href="texunit.html" />
-    <meta name="description" content="Python module to set up, plot, and analyze Modelica simulations">
+    <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
+    <meta name="author" content="Kevin L. Davies">
  
 
   </head>
@@ -50,7 +51,7 @@
         <li class="right" >
           <a href="texunit.html" title="modelicares.texunit"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.8.1 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.2 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -95,12 +96,53 @@
   <div class="section" id="module-modelicares.base">
 <span id="modelicares-base"></span><h1><a class="reference internal" href="#module-modelicares.base" title="modelicares.base"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.base</span></tt></a><a class="headerlink" href="#module-modelicares.base" title="Permalink to this headline">¶</a></h1>
 <p>Basic methods to help plot and interpret experimental data</p>
+<p>This module contains the following classes:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#modelicares.base.ArrowLine" title="modelicares.base.ArrowLine"><tt class="xref py py-class docutils literal"><span class="pre">ArrowLine</span></tt></a> - A matplotlib subclass to draw an arrowhead on a line</li>
+<li><a class="reference internal" href="#modelicares.base.Quantity" title="modelicares.base.Quantity"><tt class="xref py py-class docutils literal"><span class="pre">Quantity</span></tt></a> - Named tuple class for a constant physical quantity</li>
+</ul>
+<p>and the following functions:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#modelicares.base.add_arrows" title="modelicares.base.add_arrows"><tt class="xref py py-meth docutils literal"><span class="pre">add_arrows()</span></tt></a> - Overlays arrows with annotations on top of a pre-plotted
+line</li>
+<li><a class="reference internal" href="#modelicares.base.add_hlines" title="modelicares.base.add_hlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_hlines()</span></tt></a> - Adds horizontal lines to a set of axes with optional
+labels</li>
+<li><a class="reference internal" href="#modelicares.base.add_vlines" title="modelicares.base.add_vlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_vlines()</span></tt></a> - Adds vertical lines to a set of axes with optional
+labels</li>
+<li><a class="reference internal" href="#modelicares.base.animate" title="modelicares.base.animate"><tt class="xref py py-meth docutils literal"><span class="pre">animate()</span></tt></a> - Encodes a series of PNG images as a MPG movie</li>
+<li><a class="reference internal" href="#modelicares.base.color" title="modelicares.base.color"><tt class="xref py py-meth docutils literal"><span class="pre">color()</span></tt></a> - Plots 2D scalar data on a color axis in 2D Cartesian
+coordinates</li>
+<li><a class="reference internal" href="#modelicares.base.closeall" title="modelicares.base.closeall"><tt class="xref py py-meth docutils literal"><span class="pre">closeall()</span></tt></a> - Closes all open figures</li>
+<li><a class="reference internal" href="#modelicares.base.convert" title="modelicares.base.convert"><tt class="xref py py-meth docutils literal"><span class="pre">convert()</span></tt></a> - Converts the expression of a physical quantity between units</li>
+<li><a class="reference internal" href="#modelicares.base.expand_path" title="modelicares.base.expand_path"><tt class="xref py py-meth docutils literal"><span class="pre">expand_path()</span></tt></a> - Expands a file path by replacing &#8216;~&#8217; with the user
+directory and makes the path absolute</li>
+<li><a class="reference internal" href="#modelicares.base.flatten_dict" title="modelicares.base.flatten_dict"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_dict()</span></tt></a> - Flattens a nested dictionary</li>
+<li><a class="reference internal" href="#modelicares.base.flatten_list" title="modelicares.base.flatten_list"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_list()</span></tt></a> - Flattens a nested list</li>
+<li><a class="reference internal" href="#modelicares.base.figure" title="modelicares.base.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> - Creates a figure and set its label</li>
+<li><a class="reference internal" href="#modelicares.base.get_indices" title="modelicares.base.get_indices"><tt class="xref py py-meth docutils literal"><span class="pre">get_indices()</span></tt></a> - Returns the pair of indices that bound a target value in
+a monotonically increasing vector</li>
+<li><a class="reference internal" href="#modelicares.base.get_pow10" title="modelicares.base.get_pow10"><tt class="xref py py-meth docutils literal"><span class="pre">get_pow10()</span></tt></a> - Returns the exponent of 10 for which the significand
+of a number is within the range [1, 10)</li>
+<li><a class="reference internal" href="#modelicares.base.get_pow1000" title="modelicares.base.get_pow1000"><tt class="xref py py-meth docutils literal"><span class="pre">get_pow1000()</span></tt></a> - Returns the exponent of 1000 for which the
+significand of a number is within the range [1, 1000)</li>
+<li><a class="reference internal" href="#modelicares.base.load_csv" title="modelicares.base.load_csv"><tt class="xref py py-meth docutils literal"><span class="pre">load_csv()</span></tt></a> - Loads a CSV file into a dictionary</li>
+<li><a class="reference internal" href="#modelicares.base.plot" title="modelicares.base.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a> - Plots 1D scalar data as points and/or line segments in 2D
+Cartesian coordinates</li>
+<li><a class="reference internal" href="#modelicares.base.quiver" title="modelicares.base.quiver"><tt class="xref py py-meth docutils literal"><span class="pre">quiver()</span></tt></a> - Plots 2D vector data as arrows in 2D Cartesian coordinates</li>
+<li><a class="reference internal" href="#modelicares.base.save" title="modelicares.base.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> - Saves the current figures as images in a format or list of
+formats</li>
+<li><a class="reference internal" href="#modelicares.base.saveall" title="modelicares.base.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> - Saves all open figures as images in a format or list of
+formats</li>
+<li><a class="reference internal" href="#modelicares.base.setup_subplots" title="modelicares.base.setup_subplots"><tt class="xref py py-meth docutils literal"><span class="pre">setup_subplots()</span></tt></a> - Creates an array of subplots and return their axes</li>
+<li><a class="reference internal" href="#modelicares.base.shift_scale_x" title="modelicares.base.shift_scale_x"><tt class="xref py py-meth docutils literal"><span class="pre">shift_scale_x()</span></tt></a> - Applies an offset and a factor as necessary to the x
+axis</li>
+<li><a class="reference internal" href="#modelicares.base.shift_scale_y" title="modelicares.base.shift_scale_y"><tt class="xref py py-meth docutils literal"><span class="pre">shift_scale_y()</span></tt></a> - Applies an offset and a factor as necessary to the y
+axis</li>
+</ul>
 <dl class="class">
 <dt id="modelicares.base.Quantity">
 <em class="property">class </em><tt class="descclassname">modelicares.base.</tt><tt class="descname">Quantity</tt><a class="headerlink" href="#modelicares.base.Quantity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Named tuple class for a constant physical quantity</p>
-<p>The factor and then the offset are applied to the number to arrive at the
-quantity expressed in terms of the unit.</p>
+<dd><p>Quantity(number, factor, offset, unit)</p>
 <dl class="method">
 <dt id="modelicares.base.Quantity.__repr__">
 <tt class="descname">__repr__</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.base.Quantity.__repr__" title="Permalink to this definition">¶</a></dt>
@@ -164,13 +206,13 @@ the text</li>
 <span class="gp">&gt;&gt;&gt; </span><span class="c"># Add arrows and annotations.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">add_arrows</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x_locs</span><span class="o">=</span><span class="n">x</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">20</span><span class="p">)),</span>
 <span class="gp">... </span>           <span class="n">label</span><span class="o">=</span><span class="s">&quot;Incr. time&quot;</span><span class="p">,</span> <span class="n">xstar_offset</span><span class="o">=-</span><span class="mf">0.15</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/add_arrows.pdf</span>
 <span class="go">Saved examples/add_arrows.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/add_arrows.png"><img alt="example of add_arrows()" src="_images/add_arrows.png" style="width: 494.2px; height: 303.1px;" /></a>
+<a class="reference internal image-reference" href="_images/add_arrows.png"><img alt="example of add_arrows()" src="_images/add_arrows.png" style="width: 494.2px; height: 302.4px;" /></a>
 </dd></dl>
 
 <dl class="function">
@@ -210,7 +252,7 @@ the text</li>
 <span class="gp">&gt;&gt;&gt; </span><span class="c"># Add horizontal lines and labels.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">add_hlines</span><span class="p">(</span><span class="n">positions</span><span class="o">=</span><span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="p">)],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;min&quot;</span><span class="p">,</span> <span class="s">&quot;max&quot;</span><span class="p">],</span>
 <span class="gp">... </span>           <span class="n">color</span><span class="o">=</span><span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s">&#39;--&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/add_hlines.pdf</span>
 <span class="go">Saved examples/add_hlines.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -256,7 +298,7 @@ the text</li>
 <span class="gp">&gt;&gt;&gt; </span><span class="c"># Add horizontal lines and labels.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">add_vlines</span><span class="p">(</span><span class="n">positions</span><span class="o">=</span><span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">75</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;A&quot;</span><span class="p">,</span> <span class="s">&quot;B&quot;</span><span class="p">,</span> <span class="s">&quot;C&quot;</span><span class="p">],</span>
 <span class="gp">... </span>           <span class="n">color</span><span class="o">=</span><span class="s">&#39;k&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s">&#39;--&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/add_vlines.pdf</span>
 <span class="go">Saved examples/add_vlines.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -350,13 +392,13 @@ function is not supported on Windows.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">color</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> 
 <span class="go">&lt;matplotlib.image.AxesImage object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/color.pdf</span>
 <span class="go">Saved examples/color.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/color.png"><img alt="example of color()" src="_images/color.png" style="width: 471.8px; height: 298.9px;" /></a>
+<a class="reference internal image-reference" href="_images/color.png"><img alt="example of color()" src="_images/color.png" style="width: 471.8px; height: 298.2px;" /></a>
 </dd></dl>
 
 <dl class="function">
@@ -461,8 +503,8 @@ names</li>
 <dl class="function">
 <dt id="modelicares.base.get_indices">
 <tt class="descclassname">modelicares.base.</tt><tt class="descname">get_indices</tt><big>(</big><em>x</em>, <em>target</em><big>)</big><a class="headerlink" href="#modelicares.base.get_indices" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the the pair of indices that bound a target value in a
-monotonically increasing vector.</p>
+<dd><p>Return the pair of indices that bound a target value in a monotonically
+increasing vector.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
 <li><em>x</em>: Vector</li>
@@ -612,13 +654,13 @@ that will be used sequentially</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plot</span><span class="p">([</span><span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span> 
 <span class="go">[[&lt;matplotlib.lines.Line2D object at 0x...&gt;], [&lt;matplotlib.lines.Line2D object at 0x...&gt;]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/plot.pdf</span>
 <span class="go">Saved examples/plot.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/plot.png"><img alt="example of plot()" src="_images/plot.png" style="width: 477.4px; height: 303.1px;" /></a>
+<a class="reference internal image-reference" href="_images/plot.png"><img alt="example of plot()" src="_images/plot.png" style="width: 477.4px; height: 302.4px;" /></a>
 </dd></dl>
 
 <dl class="function">
@@ -650,7 +692,7 @@ field)</li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">quiver</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> 
 <span class="go">&lt;matplotlib.quiver.Quiver object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/quiver.pdf</span>
 <span class="go">Saved examples/quiver.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -730,7 +772,7 @@ in memory.</p>
 <span class="go">&lt;matplotlib.figure.Figure object at 0x...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> 
 <span class="go">[&lt;matplotlib.lines.Line2D object at 0x...&gt;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved temp_plot.pdf</span>
 <span class="go">Saved temp_plot.png</span>
 </pre></div>
@@ -744,7 +786,7 @@ figure with a label.</p>
 
 <dl class="function">
 <dt id="modelicares.base.setup_subplots">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">setup_subplots</tt><big>(</big><em>n_plots</em>, <em>n_rows</em>, <em>title=''</em>, <em>subtitles=None</em>, <em>label='multiplot'</em>, <em>xlabel=''</em>, <em>xticklabels=None</em>, <em>xticks=None</em>, <em>ylabel=''</em>, <em>yticklabels=None</em>, <em>yticks=None</em>, <em>ctype=None</em>, <em>clabel=''</em>, <em>margin_left=0.125</em>, <em>margin_right=0.09999999999999998</em>, <em>margin_bottom=0.1</em>, <em>margin_top=0.125</em>, <em>margin_cbar=0.2</em>, <em>wspace=0.1</em>, <em>hspace=0.25</em>, <em>cbar_space=0.1</em>, <em>cbar_width=0.05</em><big>)</big><a class="headerlink" href="#modelicares.base.setup_subplots" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modelicares.base.</tt><tt class="descname">setup_subplots</tt><big>(</big><em>n_plots</em>, <em>n_rows</em>, <em>title=''</em>, <em>subtitles=None</em>, <em>label='multiplot'</em>, <em>xlabel=''</em>, <em>xticklabels=None</em>, <em>xticks=None</em>, <em>ylabel=''</em>, <em>yticklabels=None</em>, <em>yticks=None</em>, <em>ctype=None</em>, <em>clabel=''</em>, <em>margin_left=0.125</em>, <em>margin_right=0.09999999999999998</em>, <em>margin_bottom=0.1</em>, <em>margin_top=0.09999999999999998</em>, <em>margin_cbar=0.2</em>, <em>wspace=0.1</em>, <em>hspace=0.25</em>, <em>cbar_space=0.1</em>, <em>cbar_width=0.05</em><big>)</big><a class="headerlink" href="#modelicares.base.setup_subplots" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an array of subplots and return their axes.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -835,13 +877,13 @@ on the left column)</p>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">setup_subplots</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&#39;examples/setup_subplots&#39;</span><span class="p">)</span> 
 <span class="go">([&lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;, &lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;, &lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;, &lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;], 2)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/setup_subplots.pdf</span>
 <span class="go">Saved examples/setup_subplots.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/setup_subplots.png"><img alt="example of setup_subplots()" src="_images/setup_subplots.png" style="width: 483.0px; height: 303.1px;" /></a>
+<a class="reference internal image-reference" href="_images/setup_subplots.png"><img alt="example of setup_subplots()" src="_images/setup_subplots.png" style="width: 483.0px; height: 302.4px;" /></a>
 </dd></dl>
 
 <dl class="function">
@@ -889,13 +931,13 @@ before the label will be recentered</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">&#39;After applying offset and factor&#39;</span><span class="p">)</span> 
 <span class="go">&lt;matplotlib.text.Text object at 0x...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shift_scale_x</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/shift_scale_x.pdf</span>
 <span class="go">Saved examples/shift_scale_x.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/shift_scale_x.png"><img alt="example of shift_scale_x()" src="_images/shift_scale_x.png" style="width: 488.6px; height: 333.2px;" /></a>
+<a class="reference internal image-reference" href="_images/shift_scale_x.png"><img alt="example of shift_scale_x()" src="_images/shift_scale_x.png" style="width: 488.6px; height: 331.8px;" /></a>
 </dd></dl>
 
 <dl class="function">
@@ -946,13 +988,13 @@ before the label will be recentered</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">&#39;After applying offset and factor&#39;</span><span class="p">)</span> 
 <span class="go">&lt;matplotlib.text.Text object at 0x...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">shift_scale_y</span><span class="p">(</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/shift_scale_y.pdf</span>
 <span class="go">Saved examples/shift_scale_y.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/shift_scale_y.png"><img alt="example of shift_scale_y()" src="_images/shift_scale_y.png" style="width: 522.2px; height: 335.3px;" /></a>
+<a class="reference internal image-reference" href="_images/shift_scale_y.png"><img alt="example of shift_scale_y()" src="_images/shift_scale_y.png" style="width: 520.1px; height: 335.3px;" /></a>
 </dd></dl>
 
 <dl class="class">
@@ -962,7 +1004,7 @@ before the label will be recentered</p>
 <p>Initialize the line and arrow.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li><em>arrow</em> (=<em>None</em>): Type of arrow (e.g., &#8216;&gt;&#8217;)</li>
+<li><em>arrow</em> (=&#8217;-&#8216;): Type of arrow (&#8216;&lt;&#8217; | &#8216;-&#8216; | &#8216;&gt;&#8217;)</li>
 <li><em>arrowsize</em> (=2*4): Size of arrow</li>
 <li><em>arrowedgecolor</em> (=&#8217;b&#8217;): Color of arrow edge</li>
 <li><em>arrowfacecolor</em> (=&#8217;b&#8217;): Color of arrow face</li>
@@ -988,13 +1030,13 @@ before the label will be recentered</p>
 <span class="go">(-3, 3)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="go">(-3, 3)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/ArrowLine.pdf</span>
 <span class="go">Saved examples/ArrowLine.png</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/ArrowLine.png"><img alt="example of ArrowLine" src="_images/ArrowLine.png" style="width: 476.0px; height: 303.1px;" /></a>
+<a class="reference internal image-reference" href="_images/ArrowLine.png"><img alt="example of ArrowLine" src="_images/ArrowLine.png" style="width: 476.0px; height: 302.4px;" /></a>
 </dd></dl>
 
 </div>
@@ -1017,12 +1059,12 @@ before the label will be recentered</p>
         <li class="right" >
           <a href="texunit.html" title="modelicares.texunit"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.8.1 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.2 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Aug 06, 2013.
+      Last updated on Oct 16, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

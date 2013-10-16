@@ -8,7 +8,7 @@ from itertools import product
 
 
 def fullfact(*space):
-    """Full-factorial DOE.
+    """Full-factorial DOE
 
     **Example**
 

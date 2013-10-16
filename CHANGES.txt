@@ -1,108 +1,114 @@
 Changelog
 =========
 
+0.8.2 (2013-10-16) -- Updates:
+
+   - Fixed installation issues (`setup.py`).
+
 0.8.1 (2013-8-6) -- Updates:
 
-   - Added missing *bin/loadres* script.
+   - Added missing :mod:`bin/loadres` script.
 
 0.8.0 (2013-8-6) -- Updates:
 
-   - Updates to *matplotlibrc* (default formatting)
-   - Added patterns to :meth:`exps.write_params` match more entries in a dsin
+   - Updates to :doc:`matplotlibrc` (default formatting)
+   - Added patterns to :meth:`~modelicares.exps.write_params` match more entries in a dsin
      file.
-   - :meth:`exps.write_script` now clears the log between runs.
-   - Fixed bug so that :meth:`simres.SimRes.plot` keeps the axis labels blank
+   - :meth:`~modelicares.exps.write_script` now clears the log between runs.
+   - Fixed bug so that :meth:`~modelicares.simres.SimRes.plot` keeps the axis labels blank
      when *xlabel* = "", *ylabel1* = "", or *ylabel2* = "".
-   - :meth:`texunit.label_number` now uses "in" instead of "/" to denote a
+   - :meth:`~modelicares.texunit.label_number` now uses "in" instead of "/" to denote a
      quantity in a unit that involves a function other than simple scaling
      (e.g., degC, dB).
-   - :meth:`texunit.unit2tex` now automatically formats some units and
+   - :meth:`~modelicares.texunit.unit2tex` now automatically formats some units and
      constants.
-   - Added *color* option to :meth:`multi.multiplot`.
-   - Added :meth:`SimRes.variables` method to list variable names (same as
-     :meth:`SimRes.keys` and :meth:`SimRes.names`)
-   - Added :meth:`simres.SimRes.glob` to return variables that match a pattern.
-   - Removed the `simres.info` submodule.  It is better to used the methods of
-     :class:`simres.SimRes` directly.
+   - Added *color* option to :meth:`~modelicares.multi.multiplot`.
+   - Added :meth:`~modelicares.simres.SimRes.variables` method to list variable names (same as
+     :meth:`~modelicares.simres.SimRes.keys` and :meth:`~modelicares.simres.SimRes.names`)
+   - Added :meth:`~modelicares.simres.SimRes.glob` to return variables that match a pattern.
+   - Removed the :mod:`simres.info` submodule.  It is better to used the methods of
+     :class:`~modelicares.simres.SimRes` directly.
 
 0.7.2 (2013-7-9) -- Updates:
 
    - When a variable cannot be found, suggestions are now given.  See the
-     example in :meth:`SimRes.get_values`.
-   - :meth:`exps.write_script` now allows initialization scripts.
-   - Warning message in :meth:`SimRes.plot` if y-axis variable descriptions
+     example in :meth:`~modelicares.simres.SimRes.get_values`.
+   - :meth:`~modelicares.exps.write_script` now allows initialization scripts.
+   - Warning message in :meth:`~modelicares.simres.SimRes.plot` if y-axis variable descriptions
      are different.
-   - :meth:`exps.write_script` now writes scripts that are more readable.
+   - :meth:`~modelicares.exps.write_script` now writes scripts that are more readable.
 
 0.7.1 (2013-7-7) -- Updates:
 
-   - Added missing files to MANIFEST
+   - Added missing files to :doc:`MANIFEST`
 
 0.7.0 (2013-7-7) -- Updates:
 
-   - Added :meth:`multi.multibode` and :meth:`multi.multinyquist` to create
+   - Added :meth:`~modelicares.multi.multibode` and :meth:`~modelicares.multi.multinyquist` to create
      Bode and Nyquist diagrams of multiple linearizations.
-   - Fixed and improved specifcation of axes in :meth:`linres.bode` and
-     :meth:`linres.nyquist`.  The argument *ax* argument to :meth:`linres.bode`
+   - Fixed and improved specification of axes in :meth:`~modelicares.linres.LinRes.bode` and
+     :meth:`~modelicares.linres.LinRes.nyquist`.  The argument *ax* argument to :meth:`~modelicares.linres.LinRes.bode`
      is now *axes* instead -- a tuple (pair) of axes.
-   - Fixed error with chosen directory in :meth:`base.save`
+   - Fixed error with chosen directory in :meth:`~modelicares.base.save`
    - Added function to generate one-factor-at-a-time experiments.  The old
-     *permute* argument to :meth:`exps.gen_experiments` is now generalized to
+     *permute* argument to :meth:`~modelicares.exps.gen_experiments` is now generalized to
      *design*, as in design of experiments.  Now, assign a function from
-     :mod:`exps.doe` to that argument.
+     :mod:`~modelicares.exps.doe` to that argument.
    - Using square axes by default for Nyquist plots
 
 0.6.2 (2013-7-4) -- Updates:
 
    - Updated python-control to 0.6c.  The *mark* argument has been removed from
-     :meth:`linres.nyquist`.  Use *labelFreq* to label every *labelFreq*th
+     :meth:`~modelicares.linres.LinRes.nyquist`.  Use *labelFreq* to label every *labelFreq* th
      frequency.  The *w_min* and *w_max* arguments have been removed from
-     :meth:`linres.bode` and :meth:`linres.nyquist`.  Use *omega* with bounds or
+     :meth:`~modelicares.linres.LinRes.bode` and :meth:`~modelicares.linres.LinRes.nyquist`.  Use *omega* with bounds or
      a list of frequencies.
-   - :meth:`exps.write_script` now saves the Dymola command log with translation
+   - :meth:`~modelicares.exps.write_script` now saves the Dymola command log with translation
      information.
    - Fixed error in *loadres* script in loading from a folder
-   - Added option to :class:`SimRes` (*constants_only*) to load only constants
-   - Added :meth:`SimRes.keys` method to list variable names (same as
-     :meth:`SimRes.names`)
-   - Added methods from :class:`simres.Info` to `simres.info` submodule
+   - Added option to :class:`~modelicares.simres.SimRes` (*constants_only*) to load only constants
+   - Added :meth:`~modelicares.simres.SimRes.keys` method to list variable names (same as
+     :meth:`~modelicares.simres.SimRes.names`)
+   - Added methods from :class:`~modelicares.simres.Info` to :mod:`simres.info` submodule
 
 0.6.1 (2013-7-2) -- Updates:
 
-   - Fixed README file.
+   - Fixed :doc:`README.TXT`.
 
 0.6.0 (2013-7-2) -- Updates:
 
-   - Added :meth:`base.save` to save the current figure
-   - Added *use_paren* option to :meth:`SimRes.plot`
-   - Changed :meth:`exps.write_script` to put results in folders instead of
-     special renaming scheme
-   - Improved organization of the *examples* folder
+   - Added :meth:`~modelicares.base.save` to save the current figure
+   - Added *use_paren* option to :meth:`~modelicares.simres.SimRes.plot`
+   - Changed :meth:`~modelicares.exps.write_script` to put results in folders
+     instead of special renaming scheme
+   - Improved organization of the examples folder
 
 0.5.2 (2013-6-30) -- Updates:
 
-   - Fixed error so that by default :meth:`SimRes.get_values` and
-     :meth:`SimRes.get_times` now include the final value and time.
+   - Fixed error so that by default
+     :meth:`~modelicares.simres.SimRes.get_values` and
+     :meth:`~modelicares.simres.SimRes.get_times` now include the final value
+     and time.
    - Added function to scale time
 
 0.5.1 (2013-6-18) -- Updates:
 
-   - Fixed errors in base.load_csv().
+   - Fixed errors in :meth:`~modelicares.base.load_csv`.
 
 0.5 (2013-6-5) -- Updates:
 
-   - Updated README.txt.
+   - Updated :doc:`README.TXT`.
 
 0.4 (2012-12-10) -- Updates:
 
-   - Added default of label='' to :meth:`modelicares.base.figure`.
+   - Added default of *label* = '' to :meth:`~modelicares.base.figure`.
    - Updated documentation for Windows.
    - Added check for proper Python version (currently requires 2.7).
 
 0.3 (2012-12-4) -- Updates:
 
-   - Added support for Windows.  :mod:`modelicares.aux` is now
-     :mod:`modelicares.base`.
+   - Added support for Windows.  :mod:`~modelicares.aux` is now
+     :mod:`~modelicares.base`.
 
 0.2 (2012-11-20) -- Updates:
 

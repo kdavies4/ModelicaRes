@@ -2,6 +2,13 @@
 # -*- coding: utf-8 -*-
 """Load, analyze, and plot results from Modelica_ simulations.
 
+This module contains two classes:
+
+- :class:`SimRes` - Class to load and analyze results from a Modelica_-based
+  simulation
+
+- :class:`Info` - Shortcuts to the "get" methods in :class:`SimRes`
+
 .. _Modelica: http://www.modelica.org/
 """
 __author__ = "Kevin Davies"
@@ -71,8 +78,51 @@ def merge_times(times_list):
     return all_times
 
 class SimRes(object):
-    """Base class for Modelica_-based simulation results and methods to analyze
-    those results
+    """Class to load and analyze results from a Modelica_-based simulation
+
+    This class contains the following user-accessible methods:
+
+    - :meth:`browse` - Launches a variable browser
+
+    - :meth:`get_description` - Returns the description(s) of trajectory
+      variable(s)
+
+    - :meth:`get_displayUnit` - Returns the Modelica_ *displayUnit* attribute(s)
+      of trajectory variable(s)
+
+    - :meth:`get_indices_wi_times` - Returns the widest index pair(s) for which
+      the time of signal(s) is within given limits
+
+    - :meth:`get_IV` - Returns the initial value(s) of variable(s)
+
+    - :meth:`get_FV` - Returns the final value(s) of variable(s)
+
+    - :meth:`get_times` - Returns vector(s) of the sample times of variable(s)
+
+    - :meth:`get_unit` - Returns the *unit* attribute(s) of trajectory
+      variable(s)
+
+    - :meth:`get_values` - Returns vector(s) of the values of the samples of
+      variable(s)
+
+    - :meth:`get_values_at_times` - Returns vector(s) of the values of the
+      samples of variable(s)
+
+    - :meth:`keys` - Returns a list of all variable names
+
+    - :meth:`names` - Returns a list of all variable names
+
+    - :meth:`variables` - Returns a list of all variable names
+
+    - :meth:`glob` - Returns a list of variable names that match a pattern
+
+    - :meth:`nametree` - Returns a tree of all variable names with respect to
+      the path names
+
+    - :meth:`plot` - Plots data as points and/or curves in 2D Cartesian
+      coordinates
+
+    - :meth:`sankey` - Creates a figure with Sankey diagram(s)
     """
 
     def __init__(self, fname='dsres.mat', constants_only=False):
@@ -391,7 +441,7 @@ class SimRes(object):
         """
         import wx
 
-        def do_work():
+        def _do_work():
             """Launch the broswer."""
             app = wx.GetApp()
             if app is None:
@@ -403,11 +453,11 @@ class SimRes(object):
 
         # TODO: Fix multithreading so that it can run in the background?
         #import threading
-        #thread = threading.Thread(target=do_work)
+        #thread = threading.Thread(target=_do_work)
         #thread.setDaemon(True)
         #thread.start()
 
-        do_work()
+        _do_work()
 
     def _get(self, names, attr):
         """Return attribute(s) of trajectory variable(s).
@@ -559,7 +609,7 @@ class SimRes(object):
         return self._get(names, _get_indices_wi_times)
 
     def get_IV(self, names, f=lambda x: x):
-        """Return the initial values of variable(s).
+        """Return the initial value(s) of variable(s).
 
         **Arguments:**
 
@@ -823,10 +873,14 @@ class SimRes(object):
 
         Patterns are Unix shell style:
 
-        *       matches everything
-        ?       matches any single character
-        [seq]   matches any character in seq
-        [!seq]  matches any char not in seq
+        ============   ============================
+        Character(s)   Role
+        ============   ============================
+        *              Matches everything
+        ?              Matches any single character
+        [seq]          Matches any character in seq
+        [!seq]         Matches any char not in seq
+        ============   ============================
 
         The matches are case-sensitive.
 
@@ -953,7 +1007,7 @@ class SimRes(object):
 
         .. code-block:: python
 
-           >>> from modelicares import SimRes, saveall
+           >>> from modelicares import SimRes, save
 
            >>> sim = SimRes('examples/ChuaCircuit.mat')
            >>> sim.plot(ynames1='L.i', ylabel1="Current",
@@ -961,7 +1015,7 @@ class SimRes(object):
            ...          title="Chua Circuit", label='examples/ChuaCircuit') # doctest: +ELLIPSIS
            (<matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>)
 
-           >>> saveall()
+           >>> save()
            Saved examples/ChuaCircuit.pdf
            Saved examples/ChuaCircuit.png
 
@@ -1156,19 +1210,19 @@ class SimRes(object):
 
         .. code-block:: python
 
-           >>> from modelicares import SimRes, saveall
+           >>> from modelicares import SimRes, save
 
            >>> sim = SimRes('examples/ThreeTanks')
            >>> sankeys = sim.sankey(label='examples/ThreeTanks',
            ...     title="Sankey Diagrams of Modelica.Fluid.Examples.Tanks.ThreeTanks",
            ...     times=[0, 50, 100, 150], n_rows=2, format='%.1f ',
            ...     names=['tank1.ports[1].m_flow', 'tank2.ports[1].m_flow',
-           ...           'tank3.ports[1].m_flow'],
+           ...            'tank3.ports[1].m_flow'],
            ...     labels=['Tank 1', 'Tank 2', 'Tank 3'],
            ...     orientations=[-1, 0, 1],
-           ...     scale=0.100, margin=6, offset=1.5,
+           ...     scale=0.1, margin=6, offset=1.5,
            ...     pathlengths=2, trunklength=10)
-           >>> saveall()
+           >>> save()
            Saved examples/ThreeTanks.pdf
            Saved examples/ThreeTanks.png
 

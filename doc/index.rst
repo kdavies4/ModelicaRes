@@ -39,8 +39,8 @@ math and matrix functions from NumPy_.
      :alt: Sankey digarams of three tanks model
 
   The links below and in the sidebar describe the components of ModelicaRes.
-  For an introduction see :mod:`loadres`, which loads data files and provides a
-  Python_ interpreter to help analyze them.
+  For an introduction, please see :mod:`loadres`, which loads data files and
+  provides a Python_ interpreter to help analyze them.
 
 .. only:: latex
 
@@ -57,28 +57,27 @@ math and matrix functions from NumPy_.
      :scale: 50 %
 
   The following chapters describe the components of ModelicaRes.  For an
-  introduction see :mod:`loadres`, which loads data files and provides a Python_
-  interpreter to help analyze them.
+  introduction, please see :mod:`loadres`, which loads data files and provides a
+  Python_ interpreter to help analyze them.
 
   The top-level module, :mod:`modelicares`, provides direct access to the most
   important classes and functions.  Others must be accessed through their
-  submodules.  The :mod:`loadres` script   The :mod:`modelicares.simres`
-  submodule has classes to load, analyze, and plot simulation results.
-  The :mod:`modelicares.linres` submodule has a class to load, analyze, and plot
-  results from linearizing a model.  The :mod:`modelicares.multi` submodule has
-  functions to load and plot results from multiple data files at once. The
-  :mod:`modelicares.exps` submodule has tools to set up and manage simulation
-  experiments.  The :mod:`modelicares.texunit` submodule has functions to
-  translate Modelica_ *unit* and *displayUnit* strings into LaTeX_-formatted
-  strings.  The last submodule, :mod:`modelicares.base`, has general supporting
-  functions.
+  submodules.  The :mod:`modelicares.simres` submodule has classes to load,
+  analyze, and plot simulation results.  The :mod:`modelicares.linres` submodule
+  has a class to load, analyze, and plot results from linearizing a model.  The
+  :mod:`modelicares.multi` submodule has functions to load and plot results from
+  multiple data files at once. The :mod:`modelicares.exps` submodule has tools
+  to set up and manage simulation experiments.  The :mod:`modelicares.texunit`
+  submodule has functions to translate Modelica_ *unit* and *displayUnit*
+  strings into LaTeX_-formatted strings.  The last submodule,
+  :mod:`modelicares.base`, has general supporting functions.
 
   **Installation**
 
   An installable copy of this package can be downloaded from the `main site
   <http://kdavies4.github.io/ModelicaRes/>`_ or the `PyPI page`_.  After
-  extracting the package, run the set-up script (setup.py) from the base folder.
-  On Windows, use the following command::
+  extracting the package, run the set-up script (:doc:`setup.py`) from the base
+  folder.  On Windows, use the following command::
 
      python setup.py install
 
@@ -109,9 +108,9 @@ math and matrix functions from NumPy_.
   **License terms and development**
 
   ModelicaRes_ is published under the terms of the BSD license (see
-  LICENSE.txt).  Please share any modifications you make (preferably on a Github
-  fork from https://github.com/kdavies4/ModelicaRes) so that others may benefit
-  from your work.  If you find a bug, please `report it
+  :doc:`LICENSE.txt`).  Please share any modifications you make (preferably on a
+  Github fork from https://github.com/kdavies4/ModelicaRes) so that others may
+  benefit from your work.  If you find a bug, please `report it
   <https://github.com/kdavies4/ModelicaRes/issues/new>`_.  If you have
   suggestions for improvements, please `share them here
   <https://github.com/kdavies4/ModelicaRes/wiki/Possible-Enhancements>`_.
@@ -122,21 +121,12 @@ math and matrix functions from NumPy_.
 
   - `awesim`_: helps run simulation experiments and organize results
   - `BuildingsPy`_: supports unit testing
-  - `DyMat`_: exports `Modelica`_ simulation data to comma separated values (CSV),
+  - `DyMat`_: exports `Modelica`_ simulation data to comma-separated values (CSV),
     `Gnuplot <http://www.gnuplot.info/>`_, MATLAB®, and `Network Common Data Form
     (netCDF) <http://www.unidata.ucar.edu/software/netcdf/>`_
-  - `pysimulator`_: elaborate GUI; supports the Functional Mock-up Interface (FMI)
-
-  The `pysimulator <https://code.google.com/p/pysimulator/>`_, `BuildingsPy
-  <http://simulationresearch.lbl.gov/modelica/buildingspy/>`_, DyMat_, and
-  `awesim <https://github.com/saroele/awesim>`_ projects provide related Python_
-  modules.  pysimulator_ includes an elaborate GUI and supports the Functional
-  Model Interface (FMI).  BuildingsPy_ has a :class:`Tester` class that can be
-  used for unit testing.  DyMat_ has functions to export Modelica_ simulation
-  data to comma separated values (CSV), `Gnuplot <http://www.gnuplot.info/>`_,
-  MATLAB\ :sup:`®`, and `Network Common Data Form (netCDF)
-  <http://www.unidata.ucar.edu/software/netcdf/>`_.  awesim_ provides tools to
-  help run simulation experiments and organize the results.
+  - `PyFMI`_: tools to work with models through the Functional Mock-Up Interface
+    (FMI) standard
+  - `pysimulator`_: elaborate GUI; supports FMI
 
 .. toctree::
 
@@ -154,18 +144,18 @@ math and matrix functions from NumPy_.
 
   The top-level module, :mod:`modelicares`, provides direct access to the most
   important classes and functions.  Others must be accessed through their
-  submodules.  The :mod:`loadres` script   The :mod:`modelicares.simres`
-  submodule has classes to load, analyze, and plot simulation results.
-  The :mod:`modelicares.linres` submodule has a class to load, analyze, and plot
-  results from linearizing a model.  The :mod:`modelicares.multi` submodule has
-  functions to load and plot results from multiple data files at once. The
-  :mod:`modelicares.exps` submodule has tools to set up and manage simulation
-  experiments.  The :mod:`modelicares.texunit` submodule has functions to
-  translate Modelica_ *unit* and *displayUnit* strings into LaTeX_-formatted
-  strings.  The last submodule, :mod:`modelicares.base`, has general supporting
-  functions.
+  submodules.  The :mod:`modelicares.simres` submodule has classes to load,
+  analyze, and plot simulation results.  The :mod:`modelicares.linres` submodule
+  has a class to load, analyze, and plot results from linearizing a model.
+  The :mod:`modelicares.multi` submodule has functions to load and plot results
+  from multiple data files at once. The :mod:`modelicares.exps` submodule has
+  tools to set up and manage simulation experiments.  The
+  :mod:`modelicares.texunit` submodule has functions to translate Modelica_
+  *unit* and *displayUnit* strings into LaTeX_-formatted strings.  The last
+  submodule, :mod:`modelicares.base`, has general supporting functions.
 
-  A PDF version of this documentation is available `here <ModelicaRes.pdf>`_.
+  For a list of changes, please see the `changelog <Changelog.html>`_.  A PDF
+  version of this documentation is available `here <ModelicaRes.pdf>`_.
 
   **Installation**
 
@@ -198,10 +188,10 @@ math and matrix functions from NumPy_.
 
   **License terms and development**
 
-  ModelicaRes_ is published under the terms of the BSD license (see
-  LICENSE.txt).  Please share any modifications you make (preferably on a Github
-  fork from https://github.com/kdavies4/ModelicaRes) so that others may benefit
-  from your work.  If you find a bug, please `report it
+  ModelicaRes_ is published under the terms of a `BSD-compatible license
+  <License.html>`_.  Please share any modifications you make (preferably on a
+  Github fork from https://github.com/kdavies4/ModelicaRes) so that others may
+  benefit from your work.  If you find a bug, please `report it
   <https://github.com/kdavies4/ModelicaRes/issues/new>`_.  If you have
   suggestions for improvements, please `share them here
   <https://github.com/kdavies4/ModelicaRes/wiki/Possible-Enhancements>`_.
@@ -212,12 +202,12 @@ math and matrix functions from NumPy_.
 
   - `awesim`_: helps run simulation experiments and organize results
   - `BuildingsPy`_: supports unit testing
-  - `DyMat`_: exports `Modelica`_ simulation data to comma separated values
+  - `DyMat`_: exports `Modelica`_ simulation data to comma-separated values
     (CSV), `Gnuplot <http://www.gnuplot.info/>`_, MATLAB®, and `Network Common
     Data Form (netCDF) <http://www.unidata.ucar.edu/software/netcdf/>`_
-  - `pysimulator`_: elaborate GUI; supports the Functional Mock-up Interface
-    (FMI)
-
+  - `PyFMI`_: tools to work with models through the Functional Mock-Up Interface
+    (FMI) standard
+  - `pysimulator`_: elaborate GUI; supports FMI
 
 .. _Modelica: http://www.modelica.org/
 .. _Python: http://www.python.org/
@@ -228,4 +218,5 @@ math and matrix functions from NumPy_.
 .. _awesim: https://github.com/saroele/awesim
 .. _BuildingsPy: http://simulationresearch.lbl.gov/modelica/buildingspy/
 .. _DyMat: http://www.j-raedler.de/projects/dymat/
+.. _PyFMI: https://pypi.python.org/pypi/PyFMI
 .. _pysimulator: https://code.google.com/p/pysimulator/

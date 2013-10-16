@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.multi &mdash; ModelicaRes v0.8.1 Documentation</title>
+    <title>modelicares.multi &mdash; ModelicaRes v0.8.2 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.1',
+        VERSION:     '0.8.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,14 +27,15 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.8.1 Documentation"
+          title="Search within ModelicaRes v0.8.2 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.8.1 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.8.2 Documentation" href="index.html" />
     <link rel="next" title="modelicares.exps" href="exps.html" />
     <link rel="prev" title="modelicares.linres" href="linres.html" />
-    <meta name="description" content="Python module to set up, plot, and analyze Modelica simulations">
+    <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
+    <meta name="author" content="Kevin L. Davies">
  
 
   </head>
@@ -54,7 +55,7 @@
         <li class="right" >
           <a href="linres.html" title="modelicares.linres"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.8.1 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.2 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -100,6 +101,16 @@
 <span id="modelicares-multi"></span><h1><a class="reference internal" href="#module-modelicares.multi" title="modelicares.multi"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.multi</span></tt></a><a class="headerlink" href="#module-modelicares.multi" title="Permalink to this headline">¶</a></h1>
 <p>Functions to load and plot data from multiple simulation and linearization
 files at once</p>
+<p>This module contains four functions:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#modelicares.multi.multiload" title="modelicares.multi.multiload"><tt class="xref py py-meth docutils literal"><span class="pre">multiload()</span></tt></a> - Loads multiple <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation and/or linearization
+results</li>
+<li><a class="reference internal" href="#modelicares.multi.multiplot" title="modelicares.multi.multiplot"><tt class="xref py py-meth docutils literal"><span class="pre">multiplot()</span></tt></a> - Plots data from multiple simulations in 2D Cartesian
+coordinates</li>
+<li><a class="reference internal" href="#modelicares.multi.multibode" title="modelicares.multi.multibode"><tt class="xref py py-meth docutils literal"><span class="pre">multibode()</span></tt></a> - Plots multiple linearizations onto a single Bode diagram</li>
+<li><a class="reference internal" href="#modelicares.multi.multinyquist" title="modelicares.multi.multinyquist"><tt class="xref py py-meth docutils literal"><span class="pre">multinyquist()</span></tt></a> - Plots multiple linearizations onto a single Nyquist
+diagram</li>
+</ul>
 <dl class="function">
 <dt id="modelicares.multi.multibode">
 <tt class="descclassname">modelicares.multi.</tt><tt class="descname">multibode</tt><big>(</big><em>lins, axes=None, pair=(0, 0), label='bode', title='Bode Plot', labels='', colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'], styles=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)], leg_kwargs={}, **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.multi.multibode" title="Permalink to this definition">¶</a></dt>
@@ -171,7 +182,7 @@ and &#8220;-&#8221; for a solid line.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">LinRes</span><span class="p">,</span> <span class="n">multibode</span><span class="p">,</span> <span class="n">saveall</span><span class="p">,</span> <span class="n">read_params</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">LinRes</span><span class="p">,</span> <span class="n">multibode</span><span class="p">,</span> <span class="n">save</span><span class="p">,</span> <span class="n">read_params</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">logspace</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lins</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">LinRes</span><span class="p">,</span> <span class="n">glob</span><span class="p">(</span><span class="s">&#39;examples/PID/*/*.mat&#39;</span><span class="p">))</span>
@@ -183,12 +194,12 @@ and &#8220;-&#8221; for a solid line.</p>
 <span class="gp">... </span>          <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">leg_kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s">&#39;lower right&#39;</span><span class="p">))</span> 
 <span class="go">(&lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;, &lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;)</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/PIDs-bode.pdf</span>
 <span class="go">Saved examples/PIDs-bode.png</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/PIDs-bode.png"><img alt="Bode plot of PID with varying parameters" src="_images/PIDs-bode.png" style="width: 513.1px; height: 335.3px;" /></a>
+<a class="reference internal image-reference" href="_images/PIDs-bode.png"><img alt="Bode plot of PID with varying parameters" src="_images/PIDs-bode.png" style="width: 504.7px; height: 335.3px;" /></a>
 </dd></dl>
 
 <dl class="function">
@@ -301,7 +312,7 @@ first system will have text labels.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">LinRes</span><span class="p">,</span> <span class="n">multinyquist</span><span class="p">,</span> <span class="n">saveall</span><span class="p">,</span> <span class="n">read_params</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">LinRes</span><span class="p">,</span> <span class="n">multinyquist</span><span class="p">,</span> <span class="n">save</span><span class="p">,</span> <span class="n">read_params</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">logspace</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lins</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">LinRes</span><span class="p">,</span> <span class="n">glob</span><span class="p">(</span><span class="s">&#39;examples/PID/*/*.mat&#39;</span><span class="p">))</span>
@@ -314,12 +325,12 @@ first system will have text labels.</p>
 <span class="gp">... </span>             <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">)</span> 
 <span class="go">&lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/PIDs-nyquist.pdf</span>
 <span class="go">Saved examples/PIDs-nyquist.png</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/PIDs-nyquist.png"><img alt="Nyquist plot of PID with varying parameters" src="_images/PIDs-nyquist.png" style="width: 349.3px; height: 328.3px;" /></a>
+<a class="reference internal image-reference" href="_images/PIDs-nyquist.png"><img alt="Nyquist plot of PID with varying parameters" src="_images/PIDs-nyquist.png" style="width: 349.3px; height: 325.5px;" /></a>
 </dd></dl>
 
 <dl class="function">
@@ -373,7 +384,7 @@ that will be used sequentially</p>
 </ol>
 <p><strong>Example:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span><span class="p">,</span> <span class="n">multiplot</span><span class="p">,</span> <span class="n">saveall</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span><span class="p">,</span> <span class="n">multiplot</span><span class="p">,</span> <span class="n">save</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">SimRes</span><span class="p">,</span> <span class="n">glob</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit/*/*.mat&#39;</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">multiplot</span><span class="p">(</span><span class="n">sims</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">&quot;Chua Circuit&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&#39;examples/ChuaCircuits&#39;</span><span class="p">,</span>
@@ -382,12 +393,12 @@ that will be used sequentially</p>
 <span class="gp">... </span>          <span class="n">ynames1</span><span class="o">=</span><span class="s">&#39;L.i&#39;</span><span class="p">,</span> <span class="n">ylabel1</span><span class="o">=</span><span class="s">&quot;Current&quot;</span><span class="p">)</span> 
 <span class="go">(&lt;matplotlib.axes._subplots.AxesSubplot object at 0x...&gt;, None)</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">saveall</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/ChuaCircuits.pdf</span>
 <span class="go">Saved examples/ChuaCircuits.png</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/ChuaCircuits.png"><img alt="plot of Chua circuit with varying inductance" src="_images/ChuaCircuits.png" style="width: 502.6px; height: 329.7px;" /></a>
+<a class="reference internal image-reference" href="_images/ChuaCircuits.png"><img alt="plot of Chua circuit with varying inductance" src="_images/ChuaCircuits.png" style="width: 502.6px; height: 328.3px;" /></a>
 </dd></dl>
 
 </div>
@@ -413,12 +424,12 @@ that will be used sequentially</p>
         <li class="right" >
           <a href="linres.html" title="modelicares.linres"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.8.1 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.2 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Aug 06, 2013.
+      Last updated on Oct 16, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>

@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 """Load, analyze, and plot the result of linearizing a Modelica_ model.
 
-This module relies on python-control_, which is included in the distribution.
+This module contains one class: :class:`LinRes`.  It relies on python-control_,
+which is included in the distribution.
 
 .. _Modelica: http://www.modelica.org/
 .. _python-control: http://sourceforge.net/apps/mediawiki/python-control
@@ -28,6 +29,12 @@ from control.freqplot import bode, nyquist
 class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze
     those results
+
+    This class contains two user-accessible methods:
+
+    - :meth:`bode` - Creates a Bode plot of the system's response
+
+    - :meth:`nyquist` - Creates a Nyquist plot of the system's response
     """
 
     def __init__(self, fname='dslin.mat'):
@@ -248,14 +255,14 @@ class LinRes(object):
 
         .. code-block:: python
 
-           >>> from modelicares import LinRes, saveall
+           >>> from modelicares import LinRes, save
            >>> from numpy import pi, logspace
 
            >>> lin = LinRes('examples/PID.mat')
            >>> lin.bode(label='examples/PID-bode', omega=2*pi*logspace(-2, 3),
            ...          title="Bode Plot of Modelica.Blocks.Continuous.PID") # doctest: +ELLIPSIS
            (<matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>)
-           >>> saveall()
+           >>> save()
            Saved examples/PID-bode.pdf
            Saved examples/PID-bode.png
 
@@ -376,7 +383,7 @@ class LinRes(object):
 
         .. code-block:: python
 
-           >>> from modelicares import LinRes, saveall
+           >>> from modelicares import LinRes, save
            >>> from numpy import pi, logspace
 
            >>> lin = LinRes('examples/PID.mat')
@@ -384,7 +391,7 @@ class LinRes(object):
            ...             omega=2*pi*logspace(0, 3, 61), labelFreq=20,
            ...             title="Nyquist Plot of Modelica.Blocks.Continuous.PID") # doctest: +ELLIPSIS
            <matplotlib.axes._subplots.AxesSubplot object at 0x...>
-           >>> saveall()
+           >>> save()
            Saved examples/PID-nyquist.pdf
            Saved examples/PID-nyquist.png
 
