@@ -71,11 +71,7 @@ cd ..
 # Make the web documentation.
 git commit -am "Auto-updated documentation"
 branch=`git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3` # Original branch
-#stash_msg=`git stash save "Work in progress while running 00-release.sh"`
 git checkout gh-pages
 ./00-make-gh-pages.sh
 git checkout $branch
-#if [ "$stash_msg" != "No local changes to save" ]; then
-#   git stash pop
-#fi
-rm temp_plot.*
+

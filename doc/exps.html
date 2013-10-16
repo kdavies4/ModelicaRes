@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.exps &mdash; ModelicaRes v0.8.x Documentation</title>
+    <title>modelicares.exps &mdash; ModelicaRes v0.8.2 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.8.x',
+        VERSION:     '0.8.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,10 +27,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.8.x Documentation"
+          title="Search within ModelicaRes v0.8.2 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.8.x Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.8.2 Documentation" href="index.html" />
     <link rel="next" title="modelicares.exps.doe" href="exps.doe.html" />
     <link rel="prev" title="modelicares.multi" href="multi.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
@@ -55,7 +55,7 @@
         <li class="right" >
           <a href="multi.html" title="modelicares.multi"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.8.x Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.2 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -123,18 +123,7 @@ experiments.  Finally, the generator is passed to the <a class="reference intern
 <dt id="modelicares.exps.Experiment">
 <em class="property">class </em><tt class="descclassname">modelicares.exps.</tt><tt class="descname">Experiment</tt><a class="headerlink" href="#modelicares.exps.Experiment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
-<p>Named tuple class to represent a simulation experiment</p>
-<p>Instances of this class may be used in the <em>experiments</em> argument of
-<a class="reference internal" href="#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a> and <a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-meth docutils literal"><span class="pre">run_models()</span></tt></a>, although there are some
-differences in the entries (see those functions for details).</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">experiment</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="s">&#39;ChuaCircuit&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;L.L&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">},</span> <span class="n">args</span><span class="o">=</span><span class="p">{})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">experiment</span><span class="o">.</span><span class="n">model</span>
-<span class="go">&#39;ChuaCircuit&#39;</span>
-</pre></div>
-</div>
+<p>Experiment(model, params, args)</p>
 <dl class="method">
 <dt id="modelicares.exps.Experiment.__repr__">
 <tt class="descname">__repr__</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.exps.Experiment.__repr__" title="Permalink to this definition">¶</a></dt>
@@ -212,7 +201,7 @@ included for instance names that contain symbols (e.g., &#8220;&#8216;H+&#8217;&
 
 <dl class="function">
 <dt id="modelicares.exps.gen_experiments">
-<tt class="descclassname">modelicares.exps.</tt><tt class="descname">gen_experiments</tt><big>(</big><em>models=None</em>, <em>params={}</em>, <em>args={}</em>, <em>design=&lt;function fullfact at 0xb79a5dc&gt;</em><big>)</big><a class="headerlink" href="#modelicares.exps.gen_experiments" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modelicares.exps.</tt><tt class="descname">gen_experiments</tt><big>(</big><em>models=None</em>, <em>params={}</em>, <em>args={}</em>, <em>design=&lt;function fullfact at 0x3ebcc80&gt;</em><big>)</big><a class="headerlink" href="#modelicares.exps.gen_experiments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a generator for a set of simulation experiments using permutation
 or simple element-wise grouping.</p>
 <p>The generator yields instances of <a class="reference internal" href="#modelicares.exps.Experiment" title="modelicares.exps.Experiment"><tt class="xref py py-class docutils literal"><span class="pre">Experiment</span></tt></a>&#8212;named tuples of
@@ -645,12 +634,12 @@ save results from 12 simulation experiments.</p>
         <li class="right" >
           <a href="multi.html" title="modelicares.multi"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.8.x Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.8.2 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Aug 09, 2013.
+      Last updated on Oct 16, 2013.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
