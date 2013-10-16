@@ -7,10 +7,8 @@ See the README.txt file for instructions.
 from distutils.core import setup
 from glob import glob
 
-import modelicares # Only to read the version number
-
 setup(name='ModelicaRes',
-      version=modelicares.__version__,
+      version="0.8.x",
       author='Kevin Davies',
       author_email='kdavies4@gmail.com',
       #credits=['Kevin Bandy', 'Jason Grout', 'Jason Heeris', 'Joerg Raedler'],
@@ -21,7 +19,7 @@ setup(name='ModelicaRes',
       description='Utilities to set up and analyze Modelica simulation experiments',
       long_description=open('README.txt').read(),
       provides=['modelicares'],
-      requires=['python (==2.7)', 'matplotlib', 'numpy', 'wx'],
+      requires=['python (==2.7)', 'scipy', 'matplotlib', 'numpy', 'wx'],
       package_dir={'control': 'external/control/src'},
       keywords=['Modelica', 'Dymola', 'plot', 'matplotlib', 'simulation',
                 'experiment', 'results'],

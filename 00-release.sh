@@ -3,8 +3,8 @@
 #
 # Before running this script:
 # 1.  Finalize the entries in CHANGES.txt.
-# 2.  Update the version number in modelicares/__init__.py and
-#     doc/_templates/download.html.
+# 2.  Update the version number in modelicares/__init__.py,
+#     doc/_templates/download.html, and setup.py.
 #
 # Afterward running this script:
 # 1.  See that everything is good.
