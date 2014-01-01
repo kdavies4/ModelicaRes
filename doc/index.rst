@@ -92,8 +92,8 @@ math and matrix functions from NumPy_.
 
   **Credits**
 
-  Kevin Bandy to development this package.  Third-party code has been included
-  from:
+  Kevin Bandy and Mike Tiller have provided assistance.  Third-party code has 
+  been included from:
 
   - Jason Grout (`ArrowLine
     <http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html>`_
