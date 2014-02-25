@@ -363,10 +363,10 @@ class SimRes(object):
         try:
             if transposed:
                 for i in range(dsres['dataInfo'].shape[1]):
-                    name = _chars_to_str(dsres['name'][:, i]).rstrip()
+                    name = _chars_to_str(dsres['name'][:, i]).encode('latin-1').rstrip()
                     data_set, sign_ind = dsres['dataInfo'][0:2, i]
-                    description, unit, displayUnit = _parse_description(str(
-                        _chars_to_str(dsres['description'][:, i])).rstrip())
+                    description, unit, displayUnit = _parse_description(
+                        _chars_to_str(dsres['description'][:, i]).encode('latin-1').rstrip())
                     if data_set == 1 or not constants_only:
                         self._traj[name] = TrajEntry(data_set=data_set-1,
                                                      sign=np.sign(sign_ind),
@@ -382,10 +382,10 @@ class SimRes(object):
                                   for i in range(n_data_sets)]
             else:
                 for i in range(dsres['dataInfo'].shape[0]):
-                    name = _chars_to_str(dsres['name'][i, :]).rstrip()
+                    name = _chars_to_str(dsres['name'][i, :]).encode('latin-1').rstrip()
                     data_set, sign_ind = dsres['dataInfo'][i, 0:2]
-                    description, unit, displayUnit = _parse_description(str(
-                        _chars_to_str(dsres['description'][i, :])).rstrip())
+                    description, unit, displayUnit = _parse_description(
+                        _chars_to_str(dsres['description'][i, :]).encode('latin-1').rstrip())
                     if data_set == 1 or not constants_only:
                         self._traj[name] = TrajEntry(data_set=data_set-1,
                                                      sign=np.sign(sign_ind),
