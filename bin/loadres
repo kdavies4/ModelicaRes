@@ -13,6 +13,9 @@ classes and functions of ModelicaRes are directly available as well.
 
 **Example:**
 
+To begin this example, copy this script (**loadres**) to the current directory 
+along with the **examples** folder.  
+
 .. code-block:: sh
 
    $ loadres examples
