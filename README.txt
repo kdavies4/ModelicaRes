@@ -90,4 +90,4 @@ The following `Python`_ projects are related:
 .. _BuildingsPy: http://simulationresearch.lbl.gov/modelica/buildingspy/
 .. _DyMat: http://www.j-raedler.de/projects/dymat/
 .. _PyFMI: https://pypi.python.org/pypi/PyFMI
-.. _pysimulator: https://code.google.com/p/pysimulator/
+.. _PySimulator: https://github.com/PySimulator/PySimulator
