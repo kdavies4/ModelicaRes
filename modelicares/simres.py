@@ -1013,7 +1013,7 @@ class SimRes(object):
            >>> sim.plot(ynames1='L.i', ylabel1="Current",
            ...          ynames2='L.der(i)', ylabel2="Derivative of current",
            ...          title="Chua Circuit", label='examples/ChuaCircuit') # doctest: +ELLIPSIS
-           (<matplotlib.axes._subplots.AxesSubplot object at 0x...>, <matplotlib.axes._subplots.AxesSubplot object at 0x...>)
+           (<matplotlib.axes.AxesSubplot object at 0x...>, <matplotlib.axes.AxesSubplot object at 0x...>)
 
            >>> save()
            Saved examples/ChuaCircuit.pdf
