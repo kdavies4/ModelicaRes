@@ -1266,10 +1266,10 @@ class SimRes(object):
                 elif time == stop_time:
                     subtitles[i] += " (final)"
         axes = base.setup_subplots(n_plots=n_plots, n_rows=n_rows,
-           title=title, subtitles=subtitles, label=label,
-           margin_left=margin_left, margin_right=margin_right,
-           margin_bottom=margin_bottom, margin_top=margin_top,
-           wspace=wspace, hspace=hspace)[0]
+            title=title, subtitles=subtitles, label=label,
+            margin_left=margin_left, margin_right=margin_right,
+            margin_bottom=margin_bottom, margin_top=margin_top,
+            wspace=wspace, hspace=hspace)[0]
 
         # Create the plots.
         sankeys = []
