@@ -41,8 +41,11 @@ http://matplotlib.org/users/customizing.html for details.
 Credits
 ~~~~~~~
 
-The main author is Kevin Davies.  Kevin Bandy and Mike Tiller have provided 
-assistance.  Third-party code has been included from:
+The main author is Kevin Davies.  Improvements and bug fixes have been provided 
+by Arnout Aertgeerts, Kevin Bandy, Thomas Beutlich, Martin Sjölund, and Mike 
+Tiller.  
+
+Third-party code has been included from:
 
 - Jason Grout (`ArrowLine
   <http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html>`_
