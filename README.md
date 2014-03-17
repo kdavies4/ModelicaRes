@@ -75,7 +75,7 @@ The following [Python] projects are related:
   [Network Common Data Form (netCDF)](http://www.unidata.ucar.edu/software/netcdf/)
 - [PyFMI]\: tools to work with models through the Functional Mock-Up Interface
   (FMI) standard
-- [pysimulator]\: elaborate GUI; supports the FMI
+- [PySimulator]\: elaborate GUI; supports the FMI
 
 
 [main project site]: http://kdavies4.github.io/ModelicaRes/
@@ -88,4 +88,4 @@ The following [Python] projects are related:
 [BuildingsPy]: http://simulationresearch.lbl.gov/modelica/buildingspy/
 [DyMat]: http://www.j-raedler.de/projects/dymat/
 [PyFMI]: https://pypi.python.org/pypi/PyFMI
-[pysimulator]: https://code.google.com/p/pysimulator/
+[PySimulator]: https://github.com/PySimulator/PySimulator
