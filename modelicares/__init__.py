@@ -35,7 +35,7 @@ __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
 __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
-__version__ = "0.8.2"
+__version__ = "0.9.0"
 
 
 import sys
@@ -43,8 +43,8 @@ import sys
 
 # Check the Python version.
 major, minor1, minor2, s, tmp = sys.version_info
-if not (major == 2 and minor1 == 7):
-    raise ImportError('Currently, modelicares requires Python 2.7.')
+#if not (major == 2 and minor1 == 7):
+#    raise ImportError('Currently, modelicares requires Python 2.7.')
 # TODO:  Add support for Python 3.x once wx supports it.
 
 

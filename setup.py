@@ -8,7 +8,7 @@ from distutils.core import setup
 from glob import glob
 
 setup(name='ModelicaRes',
-      version="0.8.2",
+      version="0.9.0",
       author='Kevin Davies',
       author_email='kdavies4@gmail.com',
       #credits=['Kevin Bandy', 'Jason Grout', 'Jason Heeris', 'Joerg Raedler'],

@@ -6,7 +6,7 @@
 # 2.  Update the version number in modelicares/__init__.py,
 #     doc/_templates/download.html, and setup.py.
 #
-# Afterward running this script:
+# After running this script:
 # 1.  See that everything is good.
 # 2.  Rebase the gh-pages branch to squash extra commits.  Push it to origin
 #     (git push origin gh-pages).

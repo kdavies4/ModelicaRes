@@ -166,7 +166,7 @@ def multiplot(sims, suffixes='', color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
        ...           suffixes=['L.L = %.0f H' % sim.get_IV('L.L')
        ...                     for sim in sims], # Read legend parameters.
        ...           ynames1='L.i', ylabel1="Current") # doctest: +ELLIPSIS
-       (<matplotlib.axes.AxesSubplot object at 0x...>, None)
+       (<matplotlib.axes...AxesSubplot object at 0x...>, None)
 
        >>> save()
        Saved examples/ChuaCircuits.pdf
@@ -294,7 +294,7 @@ def multibode(lins, axes=None, pair=(0, 0), label='bode', title="Bode Plot",
        ...           title="Bode Plot of Modelica.Blocks.Continuous.PID",
        ...           label='examples/PIDs-bode', omega=2*pi*logspace(-2, 3),
        ...           labels=labels, leg_kwargs=dict(loc='lower right')) # doctest: +ELLIPSIS
-       (<matplotlib.axes.AxesSubplot object at 0x...>, <matplotlib.axes.AxesSubplot object at 0x...>)
+       (<matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>)
 
        >>> save()
        Saved examples/PIDs-bode.pdf
@@ -439,7 +439,7 @@ def multinyquist(lins, ax=None, pair=(0, 0), label='nyquist',
        ...              label='examples/PIDs-nyquist', textFreq=True,
        ...              omega=2*pi*logspace(-1, 3, 81), labelFreq=20,
        ...              labels=labels) # doctest: +ELLIPSIS
-       <matplotlib.axes.AxesSubplot object at 0x...>
+       <matplotlib.axes...AxesSubplot object at 0x...>
 
        >>> save()
        Saved examples/PIDs-nyquist.pdf

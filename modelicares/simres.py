@@ -1013,7 +1013,7 @@ class SimRes(object):
            >>> sim.plot(ynames1='L.i', ylabel1="Current",
            ...          ynames2='L.der(i)', ylabel2="Derivative of current",
            ...          title="Chua Circuit", label='examples/ChuaCircuit') # doctest: +ELLIPSIS
-           (<matplotlib.axes.AxesSubplot object at 0x...>, <matplotlib.axes.AxesSubplot object at 0x...>)
+           (<matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>)
 
            >>> save()
            Saved examples/ChuaCircuit.pdf
@@ -1044,10 +1044,10 @@ class SimRes(object):
                     # If the descriptions are the same, label the y axis with
                     # the 1st one.
                     ylabel = descriptions[0]
-                    if len(set(descriptions)) <> 1:
-	                    print("The y-axis variable descriptions are not all "
-	                          "the same.  The first has been used.  Please "
-	                          "provide the proper name via ylabel1 or ylabel2.")
+                    if len(set(descriptions)) != 1:
+                        print("The y-axis variable descriptions are not all "
+                              "the same.  The first has been used.  Please "
+                              "provide the proper name via ylabel1 or ylabel2.")
                 if legends == []:
                     legends = ynames
                 if incl_prefix:
@@ -1059,7 +1059,7 @@ class SimRes(object):
                 units = self.get_unit(ynames)
                 if len(set(units)) == 1:
                     # The  units are the same, so show the 1st one on the axis.
-                    if ylabel <> "":
+                    if ylabel != "":
                         ylabel = label_number(ylabel, units[0])
                 else:
                     # Show the units in the legend.
@@ -1091,7 +1091,7 @@ class SimRes(object):
             xlabel = 'Time' if xname == 'Time' else self.get_description(xname)
             # With Dymola 7.4, the description of the time variable will be
             # "Time in", which isn't good.
-        if xlabel <> "":
+        if xlabel != "":
             xlabel = label_number(xlabel, self.get_unit(xname))
 
         # Generate the y-axis labels and sets of legend entries.

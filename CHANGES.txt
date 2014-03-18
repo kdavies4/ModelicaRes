@@ -1,6 +1,23 @@
 Changelog
 =========
 
+0.9.0 (2014-3-17) -- Updates:
+
+   - Improved support for IPython.
+   - Added dependence on easygui.
+   - Removed spaces in fahrenheit and celsius.
+   - Improved write_params() and read_params(): 
+        1. More flexible wrt whitespace
+        2. Now accepts square brackets in parameter name, 3)
+   - Changed string encoding to 'latin-1' per arnoutaertgeerts.
+   - Updated links to PySimulator per tbeu.
+   - Updated the credits.
+   - Added doc/_images per tbeu.
+   - Narrower margins in HTML documentation.
+   - Explained setup in the documentation of the loadres example.
+   - Updated expected example output.
+   - Updated matplotlibrc.
+
 0.8.2 (2013-10-16) -- Updates:
 
    - Fixed installation issues (:mod:`setup.py`).
