@@ -363,7 +363,7 @@ class SimRes(object):
         try:
             if transposed:
                 for i in range(dsres['dataInfo'].shape[1]):
-                    name = _chars_to_str(dsres['name'][:, i]).rstrip()
+                    name = _chars_to_str(dsres['name'][:, i]).encode('latin-1').rstrip()
                     data_set, sign_ind = dsres['dataInfo'][0:2, i]
                     description, unit, displayUnit = _parse_description(
                         _chars_to_str(dsres['description'][:, i]).encode('latin-1').rstrip())
