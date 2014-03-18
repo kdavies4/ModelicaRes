@@ -55,7 +55,7 @@ Third-party code has been included from:
   ([efficient base-10 logarithm](http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html)),
 - Richard Murray
   ([python-control](http://sourceforge.net/apps/mediawiki/python-control)), and
-- Joerg Raedler (method to expand a [Modelica] variable tree - from [DyMat])
+- Joerg Raedler (method to expand a [Modelica] variable tree---from [DyMat])
 
 ### License terms and development
 

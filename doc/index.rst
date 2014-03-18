@@ -76,7 +76,7 @@ math and matrix functions from NumPy_.
 
   An installable copy of this package can be downloaded from the `main site
   <http://kdavies4.github.io/ModelicaRes/>`_ or the `PyPI page`_.  After
-  extracting the package, run the set-up script (:doc:`setup.py`) from the base
+  extracting the package, run the set-up script (`setup.py <../setup.py>`_) from the base
   folder.  On Windows, use the following command::
 
      python setup.py install
@@ -105,15 +105,15 @@ math and matrix functions from NumPy_.
     <http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html>`_),
   - Richard Murray (`python-control
     <http://sourceforge.net/apps/mediawiki/python-control>`_), and
-  - Joerg Raedler (method to expand a `Modelica`_ variable tree - from
+  - Joerg Raedler (method to expand a `Modelica`_ variable tree---from
     `DyMat`_).
 
   **License terms and development**
 
   ModelicaRes_ is published under the terms of the BSD license (see
-  :doc:`LICENSE.txt`).  Please share any modifications you make (preferably on a
-  Github fork from https://github.com/kdavies4/ModelicaRes) so that others may
-  benefit from your work.  If you find a bug, please `report it
+  `LICENSE.txt <../LICENSE.txt>`_).  Please share any modifications you make 
+  (preferably on a Github fork from https://github.com/kdavies4/ModelicaRes) so 
+  that others may benefit from your work.  If you find a bug, please `report it
   <https://github.com/kdavies4/ModelicaRes/issues/new>`_.  If you have
   suggestions for improvements, please `share them here
   <https://github.com/kdavies4/ModelicaRes/wiki/Possible-Enhancements>`_.
@@ -186,7 +186,7 @@ math and matrix functions from NumPy_.
   <http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html>`_),
   Richard Murray (`python-control
   <http://sourceforge.net/apps/mediawiki/python-control>`_), and Joerg Raedler
-  (method to expand a Modelica_ variable tree - from `DyMat
+  (method to expand a Modelica_ variable tree---from `DyMat
   <http://www.j-raedler.de/projects/dymat/>`_).
 
   **License terms and development**
@@ -210,7 +210,7 @@ math and matrix functions from NumPy_.
     Data Form (netCDF) <http://www.unidata.ucar.edu/software/netcdf/>`_
   - `PyFMI`_: tools to work with models through the Functional Mock-Up Interface
     (FMI) standard
-  - `pysimulator`_: elaborate GUI; supports FMI
+  - `PySimulator`_: elaborate GUI; supports FMI
 
 .. _Modelica: http://www.modelica.org/
 .. _Python: http://www.python.org/
@@ -222,4 +222,4 @@ math and matrix functions from NumPy_.
 .. _BuildingsPy: http://simulationresearch.lbl.gov/modelica/buildingspy/
 .. _DyMat: http://www.j-raedler.de/projects/dymat/
 .. _PyFMI: https://pypi.python.org/pypi/PyFMI
-.. _pysimulator: https://code.google.com/p/pysimulator/
+.. _PySimulator: https://github.com/PySimulator/PySimulator

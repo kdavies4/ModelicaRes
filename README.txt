@@ -5,10 +5,10 @@
 `ModelicaRes`_ is a free, open-source tool to manage `Modelica`_ simulations,
 interpret results, and create publishable figures. It is currently possible to
 
--  Auto-generate simulation scripts,
--  Browse data,
--  Perform custom calculations, and
--  Produce various plots and diagrams.
+- Auto-generate simulation scripts,
+- Browse data,
+- Perform custom calculations, and
+- Produce various plots and diagrams.
 
 The figures are generated via `matplotlib`_, which offers a rich set of plotting
 routines.  `ModelicaRes`_ includes convenient functions to automatically
@@ -54,7 +54,7 @@ Third-party code has been included from:
   <http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html>`_),
 - Richard Murray (`python-control
   <http://sourceforge.net/apps/mediawiki/python-control>`_), and
-- Joerg Raedler (method to expand a `Modelica`_ variable tree - from `DyMat`_).
+- Joerg Raedler (method to expand a `Modelica`_ variable tree---from `DyMat`_).
 
 License terms and development
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
