@@ -22,8 +22,8 @@
 # 7.  Upload the release to PyPI (./setup.py sdist upload).
 # 8.  Push everything to github (git push --tags origin master;
 #     git push origin development).
-# 9.  Replace the version number in modelicares/__init__.py with x's as
-#     necessary (for the next version).
+# 9.  Replace the version number in modelicares/__init__.py and setup.py with 
+#     x's necessary (for the next version).
 #
 # Kevin Davies, 7/7/13
 
