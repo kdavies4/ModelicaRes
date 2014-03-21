@@ -14,14 +14,14 @@
 #     it in the base folder of the gh-pages branch and push to origin again
 #     (git push origin gh-pages).  Udpate it in Google Webmaster tools
 #     (https://www.google.com/webmasters/tools/sitemap-list?hl=en&siteUrl=http%3A%2F%2Fkdavies4.github.com%2FFCSys%2F#MAIN_TAB=1&CARD_TAB=-1).
-# 4.  Rebase this development branch to squash extra commits
-#     (git rebase -i origin/development).
-# 5.  Merge this development branch into master (git checkout master;
-#     git merge --squash development).
+# 4.  Rebase this develop branch to squash extra commits
+#     (git rebase -i origin/develop).
+# 5.  Merge this develop branch into master (git checkout master;
+#     git merge --squash develop).
 # 6.  Tag the master branch with the version number (git tag vx.x.x)
 # 7.  Upload the release to PyPI (./setup.py sdist upload).
 # 8.  Push everything to github (git push --tags origin master;
-#     git push origin development).
+#     git push origin develop).
 # 9.  Replace the version number in modelicares/__init__.py and setup.py with 
 #     x's necessary (for the next version).
 #

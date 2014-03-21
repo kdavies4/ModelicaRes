@@ -1,26 +1,13 @@
 # Images
 *.png
 *.pdf
-*.gif
-*.ico
-*.jpg
 
 # Compiled files
 *.pyc
-build
+build/
 
 # Generated files
-/dist
-/external/control/dist
+dist/
 /examples/*/*/*
-/MANIFEST
-*.tar.gz
+MANIFEST
 *.mos
-*.zip
-
-# Backup files
-*.py.bak
-.fuse_hidden*
-
-# Internal links
-/modelicares/examples
