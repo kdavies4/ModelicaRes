@@ -39,7 +39,7 @@ then
 fi
 
 
-## Check for errors in Python code.
+## Check for errors in the Python code.
 ## Based on http://www.sitepoint.com/git-hooks-fun-profit/
 git diff --cached --name-status --diff-filter=ACMR | while read STATUS FILE; do
 if [[ ${FILE: -3} == ".py" ]]; then

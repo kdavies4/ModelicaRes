@@ -32,14 +32,16 @@ class LinRes(object):
 
     This class contains two user-accessible methods:
 
-    - :meth:`bode` - Creates a Bode plot of the system's response
+    - :meth:`bode` - Create a Bode plot of the system's response
 
-    - :meth:`nyquist` - Creates a Nyquist plot of the system's response
+    - :meth:`nyquist` - Create a Nyquist plot of the system's response
     """
 
     def __init__(self, fname='dslin.mat'):
         """On initialization, load and preprocess a linearized Modelica_ model
-        (MATLAB\ :sup:`®` format).  The model is in state space:
+        (MATLAB\ :sup:`®` format).  
+        
+        The model is in state space:
 
         .. code-block:: modelica
 

@@ -82,47 +82,47 @@ class SimRes(object):
 
     This class contains the following user-accessible methods:
 
-    - :meth:`browse` - Launches a variable browser
+    - :meth:`browse` - Launch a variable browser
 
-    - :meth:`get_description` - Returns the description(s) of trajectory
+    - :meth:`get_description` - Return the description(s) of trajectory
       variable(s)
 
-    - :meth:`get_displayUnit` - Returns the Modelica_ *displayUnit* attribute(s)
+    - :meth:`get_displayUnit` - Return the Modelica_ *displayUnit* attribute(s)
       of trajectory variable(s)
 
-    - :meth:`get_indices_wi_times` - Returns the widest index pair(s) for which
+    - :meth:`get_indices_wi_times` - Return the widest index pair(s) for which
       the time of signal(s) is within given limits
 
-    - :meth:`get_IV` - Returns the initial value(s) of variable(s)
+    - :meth:`get_IV` - Return the initial value(s) of variable(s)
 
-    - :meth:`get_FV` - Returns the final value(s) of variable(s)
+    - :meth:`get_FV` - Return the final value(s) of variable(s)
 
-    - :meth:`get_times` - Returns vector(s) of the sample times of variable(s)
+    - :meth:`get_times` - Return vector(s) of the sample times of variable(s)
 
-    - :meth:`get_unit` - Returns the *unit* attribute(s) of trajectory
+    - :meth:`get_unit` - Return the *unit* attribute(s) of trajectory
       variable(s)
 
-    - :meth:`get_values` - Returns vector(s) of the values of the samples of
+    - :meth:`get_values` - Return vector(s) of the values of the samples of
       variable(s)
 
-    - :meth:`get_values_at_times` - Returns vector(s) of the values of the
+    - :meth:`get_values_at_times` - Return vector(s) of the values of the
       samples of variable(s)
 
-    - :meth:`keys` - Returns a list of all variable names
+    - :meth:`keys` - Return a list of all variable names
 
-    - :meth:`names` - Returns a list of all variable names
+    - :meth:`names` - Return a list of all variable names
 
-    - :meth:`variables` - Returns a list of all variable names
+    - :meth:`variables` - Return a list of all variable names
 
-    - :meth:`glob` - Returns a list of variable names that match a pattern
+    - :meth:`glob` - Return a list of variable names that match a pattern
 
-    - :meth:`nametree` - Returns a tree of all variable names with respect to
+    - :meth:`nametree` - Return a tree of all variable names with respect to
       the path names
 
-    - :meth:`plot` - Plots data as points and/or curves in 2D Cartesian
+    - :meth:`plot` - Plot data as points and/or curves in 2D Cartesian
       coordinates
 
-    - :meth:`sankey` - Creates a figure with Sankey diagram(s)
+    - :meth:`sankey` - Create a figure with Sankey diagram(s)
     """
 
     def __init__(self, fname='dsres.mat', constants_only=False):
@@ -1282,7 +1282,7 @@ class SimRes(object):
 
     def __call__(self, names, action=get_values, *args, **kwargs):
         """Upon a call to an instance of :class:`SimRes`, call a method on
-        variable(s) given their name(s)
+        variable(s) given their name(s).
 
         **Arguments**:
 
@@ -1354,7 +1354,7 @@ class SimRes(object):
 
     def __getitem__(self, names):
         """Upon accessing a variable name within an instance of
-        :class:`SimRes`, return its values
+        :class:`SimRes`, return its values.
 
         **Arguments**:
 

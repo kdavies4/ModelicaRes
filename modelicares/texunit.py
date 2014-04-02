@@ -3,13 +3,13 @@
 
 This module contains three main functions:
 
-- :meth:`label_number` - Generates text to label a number as a quantity
+- :meth:`label_number` - Generate text to label a number as a quantity
   expressed in a unit
 
-- :meth:`label_quantity` - Generates text to write a quantity as a number times
+- :meth:`label_quantity` - Generate text to write a quantity as a number times
   a unit
 
-- :meth:`unit2tex` - Converts a Modelica_ unit string to LaTeX_
+- :meth:`unit2tex` - Convert a Modelica_ unit string to LaTeX_
 
 .. _LaTeX: http://www.latex-project.org/
 """
