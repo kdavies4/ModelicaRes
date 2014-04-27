@@ -56,12 +56,11 @@ major, minor1, minor2, s, tmp = sys.version_info
 #
 # These will be available directly from modelicares; others must be loaded from
 # their submodules.
-from base import (add_arrows, add_hlines, add_vlines, animate, ArrowLine,
-                 closeall, figure, load_csv, save, saveall, setup_subplots)
-from exps import (Experiment, gen_experiments, ParamDict, read_params,
-                  run_models, write_params, write_script)
-import exps.doe as doe
-from linres import LinRes
-from multi import multiload, multiplot, multibode, multinyquist
-from simres import SimRes
-from texunit import label_number, label_quantity, unit2tex
+from .base import (add_arrows, add_hlines, add_vlines, animate, ArrowLine, 
+    closeall, figure, load_csv, save, saveall, setup_subplots)
+from .exps import (Experiment, gen_experiments, ParamDict, read_params, 
+    run_models, write_params, write_script, doe)
+from .linres import LinRes
+from .multi import multiload, multiplot, multibode, multinyquist
+from .simres import SimRes
+from .texunit import label_number, label_quantity, unit2tex

@@ -20,7 +20,6 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 
 import os
 import numpy as np
-import modelicares.base as base
 
 from scipy.io import loadmat
 from matplotlib.pyplot import figlegend
@@ -29,8 +28,9 @@ from collections import namedtuple
 from fnmatch import fnmatchcase
 from difflib import get_close_matches
 
-from modelicares.gui import Browser
-from modelicares.texunit import unit2tex, label_number
+from .gui import Browser
+from .texunit import unit2tex, label_number
+from . import base
 
 
 def _chars_to_str(str_arr):

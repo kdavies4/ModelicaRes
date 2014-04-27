@@ -33,7 +33,7 @@
 #backend      : GTKAgg
 #backend      : GTKCairo # KLD 7/21/13: Much, much slower than GTKAgg.
 # KLD 10/9/2012:  Not good:
-backend      : Agg # No onscreen plots
+#backend      : Agg # No onscreen plots
 #backend      : WX # Doesn't seem to support TeX
 #backend      : WXAgg # Errors
 #backend      : FltkAgg # Fails
@@ -43,7 +43,7 @@ backend      : Agg # No onscreen plots
 #backend      : PDF # No onscreen plots
 #backend      : SVG # No onscreen plots
 #backend      : Template # No onscreen plots
-#backend      : Qt4Agg # Fails
+backend      : Qt4Agg # Fails
 #backend      : CocoaAgg # Fails
 #backend      : TkAgg # Looks bad
 #backend      : GTK # Looks bad

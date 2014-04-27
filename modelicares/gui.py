@@ -14,7 +14,7 @@ from matplotlib import rcParams
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from modelicares.texunit import unit2tex
+from .texunit import unit2tex
 
 
 class PreviewPanel(wx.Panel):

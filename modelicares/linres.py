@@ -17,14 +17,13 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import numpy as np
 
-import modelicares.base as base
 
 from scipy.io import loadmat
 from matplotlib.cbook import iterable
 
 from control.matlab import ss
 from control.freqplot import bode, nyquist
-
+from .base import figure, add_hlines, add_vlines
 
 class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze
@@ -283,7 +282,7 @@ class LinRes(object):
         """
         # Create axes if necessary.
         if axes is None or (None, None):
-            fig = base.figure(label)
+            fig = figure(label)
             axes = (fig.add_subplot(211), fig.add_subplot(212))
 
         # Create a title if necessary.
@@ -412,7 +411,7 @@ class LinRes(object):
         """
         # Create axes if necessary.
         if not ax:
-            fig = base.figure(label)
+            fig = figure(label)
             ax = fig.add_subplot(111, aspect='equal')
 
         # Create a title if necessary.
@@ -444,8 +443,8 @@ class LinRes(object):
         # Decorate and finish.
         if len(pairs) > 1:
             ax.legend()
-        base.add_hlines(ax, color='k', linestyle='--', linewidth=0.5)
-        base.add_vlines(ax, color='k', linestyle='--', linewidth=0.5)
+        add_hlines(ax, color='k', linestyle='--', linewidth=0.5)
+        add_vlines(ax, color='k', linestyle='--', linewidth=0.5)
         ax.set_title(title)
         if xlabel: # Without this check, xlabel=None will give a label of "None".
             ax.set_xlabel(xlabel)

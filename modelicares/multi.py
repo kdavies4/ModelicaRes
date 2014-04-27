@@ -33,9 +33,9 @@ from matplotlib.cbook import iterable
 from itertools import cycle
 
 from control.freqplot import bode, nyquist
-from linres import LinRes
-from simres import SimRes
-from base import figure, add_hlines, add_vlines
+from .linres import LinRes
+from .simres import SimRes
+from .base import figure, add_hlines, add_vlines
 
 
 def multiload(locations='*'):
