@@ -23,7 +23,7 @@ from matplotlib.cbook import iterable
 
 from control.matlab import ss
 from control.freqplot import bode, nyquist
-from .base import figure, add_hlines, add_vlines
+from modelicares.base import figure, add_hlines, add_vlines
 
 class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze

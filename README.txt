@@ -41,9 +41,9 @@ http://matplotlib.org/users/customizing.html for details.
 Credits
 ~~~~~~~
 
-The main author is Kevin Davies.  Improvements and bug fixes have been provided 
-by Arnout Aertgeerts, Kevin Bandy, Thomas Beutlich, Martin Sjölund, and Mike 
-Tiller.  
+The main author is Kevin Davies.  Improvements, bug fixes, and suggestions have 
+been provided by Arnout Aertgeerts, Kevin Bandy, Thomas Beutlich, 
+Martin Sjölund, Mike Tiller, and Michael Wetter.
 
 Third-party code has been included from:
 

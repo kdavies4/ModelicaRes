@@ -3,6 +3,10 @@ Changelog
 
 0.10.0 (2014-**-**) -- Updates:
 
+   - Added functions to calculate the minimum, maximum, and mean of variables
+     (:meth:`~modelicares.simres.SimRes.get_min`, 
+     :meth:`~modelicares.simres.SimRes.get_max`, and 
+     :meth:`~modelicares.simres.SimRes.get_mean`).
    - Removed :meth:`~modelicares.simres.SimRes.variables`, 
      :meth:`~modelicares.simres.SimRes.variables`, and 
      :meth:`~modelicares.simres.SimRes.glob`.  Use

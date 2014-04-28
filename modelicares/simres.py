@@ -22,15 +22,16 @@ import os
 import numpy as np
 
 from scipy.io import loadmat
+from scipy.integrate import trapz
 from matplotlib.pyplot import figlegend
 from matplotlib import rcParams
 from collections import namedtuple
 from fnmatch import fnmatchcase
 from difflib import get_close_matches
 
-from .gui import Browser
-from .texunit import unit2tex, label_number
-from . import base
+from modelicares.gui import Browser
+from modelicares.texunit import unit2tex, label_number
+from modelicares import base
 
 
 def _chars_to_str(str_arr):
@@ -96,6 +97,12 @@ class SimRes(object):
     - :meth:`get_IV` - Return the initial value(s) of variable(s)
 
     - :meth:`get_FV` - Return the final value(s) of variable(s)
+
+    - :meth:`get_max` - Return the maximum value(s) of variable(s).
+
+    - :meth:`get_mean` - Return the time-averaged value(s) of variable(s).
+
+    - :meth:`get_min` - Return the minimum value(s) of variable(s).
 
     - :meth:`get_times` - Return vector(s) of the sample times of variable(s)
 
@@ -640,9 +647,9 @@ class SimRes(object):
         - *f*: Function that should be applied to the value(s) (default is
           identity)
 
-        If *names* is a string, then the output will be an array of values.  If
+        If *names* is a string, then the output will be a single value.  If
         *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of arrays.
+        be a (nested) list of values.
 
         **Example:**
 
@@ -819,6 +826,91 @@ class SimRes(object):
             return get_values_at(times)
 
         return self._get(names, _get_value_at_times)
+
+    def get_max(self, names, f=lambda x: x):
+        """Return the maximum value(s) of variable(s).
+
+        **Arguments:**
+
+        - *names*: String or (possibly nested) list of strings of variable
+          names
+
+        - *f*: Function that should be applied before taking the maximum 
+          (default is identity)
+
+        If *names* is a string, then the output will be a single value.  If
+        *names* is a (optionally nested) list of strings, then the output will
+        be a (nested) list of values.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim.get_max('L.v')
+           0.77344114
+        """
+        return self.get_values(names, f=lambda x: max(f(x)))
+
+    def get_mean(self, names, f=lambda x: x):
+        """Return the time-averaged value(s) of variable(s).
+
+        **Arguments:**
+
+        - *names*: String or (possibly nested) list of strings of variable
+          names
+
+        - *f*: Function that should be applied before taking the mean (default 
+          is identity)
+
+        If *names* is a string, then the output will be a single value.  If
+        *names* is a (optionally nested) list of strings, then the output will
+        be a (nested) list of values.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim.get_mean('L.v')
+           0.014733823
+        """
+        integral = lambda name: trapz(self.get_values(name, f=f), 
+                                      self.get_times(name))
+        Deltat = lambda name: self.get_times(name, -1) - self.get_times(name, 0)
+        mean = lambda name: integral(name)/Deltat(name)
+        return self._get(names, mean)
+
+    def get_min(self, names, f=lambda x: x):
+        """Return the minimum value(s) of variable(s).
+
+        **Arguments:**
+
+        - *names*: String or (possibly nested) list of strings of variable
+          names
+
+        - *f*: Function that should be applied before taking the minimum 
+          (default is identity)
+
+        If *names* is a string, then the output will be a single value.  If
+        *names* is a (optionally nested) list of strings, then the output will
+        be a (nested) list of values.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim.get_min('L.v')
+           -0.9450165
+        """
+        return self.get_values(names, f=lambda x: min(f(x)))
 
     def names(self, pattern='*'):
         """Return a list of variable names that match *pattern*.
@@ -1391,6 +1483,12 @@ class Info:
     """Alias for :meth:`SimRes.get_IV`"""
     FV = SimRes.get_FV
     """Alias for :meth:`SimRes.get_FV`"""
+    max = SimRes.get_max
+    """Alias for :meth:`SimRes.get_max`"""
+    mean = SimRes.get_mean
+    """Alias for :meth:`SimRes.get_mean`"""
+    min = SimRes.get_min
+    """Alias for :meth:`SimRes.get_min`"""
     times = SimRes.get_times
     """Alias for :meth:`SimRes.get_times`"""
     unit = SimRes.get_unit

@@ -4,11 +4,11 @@
 # Kevin Davies, 7/10/13
 
 # Run the doc tests and recreate the example images.
-./modelicares/__init__.py
-./modelicares/base.py
-./modelicares/exps/__init__.py
+python modelicares/__init__.py
+python modelicares/base.py
+python modelicares/exps/__init__.py
 python -m modelicares.exps.doe
-./modelicares/linres.py
-./modelicares/multi.py
-./modelicares/simres.py
-./modelicares/texunit.py
+python modelicares/linres.py
+python modelicares/multi.py
+python modelicares/simres.py
+python modelicares/texunit.py
