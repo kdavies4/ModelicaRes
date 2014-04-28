@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.10.0 (2014-**-**) -- Updates:
+
+   - Merged the pattern-matching functionality of 
+     :meth:`~modelicares.simres.SimRes.glob` into 
+     :meth:`~modelicares.simres.SimRes.names`.  By default, 
+     :meth:`~modelicares.simres.SimRes.names` still returns all variable names.
+
 0.9.0 (2014-3-17) -- Updates:
 
    - Improved support for `IPython <http://ipython.org/>`_.

@@ -110,7 +110,7 @@ class SimRes(object):
 
     - :meth:`keys` - Return a list of all variable names
 
-    - :meth:`names` - Return a list of all variable names
+    - :meth:`names` - Return a list of variable names that match a pattern
 
     - :meth:`variables` - Return a list of all variable names
 
@@ -470,8 +470,8 @@ class SimRes(object):
              This may be a string or (possibly nested) list of strings
              representing the names of the variables.
 
-        - *attr*: Method to retrieve the attribute from *self._traj* given the
-          name of a single variable
+        - *attr*: Method to retrieve the attribute given the name of a single 
+          variable
 
              E.g., for the *unit* attribute:
              ``attr = lambda name: self._traj[name].unit``
@@ -779,8 +779,8 @@ class SimRes(object):
         return self._get(names, lambda name: _get_value(self._traj[name]))
 
     def get_values_at_times(self, names, times, f=lambda x: x):
-        """Return vector(s) of the values of the samples of variable(s) (at
-        optionally given times).
+        """Return vector(s) of the values of the samples of variable(s) at
+        given times.
 
         **Arguments:**
 
@@ -840,19 +840,33 @@ class SimRes(object):
         """
         return self._traj.keys()
 
-    def names(self):
-        """Return a list of all variable names.
+    def names(self, pattern='*'):
+        """Return a list of variable names that match *pattern*.
 
-        This is the same as :meth:`keys` and :meth:`variables`.
+        All names are returned by default.  The pattern is case-sensitive and 
+        follows the Unix shell style:
+
+        ============   ============================
+        Character(s)   Role
+        ============   ============================
+        *              Matches everything
+        ?              Matches any single character
+        [seq]          Matches any character in seq
+        [!seq]         Matches any char not in seq
+        ============   ============================
 
         **Example:**
 
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.names()  # doctest: +ELLIPSIS
-           [u'L.p.i', u'Ro.alpha', ... u'Ro.LossPower']
+           >>> sim.names('L.p*')  # doctest: +ELLIPSIS
+           [u'L.p.i', u'L.p.v']
         """
-        return self._traj.keys()
+        if pattern == '*':
+            return self._traj.keys() # Shortcut
+        else:
+            return [key for key in self._traj.keys() 
+                    if fnmatchcase(key, pattern)]
 
     def variables(self):
         """Return a list of all variable names.
