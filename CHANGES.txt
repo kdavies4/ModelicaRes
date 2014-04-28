@@ -3,6 +3,10 @@ Changelog
 
 0.10.0 (2014-**-**) -- Updates:
 
+   - Removed :meth:`~modelicares.simres.SimRes.variables`, 
+     :meth:`~modelicares.simres.SimRes.variables`, and 
+     :meth:`~modelicares.simres.SimRes.glob`.  Use
+     :meth:`~modelicares.simres.SimRes.names` instead.
    - Merged the pattern-matching functionality of 
      :meth:`~modelicares.simres.SimRes.glob` into 
      :meth:`~modelicares.simres.SimRes.names`.  By default, 

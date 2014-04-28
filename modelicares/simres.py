@@ -108,13 +108,7 @@ class SimRes(object):
     - :meth:`get_values_at_times` - Return vector(s) of the values of the
       samples of variable(s)
 
-    - :meth:`keys` - Return a list of all variable names
-
     - :meth:`names` - Return a list of variable names that match a pattern
-
-    - :meth:`variables` - Return a list of all variable names
-
-    - :meth:`glob` - Return a list of variable names that match a pattern
 
     - :meth:`nametree` - Return a tree of all variable names with respect to
       the path names
@@ -826,20 +820,6 @@ class SimRes(object):
 
         return self._get(names, _get_value_at_times)
 
-    def keys(self):
-        """Return a list of all variable names.
-
-        This is the same as :meth:`names` and :meth:`variables`.
-
-        **Example:**
-
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.keys()  # doctest: +ELLIPSIS
-           [u'L.p.i', u'Ro.alpha', ... u'Ro.LossPower']
-        """
-        return self._traj.keys()
-
     def names(self, pattern='*'):
         """Return a list of variable names that match *pattern*.
 
@@ -867,45 +847,6 @@ class SimRes(object):
         else:
             return [key for key in self._traj.keys() 
                     if fnmatchcase(key, pattern)]
-
-    def variables(self):
-        """Return a list of all variable names.
-
-        This is the same as :meth:`keys` and :meth:`names`.
-
-        **Example:**
-
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.variables()  # doctest: +ELLIPSIS
-           [u'L.p.i', u'Ro.alpha', ... u'Ro.LossPower']
-        """
-        return self._traj.keys()
-
-    def glob(self, pattern):
-        """Return a list of variable names that match *pattern*.
-
-        Patterns are Unix shell style:
-
-        ============   ============================
-        Character(s)   Role
-        ============   ============================
-        *              Matches everything
-        ?              Matches any single character
-        [seq]          Matches any character in seq
-        [!seq]         Matches any char not in seq
-        ============   ============================
-
-        The matches are case-sensitive.
-
-        **Example:**
-
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.glob('L.p*')  # doctest: +ELLIPSIS
-           [u'L.p.i', u'L.p.v']
-        """
-        return [key for key in self._traj.keys() if fnmatchcase(key, pattern)]
 
     def nametree(self):
         """Return a tree of all variable names with respect to the path names.
