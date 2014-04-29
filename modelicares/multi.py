@@ -3,8 +3,6 @@
 """Functions to load and plot data from multiple simulation and linearization
 files at once
 
-This module contains four functions:
-
 - :meth:`multiload` - Load multiple Modelica_ simulation and/or linearization
   results
 
@@ -15,6 +13,7 @@ This module contains four functions:
 
 - :meth:`multinyquist` - Plot multiple linearizations onto a single Nyquist
   diagram
+
 
 .. _Modelica: http://www.modelica.org/
 """

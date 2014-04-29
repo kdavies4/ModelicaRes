@@ -1,14 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Basic methods to help plot and interpret experimental data
+"""Classes and functions to help plot and interpret experimental data
 
-This module contains the following classes:
+
+**Classes:**
 
 - :class:`ArrowLine` - A matplotlib subclass to draw an arrowhead on a line
 
 - :class:`Quantity` - Named tuple class for a constant physical quantity
 
-and the following functions:
+
+**Functions:**
 
 - :meth:`add_arrows` - Overlay arrows with annotations on top of a pre-plotted
   line

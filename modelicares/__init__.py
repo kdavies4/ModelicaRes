@@ -11,7 +11,7 @@ from its submodules.  These are:
   :meth:`~base.saveall`, and :meth:`~base.setup_subplots`
 
 - To manage simulation experiments (:mod:`~modelicares.exps` module):
-  :class:`~exps.Experiment`, :mod:`~exps.doe`, :meth:`~exps.gen_experiments`,
+  :class:`~exps.Experiment`, :mod:`~modelicares.exps.doe`, :meth:`~exps.gen_experiments`,
   :class:`~exps.ParamDict`, :meth:`~exps.read_params`, :meth:`~exps.run_models`,
   :meth:`~exps.write_params`, and :meth:`~exps.write_script`
 

@@ -23,18 +23,20 @@ Changelog
    - Removed spaces in fahrenheit and celsius.
    - Improved :meth:`~modelicares.exps.write_params` and 
      :meth:`~modelicares.exps.read_params`: 
+
         1. More flexible with respect to whitespace
         2. Now accepts square brackets in parameter name
+
    - Changed MATLAB® file string encoding to 'latin-1' per 
      `arnoutaertgeerts <https://github.com/arnoutaertgeerts>`_.
    - Updated links to `PySimulator <https://github.com/PySimulator/PySimulator>`_ 
      per `tbeu <https://github.com/tbeu>`_.
    - Updated the credits.
-   - Added **doc/_images** per tbeu_.
+   - Added *doc/_images* per tbeu_.
    - Narrowed the margins in HTML documentation.
    - Explained setup in the :mod:`loadres` example.
    - Updated expected example output.
-   - Updated **matplotlibrc**.
+   - Updated *matplotlibrc*.
 
 0.8.2 (2013-10-16) -- Updates:
 
@@ -126,7 +128,7 @@ Changelog
    - Added *use_paren* option to :meth:`~modelicares.simres.SimRes.plot`.
    - Changed :meth:`~modelicares.exps.write_script` to put results in folders
      instead of special renaming scheme.
-   - Improved organization of the **examples** folder.
+   - Improved organization of the *examples* folder.
 
 0.5.2 (2013-6-30) -- Updates:
 

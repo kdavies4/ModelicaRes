@@ -1,13 +1,21 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Load, analyze, and plot results from Modelica_ simulations.
+"""Classes and functions to Load, analyze, and plot results from Modelica_ 
+simulations
 
-This module contains two classes:
+
+**Classes:**
 
 - :class:`SimRes` - Class to load and analyze results from a Modelica_-based
   simulation
 
 - :class:`Info` - Shortcuts to the "get" methods in :class:`SimRes`
+
+
+**Functions:**
+
+- :meth:`merge_times` - Merge a list of multiple time vectors into one vector
+
 
 .. _Modelica: http://www.modelica.org/
 """
@@ -81,7 +89,7 @@ def merge_times(times_list):
 class SimRes(object):
     """Class to load and analyze results from a Modelica_-based simulation
 
-    This class contains the following user-accessible methods:
+    This class contains the following methods:
 
     - :meth:`browse` - Launch a variable browser
 
@@ -98,11 +106,11 @@ class SimRes(object):
 
     - :meth:`get_FV` - Return the final value(s) of variable(s)
 
-    - :meth:`get_max` - Return the maximum value(s) of variable(s).
+    - :meth:`get_max` - Return the maximum value(s) of variable(s)
 
-    - :meth:`get_mean` - Return the time-averaged value(s) of variable(s).
+    - :meth:`get_mean` - Return the time-averaged value(s) of variable(s)
 
-    - :meth:`get_min` - Return the minimum value(s) of variable(s).
+    - :meth:`get_min` - Return the minimum value(s) of variable(s)
 
     - :meth:`get_times` - Return vector(s) of the sample times of variable(s)
 
@@ -1471,7 +1479,17 @@ class SimRes(object):
 
 
 class Info:
-    """Shortcuts to the "get" methods in :class:`SimRes`
+    """Aliases for the "get" methods in :class:`SimRes`
+
+    **Example:**
+
+    .. code-block:: python
+
+       >>> from modelicares.simres import SimRes, Info
+
+       >>> sim = SimRes('examples/ChuaCircuit.mat')
+       >>> Info.FV(sim, 'L.v')
+       -0.25352862
     """
     description = SimRes.get_description
     """Alias for :meth:`SimRes.get_description`"""

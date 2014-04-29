@@ -2,7 +2,7 @@ ModelicaRes
 -----------
 
 [ModelicaRes] is a free, open-source tool to manage [Modelica] simulations,
-interpret results, and create publishable figures.  It is currently possible to
+interpret results, and create publishable figures.  It is possible to
 
 - Auto-generate simulation scripts,
 - Browse data,
@@ -23,21 +23,30 @@ folder for the full documentation and many examples.
 
 ### Installation
 
-An installable copy of this package can be downloaded from the
-[main project site] or the
-[PyPI page](http://pypi.python.org/pypi/ModelicaRes).  After extracting the
-package, run the set up script ([setup.py](setup.py)) from the base folder.  On
-Windows, use the following command:
+The easiest way to install this package is to use 
+[pip](https://pypi.python.org/pypi/pip):
+
+    pip install modelicares
+
+On Linux, it may be necessary to have root privileges:
+
+    sudo pip install modelicares
+
+Another way is to download and extract a copy of the package from the 
+[main project site], the 
+[master branch at GitHub](https://github.com/kdavies4/ModelicaRes), or the
+[PyPI page](http://pypi.python.org/pypi/ModelicaRes).  Run the following command 
+from the base folder:
 
     python setup.py install
 
-On Linux, use:
+Or, on Linux:
 
     sudo python setup.py install
 
-The [matplotlibrc](bin/matplotlibrc) file has some recommended revisions to
-[matplotlib]'s defaults.  To use it, move or copy the file to the working
-directory or [matplotlib]'s configuration directory.  See
+The [matplotlibrc](matplotlibrc) file has some recommended revisions to
+[matplotlib]'s defaults.  To use it, move or copy it to the working directory or 
+[matplotlib]'s configuration directory.  See
 http://matplotlib.org/users/customizing.html for details.
 
 ### Credits
@@ -59,13 +68,13 @@ Third-party code has been included from:
 
 ### License terms and development
 
-[ModelicaRes] is published under the terms of the BSD license (see
-[LICENSE.txt](LICENSE.txt)).  Please share any modifications you make
-(preferably on a Github fork from https://github.com/kdavies4/ModelicaRes) so
-that others may benefit from your work.  If you find a bug, please
+[ModelicaRes] is published under a [BSD license](LICENSE.txt).  Please share any 
+modifications you make (preferably on a Github fork from 
+https://github.com/kdavies4/ModelicaRes) in order to help others.  If you find a 
+bug, please
 [report it](https://github.com/kdavies4/ModelicaRes/issues/new).  If you have
-suggestions for improvements, please
-[share them here](https://github.com/kdavies4/ModelicaRes/wiki/Possible-Enhancements).
+suggestions, please
+[share them](https://github.com/kdavies4/ModelicaRes/wiki/Suggestions).
 
 ### See also
 

@@ -23,7 +23,44 @@ piecewise alignment or permutation) and returns a generator to step through the
 experiments.  Finally, the generator is passed to the :meth:`write_script` or
 :meth:`run_models` function (see first paragraph).
 
+
+**Classes:**
+
+- :class:`ParamDict` - Dictionary that prints its items as nested tuple-based
+  modifiers, formatted for Modelica_
+
+- :class:`Experiment` - Named tuple class to represent a simulation experiment
+
+
+**Functions:**
+
+- :meth:`gen_experiments` - Return a generator for a set of simulation 
+  experiments using permutation or simple element-wise grouping
+
+- :meth:`modelica_array` - Convert a NumPy_ array to a Modelica_-formatted 
+  string
+
+- :meth:`modelica_boolean` - Convert a Boolean variable to a Modelica_ string
+
+- :meth:`read_params` - Read parameter values from an initialization or final 
+  values file
+
+- :meth:`run_models` - Run Modelica_ models via pairs of executables and 
+  initialization files (not yet implemented)
+
+- :meth:`write_params` - Write parameter values to a simulation initialization 
+  file
+
+- :meth:`write_script` - Write a Modelica_ script to run simulations
+
+
+**Submodules:**
+
+- :mod:`~modelicares.exps.doe` - Functions for design of experiments (DOE)
+
+
 .. _Modelica: http://www.modelica.org/
+.. _NumPy: http://numpy.scipy.org/
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
@@ -193,7 +230,7 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
               "entries in params and args must be lists.")
 
 def modelica_array(x):
-    """Return a string representing a NumPy_ array in Modelica_ format.
+    """Convert a NumPy_ array to a Modelica_-formatted string.
 
     Square brackets are curled and Booleans are cast to lowercase.
 
@@ -210,8 +247,6 @@ def modelica_array(x):
 
        >>> modelica_array(array([[True, True], [False, False]]))
        '{{true, true}, {false, false}}'
-
-    .. _NumPy: http://numpy.scipy.org/
     """
     assert isinstance(x, np.ndarray), "Only numpy arrays are supported."
     x = str(x)
@@ -224,10 +259,8 @@ def modelica_array(x):
 
 
 def modelica_boolean(x):
-    """Return a string representing an instance of Python's :class:`bool` in
-    Modelica_.
-
-    This is simply 'true' or 'false' (in lowercase).
+    """Convert a Boolean variable (:class:`bool`) to a Modelica_ string ('true'
+    or 'false').
 
     **Example:**
 
@@ -244,7 +277,8 @@ def modelica_boolean(x):
 
 
 def read_params(names, fname='dsin.txt'):
-    """Read parameter values from an initialization or final values file.
+    """Read parameter values from an initialization or final values file (e.g., 
+    dsin.txt or dsfinal.txt).
 
     **Arguments:**
 
@@ -416,7 +450,8 @@ simspecs = [SimSpec(model + "(L(L=%s), C1(C=%s), C2(C=%s))" % params,
 
 
 def write_params(params, fname='dsin.txt'):
-    """Write parameter values to a simulation initialization file.
+    """Write parameter values to a simulation initialization file (e.g., 
+    dsin.txt).
 
     **Arguments:**
 

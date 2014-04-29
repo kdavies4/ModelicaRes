@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -15,7 +13,7 @@
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.9.x',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -63,7 +61,6 @@
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="exps.doe.html"><tt class="docutils literal"><span class="pre">modelicares.exps.doe</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="base.html"><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
 </ul>
@@ -91,6 +88,23 @@
             
   <div class="section" id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
+<p>0.10.0 (2014-<strong>-</strong>) &#8211; Updates:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Added functions to calculate the minimum, maximum, and mean of variables
+(<a class="reference internal" href="simres.html#modelicares.simres.SimRes.get_min" title="modelicares.simres.SimRes.get_min"><tt class="xref py py-meth docutils literal"><span class="pre">get_min()</span></tt></a>,
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.get_max" title="modelicares.simres.SimRes.get_max"><tt class="xref py py-meth docutils literal"><span class="pre">get_max()</span></tt></a>, and
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.get_mean" title="modelicares.simres.SimRes.get_mean"><tt class="xref py py-meth docutils literal"><span class="pre">get_mean()</span></tt></a>).</li>
+<li>Removed <tt class="xref py py-meth docutils literal"><span class="pre">variables()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">variables()</span></tt>, and
+<tt class="xref py py-meth docutils literal"><span class="pre">glob()</span></tt>.  Use
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a> instead.</li>
+<li>Merged the pattern-matching functionality of
+<tt class="xref py py-meth docutils literal"><span class="pre">glob()</span></tt> into
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a>.  By default,
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a> still returns all variable names.</li>
+</ul>
+</div></blockquote>
 <p>0.9.0 (2014-3-17) &#8211; Updates:</p>
 <blockquote>
 <div><ul>
@@ -156,10 +170,10 @@ scaling (e.g., degC, dB).</li>
 <li><a class="reference internal" href="texunit.html#modelicares.texunit.unit2tex" title="modelicares.texunit.unit2tex"><tt class="xref py py-meth docutils literal"><span class="pre">unit2tex()</span></tt></a> now automatically formats some units
 and constants.</li>
 <li>Added <em>color</em> option to <a class="reference internal" href="multi.html#modelicares.multi.multiplot" title="modelicares.multi.multiplot"><tt class="xref py py-meth docutils literal"><span class="pre">multiplot()</span></tt></a>.</li>
-<li>Added <a class="reference internal" href="simres.html#modelicares.simres.SimRes.variables" title="modelicares.simres.SimRes.variables"><tt class="xref py py-meth docutils literal"><span class="pre">variables()</span></tt></a> method to list variable
-names (same as <a class="reference internal" href="simres.html#modelicares.simres.SimRes.keys" title="modelicares.simres.SimRes.keys"><tt class="xref py py-meth docutils literal"><span class="pre">keys()</span></tt></a> and
+<li>Added <tt class="xref py py-meth docutils literal"><span class="pre">variables()</span></tt> method to list variable
+names (same as <tt class="xref py py-meth docutils literal"><span class="pre">keys()</span></tt> and
 <a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a>).</li>
-<li>Added <a class="reference internal" href="simres.html#modelicares.simres.SimRes.glob" title="modelicares.simres.SimRes.glob"><tt class="xref py py-meth docutils literal"><span class="pre">glob()</span></tt></a> to return variables that
+<li>Added <tt class="xref py py-meth docutils literal"><span class="pre">glob()</span></tt> to return variables that
 match a pattern.</li>
 <li>Removed the <tt class="xref py py-mod docutils literal"><span class="pre">simres.info</span></tt> submodule.  It is better to use the methods
 of <a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> directly.</li>
@@ -217,7 +231,7 @@ with translation information.</li>
 <li>Fixed error in <tt class="xref py py-mod docutils literal"><span class="pre">loadres</span></tt> script in loading from a folder.</li>
 <li>Added option to <a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> (<em>constants_only</em>) to
 load only constants.</li>
-<li>Added <a class="reference internal" href="simres.html#modelicares.simres.SimRes.keys" title="modelicares.simres.SimRes.keys"><tt class="xref py py-meth docutils literal"><span class="pre">keys()</span></tt></a> method to list variable names
+<li>Added <tt class="xref py py-meth docutils literal"><span class="pre">keys()</span></tt> method to list variable names
 (same as <a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a>).</li>
 <li>Added methods from <a class="reference internal" href="simres.html#modelicares.simres.Info" title="modelicares.simres.Info"><tt class="xref py py-class docutils literal"><span class="pre">Info</span></tt></a> to <tt class="xref py py-mod docutils literal"><span class="pre">simres.info</span></tt>
 submodule.</li>
@@ -306,8 +320,8 @@ time.</li>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Mar 20, 2014.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Last updated on Apr 29, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

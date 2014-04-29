@@ -15,8 +15,8 @@ classes and functions of ModelicaRes are directly available as well.
 
 **Example:**
 
-To begin this example, copy this script (**loadres**) to the current directory 
-along with the **examples** folder. 
+To begin this example, copy this script (*loadres*) to the current directory 
+along with the *examples* folder. 
 
 .. code-block:: sh
 
@@ -72,9 +72,9 @@ To see all the methods, use
    >>> help(sims[0])
 
 or go to :class:`~modelicares.simres.SimRes`.  To search for variable names, use
-:meth:`~modelicares.simres.SimRes.glob` with wildcards:
+:meth:`~modelicares.simres.SimRes.names` with wildcards:
 
-   >>> sims[0].glob('L.p*')
+   >>> sims[0].names('L.p*')
    [u'L.p.i', u'L.p.v']
 
 Likewise, you can explore the linearization result or create diagrams using the

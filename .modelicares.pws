@@ -72,8 +72,8 @@ sys
 Chua
 dslog
 heatPort
-PyLab
 pylab
+PyLab
 GTRC
 matplotlib
 fahrenheit
@@ -175,13 +175,13 @@ fixedstepsize
 formatter
 outputInterval
 lw
-np
 ok
+np
 Indentification
 WxApp
 sankeyfig
-nx
 os
+nx
 linearized
 getitem
 OnDragInit
