@@ -93,11 +93,10 @@ class SimRes(object):
 
     - :meth:`browse` - Launch a variable browser
 
-    - :meth:`get_description` - Return the description(s) of trajectory
-      variable(s)
+    - :meth:`get_description` - Return the description(s) of variable(s)
 
     - :meth:`get_displayUnit` - Return the Modelica_ *displayUnit* attribute(s)
-      of trajectory variable(s)
+      of variable(s)
 
     - :meth:`get_indices_wi_times` - Return the widest index pair(s) for which
       the time of signal(s) is within given limits
@@ -117,8 +116,7 @@ class SimRes(object):
     - :meth:`get_tuple` - Return tuple(s) of time and value vectors for 
       variable(s)
 
-    - :meth:`get_unit` - Return the *unit* attribute(s) of trajectory
-      variable(s)
+    - :meth:`get_unit` - Return the *unit* attribute(s) of variable(s)
 
     - :meth:`get_values` - Return vector(s) of the values of the samples of
       variable(s)
@@ -472,7 +470,7 @@ class SimRes(object):
         _do_work()
 
     def _get(self, names, attr):
-        """Return attribute(s) of trajectory variable(s).
+        """Return attribute(s) of variable(s).
 
         **Arguments:**
 
@@ -515,7 +513,7 @@ class SimRes(object):
             return
 
     def get_description(self, names):
-        """Return the description(s) of trajectory variable(s).
+        """Return the description(s) of variable(s).
 
         **Arguments:**
 
@@ -542,8 +540,7 @@ class SimRes(object):
         return self._get(names, lambda name: self._traj[name].description)
 
     def get_displayUnit(self, names):
-        """Return the Modelica_ *displayUnit* attribute(s) of trajectory
-        variable(s).
+        """Return the Modelica_ *displayUnit* attribute(s) of variable(s).
 
         **Arguments:**
 
@@ -708,7 +705,7 @@ class SimRes(object):
                          f(self._data[self._traj[name].data_set][0, i]))
 
     def get_unit(self, names):
-        """Return the *unit* attribute(s) of trajectory variable(s).
+        """Return the *unit* attribute(s) of variable(s).
 
         **Arguments:**
 
