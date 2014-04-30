@@ -29,6 +29,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import numpy as np
 
+from re import compile as re_compile
 from scipy.io import loadmat
 from scipy.integrate import trapz
 from matplotlib.pyplot import figlegend
@@ -967,33 +968,68 @@ class SimRes(object):
         """
         return self.get_values(names, f=lambda x: min(f(x)))
 
-    def names(self, pattern='*'):
-        """Return a list of variable names that match *pattern*.
+    def names(self, pattern=None, re=False):
+        r"""Return a list of variable names that match a pattern.
 
-        All names are returned by default.  The pattern is case-sensitive and 
-        follows the Unix shell style:
+        By default, all names are returned.
 
-        ============   ============================
-        Character(s)   Role
-        ============   ============================
-        *              Matches everything
-        ?              Matches any single character
-        [seq]          Matches any character in seq
-        [!seq]         Matches any char not in seq
-        ============   ============================
+        **Arguments:**
 
-        **Example:**
+        - *pattern*: Case-sensitive string used for matching
+
+          - If *re* is *False* (next argument), then the pattern follows the 
+            Unix shell style:
+
+            ============   ============================
+            Character(s)   Role
+            ============   ============================
+            *\             Matches everything
+            ?              Matches any single character
+            [seq]          Matches any character in seq
+            [!seq]         Matches any char not in seq
+            ============   ============================
+
+            Wildcard characters (*\) are not automatically added at the 
+            beginning or end of the pattern.  For example, 'x*\' matches
+            variables that begin with "x", whereas '*\x*\' matches all variables 
+            that contain "x".
+
+          - If *re* is *True*, regular expressions are used a la `Python's 
+            **re** module <http://docs.python.org/2/library/re.html>`_.  See 
+            also http://docs.python.org/2/howto/regex.html#regex-howto.
+
+            Since :mod:`re.search` is used to produce the matches, it is as if 
+            wildcards ('.*\') are automatically added at the beginning and end.
+            For example, 'x' matches all variables that contain "x".  Use '^x$' 
+            to match only the variables that begin with "x" and 'x$' to match 
+            only the variables that end with "x".
+
+            Note that '.' is a subclass separator in Modelica but a wildcard in 
+            regular expressions.  Escape the subclass separator as '\.'.
+
+        - *re*: *True* to use regular expressions (*False* to use shell style)
+
+        **Examples:**
 
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.names('L.p*')  # doctest: +ELLIPSIS
+
+           >>> # Names starting with "L.p", using shell-style matching:
+           >>> sim.names('L.p*')
            [u'L.p.i', u'L.p.v']
+
+           >>> # Names ending with "p.v", using re matching:
+           >>> sim.names('p\.v$', re=True)
+           [u'C2.p.v', u'Gnd.p.v', u'L.p.v', u'Nr.p.v', u'C1.p.v', u'Ro.p.v', u'G.p.v']
         """
-        if pattern == '*':
-            return self._traj.keys() # Shortcut
+        if pattern is None:
+            return list(self._traj) # Shortcut
         else:
-            return [key for key in self._traj.keys() 
-                    if fnmatchcase(key, pattern)]
+            if re:
+                matcher = re_compile(pattern).search
+            else:
+                matcher = lambda name: fnmatchcase(name, pattern)
+            return filter(matcher, self._traj.keys())
 
     def nametree(self):
         """Return a tree of all variable names with respect to the path names.
