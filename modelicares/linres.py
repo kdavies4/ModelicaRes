@@ -22,7 +22,7 @@ from scipy.io import loadmat
 from matplotlib.cbook import iterable
 
 from control.matlab import ss
-from .freqplot import bode_plot, nyquist_plot
+from freqplot import bode_plot, nyquist_plot
 from modelicares.base import figure, add_hlines, add_vlines
 
 class LinRes(object):

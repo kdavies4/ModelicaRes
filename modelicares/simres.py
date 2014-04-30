@@ -42,11 +42,6 @@ from modelicares.texunit import unit2tex, label_number
 from modelicares import base
 
 
-def make(f=lambda x: x):
-    def func(x):
-        return f(x)
-    return func
-
 def _chars_to_str(str_arr):
     """Convert a string array to a string.
     """
@@ -119,6 +114,9 @@ class SimRes(object):
 
     - :meth:`get_times` - Return vector(s) of the sample times of variable(s)
 
+    - :meth:`get_tuple` - Return tuple(s) of time and value vectors for 
+      variable(s)
+
     - :meth:`get_unit` - Return the *unit* attribute(s) of trajectory
       variable(s)
 
@@ -138,9 +136,6 @@ class SimRes(object):
 
     - :meth:`sankey` - Create a figure with Sankey diagram(s)
     """
-
-    get_m = min
-    """doc"""
 
     def __init__(self, fname='dsres.mat', constants_only=False):
         """On initialization, load Modelica_ simulation results from a
@@ -741,9 +736,6 @@ class SimRes(object):
     def get_values(self, names, i=slice(0, None), f=lambda x: x):
         """Return vector(s) of the values of the samples of variable(s).
 
-        If there is only a single value, then it is repeated (to support
-        plotting).
-
         **Arguments:**
 
         - *names*: String or (possibly nested) list of strings of the variable
@@ -786,27 +778,14 @@ class SimRes(object):
         The other *get_*\* methods also give this message when a variable cannot
         be found.
         """
-        def _get_value(entry):
+        def _get_values(entry):
             """Return the values of a variable given its *_traj* entry.
             """
             return f(self._data[entry.data_set][entry.data_row, i]
                     if entry.sign == 1 else
                     -self._data[entry.data_set][entry.data_row, i])
 
-        return self._get(names, lambda name: _get_value(self._traj[name]))
-
-    def test(self, f=lambda x: x):
-        s=self
-        def get_values(names, i=slice(0, None)):
-            def _get_value(entry):
-                """Return the values of a variable given its *_traj* entry.
-                """
-                return f(s._data[entry.data_set][entry.data_row, i]
-                        if entry.sign == 1 else
-                        -s._data[entry.data_set][entry.data_row, i])
-
-            return s._get(names, lambda name: _get_value(self._traj[name]))
-        return get_values
+        return self._get(names, lambda name: _get_values(self._traj[name]))
 
     def get_values_at_times(self, names, times, f=lambda x: x):
         """Return vector(s) of the values of the samples of variable(s) at
@@ -855,6 +834,56 @@ class SimRes(object):
             return get_values_at(times)
 
         return self._get(names, _get_value_at_times)
+
+    def get_tuple(self, names, i=slice(0, None)):
+        """Return tuple(s) of time and value vectors for variable(s).
+
+        Each tuple contains two vectors: one for times and one for values.
+
+        **Arguments:**
+
+        - *names*: String or (possibly nested) list of strings of the variable
+          names
+
+        - *i*: Index (-1 for last), list of indices, or slice of the values(s)
+          to return
+
+             By default, all values are returned.
+
+        If *names* is a string, then the output will be a tuple.  If *names* is 
+        a (optionally nested) list of strings, then the output will be a 
+        (nested) list of tuples.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim.get_tuple('L.v') # doctest: +ELLIPSIS
+           (array([    0.        , ... ,  2500.        ], dtype=float32), array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32))
+
+        Note that this is a tuple of vectors, not a vector of tuples. 
+        """
+        def _get_times(entry):
+            """Return the times of a variable given its *_traj* entry.
+            """
+            return self._data[entry.data_set][0, i]
+
+        def _get_values(entry):
+            """Return the values of a variable given its *_traj* entry.
+            """
+            return (self._data[entry.data_set][entry.data_row, i]
+                   if entry.sign == 1 else
+                   -self._data[entry.data_set][entry.data_row, i])
+
+        def _get_tuple(entry):
+            """Return the (times, values) of a variable given its *_traj* entry.
+            """
+            return (_get_times(entry), _get_values(entry))
+
+        return self._get(names, lambda name: _get_tuple(self._traj[name]))
 
     def get_max(self, names, f=lambda x: x):
         """Return the maximum value(s) of variable(s).
@@ -1530,12 +1559,14 @@ class Info:
     """Alias for :meth:`SimRes.get_min`"""
     times = SimRes.get_times
     """Alias for :meth:`SimRes.get_times`"""
+    tuple = SimRes.get_tuple
+    """Alias for :meth:`SimRes.get_tuple`"""
     unit = SimRes.get_unit
     """Alias for :meth:`SimRes.get_unit`"""
     values = SimRes.get_values
     """Alias for :meth:`SimRes.get_values`"""
     values_at_times = SimRes.get_values_at_times
-    """Alias for :meth:`SimRes.get_description`"""
+    """Alias for :meth:`SimRes.get_values_at_times`"""
 
 
 if __name__ == '__main__':

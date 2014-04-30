@@ -3,6 +3,8 @@ Changelog
 
 0.10.0 (2014-**-**) -- Updates:
 
+   - Added :meth:`~modelicares.simres.SimRes.get_tuple` to get time, value 
+     tuples for variables.
    - Removed the *external/control* folder.  Instead, using PyPI/distutils to 
      install the `control package <https://pypi.python.org/pypi/control>`_.
    - Added functions to calculate the minimum, maximum, and mean of variables
