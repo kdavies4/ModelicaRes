@@ -3,6 +3,8 @@ Changelog
 
 0.10.0 (2014-**-**) -- Updates:
 
+   - Removed the *external/control* folder.  Instead, using PyPI/distutils to 
+     install the `control package <https://pypi.python.org/pypi/control>`_.
    - Added functions to calculate the minimum, maximum, and mean of variables
      (:meth:`~modelicares.simres.SimRes.get_min`, 
      :meth:`~modelicares.simres.SimRes.get_max`, and 

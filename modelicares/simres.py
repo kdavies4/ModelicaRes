@@ -9,7 +9,7 @@ simulations
 - :class:`SimRes` - Class to load and analyze results from a Modelica_-based
   simulation
 
-- :class:`Info` - Shortcuts to the "get" methods in :class:`SimRes`
+- :class:`Info` - Aliases for the "get" methods in :class:`SimRes`
 
 
 **Functions:**
@@ -41,6 +41,11 @@ from modelicares.gui import Browser
 from modelicares.texunit import unit2tex, label_number
 from modelicares import base
 
+
+def make(f=lambda x: x):
+    def func(x):
+        return f(x)
+    return func
 
 def _chars_to_str(str_arr):
     """Convert a string array to a string.
@@ -133,6 +138,9 @@ class SimRes(object):
 
     - :meth:`sankey` - Create a figure with Sankey diagram(s)
     """
+
+    get_m = min
+    """doc"""
 
     def __init__(self, fname='dsres.mat', constants_only=False):
         """On initialization, load Modelica_ simulation results from a
@@ -786,6 +794,19 @@ class SimRes(object):
                     -self._data[entry.data_set][entry.data_row, i])
 
         return self._get(names, lambda name: _get_value(self._traj[name]))
+
+    def test(self, f=lambda x: x):
+        s=self
+        def get_values(names, i=slice(0, None)):
+            def _get_value(entry):
+                """Return the values of a variable given its *_traj* entry.
+                """
+                return f(s._data[entry.data_set][entry.data_row, i]
+                        if entry.sign == 1 else
+                        -s._data[entry.data_set][entry.data_row, i])
+
+            return s._get(names, lambda name: _get_value(self._traj[name]))
+        return get_values
 
     def get_values_at_times(self, names, times, f=lambda x: x):
         """Return vector(s) of the values of the samples of variable(s) at

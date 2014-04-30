@@ -22,7 +22,7 @@ from scipy.io import loadmat
 from matplotlib.cbook import iterable
 
 from control.matlab import ss
-from control.freqplot import bode, nyquist
+from .freqplot import bode_plot, nyquist_plot
 from modelicares.base import figure, add_hlines, add_vlines
 
 class LinRes(object):
@@ -313,9 +313,9 @@ class LinRes(object):
             # Extract the SISO TF. TODO: Is there a better way to do this?
             sys = ss(self.sys.A, self.sys.B[:, i_u], self.sys.C[i_y, :],
                      self.sys.D[i_y, i_u])
-            bode(sys, Hz=True, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
-                 color=colors[np.mod(i, n_colors)], axes=axes,
-                 style=styles[np.mod(i, n_styles)], **kwargs)
+            bode_plot(sys, Hz=True, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
+                      color=colors[np.mod(i, n_colors)], axes=axes,
+                      style=styles[np.mod(i, n_styles)], **kwargs)
             # Note: controls.freqplot.bode() is currently only implemented for
             # SISO systems.
             # 5/23/11: Since controls.freqplot.bode() already uses subplots for
@@ -435,8 +435,8 @@ class LinRes(object):
             # Extract the SISO TF. TODO: Is there a better way to do this?
             sys = ss(self.sys.A, self.sys.B[:, i_u], self.sys.C[i_y, :],
                      self.sys.D[i_y, i_u])
-            nyquist(sys, mark=False, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
-                    color=colors[np.mod(i, n_colors)], ax=ax, **kwargs)
+            nyquist_plot(sys, mark=False, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
+                         color=colors[np.mod(i, n_colors)], ax=ax, **kwargs)
             # Note: controls.freqplot.nyquist() is currently only implemented
             # for SISO systems.
 
