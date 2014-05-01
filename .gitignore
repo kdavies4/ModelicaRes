@@ -1,0 +1,45 @@
+# Compiled files
+*.pyc
+build/
+
+# Internal links
+/doc/demos
+/doc/release
+
+# Folders that are copied to the root directory
+/doc/_static/
+
+# Files and folders for local copy (not github page)
+/examples/
+/modelicares/
+
+# Auto-generated files
+/MANIFEST
+/dist/
+/doc/ModelicaRes.pdf
+/doc/_images/
+/doc/examples/
+/doc/*.html
+/doc/objects.inv
+/doc/searchindex.js
+doc/_sources/
+
+# Temporary files
+temp_plot.pdf
+temp_plot.png
+
+# Files that are tracked on the master branch
+/external/
+*.py
+/doc/_templates/search.html
+
+# Backup
+.fuse_hidden*
+# Internal links
+/modelicares/examples
+
+# Files from the master branch
+*.pws
+*.yml
+*.sh
+00-release-checklist.txt
