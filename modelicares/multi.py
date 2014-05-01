@@ -3,18 +3,17 @@
 """Functions to load and plot data from multiple simulation and linearization
 files at once
 
-This module contains four functions:
-
-- :meth:`multiload` - Loads multiple Modelica_ simulation and/or linearization
+- :meth:`multiload` - Load multiple Modelica_ simulation and/or linearization
   results
 
-- :meth:`multiplot` - Plots data from multiple simulations in 2D Cartesian
+- :meth:`multiplot` - Plot data from multiple simulations in 2D Cartesian
   coordinates
 
-- :meth:`multibode` - Plots multiple linearizations onto a single Bode diagram
+- :meth:`multibode` - Plot multiple linearizations onto a single Bode diagram
 
-- :meth:`multinyquist` - Plots multiple linearizations onto a single Nyquist
+- :meth:`multinyquist` - Plot multiple linearizations onto a single Nyquist
   diagram
+
 
 .. _Modelica: http://www.modelica.org/
 """
@@ -32,10 +31,10 @@ from glob import glob
 from matplotlib.cbook import iterable
 from itertools import cycle
 
-from control.freqplot import bode, nyquist
-from linres import LinRes
-from simres import SimRes
-from base import figure, add_hlines, add_vlines
+from freqplot import bode_plot, nyquist_plot
+from modelicares.linres import LinRes
+from modelicares.simres import SimRes
+from modelicares.base import figure, add_hlines, add_vlines
 
 
 def multiload(locations='*'):
@@ -349,9 +348,9 @@ def multibode(lins, axes=None, pair=(0, 0), label='bode', title="Bode Plot",
                      self.sys.D[pair[1], pair[0]])
         else:
             sys = lin.sys
-        bode(sys, Hz=True, label=label,
-             color=colors[np.mod(i, n_colors)], axes=axes,
-             style=styles[np.mod(i, n_styles)], **kwargs)
+        bode_plot(sys, Hz=True, label=label,
+                  color=colors[np.mod(i, n_colors)], axes=axes,
+                  style=styles[np.mod(i, n_styles)], **kwargs)
 
     # Decorate and finish.
     axes[0].set_title(title)
@@ -489,9 +488,9 @@ def multinyquist(lins, ax=None, pair=(0, 0), label='nyquist',
                      self.sys.D[pair[1], pair[0]])
         else:
             sys = lin.sys
-        nyquist(sys, mark=False, label=label, ax=ax,
-                textFreq=i==0 if textFreq is None else textFreq,
-                color=colors[np.mod(i, n_colors)], **kwargs)
+        nyquist_plot(sys, mark=False, label=label, ax=ax,
+                     textFreq=i==0 if textFreq is None else textFreq,
+                     color=colors[np.mod(i, n_colors)], **kwargs)
 
     # Decorate and finish.
     add_hlines(ax, color='k', linestyle='--', linewidth=0.5)

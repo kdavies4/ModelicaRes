@@ -17,7 +17,7 @@ include examples/PID/*.md
 include examples/PID/*.py
 
 # Documentation (built version)
-include doc/_sources/*
+include doc/_images/*
 include doc/_static/*
 include doc/*.html
 include doc/*.rst

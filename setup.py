@@ -1,28 +1,21 @@
 #!/usr/bin/python
 """Set up the ModelicaRes module.
 
-See the README.txt file for instructions.
+See README.txt for instructions.
 """
 
 from distutils.core import setup
 from glob import glob
 
 setup(name='ModelicaRes',
-      version="0.9.0",
-      author='Kevin Davies',
-      author_email='kdavies4@gmail.com',
-      #credits=['Kevin Bandy', 'Jason Grout', 'Jason Heeris', 'Joerg Raedler'],
-      packages=['control', 'modelicares', 'modelicares.exps'],
-      scripts=glob('bin/*'),
-      url='http://kdavies4.github.io/ModelicaRes/',
-      license='BSD-compatible (see LICENSE.txt)',
+      version="0.10.0",
       description='Utilities to set up and analyze Modelica simulation experiments',
       long_description=open('README.txt').read(),
-      provides=['modelicares'],
-      requires=['python (==2.7)', 'scipy', 'matplotlib', 'numpy', 'wx', 'easygui'],
-      package_dir={'control': 'external/control/src'},
-      keywords=['Modelica', 'Dymola', 'plot', 'matplotlib', 'simulation',
-                'experiment', 'results'],
+      author='Kevin Davies',
+      author_email='kdavies4@gmail.com',
+      url='http://kdavies4.github.io/ModelicaRes/',
+      packages=['modelicares', 'modelicares.exps'],
+      scripts=glob('bin/*'),
       classifiers=['Development Status :: 4 - Beta',
                    'Operating System :: POSIX :: Linux',
                    'Operating System :: Microsoft :: Windows',
@@ -33,10 +26,13 @@ setup(name='ModelicaRes',
                    'Topic :: Scientific/Engineering',
                    'Topic :: Utilities',
                    ],
+      license='BSD-compatible (see LICENSE.txt)',
+      keywords=['Modelica', 'plot', 'results', 'simulation', 'experiment', 
+                'Dymola', 'matplotlib'],
+      provides=['modelicares'],
+      requires=['python (==2.7)', 'scipy (>=0.10.0)', 'numpy', 
+                'matplotlib (>=1.1.0)', 'control', 'wx', 'easygui', ],
+      # Note: This package may run with scipy as early as 0.7.0.  However, the 
+      # control package seems to need scipy >= 0.10.0 but does not stipulate the 
+      # version.
       )
-
-# 10/30/11: Not currently using PyTables (TODO: Consider it for the future).
-# Install PyTables (version 2.3.1, and maybe later, works).
-# See http://www.pytables.org/moin/Downloads
-#import subprocess
-#subprocess.call("sudo easy_install tables")

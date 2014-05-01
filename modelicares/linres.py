@@ -17,14 +17,13 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import numpy as np
 
-import modelicares.base as base
 
 from scipy.io import loadmat
 from matplotlib.cbook import iterable
 
 from control.matlab import ss
-from control.freqplot import bode, nyquist
-
+from freqplot import bode_plot, nyquist_plot
+from modelicares.base import figure, add_hlines, add_vlines
 
 class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze
@@ -32,14 +31,16 @@ class LinRes(object):
 
     This class contains two user-accessible methods:
 
-    - :meth:`bode` - Creates a Bode plot of the system's response
+    - :meth:`bode` - Create a Bode plot of the system's response
 
-    - :meth:`nyquist` - Creates a Nyquist plot of the system's response
+    - :meth:`nyquist` - Create a Nyquist plot of the system's response
     """
 
     def __init__(self, fname='dslin.mat'):
         """On initialization, load and preprocess a linearized Modelica_ model
-        (MATLAB\ :sup:`®` format).  The model is in state space:
+        (MATLAB\ :sup:`®` format).  
+        
+        The model is in state space:
 
         .. code-block:: modelica
 
@@ -281,7 +282,7 @@ class LinRes(object):
         """
         # Create axes if necessary.
         if axes is None or (None, None):
-            fig = base.figure(label)
+            fig = figure(label)
             axes = (fig.add_subplot(211), fig.add_subplot(212))
 
         # Create a title if necessary.
@@ -312,9 +313,9 @@ class LinRes(object):
             # Extract the SISO TF. TODO: Is there a better way to do this?
             sys = ss(self.sys.A, self.sys.B[:, i_u], self.sys.C[i_y, :],
                      self.sys.D[i_y, i_u])
-            bode(sys, Hz=True, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
-                 color=colors[np.mod(i, n_colors)], axes=axes,
-                 style=styles[np.mod(i, n_styles)], **kwargs)
+            bode_plot(sys, Hz=True, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
+                      color=colors[np.mod(i, n_colors)], axes=axes,
+                      style=styles[np.mod(i, n_styles)], **kwargs)
             # Note: controls.freqplot.bode() is currently only implemented for
             # SISO systems.
             # 5/23/11: Since controls.freqplot.bode() already uses subplots for
@@ -410,7 +411,7 @@ class LinRes(object):
         """
         # Create axes if necessary.
         if not ax:
-            fig = base.figure(label)
+            fig = figure(label)
             ax = fig.add_subplot(111, aspect='equal')
 
         # Create a title if necessary.
@@ -434,16 +435,16 @@ class LinRes(object):
             # Extract the SISO TF. TODO: Is there a better way to do this?
             sys = ss(self.sys.A, self.sys.B[:, i_u], self.sys.C[i_y, :],
                      self.sys.D[i_y, i_u])
-            nyquist(sys, mark=False, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
-                    color=colors[np.mod(i, n_colors)], ax=ax, **kwargs)
+            nyquist_plot(sys, mark=False, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
+                         color=colors[np.mod(i, n_colors)], ax=ax, **kwargs)
             # Note: controls.freqplot.nyquist() is currently only implemented
             # for SISO systems.
 
         # Decorate and finish.
         if len(pairs) > 1:
             ax.legend()
-        base.add_hlines(ax, color='k', linestyle='--', linewidth=0.5)
-        base.add_vlines(ax, color='k', linestyle='--', linewidth=0.5)
+        add_hlines(ax, color='k', linestyle='--', linewidth=0.5)
+        add_vlines(ax, color='k', linestyle='--', linewidth=0.5)
         ax.set_title(title)
         if xlabel: # Without this check, xlabel=None will give a label of "None".
             ax.set_xlabel(xlabel)

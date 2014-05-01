@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.base &mdash; ModelicaRes v0.9.0 Documentation</title>
+    <title>modelicares.base &mdash; ModelicaRes v0.10.0 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '0.9.0',
+        URL_ROOT:    './',
+        VERSION:     '0.10.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,10 +25,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.9.0 Documentation"
+          title="Search within ModelicaRes v0.10.0 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.9.0 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.10.0 Documentation" href="index.html" />
     <link rel="prev" title="modelicares.texunit" href="texunit.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
@@ -51,7 +49,7 @@
         <li class="right" >
           <a href="texunit.html" title="modelicares.texunit"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.9.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -67,7 +65,6 @@
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="exps.doe.html"><tt class="docutils literal"><span class="pre">modelicares.exps.doe</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
 </ul>
@@ -95,48 +92,48 @@
             
   <div class="section" id="module-modelicares.base">
 <span id="modelicares-base"></span><h1><a class="reference internal" href="#module-modelicares.base" title="modelicares.base"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.base</span></tt></a><a class="headerlink" href="#module-modelicares.base" title="Permalink to this headline">¶</a></h1>
-<p>Basic methods to help plot and interpret experimental data</p>
-<p>This module contains the following classes:</p>
+<p>Classes and functions to help plot and interpret experimental data</p>
+<p><strong>Classes:</strong></p>
 <ul class="simple">
 <li><a class="reference internal" href="#modelicares.base.ArrowLine" title="modelicares.base.ArrowLine"><tt class="xref py py-class docutils literal"><span class="pre">ArrowLine</span></tt></a> - A matplotlib subclass to draw an arrowhead on a line</li>
 <li><a class="reference internal" href="#modelicares.base.Quantity" title="modelicares.base.Quantity"><tt class="xref py py-class docutils literal"><span class="pre">Quantity</span></tt></a> - Named tuple class for a constant physical quantity</li>
 </ul>
-<p>and the following functions:</p>
+<p><strong>Functions:</strong></p>
 <ul class="simple">
-<li><a class="reference internal" href="#modelicares.base.add_arrows" title="modelicares.base.add_arrows"><tt class="xref py py-meth docutils literal"><span class="pre">add_arrows()</span></tt></a> - Overlays arrows with annotations on top of a pre-plotted
+<li><a class="reference internal" href="#modelicares.base.add_arrows" title="modelicares.base.add_arrows"><tt class="xref py py-meth docutils literal"><span class="pre">add_arrows()</span></tt></a> - Overlay arrows with annotations on top of a pre-plotted
 line</li>
-<li><a class="reference internal" href="#modelicares.base.add_hlines" title="modelicares.base.add_hlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_hlines()</span></tt></a> - Adds horizontal lines to a set of axes with optional
+<li><a class="reference internal" href="#modelicares.base.add_hlines" title="modelicares.base.add_hlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_hlines()</span></tt></a> - Add horizontal lines to a set of axes with optional
 labels</li>
-<li><a class="reference internal" href="#modelicares.base.add_vlines" title="modelicares.base.add_vlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_vlines()</span></tt></a> - Adds vertical lines to a set of axes with optional
+<li><a class="reference internal" href="#modelicares.base.add_vlines" title="modelicares.base.add_vlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_vlines()</span></tt></a> - Add vertical lines to a set of axes with optional
 labels</li>
-<li><a class="reference internal" href="#modelicares.base.animate" title="modelicares.base.animate"><tt class="xref py py-meth docutils literal"><span class="pre">animate()</span></tt></a> - Encodes a series of PNG images as a MPG movie</li>
-<li><a class="reference internal" href="#modelicares.base.color" title="modelicares.base.color"><tt class="xref py py-meth docutils literal"><span class="pre">color()</span></tt></a> - Plots 2D scalar data on a color axis in 2D Cartesian
+<li><a class="reference internal" href="#modelicares.base.animate" title="modelicares.base.animate"><tt class="xref py py-meth docutils literal"><span class="pre">animate()</span></tt></a> - Encode a series of PNG images as a MPG movie</li>
+<li><a class="reference internal" href="#modelicares.base.color" title="modelicares.base.color"><tt class="xref py py-meth docutils literal"><span class="pre">color()</span></tt></a> - Plot 2D scalar data on a color axis in 2D Cartesian
 coordinates</li>
-<li><a class="reference internal" href="#modelicares.base.closeall" title="modelicares.base.closeall"><tt class="xref py py-meth docutils literal"><span class="pre">closeall()</span></tt></a> - Closes all open figures</li>
-<li><a class="reference internal" href="#modelicares.base.convert" title="modelicares.base.convert"><tt class="xref py py-meth docutils literal"><span class="pre">convert()</span></tt></a> - Converts the expression of a physical quantity between units</li>
-<li><a class="reference internal" href="#modelicares.base.expand_path" title="modelicares.base.expand_path"><tt class="xref py py-meth docutils literal"><span class="pre">expand_path()</span></tt></a> - Expands a file path by replacing &#8216;~&#8217; with the user
+<li><a class="reference internal" href="#modelicares.base.closeall" title="modelicares.base.closeall"><tt class="xref py py-meth docutils literal"><span class="pre">closeall()</span></tt></a> - Close all open figures</li>
+<li><a class="reference internal" href="#modelicares.base.convert" title="modelicares.base.convert"><tt class="xref py py-meth docutils literal"><span class="pre">convert()</span></tt></a> - Convert the expression of a physical quantity between units</li>
+<li><a class="reference internal" href="#modelicares.base.expand_path" title="modelicares.base.expand_path"><tt class="xref py py-meth docutils literal"><span class="pre">expand_path()</span></tt></a> - Expand a file path by replacing &#8216;~&#8217; with the user
 directory and makes the path absolute</li>
-<li><a class="reference internal" href="#modelicares.base.flatten_dict" title="modelicares.base.flatten_dict"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_dict()</span></tt></a> - Flattens a nested dictionary</li>
-<li><a class="reference internal" href="#modelicares.base.flatten_list" title="modelicares.base.flatten_list"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_list()</span></tt></a> - Flattens a nested list</li>
-<li><a class="reference internal" href="#modelicares.base.figure" title="modelicares.base.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> - Creates a figure and set its label</li>
-<li><a class="reference internal" href="#modelicares.base.get_indices" title="modelicares.base.get_indices"><tt class="xref py py-meth docutils literal"><span class="pre">get_indices()</span></tt></a> - Returns the pair of indices that bound a target value in
+<li><a class="reference internal" href="#modelicares.base.flatten_dict" title="modelicares.base.flatten_dict"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_dict()</span></tt></a> - Flatten a nested dictionary</li>
+<li><a class="reference internal" href="#modelicares.base.flatten_list" title="modelicares.base.flatten_list"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_list()</span></tt></a> - Flatten a nested list</li>
+<li><a class="reference internal" href="#modelicares.base.figure" title="modelicares.base.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> - Create a figure and set its label</li>
+<li><a class="reference internal" href="#modelicares.base.get_indices" title="modelicares.base.get_indices"><tt class="xref py py-meth docutils literal"><span class="pre">get_indices()</span></tt></a> - Return the pair of indices that bound a target value in
 a monotonically increasing vector</li>
-<li><a class="reference internal" href="#modelicares.base.get_pow10" title="modelicares.base.get_pow10"><tt class="xref py py-meth docutils literal"><span class="pre">get_pow10()</span></tt></a> - Returns the exponent of 10 for which the significand
+<li><a class="reference internal" href="#modelicares.base.get_pow10" title="modelicares.base.get_pow10"><tt class="xref py py-meth docutils literal"><span class="pre">get_pow10()</span></tt></a> - Return the exponent of 10 for which the significand
 of a number is within the range [1, 10)</li>
-<li><a class="reference internal" href="#modelicares.base.get_pow1000" title="modelicares.base.get_pow1000"><tt class="xref py py-meth docutils literal"><span class="pre">get_pow1000()</span></tt></a> - Returns the exponent of 1000 for which the
+<li><a class="reference internal" href="#modelicares.base.get_pow1000" title="modelicares.base.get_pow1000"><tt class="xref py py-meth docutils literal"><span class="pre">get_pow1000()</span></tt></a> - Return the exponent of 1000 for which the
 significand of a number is within the range [1, 1000)</li>
-<li><a class="reference internal" href="#modelicares.base.load_csv" title="modelicares.base.load_csv"><tt class="xref py py-meth docutils literal"><span class="pre">load_csv()</span></tt></a> - Loads a CSV file into a dictionary</li>
-<li><a class="reference internal" href="#modelicares.base.plot" title="modelicares.base.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a> - Plots 1D scalar data as points and/or line segments in 2D
+<li><a class="reference internal" href="#modelicares.base.load_csv" title="modelicares.base.load_csv"><tt class="xref py py-meth docutils literal"><span class="pre">load_csv()</span></tt></a> - Load a CSV file into a dictionary</li>
+<li><a class="reference internal" href="#modelicares.base.plot" title="modelicares.base.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a> - Plot 1D scalar data as points and/or line segments in 2D
 Cartesian coordinates</li>
-<li><a class="reference internal" href="#modelicares.base.quiver" title="modelicares.base.quiver"><tt class="xref py py-meth docutils literal"><span class="pre">quiver()</span></tt></a> - Plots 2D vector data as arrows in 2D Cartesian coordinates</li>
-<li><a class="reference internal" href="#modelicares.base.save" title="modelicares.base.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> - Saves the current figures as images in a format or list of
+<li><a class="reference internal" href="#modelicares.base.quiver" title="modelicares.base.quiver"><tt class="xref py py-meth docutils literal"><span class="pre">quiver()</span></tt></a> - Plot 2D vector data as arrows in 2D Cartesian coordinates</li>
+<li><a class="reference internal" href="#modelicares.base.save" title="modelicares.base.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> - Save the current figures as images in a format or list of
 formats</li>
-<li><a class="reference internal" href="#modelicares.base.saveall" title="modelicares.base.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> - Saves all open figures as images in a format or list of
+<li><a class="reference internal" href="#modelicares.base.saveall" title="modelicares.base.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> - Save all open figures as images in a format or list of
 formats</li>
-<li><a class="reference internal" href="#modelicares.base.setup_subplots" title="modelicares.base.setup_subplots"><tt class="xref py py-meth docutils literal"><span class="pre">setup_subplots()</span></tt></a> - Creates an array of subplots and return their axes</li>
-<li><a class="reference internal" href="#modelicares.base.shift_scale_x" title="modelicares.base.shift_scale_x"><tt class="xref py py-meth docutils literal"><span class="pre">shift_scale_x()</span></tt></a> - Applies an offset and a factor as necessary to the x
+<li><a class="reference internal" href="#modelicares.base.setup_subplots" title="modelicares.base.setup_subplots"><tt class="xref py py-meth docutils literal"><span class="pre">setup_subplots()</span></tt></a> - Create an array of subplots and return their axes</li>
+<li><a class="reference internal" href="#modelicares.base.shift_scale_x" title="modelicares.base.shift_scale_x"><tt class="xref py py-meth docutils literal"><span class="pre">shift_scale_x()</span></tt></a> - Apply an offset and a factor as necessary to the x
 axis</li>
-<li><a class="reference internal" href="#modelicares.base.shift_scale_y" title="modelicares.base.shift_scale_y"><tt class="xref py py-meth docutils literal"><span class="pre">shift_scale_y()</span></tt></a> - Applies an offset and a factor as necessary to the y
+<li><a class="reference internal" href="#modelicares.base.shift_scale_y" title="modelicares.base.shift_scale_y"><tt class="xref py py-meth docutils literal"><span class="pre">shift_scale_y()</span></tt></a> - Apply an offset and a factor as necessary to the y
 axis</li>
 </ul>
 <dl class="class">
@@ -616,7 +613,7 @@ if applied)</p>
 will be used sequentially</p>
 <blockquote>
 <div><p>Each entry may be a character, grayscale, or rgb value.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference external" href="http://matplotlib.sourceforge.net/api/colors_api.html">http://matplotlib.sourceforge.net/api/colors_api.html</a></p>
 </div>
@@ -636,7 +633,7 @@ that will be used sequentially</p>
 <blockquote>
 <div><p>Each style is a tuple of on/off lengths representing dashes.  Use
 (0, 1) for no line and (None, None) for a solid line.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference external" href="http://matplotlib.sourceforge.net/api/collections_api.html">http://matplotlib.sourceforge.net/api/collections_api.html</a></p>
 </div>
@@ -939,7 +936,7 @@ before the label will be recentered</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/shift_scale_x.png"><img alt="example of shift_scale_x()" src="_images/shift_scale_x.png" style="width: 488.6px; height: 333.2px;" /></a>
+<a class="reference internal image-reference" href="_images/shift_scale_x.png"><img alt="example of shift_scale_x()" src="_images/shift_scale_x.png" style="width: 488.6px; height: 333.9px;" /></a>
 </dd></dl>
 
 <dl class="function">
@@ -996,7 +993,7 @@ before the label will be recentered</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/shift_scale_y.png"><img alt="example of shift_scale_y()" src="_images/shift_scale_y.png" style="width: 522.2px; height: 335.3px;" /></a>
+<a class="reference internal image-reference" href="_images/shift_scale_y.png"><img alt="example of shift_scale_y()" src="_images/shift_scale_y.png" style="width: 527.1px; height: 335.3px;" /></a>
 </dd></dl>
 
 <dl class="class">
@@ -1061,13 +1058,13 @@ before the label will be recentered</p>
         <li class="right" >
           <a href="texunit.html" title="modelicares.texunit"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.9.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Mar 17, 2014.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Last updated on Apr 30, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

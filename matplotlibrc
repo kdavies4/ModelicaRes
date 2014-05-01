@@ -29,29 +29,7 @@
 # You can also deploy your own backend outside of matplotlib by
 # referring to the module name (which must be in the PYTHONPATH) as
 # 'module://my_backend'
-# KLD 7/8/13:  New, not tested:
-#backend      : QtAgg
-#backend      : Qt4Agg
-#backend      : FltkAgg
-# KLD 10/9/2012:  Works:
-backend      : GTKAgg
-#backend      : GTKCairo # KLD 7/21/13: Much, much slower than GTKAgg.
-# KLD 10/9/2012:  Not good:
-#backend      : Agg # No onscreen plots
-#backend      : WX # Doesn't seem to support TeX
-#backend      : WXAgg # Errors
-#backend      : FltkAgg # Fails
-#backend      : Cairo # No onscreen plots
-#backend      : GDK # No onscreen plots
-#backend      : PS # No onscreen plots
-#backend      : PDF # No onscreen plots
-#backend      : SVG # No onscreen plots
-#backend      : Template # No onscreen plots
-#backend      : Qt4Agg # Fails
-#backend      : CocoaAgg # Fails
-#backend      : TkAgg # Looks bad
-#backend      : GTK # Looks bad
-#backend      : QtAgg # Missing buttons
+backend      : Qt4Agg
 
 # If you are using the Qt4Agg backend, you can choose here
 # to use the PyQt4 bindings or the newer PySide bindings to
@@ -240,7 +218,7 @@ backend      : GTKAgg
                        # the special name "regular" for the same font
                        # used in regular text.
 mathtext.default : regular # The default font to use for math.
-# KLD 12/11/2012:  regular is used because LaTeX math is used to typeset the
+# ModelicaRes:  regular is used because LaTeX math is used to typeset the
 # units in the axis labels, and units should usually be regular instead of
 # italic (e.g., SI units).
 
@@ -340,7 +318,7 @@ legend.fontsize      : medium
 # See http://matplotlib.org/api/figure_api.html#matplotlib.figure.Figure
 #figure.figsize   : 8, 6    # figure size in inches
 figure.figsize   : 8.1, 5     # figure size in inches
-# KLD:  The aspect ratio is approx. golden ratio (~1.61803399).
+# ModelicaRes:  The aspect ratio is approx. golden ratio (~1.61803399).
 #figure.dpi       : 80      # figure dots per inch
 #figure.facecolor : 0.75    # figure facecolor; 0.75 is scalar gray
 #figure.edgecolor : white   # figure edgecolor
@@ -357,7 +335,7 @@ figure.figsize   : 8.1, 5     # figure size in inches
 #figure.subplot.bottom  : 0.1    # the bottom of the subplots of the figure
 #figure.subplot.top      : 0.9    # the top of the subplots of the figure
 figure.subplot.top      : 0.875    # the top of the subplots of the figure
-# KLD 5/21/2011:  This is about the narrowest the margins can be without
+# ModelicaRes:  This is about the narrowest the margins can be without
 # clipping a 2-line title.
 #figure.subplot.wspace  : 0.2    # the amount of width reserved for blank space between subplots
 #figure.subplot.hspace  : 0.2    # the amount of height reserved for white space between subplots
@@ -369,7 +347,7 @@ image.aspect : auto             # equal | auto | a number
 image.interpolation  : nearest  # see help(imshow) for options
 #image.cmap   : jet               # gray | jet etc...
 image.cmap   : hot               # gray | jet etc... (bone, gist_earth, gist_gray, gray, and hot look the best in black and white)
-# KLD 12/11/2012:  This shows well in color or in black and white.
+# ModelicaRes:  This shows well in color or in black and white.
 #image.lut    : 256               # the size of the colormap lookup table
 #image.origin : upper             # lower | upper
 #image.resample  : False

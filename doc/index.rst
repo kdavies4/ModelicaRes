@@ -5,7 +5,7 @@
 **Python utilities to set up and analyze Modelica simulation experiments**
 
 ModelicaRes is a free, open-source tool to manage Modelica_ simulations,
-interpret results, and create publishable figures.  It is currently possible to
+interpret results, and create publishable figures.  It is possible to
 
 - Auto-generate simulation scripts,
 - Browse data,
@@ -74,27 +74,35 @@ math and matrix functions from NumPy_.
 
   **Installation**
 
-  An installable copy of this package can be downloaded from the `main site
-  <http://kdavies4.github.io/ModelicaRes/>`_ or the `PyPI page`_.  After
-  extracting the package, run the set-up script (:doc:`setup.py`) from the base
-  folder.  On Windows, use the following command::
+  The easiest way to install this package is to use pip_::
 
-     python setup.py install
+      pip install modelicares
 
-  On Linux, use::
+  On Linux, it may be necessary to have root privileges::
 
-     sudo python setup.py install
+      sudo pip install modelicares
 
-  The matplotlibrc file in the base folder has some recommended revisions to
-  matplotlib_'s defaults.  To use it, copy or move the file to the working
-  directory or matplotlib_'s configuration directory.  See
+  Another way is to download and extract a copy of the package from the 
+  `main project site`_, the `master branch at GitHub 
+  <https://github.com/kdavies4/ModelicaRes>`_, or the `PyPI page`_.  Run 
+  the following command from the base folder::
+
+      python setup.py install
+
+  Or, on Linux::
+
+      sudo python setup.py install
+
+  The *matplotlibrc* file in the base folder has some recommended revisions to
+  matplotlib_'s defaults.  To use it, copy or move it to the working directory
+  or matplotlib_'s configuration directory.  See
   http://matplotlib.org/users/customizing.html for details.
 
   **Credits**
 
-  The main author is Kevin Davies.  Improvements and bug fixes have been 
-  provided by Arnout Aertgeerts, Kevin Bandy, Thomas Beutlich, Martin Sjölund, 
-  and Mike Tiller.  
+  The main author is Kevin Davies.  Improvements, bug fixes, and suggestions 
+  have been provided by Arnout Aertgeerts, Kevin Bandy, Thomas Beutlich, 
+  Martin Sjölund, Mike Tiller, and Michael Wetter.  
 
   Third-party code has been included from:
 
@@ -105,31 +113,31 @@ math and matrix functions from NumPy_.
     <http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html>`_),
   - Richard Murray (`python-control
     <http://sourceforge.net/apps/mediawiki/python-control>`_), and
-  - Joerg Raedler (method to expand a `Modelica`_ variable tree - from
-    `DyMat`_).
+  - Joerg Raedler (method to expand a Modelica_ variable tree---from
+    DyMat_).
 
   **License terms and development**
 
-  ModelicaRes_ is published under the terms of the BSD license (see
-  :doc:`LICENSE.txt`).  Please share any modifications you make (preferably on a
-  Github fork from https://github.com/kdavies4/ModelicaRes) so that others may
-  benefit from your work.  If you find a bug, please `report it
-  <https://github.com/kdavies4/ModelicaRes/issues/new>`_.  If you have
-  suggestions for improvements, please `share them here
-  <https://github.com/kdavies4/ModelicaRes/wiki/Possible-Enhancements>`_.
+  ModelicaRes_ is published under a BSD license (see LICENSE.txt).  Please share 
+  any modifications you make (preferably on a Github fork from 
+  https://github.com/kdavies4/ModelicaRes) in order to help others.  If you find 
+  a bug, please `report it
+  <https://github.com/kdavies4/ModelicaRes/issues/new>`_.  If you have 
+  suggestions, please `share them
+  <https://github.com/kdavies4/ModelicaRes/wiki/Suggestions>`_.
 
   **See also**
 
-  The following `Python`_ projects are related:
+  The following Python_ projects are related:
 
-  - `awesim`_: helps run simulation experiments and organize results
-  - `BuildingsPy`_: supports unit testing
-  - `DyMat`_: exports `Modelica`_ simulation data to comma-separated values (CSV),
+  - awesim_: helps run simulation experiments and organize results
+  - BuildingsPy_: supports unit testing
+  - DyMat_: exports Modelica_ simulation data to comma-separated values (CSV),
     `Gnuplot <http://www.gnuplot.info/>`_, MATLAB®, and `Network Common Data Form
     (netCDF) <http://www.unidata.ucar.edu/software/netcdf/>`_
-  - `PyFMI`_: tools to work with models through the Functional Mock-Up Interface
+  - PyFMI_: tools to work with models through the Functional Mock-Up Interface
     (FMI) standard
-  - `pysimulator`_: elaborate GUI; supports FMI
+  - PySimulator_: elaborate GUI; supports FMI
 
 .. toctree::
 
@@ -139,7 +147,6 @@ math and matrix functions from NumPy_.
   linres
   multi
   exps
-  exps.doe
   texunit
   base
 
@@ -162,64 +169,82 @@ math and matrix functions from NumPy_.
 
   **Installation**
 
-  An installable copy of this package can be downloaded from the `main site`_ or
-  the `PyPI page`_.  After extracting the package, run the set-up script
-  (setup.py) from the base folder.  On Windows, use the following command::
+  The easiest way to install this package is to use pip_::
 
-     python setup.py install
+      pip install modelicares
 
-  On Linux, use::
+  On Linux, it may be necessary to have root privileges::
 
-     sudo python setup.py install
+      sudo pip install modelicares
 
-  The matplotlibrc file in the base folder has some recommended revisions to
-  matplotlib_'s defaults.  To use it, copy or move the file to the working
+  Another way is to download and extract a copy of the package from the 
+  `main project site`_, the `master branch at GitHub 
+  <https://github.com/kdavies4/ModelicaRes>`_, or the `PyPI page`_.  Run the
+  following command from the base folder::
+
+      python setup.py install
+
+  Or, on Linux::
+
+      sudo python setup.py install
+
+  The *matplotlibrc* file in the base folder has some recommended revisions to
+  matplotlib_'s defaults.  To use it, copy or move it to the working
   directory or matplotlib_'s configuration directory.  See
   http://matplotlib.org/users/customizing.html for details.
 
   **Credits**
 
-  The main author is Kevin Davies.  Kevin Bandy also helped in the development.
-  Third-party code has been included from Jason Grout (`ArrowLine
-  <http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html>`_
-  class), Jason Heeris (`efficient base-10 logarithm
-  <http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html>`_),
-  Richard Murray (`python-control
-  <http://sourceforge.net/apps/mediawiki/python-control>`_), and Joerg Raedler
-  (method to expand a Modelica_ variable tree - from `DyMat
-  <http://www.j-raedler.de/projects/dymat/>`_).
+  The main author is Kevin Davies.  Improvements, bug fixes, and suggestions 
+  have been provided by Arnout Aertgeerts, Kevin Bandy, Thomas Beutlich, 
+  Martin Sjölund, Mike Tiller, and Michael Wetter.  
+
+  Third-party code has been included from:
+
+  - Jason Grout (`ArrowLine
+    <http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html>`_
+    class),
+  - Jason Heeris (`efficient base-10 logarithm
+    <http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html>`_),
+  - Richard Murray (`python-control
+    <http://sourceforge.net/apps/mediawiki/python-control>`_), and
+  - Joerg Raedler (method to expand a `Modelica`_ variable tree---from
+    DyMat_).
 
   **License terms and development**
 
-  ModelicaRes_ is published under the terms of a `BSD-compatible license
-  <License.html>`_.  Please share any modifications you make (preferably on a
-  Github fork from https://github.com/kdavies4/ModelicaRes) so that others may
-  benefit from your work.  If you find a bug, please `report it
-  <https://github.com/kdavies4/ModelicaRes/issues/new>`_.  If you have
-  suggestions for improvements, please `share them here
-  <https://github.com/kdavies4/ModelicaRes/wiki/Possible-Enhancements>`_.
+  ModelicaRes_ is published under a BSD license (see LICENSE.txt).  Please share 
+  any modifications you make (preferably on a Github fork from 
+  https://github.com/kdavies4/ModelicaRes) in order to help others.  If you find 
+  a bug, please `report it
+  <https://github.com/kdavies4/ModelicaRes/issues/new>`_.  If you have 
+  suggestions, please `share them
+  <https://github.com/kdavies4/ModelicaRes/wiki/Suggestions>`_.
 
   **See also**
 
-  The following `Python`_ projects are related:
+  The following Python_ projects are related:
 
-  - `awesim`_: helps run simulation experiments and organize results
-  - `BuildingsPy`_: supports unit testing
-  - `DyMat`_: exports `Modelica`_ simulation data to comma-separated values
+  - awesim_: helps run simulation experiments and organize results
+  - BuildingsPy_: supports unit testing
+  - DyMat_: exports Modelica_ simulation data to comma-separated values
     (CSV), `Gnuplot <http://www.gnuplot.info/>`_, MATLAB®, and `Network Common
     Data Form (netCDF) <http://www.unidata.ucar.edu/software/netcdf/>`_
-  - `PyFMI`_: tools to work with models through the Functional Mock-Up Interface
+  - PyFMI_: tools to work with models through the Functional Mock-Up Interface
     (FMI) standard
-  - `pysimulator`_: elaborate GUI; supports FMI
+  - PySimulator_: elaborate GUI; supports FMI
+
 
 .. _Modelica: http://www.modelica.org/
+.. _main project site: http://kdavies4.github.io/ModelicaRes/
 .. _Python: http://www.python.org/
 .. _matplotlib: http://www.matplotlib.org/
 .. _NumPy: http://numpy.scipy.org/
 .. _PyPI page: http://pypi.python.org/pypi/ModelicaRes
+.. _pip: https://pypi.python.org/pypi/pip
 .. _LaTeX: http://www.latex-project.org/
 .. _awesim: https://github.com/saroele/awesim
 .. _BuildingsPy: http://simulationresearch.lbl.gov/modelica/buildingspy/
 .. _DyMat: http://www.j-raedler.de/projects/dymat/
 .. _PyFMI: https://pypi.python.org/pypi/PyFMI
-.. _pysimulator: https://code.google.com/p/pysimulator/
+.. _PySimulator: https://github.com/PySimulator/PySimulator

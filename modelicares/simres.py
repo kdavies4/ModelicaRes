@@ -1,13 +1,21 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Load, analyze, and plot results from Modelica_ simulations.
+"""Classes and functions to Load, analyze, and plot results from Modelica_ 
+simulations
 
-This module contains two classes:
+
+**Classes:**
 
 - :class:`SimRes` - Class to load and analyze results from a Modelica_-based
   simulation
 
-- :class:`Info` - Shortcuts to the "get" methods in :class:`SimRes`
+- :class:`Info` - Aliases for the "get" methods in :class:`SimRes`
+
+
+**Functions:**
+
+- :meth:`merge_times` - Merge a list of multiple time vectors into one vector
+
 
 .. _Modelica: http://www.modelica.org/
 """
@@ -20,9 +28,10 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 
 import os
 import numpy as np
-import modelicares.base as base
 
+from re import compile as re_compile
 from scipy.io import loadmat
+from scipy.integrate import trapz
 from matplotlib.pyplot import figlegend
 from matplotlib import rcParams
 from collections import namedtuple
@@ -31,6 +40,7 @@ from difflib import get_close_matches
 
 from modelicares.gui import Browser
 from modelicares.texunit import unit2tex, label_number
+from modelicares import base
 
 
 def _chars_to_str(str_arr):
@@ -80,49 +90,50 @@ def merge_times(times_list):
 class SimRes(object):
     """Class to load and analyze results from a Modelica_-based simulation
 
-    This class contains the following user-accessible methods:
+    This class contains the following methods:
 
-    - :meth:`browse` - Launches a variable browser
+    - :meth:`browse` - Launch a variable browser
 
-    - :meth:`get_description` - Returns the description(s) of trajectory
-      variable(s)
+    - :meth:`get_description` - Return the description(s) of variable(s)
 
-    - :meth:`get_displayUnit` - Returns the Modelica_ *displayUnit* attribute(s)
-      of trajectory variable(s)
+    - :meth:`get_displayUnit` - Return the Modelica_ *displayUnit* attribute(s)
+      of variable(s)
 
-    - :meth:`get_indices_wi_times` - Returns the widest index pair(s) for which
+    - :meth:`get_indices_wi_times` - Return the widest index pair(s) for which
       the time of signal(s) is within given limits
 
-    - :meth:`get_IV` - Returns the initial value(s) of variable(s)
+    - :meth:`get_IV` - Return the initial value(s) of variable(s)
 
-    - :meth:`get_FV` - Returns the final value(s) of variable(s)
+    - :meth:`get_FV` - Return the final value(s) of variable(s)
 
-    - :meth:`get_times` - Returns vector(s) of the sample times of variable(s)
+    - :meth:`get_max` - Return the maximum value(s) of variable(s)
 
-    - :meth:`get_unit` - Returns the *unit* attribute(s) of trajectory
+    - :meth:`get_mean` - Return the time-averaged value(s) of variable(s)
+
+    - :meth:`get_min` - Return the minimum value(s) of variable(s)
+
+    - :meth:`get_times` - Return vector(s) of the sample times of variable(s)
+
+    - :meth:`get_tuple` - Return tuple(s) of time and value vectors for 
       variable(s)
 
-    - :meth:`get_values` - Returns vector(s) of the values of the samples of
+    - :meth:`get_unit` - Return the *unit* attribute(s) of variable(s)
+
+    - :meth:`get_values` - Return vector(s) of the values of the samples of
       variable(s)
 
-    - :meth:`get_values_at_times` - Returns vector(s) of the values of the
+    - :meth:`get_values_at_times` - Return vector(s) of the values of the
       samples of variable(s)
 
-    - :meth:`keys` - Returns a list of all variable names
+    - :meth:`names` - Return a list of variable names that match a pattern
 
-    - :meth:`names` - Returns a list of all variable names
-
-    - :meth:`variables` - Returns a list of all variable names
-
-    - :meth:`glob` - Returns a list of variable names that match a pattern
-
-    - :meth:`nametree` - Returns a tree of all variable names with respect to
+    - :meth:`nametree` - Return a tree of all variable names with respect to
       the path names
 
-    - :meth:`plot` - Plots data as points and/or curves in 2D Cartesian
+    - :meth:`plot` - Plot data as points and/or curves in 2D Cartesian
       coordinates
 
-    - :meth:`sankey` - Creates a figure with Sankey diagram(s)
+    - :meth:`sankey` - Create a figure with Sankey diagram(s)
     """
 
     def __init__(self, fname='dsres.mat', constants_only=False):
@@ -460,7 +471,7 @@ class SimRes(object):
         _do_work()
 
     def _get(self, names, attr):
-        """Return attribute(s) of trajectory variable(s).
+        """Return attribute(s) of variable(s).
 
         **Arguments:**
 
@@ -470,8 +481,8 @@ class SimRes(object):
              This may be a string or (possibly nested) list of strings
              representing the names of the variables.
 
-        - *attr*: Method to retrieve the attribute from *self._traj* given the
-          name of a single variable
+        - *attr*: Method to retrieve the attribute given the name of a single 
+          variable
 
              E.g., for the *unit* attribute:
              ``attr = lambda name: self._traj[name].unit``
@@ -503,7 +514,7 @@ class SimRes(object):
             return
 
     def get_description(self, names):
-        """Return the description(s) of trajectory variable(s).
+        """Return the description(s) of variable(s).
 
         **Arguments:**
 
@@ -530,8 +541,7 @@ class SimRes(object):
         return self._get(names, lambda name: self._traj[name].description)
 
     def get_displayUnit(self, names):
-        """Return the Modelica_ *displayUnit* attribute(s) of trajectory
-        variable(s).
+        """Return the Modelica_ *displayUnit* attribute(s) of variable(s).
 
         **Arguments:**
 
@@ -646,9 +656,9 @@ class SimRes(object):
         - *f*: Function that should be applied to the value(s) (default is
           identity)
 
-        If *names* is a string, then the output will be an array of values.  If
+        If *names* is a string, then the output will be a single value.  If
         *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of arrays.
+        be a (nested) list of values.
 
         **Example:**
 
@@ -696,7 +706,7 @@ class SimRes(object):
                          f(self._data[self._traj[name].data_set][0, i]))
 
     def get_unit(self, names):
-        """Return the *unit* attribute(s) of trajectory variable(s).
+        """Return the *unit* attribute(s) of variable(s).
 
         **Arguments:**
 
@@ -723,9 +733,6 @@ class SimRes(object):
 
     def get_values(self, names, i=slice(0, None), f=lambda x: x):
         """Return vector(s) of the values of the samples of variable(s).
-
-        If there is only a single value, then it is repeated (to support
-        plotting).
 
         **Arguments:**
 
@@ -769,18 +776,18 @@ class SimRes(object):
         The other *get_*\* methods also give this message when a variable cannot
         be found.
         """
-        def _get_value(entry):
+        def _get_values(entry):
             """Return the values of a variable given its *_traj* entry.
             """
             return f(self._data[entry.data_set][entry.data_row, i]
                     if entry.sign == 1 else
                     -self._data[entry.data_set][entry.data_row, i])
 
-        return self._get(names, lambda name: _get_value(self._traj[name]))
+        return self._get(names, lambda name: _get_values(self._traj[name]))
 
     def get_values_at_times(self, names, times, f=lambda x: x):
-        """Return vector(s) of the values of the samples of variable(s) (at
-        optionally given times).
+        """Return vector(s) of the values of the samples of variable(s) at
+        given times.
 
         **Arguments:**
 
@@ -826,72 +833,203 @@ class SimRes(object):
 
         return self._get(names, _get_value_at_times)
 
-    def keys(self):
-        """Return a list of all variable names.
+    def get_tuple(self, names, i=slice(0, None)):
+        """Return tuple(s) of time and value vectors for variable(s).
 
-        This is the same as :meth:`names` and :meth:`variables`.
+        Each tuple contains two vectors: one for times and one for values.
+
+        **Arguments:**
+
+        - *names*: String or (possibly nested) list of strings of the variable
+          names
+
+        - *i*: Index (-1 for last), list of indices, or slice of the values(s)
+          to return
+
+             By default, all values are returned.
+
+        If *names* is a string, then the output will be a tuple.  If *names* is 
+        a (optionally nested) list of strings, then the output will be a 
+        (nested) list of tuples.
 
         **Example:**
 
+        .. code-block:: python
+
            >>> from modelicares import SimRes
+
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.keys()  # doctest: +ELLIPSIS
-           [u'L.p.i', u'Ro.alpha', ... u'Ro.LossPower']
+           >>> sim.get_tuple('L.v') # doctest: +ELLIPSIS
+           (array([    0.        , ... ,  2500.        ], dtype=float32), array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32))
+
+        Note that this is a tuple of vectors, not a vector of tuples. 
         """
-        return self._traj.keys()
+        def _get_times(entry):
+            """Return the times of a variable given its *_traj* entry.
+            """
+            return self._data[entry.data_set][0, i]
 
-    def names(self):
-        """Return a list of all variable names.
+        def _get_values(entry):
+            """Return the values of a variable given its *_traj* entry.
+            """
+            return (self._data[entry.data_set][entry.data_row, i]
+                   if entry.sign == 1 else
+                   -self._data[entry.data_set][entry.data_row, i])
 
-        This is the same as :meth:`keys` and :meth:`variables`.
+        def _get_tuple(entry):
+            """Return the (times, values) of a variable given its *_traj* entry.
+            """
+            return (_get_times(entry), _get_values(entry))
+
+        return self._get(names, lambda name: _get_tuple(self._traj[name]))
+
+    def get_max(self, names, f=lambda x: x):
+        """Return the maximum value(s) of variable(s).
+
+        **Arguments:**
+
+        - *names*: String or (possibly nested) list of strings of variable
+          names
+
+        - *f*: Function that should be applied before taking the maximum 
+          (default is identity)
+
+        If *names* is a string, then the output will be a single value.  If
+        *names* is a (optionally nested) list of strings, then the output will
+        be a (nested) list of values.
 
         **Example:**
 
+        .. code-block:: python
+
            >>> from modelicares import SimRes
+
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.names()  # doctest: +ELLIPSIS
-           [u'L.p.i', u'Ro.alpha', ... u'Ro.LossPower']
+           >>> sim.get_max('L.v')
+           0.77344114
         """
-        return self._traj.keys()
+        return self.get_values(names, f=lambda x: max(f(x)))
 
-    def variables(self):
-        """Return a list of all variable names.
+    def get_mean(self, names, f=lambda x: x):
+        """Return the time-averaged value(s) of variable(s).
 
-        This is the same as :meth:`keys` and :meth:`names`.
+        **Arguments:**
+
+        - *names*: String or (possibly nested) list of strings of variable
+          names
+
+        - *f*: Function that should be applied before taking the mean (default 
+          is identity)
+
+        If *names* is a string, then the output will be a single value.  If
+        *names* is a (optionally nested) list of strings, then the output will
+        be a (nested) list of values.
 
         **Example:**
 
+        .. code-block:: python
+
            >>> from modelicares import SimRes
+
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.variables()  # doctest: +ELLIPSIS
-           [u'L.p.i', u'Ro.alpha', ... u'Ro.LossPower']
+           >>> sim.get_mean('L.v')
+           0.014733823
         """
-        return self._traj.keys()
+        integral = lambda name: trapz(self.get_values(name, f=f), 
+                                      self.get_times(name))
+        Deltat = lambda name: self.get_times(name, -1) - self.get_times(name, 0)
+        mean = lambda name: integral(name)/Deltat(name)
+        return self._get(names, mean)
 
-    def glob(self, pattern):
-        """Return a list of variable names that match *pattern*.
+    def get_min(self, names, f=lambda x: x):
+        """Return the minimum value(s) of variable(s).
 
-        Patterns are Unix shell style:
+        **Arguments:**
 
-        ============   ============================
-        Character(s)   Role
-        ============   ============================
-        *              Matches everything
-        ?              Matches any single character
-        [seq]          Matches any character in seq
-        [!seq]         Matches any char not in seq
-        ============   ============================
+        - *names*: String or (possibly nested) list of strings of variable
+          names
 
-        The matches are case-sensitive.
+        - *f*: Function that should be applied before taking the minimum 
+          (default is identity)
+
+        If *names* is a string, then the output will be a single value.  If
+        *names* is a (optionally nested) list of strings, then the output will
+        be a (nested) list of values.
 
         **Example:**
 
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim.get_min('L.v')
+           -0.9450165
+        """
+        return self.get_values(names, f=lambda x: min(f(x)))
+
+    def names(self, pattern=None, re=False):
+        r"""Return a list of variable names that match a pattern.
+
+        By default, all names are returned.
+
+        **Arguments:**
+
+        - *pattern*: Case-sensitive string used for matching
+
+          - If *re* is *False* (next argument), then the pattern follows the 
+            Unix shell style:
+
+            ============   ============================
+            Character(s)   Role
+            ============   ============================
+            \*             Matches everything
+            ?              Matches any single character
+            [seq]          Matches any character in seq
+            [!seq]         Matches any char not in seq
+            ============   ============================
+
+            Wildcard characters ('\*') are not automatically added at the 
+            beginning or the end of the pattern.  For example, 'x\*' matches
+            variables that begin with "x", whereas '\*x\*' matches all variables 
+            that contain "x".
+
+          - If *re* is *True*, regular expressions are used a la `Python's re
+            module <http://docs.python.org/2/library/re.html>`_.  See also
+            http://docs.python.org/2/howto/regex.html#regex-howto.
+
+            Since :mod:`re.search` is used to produce the matches, it is as if 
+            wildcards ('.*') are automatically added at the beginning and the 
+            end.  For example, 'x' matches all variables that contain "x".  Use 
+            '^x$' to match only the variables that begin with "x" and 'x$' to 
+            match only the variables that end with "x".
+
+            Note that '.' is a subclass separator in Modelica but a wildcard in 
+            regular expressions.  Escape the subclass separator as '\\.'.
+
+        - *re*: *True* to use regular expressions (*False* to use shell style)
+
+        **Examples:**
+
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.glob('L.p*')  # doctest: +ELLIPSIS
+
+           >>> # Names starting with "L.p", using shell-style matching:
+           >>> sim.names('L.p*')
            [u'L.p.i', u'L.p.v']
+
+           >>> # Names ending with "p.v", using re matching:
+           >>> sim.names('p\.v$', re=True)
+           [u'C2.p.v', u'Gnd.p.v', u'L.p.v', u'Nr.p.v', u'C1.p.v', u'Ro.p.v', u'G.p.v']
         """
-        return [key for key in self._traj.keys() if fnmatchcase(key, pattern)]
+        if pattern is None:
+            return list(self._traj) # Shortcut
+        else:
+            if re:
+                matcher = re_compile(pattern).search
+            else:
+                matcher = lambda name: fnmatchcase(name, pattern)
+            return filter(matcher, self._traj.keys())
 
     def nametree(self):
         """Return a tree of all variable names with respect to the path names.
@@ -1282,7 +1420,7 @@ class SimRes(object):
 
     def __call__(self, names, action=get_values, *args, **kwargs):
         """Upon a call to an instance of :class:`SimRes`, call a method on
-        variable(s) given their name(s)
+        variable(s) given their name(s).
 
         **Arguments**:
 
@@ -1354,7 +1492,7 @@ class SimRes(object):
 
     def __getitem__(self, names):
         """Upon accessing a variable name within an instance of
-        :class:`SimRes`, return its values
+        :class:`SimRes`, return its values.
 
         **Arguments**:
 
@@ -1424,7 +1562,17 @@ class SimRes(object):
 
 
 class Info:
-    """Shortcuts to the "get" methods in :class:`SimRes`
+    """Aliases for the "get" methods in :class:`SimRes`
+
+    **Example:**
+
+    .. code-block:: python
+
+       >>> from modelicares.simres import SimRes, Info
+
+       >>> sim = SimRes('examples/ChuaCircuit.mat')
+       >>> Info.FV(sim, 'L.v')
+       -0.25352862
     """
     description = SimRes.get_description
     """Alias for :meth:`SimRes.get_description`"""
@@ -1436,14 +1584,22 @@ class Info:
     """Alias for :meth:`SimRes.get_IV`"""
     FV = SimRes.get_FV
     """Alias for :meth:`SimRes.get_FV`"""
+    max = SimRes.get_max
+    """Alias for :meth:`SimRes.get_max`"""
+    mean = SimRes.get_mean
+    """Alias for :meth:`SimRes.get_mean`"""
+    min = SimRes.get_min
+    """Alias for :meth:`SimRes.get_min`"""
     times = SimRes.get_times
     """Alias for :meth:`SimRes.get_times`"""
+    tuple = SimRes.get_tuple
+    """Alias for :meth:`SimRes.get_tuple`"""
     unit = SimRes.get_unit
     """Alias for :meth:`SimRes.get_unit`"""
     values = SimRes.get_values
     """Alias for :meth:`SimRes.get_values`"""
     values_at_times = SimRes.get_values_at_times
-    """Alias for :meth:`SimRes.get_description`"""
+    """Alias for :meth:`SimRes.get_values_at_times`"""
 
 
 if __name__ == '__main__':

@@ -1,70 +1,72 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Basic methods to help plot and interpret experimental data
+"""Classes and functions to help plot and interpret experimental data
 
-This module contains the following classes:
+
+**Classes:**
 
 - :class:`ArrowLine` - A matplotlib subclass to draw an arrowhead on a line
 
 - :class:`Quantity` - Named tuple class for a constant physical quantity
 
-and the following functions:
 
-- :meth:`add_arrows` - Overlays arrows with annotations on top of a pre-plotted
+**Functions:**
+
+- :meth:`add_arrows` - Overlay arrows with annotations on top of a pre-plotted
   line
 
-- :meth:`add_hlines` - Adds horizontal lines to a set of axes with optional
+- :meth:`add_hlines` - Add horizontal lines to a set of axes with optional
   labels
 
-- :meth:`add_vlines` - Adds vertical lines to a set of axes with optional
+- :meth:`add_vlines` - Add vertical lines to a set of axes with optional
   labels
 
-- :meth:`animate` - Encodes a series of PNG images as a MPG movie
+- :meth:`animate` - Encode a series of PNG images as a MPG movie
 
-- :meth:`color` - Plots 2D scalar data on a color axis in 2D Cartesian
+- :meth:`color` - Plot 2D scalar data on a color axis in 2D Cartesian
   coordinates
 
-- :meth:`closeall` - Closes all open figures
+- :meth:`closeall` - Close all open figures
 
-- :meth:`convert` - Converts the expression of a physical quantity between units
+- :meth:`convert` - Convert the expression of a physical quantity between units
 
-- :meth:`expand_path` - Expands a file path by replacing '~' with the user
+- :meth:`expand_path` - Expand a file path by replacing '~' with the user
   directory and makes the path absolute
 
-- :meth:`flatten_dict` - Flattens a nested dictionary
+- :meth:`flatten_dict` - Flatten a nested dictionary
 
-- :meth:`flatten_list` - Flattens a nested list
+- :meth:`flatten_list` - Flatten a nested list
 
-- :meth:`figure` - Creates a figure and set its label
+- :meth:`figure` - Create a figure and set its label
 
-- :meth:`get_indices` - Returns the pair of indices that bound a target value in
+- :meth:`get_indices` - Return the pair of indices that bound a target value in
   a monotonically increasing vector
 
-- :meth:`get_pow10` - Returns the exponent of 10 for which the significand
+- :meth:`get_pow10` - Return the exponent of 10 for which the significand
   of a number is within the range [1, 10)
 
-- :meth:`get_pow1000` - Returns the exponent of 1000 for which the
+- :meth:`get_pow1000` - Return the exponent of 1000 for which the
   significand of a number is within the range [1, 1000)
 
-- :meth:`load_csv` - Loads a CSV file into a dictionary
+- :meth:`load_csv` - Load a CSV file into a dictionary
 
-- :meth:`plot` - Plots 1D scalar data as points and/or line segments in 2D
+- :meth:`plot` - Plot 1D scalar data as points and/or line segments in 2D
   Cartesian coordinates
 
-- :meth:`quiver` - Plots 2D vector data as arrows in 2D Cartesian coordinates
+- :meth:`quiver` - Plot 2D vector data as arrows in 2D Cartesian coordinates
 
-- :meth:`save` - Saves the current figures as images in a format or list of
+- :meth:`save` - Save the current figures as images in a format or list of
   formats
 
-- :meth:`saveall` - Saves all open figures as images in a format or list of
+- :meth:`saveall` - Save all open figures as images in a format or list of
   formats
 
-- :meth:`setup_subplots` - Creates an array of subplots and return their axes
+- :meth:`setup_subplots` - Create an array of subplots and return their axes
 
-- :meth:`shift_scale_x` - Applies an offset and a factor as necessary to the x
+- :meth:`shift_scale_x` - Apply an offset and a factor as necessary to the x
   axis
 
-- :meth:`shift_scale_y` - Applies an offset and a factor as necessary to the y
+- :meth:`shift_scale_y` - Apply an offset and a factor as necessary to the y
   axis
 """
 __author__ = "Kevin Davies"

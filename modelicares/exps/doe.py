@@ -1,7 +1,8 @@
 #!/usr/bin/python
-"""Functions to design experiments (i.e., design of experiments (DOE))
+"""Functions for design of experiments (DOE)
 
-These can be passed to the *design* argument of :meth:`exps.gen_experiments`.
+These can be passed to the *design* argument of 
+:meth:`~modelicares.exps.gen_experiments`.
 """
 
 from itertools import product
@@ -10,7 +11,7 @@ from itertools import product
 def fullfact(*space):
     """Full-factorial DOE
 
-    **Example**
+    **Example:**
 
     .. code-block:: python
 
@@ -39,7 +40,7 @@ def aslisted(*space):
 
     The set of experiments will terminate at end of the shortest list.
 
-    **Example**
+    **Example:**
 
     .. code-block:: python
 
@@ -59,7 +60,7 @@ def ofat(*space):
     The first entry in each sublist is taken as the baseline value for that
     dimension.
 
-    **Example**
+    **Example:**
 
     .. code-block:: python
 

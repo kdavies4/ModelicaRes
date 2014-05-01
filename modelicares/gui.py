@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Classes and methods to create a (limited) graphical user interface for
+"""Classes and functions to create a (limited) graphical user interface for
 ModelicaRes
 """
 __author__ = "Kevin Davies"

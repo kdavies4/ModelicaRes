@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>loadres &mdash; ModelicaRes v0.9.0 Documentation</title>
+    <title>loadres &mdash; ModelicaRes v0.10.0 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '0.9.0',
+        URL_ROOT:    './',
+        VERSION:     '0.10.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,10 +25,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.9.0 Documentation"
+          title="Search within ModelicaRes v0.10.0 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.9.0 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.10.0 Documentation" href="index.html" />
     <link rel="next" title="modelicares" href="modelicares.html" />
     <link rel="prev" title="ModelicaRes" href="index.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
@@ -55,7 +53,7 @@
         <li class="right" >
           <a href="index.html" title="ModelicaRes"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.9.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -71,7 +69,6 @@
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="exps.doe.html"><tt class="docutils literal"><span class="pre">modelicares.exps.doe</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="base.html"><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
 </ul>
@@ -110,8 +107,8 @@ session of <a class="reference external" href="http://www.ipython.org/">IPython<
 of <a class="reference external" href="http://numpy.scipy.org/">NumPy</a> and <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a> (e.g., <tt class="xref py py-meth docutils literal"><span class="pre">sin()</span></tt> and <tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt>).  The essential
 classes and functions of ModelicaRes are directly available as well.</p>
 <p><strong>Example:</strong></p>
-<p>To begin this example, copy this script (<strong>loadres</strong>) to the current directory
-along with the <strong>examples</strong> folder.</p>
+<p>To begin this example, copy this script (<em>loadres</em>) to the current directory
+along with the <em>examples</em> folder.</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>loadres examples
 Valid: SimRes<span class="o">(</span><span class="s1">&#39;.../examples/ChuaCircuit.mat&#39;</span><span class="o">)</span>
 Valid: SimRes<span class="o">(</span><span class="s1">&#39;.../examples/ThreeTanks.mat&#39;</span><span class="o">)</span>
@@ -156,8 +153,8 @@ A linearization result has been loaded into lin.
 </pre></div>
 </div>
 <p>or go to <a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a>.  To search for variable names, use
-<a class="reference internal" href="simres.html#modelicares.simres.SimRes.glob" title="modelicares.simres.SimRes.glob"><tt class="xref py py-meth docutils literal"><span class="pre">glob()</span></tt></a> with wildcards:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s">&#39;L.p*&#39;</span><span class="p">)</span>
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a> with wildcards:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">names</span><span class="p">(</span><span class="s">&#39;L.p*&#39;</span><span class="p">)</span>
 <span class="go">[u&#39;L.p.i&#39;, u&#39;L.p.v&#39;]</span>
 </pre></div>
 </div>
@@ -193,13 +190,13 @@ methods in <a class="reference internal" href="linres.html#modelicares.linres.Li
         <li class="right" >
           <a href="index.html" title="ModelicaRes"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.9.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Mar 17, 2014.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Last updated on Apr 30, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>

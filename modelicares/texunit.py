@@ -1,5 +1,14 @@
 #!/usr/bin/python
-"""Methods to format numbers to support LaTeX_
+"""Functions to format numbers to support LaTeX_
+
+- :meth:`label_number` - Generate text to label a number as a quantity
+  expressed in a unit
+
+- :meth:`label_quantity` - Generate text to write a quantity as a number times
+  a unit
+
+- :meth:`unit2tex` - Convert a Modelica_ unit string to LaTeX_
+
 
 This module contains three main functions:
 

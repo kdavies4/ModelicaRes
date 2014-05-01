@@ -1,22 +1,47 @@
 Changelog
 =========
 
+0.10.0 (2014-**-**) -- Updates:
+
+   - Added :meth:`~modelicares.simres.SimRes.get_tuple` to get time, value 
+     tuples for variables.
+   - Removed the *external/control* folder.  Instead, using PyPI/distutils to 
+     install the `control package <https://pypi.python.org/pypi/control>`_.
+   - Added functions to calculate the minimum, maximum, and mean of variables
+     (:meth:`~modelicares.simres.SimRes.get_min`, 
+     :meth:`~modelicares.simres.SimRes.get_max`, and 
+     :meth:`~modelicares.simres.SimRes.get_mean`).
+   - Removed :meth:`~modelicares.simres.SimRes.variables`, 
+     :meth:`~modelicares.simres.SimRes.variables`, and 
+     :meth:`~modelicares.simres.SimRes.glob`.  Use
+     :meth:`~modelicares.simres.SimRes.names` instead.
+   - Merged the pattern-matching functionality of 
+     :meth:`~modelicares.simres.SimRes.glob` into 
+     :meth:`~modelicares.simres.SimRes.names` and added the option to use 
+     regular expressions.  By default, :meth:`~modelicares.simres.SimRes.names` 
+     still returns all variable names.
+
 0.9.0 (2014-3-17) -- Updates:
 
-   - Improved support for IPython.
-   - Added dependence on easygui.
+   - Improved support for `IPython <http://ipython.org/>`_.
+   - Added dependence on `easygui <http://easygui.sourceforge.net/>`_.
    - Removed spaces in fahrenheit and celsius.
-   - Improved write_params() and read_params(): 
-        1. More flexible wrt whitespace
-        2. Now accepts square brackets in parameter name, 3)
-   - Changed string encoding to 'latin-1' per arnoutaertgeerts.
-   - Updated links to PySimulator per tbeu.
+   - Improved :meth:`~modelicares.exps.write_params` and 
+     :meth:`~modelicares.exps.read_params`: 
+
+        1. More flexible with respect to whitespace
+        2. Now accepts square brackets in parameter name
+
+   - Changed MATLAB® file string encoding to 'latin-1' per 
+     `arnoutaertgeerts <https://github.com/arnoutaertgeerts>`_.
+   - Updated links to `PySimulator <https://github.com/PySimulator/PySimulator>`_ 
+     per `tbeu <https://github.com/tbeu>`_.
    - Updated the credits.
-   - Added doc/_images per tbeu.
-   - Narrower margins in HTML documentation.
-   - Explained setup in the documentation of the loadres example.
+   - Added *doc/_images* per tbeu_.
+   - Narrowed the margins in HTML documentation.
+   - Explained setup in the :mod:`loadres` example.
    - Updated expected example output.
-   - Updated matplotlibrc.
+   - Updated *matplotlibrc*.
 
 0.8.2 (2013-10-16) -- Updates:
 
@@ -28,85 +53,95 @@ Changelog
 
 0.8.0 (2013-8-6) -- Updates:
 
-   - Updates to :doc:`matplotlibrc` (default formatting)
-   - Added patterns to :meth:`~modelicares.exps.write_params` match more entries in a dsin
-     file.
+   - Updated :doc:`matplotlibrc` (default formatting).
+   - Added patterns to :meth:`~modelicares.exps.write_params` to match more 
+     entries in a dsin file.
    - :meth:`~modelicares.exps.write_script` now clears the log between runs.
-   - Fixed bug so that :meth:`~modelicares.simres.SimRes.plot` keeps the axis labels blank
-     when *xlabel* = "", *ylabel1* = "", or *ylabel2* = "".
-   - :meth:`~modelicares.texunit.label_number` now uses "in" instead of "/" to denote a
-     quantity in a unit that involves a function other than simple scaling
-     (e.g., degC, dB).
-   - :meth:`~modelicares.texunit.unit2tex` now automatically formats some units and
-     constants.
+   - Fixed bug so that :meth:`~modelicares.simres.SimRes.plot` keeps the axis 
+     labels blank when *xlabel* = "", *ylabel1* = "", or *ylabel2* = "".
+   - :meth:`~modelicares.texunit.label_number` now uses "in" instead of "/" to 
+     denote a quantity in a unit that involves a function other than simple 
+     scaling (e.g., degC, dB).
+   - :meth:`~modelicares.texunit.unit2tex` now automatically formats some units 
+     and constants.
    - Added *color* option to :meth:`~modelicares.multi.multiplot`.
-   - Added :meth:`~modelicares.simres.SimRes.variables` method to list variable names (same as
-     :meth:`~modelicares.simres.SimRes.keys` and :meth:`~modelicares.simres.SimRes.names`)
-   - Added :meth:`~modelicares.simres.SimRes.glob` to return variables that match a pattern.
-   - Removed the :mod:`simres.info` submodule.  It is better to used the methods of
-     :class:`~modelicares.simres.SimRes` directly.
+   - Added :meth:`~modelicares.simres.SimRes.variables` method to list variable 
+     names (same as :meth:`~modelicares.simres.SimRes.keys` and 
+     :meth:`~modelicares.simres.SimRes.names`).
+   - Added :meth:`~modelicares.simres.SimRes.glob` to return variables that 
+     match a pattern.
+   - Removed the :mod:`simres.info` submodule.  It is better to use the methods 
+     of :class:`~modelicares.simres.SimRes` directly.
 
 0.7.2 (2013-7-9) -- Updates:
 
    - When a variable cannot be found, suggestions are now given.  See the
      example in :meth:`~modelicares.simres.SimRes.get_values`.
    - :meth:`~modelicares.exps.write_script` now allows initialization scripts.
-   - Warning message in :meth:`~modelicares.simres.SimRes.plot` if y-axis variable descriptions
-     are different.
-   - :meth:`~modelicares.exps.write_script` now writes scripts that are more readable.
+   - Added warning message in :meth:`~modelicares.simres.SimRes.plot` if y-axis 
+     variable descriptions are different.
+   - :meth:`~modelicares.exps.write_script` now writes scripts that are more 
+     readable.
 
 0.7.1 (2013-7-7) -- Updates:
 
-   - Added missing files to :doc:`MANIFEST`
+   - Added missing files to :doc:`MANIFEST`.
 
 0.7.0 (2013-7-7) -- Updates:
 
-   - Added :meth:`~modelicares.multi.multibode` and :meth:`~modelicares.multi.multinyquist` to create
-     Bode and Nyquist diagrams of multiple linearizations.
-   - Fixed and improved specification of axes in :meth:`~modelicares.linres.LinRes.bode` and
-     :meth:`~modelicares.linres.LinRes.nyquist`.  The argument *ax* argument to :meth:`~modelicares.linres.LinRes.bode`
-     is now *axes* instead -- a tuple (pair) of axes.
+   - Added :meth:`~modelicares.multi.multibode` and 
+     :meth:`~modelicares.multi.multinyquist` to create Bode and Nyquist diagrams 
+     of multiple linearizations.
+   - Fixed and improved specification of axes in 
+     :meth:`~modelicares.linres.LinRes.bode` and
+     :meth:`~modelicares.linres.LinRes.nyquist`.  The argument *ax* argument to 
+     :meth:`~modelicares.linres.LinRes.bode` is now *axes* instead---a tuple 
+     (pair) of axes.
    - Fixed error with chosen directory in :meth:`~modelicares.base.save`
    - Added function to generate one-factor-at-a-time experiments.  The old
-     *permute* argument to :meth:`~modelicares.exps.gen_experiments` is now generalized to
-     *design*, as in design of experiments.  Now, assign a function from
-     :mod:`~modelicares.exps.doe` to that argument.
-   - Using square axes by default for Nyquist plots
+     *permute* argument to :meth:`~modelicares.exps.gen_experiments` is now 
+     generalized to *design*, as in design of experiments.  Now, assign a 
+     function from :mod:`~modelicares.exps.doe` to that argument.
+   - Square axes are now the default for Nyquist plots.
 
 0.6.2 (2013-7-4) -- Updates:
 
-   - Updated python-control to 0.6c.  The *mark* argument has been removed from
-     :meth:`~modelicares.linres.LinRes.nyquist`.  Use *labelFreq* to label every *labelFreq* th
-     frequency.  The *w_min* and *w_max* arguments have been removed from
-     :meth:`~modelicares.linres.LinRes.bode` and :meth:`~modelicares.linres.LinRes.nyquist`.  Use *omega* with bounds or
-     a list of frequencies.
-   - :meth:`~modelicares.exps.write_script` now saves the Dymola command log with translation
-     information.
-   - Fixed error in *loadres* script in loading from a folder
-   - Added option to :class:`~modelicares.simres.SimRes` (*constants_only*) to load only constants
-   - Added :meth:`~modelicares.simres.SimRes.keys` method to list variable names (same as
-     :meth:`~modelicares.simres.SimRes.names`)
-   - Added methods from :class:`~modelicares.simres.Info` to :mod:`simres.info` submodule
+   - Updated `python-control <http://sourceforge.net/apps/mediawiki/python-control>`_ 
+     to 0.6c.  The *mark* argument has been removed from
+     :meth:`~modelicares.linres.LinRes.nyquist`.  Use *labelFreq* to label every 
+     *labelFreq* th frequency.  The *w_min* and *w_max* arguments have been 
+     removed from :meth:`~modelicares.linres.LinRes.bode` and 
+     :meth:`~modelicares.linres.LinRes.nyquist`.  Instead, use *omega* with 
+     bounds or a list of frequencies.
+   - :meth:`~modelicares.exps.write_script` now saves the Dymola command log 
+     with translation information.
+   - Fixed error in :mod:`loadres` script in loading from a folder.
+   - Added option to :class:`~modelicares.simres.SimRes` (*constants_only*) to 
+     load only constants.
+   - Added :meth:`~modelicares.simres.SimRes.keys` method to list variable names 
+     (same as :meth:`~modelicares.simres.SimRes.names`).
+   - Added methods from :class:`~modelicares.simres.Info` to :mod:`simres.info` 
+     submodule.
 
 0.6.1 (2013-7-2) -- Updates:
 
-   - Fixed :doc:`README.TXT`.
+   - Fixed :doc:`README.txt`.
 
 0.6.0 (2013-7-2) -- Updates:
 
-   - Added :meth:`~modelicares.base.save` to save the current figure
-   - Added *use_paren* option to :meth:`~modelicares.simres.SimRes.plot`
+   - Added :meth:`~modelicares.base.save` to save the current figure.
+   - Added *use_paren* option to :meth:`~modelicares.simres.SimRes.plot`.
    - Changed :meth:`~modelicares.exps.write_script` to put results in folders
-     instead of special renaming scheme
-   - Improved organization of the examples folder
+     instead of special renaming scheme.
+   - Improved organization of the *examples* folder.
 
 0.5.2 (2013-6-30) -- Updates:
 
    - Fixed error so that by default
      :meth:`~modelicares.simres.SimRes.get_values` and
-     :meth:`~modelicares.simres.SimRes.get_times` now include the final value
-     and time.
-   - Added function to scale time
+     :meth:`~modelicares.simres.SimRes.get_times` include the final value and
+     time.
+   - Added function to scale time.
 
 0.5.1 (2013-6-18) -- Updates:
 
@@ -114,13 +149,13 @@ Changelog
 
 0.5 (2013-6-5) -- Updates:
 
-   - Updated :doc:`README.TXT`.
+   - Updated :doc:`README.txt`.
 
 0.4 (2012-12-10) -- Updates:
 
    - Added default of *label* = '' to :meth:`~modelicares.base.figure`.
    - Updated documentation for Windows.
-   - Added check for proper Python version (currently requires 2.7).
+   - Added check for Python version (currently requires 2.7).
 
 0.3 (2012-12-4) -- Updates:
 

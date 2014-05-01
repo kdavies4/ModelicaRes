@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -8,15 +6,15 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.multi &mdash; ModelicaRes v0.9.0 Documentation</title>
+    <title>modelicares.multi &mdash; ModelicaRes v0.10.0 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
-        VERSION:     '0.9.0',
+        URL_ROOT:    './',
+        VERSION:     '0.10.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,10 +25,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.9.0 Documentation"
+          title="Search within ModelicaRes v0.10.0 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.9.0 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.10.0 Documentation" href="index.html" />
     <link rel="next" title="modelicares.exps" href="exps.html" />
     <link rel="prev" title="modelicares.linres" href="linres.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
@@ -55,7 +53,7 @@
         <li class="right" >
           <a href="linres.html" title="modelicares.linres"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.9.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -71,7 +69,6 @@
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="exps.doe.html"><tt class="docutils literal"><span class="pre">modelicares.exps.doe</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="base.html"><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
 </ul>
@@ -101,14 +98,13 @@
 <span id="modelicares-multi"></span><h1><a class="reference internal" href="#module-modelicares.multi" title="modelicares.multi"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.multi</span></tt></a><a class="headerlink" href="#module-modelicares.multi" title="Permalink to this headline">¶</a></h1>
 <p>Functions to load and plot data from multiple simulation and linearization
 files at once</p>
-<p>This module contains four functions:</p>
 <ul class="simple">
-<li><a class="reference internal" href="#modelicares.multi.multiload" title="modelicares.multi.multiload"><tt class="xref py py-meth docutils literal"><span class="pre">multiload()</span></tt></a> - Loads multiple <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation and/or linearization
+<li><a class="reference internal" href="#modelicares.multi.multiload" title="modelicares.multi.multiload"><tt class="xref py py-meth docutils literal"><span class="pre">multiload()</span></tt></a> - Load multiple <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation and/or linearization
 results</li>
-<li><a class="reference internal" href="#modelicares.multi.multiplot" title="modelicares.multi.multiplot"><tt class="xref py py-meth docutils literal"><span class="pre">multiplot()</span></tt></a> - Plots data from multiple simulations in 2D Cartesian
+<li><a class="reference internal" href="#modelicares.multi.multiplot" title="modelicares.multi.multiplot"><tt class="xref py py-meth docutils literal"><span class="pre">multiplot()</span></tt></a> - Plot data from multiple simulations in 2D Cartesian
 coordinates</li>
-<li><a class="reference internal" href="#modelicares.multi.multibode" title="modelicares.multi.multibode"><tt class="xref py py-meth docutils literal"><span class="pre">multibode()</span></tt></a> - Plots multiple linearizations onto a single Bode diagram</li>
-<li><a class="reference internal" href="#modelicares.multi.multinyquist" title="modelicares.multi.multinyquist"><tt class="xref py py-meth docutils literal"><span class="pre">multinyquist()</span></tt></a> - Plots multiple linearizations onto a single Nyquist
+<li><a class="reference internal" href="#modelicares.multi.multibode" title="modelicares.multi.multibode"><tt class="xref py py-meth docutils literal"><span class="pre">multibode()</span></tt></a> - Plot multiple linearizations onto a single Bode diagram</li>
+<li><a class="reference internal" href="#modelicares.multi.multinyquist" title="modelicares.multi.multinyquist"><tt class="xref py py-meth docutils literal"><span class="pre">multinyquist()</span></tt></a> - Plot multiple linearizations onto a single Nyquist
 diagram</li>
 </ul>
 <dl class="function">
@@ -147,7 +143,7 @@ empty string (&#8216;&#8217;), then the base filenames will be used.</p>
 <li><p class="first"><em>colors</em>: Color or list of colors that will be used sequentially</p>
 <blockquote>
 <div><p>Each may be a character, grayscale, or rgb value.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference external" href="http://matplotlib.sourceforge.net/api/colors_api.html">http://matplotlib.sourceforge.net/api/colors_api.html</a></p>
 </div>
@@ -159,7 +155,7 @@ used sequentially</p>
 <div><p>Each style is a string representing a linestyle (e.g., &#8220;&#8211;&#8221;) or a
 tuple of on/off lengths representing dashes.  Use &#8220;&#8221; for no line
 and &#8220;-&#8221; for a solid line.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference external" href="http://matplotlib.sourceforge.net/api/collections_api.html">http://matplotlib.sourceforge.net/api/collections_api.html</a></p>
 </div>
@@ -283,7 +279,7 @@ empty string (&#8216;&#8217;), then the base filenames will be used.</p>
 <li><p class="first"><em>colors</em>: Color or list of colors that will be used sequentially</p>
 <blockquote>
 <div><p>Each may be a character, grayscale, or rgb value.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference external" href="http://matplotlib.sourceforge.net/api/colors_api.html">http://matplotlib.sourceforge.net/api/colors_api.html</a></p>
 </div>
@@ -356,7 +352,7 @@ empty string (&#8216;&#8217;), then the base filenames will be used.</p>
 will be used sequentially</p>
 <blockquote>
 <div><p>Each entry may be a character, grayscale, or rgb value.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference external" href="http://matplotlib.sourceforge.net/api/colors_api.html">http://matplotlib.sourceforge.net/api/colors_api.html</a></p>
 </div>
@@ -367,7 +363,7 @@ that will be used sequentially</p>
 <blockquote>
 <div><p>Each style is a tuple of on/off lengths representing dashes.  Use
 (0, 1) for no line and (None ,None) for a solid line.</p>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference external" href="http://matplotlib.sourceforge.net/api/collections_api.html">http://matplotlib.sourceforge.net/api/collections_api.html</a></p>
 </div>
@@ -424,13 +420,13 @@ that will be used sequentially</p>
         <li class="right" >
           <a href="linres.html" title="modelicares.linres"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.9.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Mar 17, 2014.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+      Last updated on Apr 30, 2014.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>
