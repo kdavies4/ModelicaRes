@@ -1,7 +1,12 @@
 Changelog
 =========
 
-0.10.0 (2014-**-**) -- Updates:
+0.10.x (2014-*-**) -- Updates:
+
+   - Removed :meth:`~modelicares.simres.merge_times`.  It is not used internally
+     and probably is not useful externally.
+
+0.10.0 (2014-4-30) -- Updates:
 
    - Added :meth:`~modelicares.simres.SimRes.get_tuple` to get time, value 
      tuples for variables.
@@ -13,7 +18,8 @@ Changelog
      :meth:`~modelicares.simres.SimRes.get_mean`).
    - Removed :meth:`~modelicares.simres.SimRes.variables`, 
      :meth:`~modelicares.simres.SimRes.variables`, and 
-     :meth:`~modelicares.simres.SimRes.glob`.  Use
+     :meth:`~modelicares.simres.SimRes.glob` from 
+     :meth:`~modelicares.simres.SimRes`.  Use
      :meth:`~modelicares.simres.SimRes.names` instead.
    - Merged the pattern-matching functionality of 
      :meth:`~modelicares.simres.SimRes.glob` into 

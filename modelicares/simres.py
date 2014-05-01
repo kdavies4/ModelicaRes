@@ -1,20 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Classes and functions to Load, analyze, and plot results from Modelica_ 
-simulations
-
-
-**Classes:**
+"""Classes to load, analyze, and plot results from Modelica_ simulations
 
 - :class:`SimRes` - Class to load and analyze results from a Modelica_-based
   simulation
 
 - :class:`Info` - Aliases for the "get" methods in :class:`SimRes`
-
-
-**Functions:**
-
-- :meth:`merge_times` - Merge a list of multiple time vectors into one vector
 
 
 .. _Modelica: http://www.modelica.org/
@@ -64,28 +55,6 @@ def _small_product(arr):
         res *= e
     return res
 
-
-def merge_times(times_list):
-    """Merge a list of multiple time vectors into one vector.
-
-    **Example:**
-
-    .. code-block:: python
-
-       >>> from modelicares.simres import SimRes, merge_times
-
-       >>> sim = SimRes('examples/ChuaCircuit.mat')
-       >>> times_list = sim.get_times(['L.v', 'G.T_heatPort'])
-       >>> merge_times(times_list) # doctest: +ELLIPSIS
-       array([    0.        , ... 2500.        ], dtype=float32)
-    """
-    all_times = times_list[0]
-    for i in range(1, len(times_list)):
-        if (len(times_list[i-1]) != len(times_list[i])
-            or any(times_list[i-1] != times_list[i])):
-            all_times = np.union1d(all_times, times_list[i])
-    all_times.sort()
-    return all_times
 
 class SimRes(object):
     """Class to load and analyze results from a Modelica_-based simulation

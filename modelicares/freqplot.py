@@ -352,4 +352,3 @@ def nyquist_plot(syslist, omega=None, Plot=True, color='b', label=None, mark=Tru
         # ModelicaRes 7/5/13:
         #return x, y, omega
         return x, y, omega, ax
-

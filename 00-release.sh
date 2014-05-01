@@ -74,4 +74,3 @@ branch=`git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3` # Original branch
 git checkout gh-pages
 bash 00-make-gh-pages.sh
 git checkout $branch
-
