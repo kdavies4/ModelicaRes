@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>ModelicaRes &mdash; ModelicaRes v0.9.x Documentation</title>
+    <title>ModelicaRes &mdash; ModelicaRes v0.10.0 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.9.x',
+        VERSION:     '0.10.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,10 +25,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.9.x Documentation"
+          title="Search within ModelicaRes v0.10.0 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.9.x Documentation" href="#" />
+    <link rel="top" title="ModelicaRes v0.10.0 Documentation" href="#" />
     <link rel="next" title="loadres" href="loadres.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
@@ -49,7 +49,7 @@
         <li class="right" >
           <a href="loadres.html" title="loadres"
              accesskey="N">next</a> |</li>
-        <li><a href="#">ModelicaRes v0.9.x Documentation</a> &raquo;</li> 
+        <li><a href="#">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -94,7 +94,7 @@
 <h1>ModelicaRes<a class="headerlink" href="#modelicares" title="Permalink to this headline">¶</a></h1>
 <p><strong>Python utilities to set up and analyze Modelica simulation experiments</strong></p>
 <p>ModelicaRes is a free, open-source tool to manage <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulations,
-interpret results, and create publishable figures.  It is currently possible to</p>
+interpret results, and create publishable figures.  It is possible to</p>
 <ul class="simple">
 <li>Auto-generate simulation scripts,</li>
 <li>Browse data,</li>
@@ -142,23 +142,26 @@ submodule, <a class="reference internal" href="base.html#module-modelicares.base
 <p>For a list of changes, please see the <a class="reference external" href="Changelog.html">changelog</a>.  A PDF
 version of this documentation is available <a class="reference external" href="ModelicaRes.pdf">here</a>.</p>
 <p><strong>Installation</strong></p>
-<p>The easiest way to install this package is to use <a href="#id3"><span class="problematic" id="id4">`</span></a>pip
-&lt;<a class="reference external" href="https://pypi.python.org/pypi/pip">https://pypi.python.org/pypi/pip</a>&gt;_:</p>
+<p>The easiest way to install this package is to use <a class="reference external" href="https://pypi.python.org/pypi/pip">pip</a>:</p>
 <div class="highlight-python"><div class="highlight"><pre>pip install modelicares
 </pre></div>
 </div>
+<p>On Linux, it may be necessary to have root privileges:</p>
+<div class="highlight-python"><div class="highlight"><pre>sudo pip install modelicares
+</pre></div>
+</div>
 <p>Another way is to download and extract a copy of the package from the
-<a href="#id15"><span class="problematic" id="id16">`main project site`_</span></a>, the <a class="reference external" href="https://github.com/kdavies4/ModelicaRes">master branch at GitHub</a>, or the <a class="reference external" href="http://pypi.python.org/pypi/ModelicaRes">PyPI page</a>.  Run
-<em>setup.py</em> from the base folder using the following command:</p>
+<a class="reference external" href="http://kdavies4.github.io/ModelicaRes/">main project site</a>, the <a class="reference external" href="https://github.com/kdavies4/ModelicaRes">master branch at GitHub</a>, or the <a class="reference external" href="http://pypi.python.org/pypi/ModelicaRes">PyPI page</a>.  Run the
+following command from the base folder:</p>
 <div class="highlight-python"><div class="highlight"><pre>python setup.py install
 </pre></div>
 </div>
-<p>On Linux, it may be necessary to have root privileges:</p>
+<p>Or, on Linux:</p>
 <div class="highlight-python"><div class="highlight"><pre>sudo python setup.py install
 </pre></div>
 </div>
-<p>The matplotlibrc file in the base folder has some recommended revisions to
-<a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>&#8216;s defaults.  To use it, copy or move the file to the working
+<p>The <em>matplotlibrc</em> file in the base folder has some recommended revisions to
+<a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>&#8216;s defaults.  To use it, copy or move it to the working
 directory or <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>&#8216;s configuration directory.  See
 <a class="reference external" href="http://matplotlib.org/users/customizing.html">http://matplotlib.org/users/customizing.html</a> for details.</p>
 <p><strong>Credits</strong></p>
@@ -175,10 +178,11 @@ class),</li>
 <a class="reference external" href="http://www.j-raedler.de/projects/dymat/">DyMat</a>).</li>
 </ul>
 <p><strong>License terms and development</strong></p>
-<p><a class="reference internal" href="#modelicares">ModelicaRes</a> is published under the terms of a <a class="reference external" href="License.html">BSD-compatible license</a>.  Please share any modifications you make (preferably on a
-Github fork from <a class="reference external" href="https://github.com/kdavies4/ModelicaRes">https://github.com/kdavies4/ModelicaRes</a>) so that others may
-benefit from your work.  If you find a bug, please <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/issues/new">report it</a>.  If you have
-suggestions for improvements, please <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/wiki/Possible-Enhancements">share them here</a>.</p>
+<p><a class="reference internal" href="#modelicares">ModelicaRes</a> is published under a BSD license (see LICENSE.txt).  Please share
+any modifications you make (preferably on a Github fork from
+<a class="reference external" href="https://github.com/kdavies4/ModelicaRes">https://github.com/kdavies4/ModelicaRes</a>) in order to help others.  If you find
+a bug, please <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/issues/new">report it</a>.  If you have
+suggestions, please <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/wiki/Suggestions">share them</a>.</p>
 <p><strong>See also</strong></p>
 <p>The following <a class="reference external" href="http://www.python.org/">Python</a> projects are related:</p>
 <ul class="simple">
@@ -211,12 +215,12 @@ Data Form (netCDF)</a></li>
         <li class="right" >
           <a href="loadres.html" title="loadres"
              >next</a> |</li>
-        <li><a href="#">ModelicaRes v0.9.x Documentation</a> &raquo;</li> 
+        <li><a href="#">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 29, 2014.
+      Last updated on Apr 30, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

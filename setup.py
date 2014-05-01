@@ -8,7 +8,7 @@ from distutils.core import setup
 from glob import glob
 
 setup(name='ModelicaRes',
-      version="0.9.x",
+      version="0.10.x",
       description='Utilities to set up and analyze Modelica simulation experiments',
       long_description=open('README.txt').read(),
       author='Kevin Davies',

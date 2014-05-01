@@ -28,19 +28,19 @@
 # Kevin Davies, 7/7/13
 
 # Build and install.
-./setup.py build
-sudo ./setup.py install
+python setup.py build
+sudo python setup.py install
 
 # Run the doc tests and recreate the example images.
-./00-test.sh
+bash 00-test.sh
 cd examples
-./00-crop-png.sh
+bash 00-crop-png.sh
 cd ..
 
 # Make the local documentation.
 cd doc
-./make.py html
-./make.py latex
+python make.py html
+python make.py latex
 
 # Copy the HTML and PDF documentation to the root of the doc folder.
 rm *.html
@@ -58,9 +58,9 @@ cp -f build/latex/ModelicaRes.pdf ./
 cd ..
 
 # Make a distributable copy.
-./setup.py sdist --formats=gztar,zip
+python setup.py sdist --formats=gztar,zip
 # Use the zip command to change all line endings to Windows format.
-name=`./setup.py --fullname`
+name=`python setup.py --fullname`
 cd dist
 rm $name.zip
 tar -xf $name.tar.gz
@@ -72,6 +72,6 @@ cd ..
 git commit -am "Auto-updated documentation"
 branch=`git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3` # Original branch
 git checkout gh-pages
-./00-make-gh-pages.sh
+bash 00-make-gh-pages.sh
 git checkout $branch
 

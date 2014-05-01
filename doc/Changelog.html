@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Changelog &mdash; ModelicaRes v0.9.x Documentation</title>
+    <title>Changelog &mdash; ModelicaRes v0.10.0 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.9.x',
+        VERSION:     '0.10.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,10 +25,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.9.x Documentation"
+          title="Search within ModelicaRes v0.10.0 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.9.x Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.10.0 Documentation" href="index.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
     <meta name="author" content="Kevin L. Davies">
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.9.x Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -91,6 +91,10 @@
 <p>0.10.0 (2014-<strong>-</strong>) &#8211; Updates:</p>
 <blockquote>
 <div><ul class="simple">
+<li>Added <a class="reference internal" href="simres.html#modelicares.simres.SimRes.get_tuple" title="modelicares.simres.SimRes.get_tuple"><tt class="xref py py-meth docutils literal"><span class="pre">get_tuple()</span></tt></a> to get time, value
+tuples for variables.</li>
+<li>Removed the <em>external/control</em> folder.  Instead, using PyPI/distutils to
+install the <a class="reference external" href="https://pypi.python.org/pypi/control">control package</a>.</li>
 <li>Added functions to calculate the minimum, maximum, and mean of variables
 (<a class="reference internal" href="simres.html#modelicares.simres.SimRes.get_min" title="modelicares.simres.SimRes.get_min"><tt class="xref py py-meth docutils literal"><span class="pre">get_min()</span></tt></a>,
 <a class="reference internal" href="simres.html#modelicares.simres.SimRes.get_max" title="modelicares.simres.SimRes.get_max"><tt class="xref py py-meth docutils literal"><span class="pre">get_max()</span></tt></a>, and
@@ -101,8 +105,9 @@
 <a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a> instead.</li>
 <li>Merged the pattern-matching functionality of
 <tt class="xref py py-meth docutils literal"><span class="pre">glob()</span></tt> into
-<a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a>.  By default,
-<a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a> still returns all variable names.</li>
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a> and added the option to use
+regular expressions.  By default, <a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a>
+still returns all variable names.</li>
 </ul>
 </div></blockquote>
 <p>0.9.0 (2014-3-17) &#8211; Updates:</p>
@@ -131,7 +136,7 @@ per <a class="reference external" href="https://github.com/tbeu">tbeu</a>.</p>
 </li>
 <li><p class="first">Updated the credits.</p>
 </li>
-<li><p class="first">Added <strong>doc/_images</strong> per <a class="reference external" href="https://github.com/tbeu">tbeu</a>.</p>
+<li><p class="first">Added <em>doc/_images</em> per <a class="reference external" href="https://github.com/tbeu">tbeu</a>.</p>
 </li>
 <li><p class="first">Narrowed the margins in HTML documentation.</p>
 </li>
@@ -139,7 +144,7 @@ per <a class="reference external" href="https://github.com/tbeu">tbeu</a>.</p>
 </li>
 <li><p class="first">Updated expected example output.</p>
 </li>
-<li><p class="first">Updated <strong>matplotlibrc</strong>.</p>
+<li><p class="first">Updated <em>matplotlibrc</em>.</p>
 </li>
 </ul>
 </div></blockquote>
@@ -250,7 +255,7 @@ submodule.</li>
 <li>Added <em>use_paren</em> option to <a class="reference internal" href="simres.html#modelicares.simres.SimRes.plot" title="modelicares.simres.SimRes.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a>.</li>
 <li>Changed <a class="reference internal" href="exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a> to put results in folders
 instead of special renaming scheme.</li>
-<li>Improved organization of the <strong>examples</strong> folder.</li>
+<li>Improved organization of the <em>examples</em> folder.</li>
 </ul>
 </div></blockquote>
 <p>0.5.2 (2013-6-30) &#8211; Updates:</p>
@@ -315,12 +320,12 @@ time.</li>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.9.x Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 29, 2014.
+      Last updated on Apr 30, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

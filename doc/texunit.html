@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.texunit &mdash; ModelicaRes v0.9.x Documentation</title>
+    <title>modelicares.texunit &mdash; ModelicaRes v0.10.0 Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.9.x',
+        VERSION:     '0.10.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,10 +25,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.9.x Documentation"
+          title="Search within ModelicaRes v0.10.0 Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.9.x Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.10.0 Documentation" href="index.html" />
     <link rel="next" title="modelicares.base" href="base.html" />
     <link rel="prev" title="modelicares.exps" href="exps.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
@@ -53,7 +53,7 @@
         <li class="right" >
           <a href="exps.html" title="modelicares.exps"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.9.x Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -124,7 +124,7 @@ a unit</li>
 <div><p><em>times</em> is applied between the number and the first unit and between
 units.  The default is 3/18 quad space.  The multiplication between
 the significand and the exponent is always indicated by
-&#8220;<span class="math">\times</span>&#8221;.</p>
+&#8220;<img class="math" src="_images/math/c69691d64985442217922c8d34e835a9dea60178.png" alt="\times"/>&#8221;.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>per</em>: <a class="reference external" href="http://www.latex-project.org/">LaTeX</a> math string to indicate division</p>
@@ -151,7 +151,7 @@ than italics)</p>
 <span class="go">&#39;Mobility$\\,/\\,\\mathrm{m^{2}\\,V^{-1}\\,s^{-1}}$&#39;</span>
 </pre></div>
 </div>
-<p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: Mobility <span class="math">\,/\,\mathrm{m^{2}\,V^{-1}\,s^{-1}}</span></p>
+<p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: Mobility <img class="math" src="_images/math/6392082ab7f0b5986af5238ddc792e4102e0b837.png" alt="\,/\,\mathrm{m^{2}\,V^{-1}\,s^{-1}}"/></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">label_number</span><span class="p">(</span><span class="s">&quot;Mole fraction&quot;</span><span class="p">,</span> <span class="s">&quot;1&quot;</span><span class="p">)</span>
 <span class="go">&#39;Mole fraction&#39;</span>
 </pre></div>
@@ -192,7 +192,7 @@ and <a class="reference external" href="http://en.wikipedia.org/wiki/SI_prefix">
 <div><p><em>times</em> is applied between the number and the first unit and between
 units.  The default is 3/18 quad space.  The multiplication between
 the significand and the exponent is always indicated by
-&#8220;<span class="math">\times</span>&#8221;.</p>
+&#8220;<img class="math" src="_images/math/c69691d64985442217922c8d34e835a9dea60178.png" alt="\times"/>&#8221;.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>roman</em>: <em>True</em>, if the units should be typeset in Roman text (rather
@@ -205,22 +205,22 @@ than italics)</p>
 <span class="go">&#39;1.234$\\,\\mathrm{mm}$&#39;</span>
 </pre></div>
 </div>
-<p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: <span class="math">1.234\mathrm{\,mm}</span></p>
+<p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: <img class="math" src="_images/math/f8b195efbaf0ffe5542a3a829afb50cb85e233ca.png" alt="1.234\mathrm{\,mm}"/></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">label_quantity</span><span class="p">(</span><span class="mf">1.2345e-3</span><span class="p">,</span> <span class="s">&#39;m&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.3E</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">roman</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="go">&#39;1.234$\\times10^{-3}$$\\,\\mathrm{m}$&#39;</span>
 </pre></div>
 </div>
-<p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: <span class="math">1.234\times10^{-3}\,\mathrm{m}</span></p>
+<p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: <img class="math" src="_images/math/28a3677e8a4173f7c7fd600b77071542613f8a95.png" alt="1.234\times10^{-3}\,\mathrm{m}"/></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">label_quantity</span><span class="p">(</span><span class="mf">1.2345e6</span><span class="p">)</span>
 <span class="go">&#39;1.2345$\\times10^{6}$&#39;</span>
 </pre></div>
 </div>
-<p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: <span class="math">1.2345\times10^{6}</span></p>
+<p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: <img class="math" src="_images/math/516b366d05af4b384d90cc84ae867097a80e0ebf.png" alt="1.2345\times10^{6}"/></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">label_quantity</span><span class="p">(</span><span class="mf">1e3</span><span class="p">,</span> <span class="s">&#39;\Omega&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.1e</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">roman</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="go">&#39;1.0$\\,\\mathrm{k\\Omega}$&#39;</span>
 </pre></div>
 </div>
-<p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: <span class="math">1.0\,\mathrm{k\Omega}</span></p>
+<p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: <img class="math" src="_images/math/45044130be4bdda6a9dc61fb00dc3c4faec07259.png" alt="1.0\,\mathrm{k\Omega}"/></p>
 </div></blockquote>
 </dd></dl>
 
@@ -258,7 +258,7 @@ than italics)</p>
 <span class="go">&#39;\\mathrm{m\\,s^{-2}}&#39;</span>
 </pre></div>
 </div>
-<p>which will render in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a> math as <span class="math">\mathrm{m\,s^{-2}}</span></p>
+<p>which will render in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a> math as <img class="math" src="_images/math/1bfbd763007e7b6412793cebf5a3c7440bf5cce6.png" alt="\mathrm{m\,s^{-2}}"/></p>
 </div></blockquote>
 </dd></dl>
 
@@ -285,12 +285,12 @@ than italics)</p>
         <li class="right" >
           <a href="exps.html" title="modelicares.exps"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.9.x Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 29, 2014.
+      Last updated on Apr 30, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

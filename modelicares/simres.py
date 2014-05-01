@@ -983,29 +983,29 @@ class SimRes(object):
             ============   ============================
             Character(s)   Role
             ============   ============================
-            *\             Matches everything
+            \*             Matches everything
             ?              Matches any single character
             [seq]          Matches any character in seq
             [!seq]         Matches any char not in seq
             ============   ============================
 
-            Wildcard characters (*\) are not automatically added at the 
-            beginning or end of the pattern.  For example, 'x*\' matches
-            variables that begin with "x", whereas '*\x*\' matches all variables 
+            Wildcard characters ('\*') are not automatically added at the 
+            beginning or the end of the pattern.  For example, 'x\*' matches
+            variables that begin with "x", whereas '\*x\*' matches all variables 
             that contain "x".
 
-          - If *re* is *True*, regular expressions are used a la `Python's 
-            **re** module <http://docs.python.org/2/library/re.html>`_.  See 
-            also http://docs.python.org/2/howto/regex.html#regex-howto.
+          - If *re* is *True*, regular expressions are used a la `Python's re
+            module <http://docs.python.org/2/library/re.html>`_.  See also
+            http://docs.python.org/2/howto/regex.html#regex-howto.
 
             Since :mod:`re.search` is used to produce the matches, it is as if 
-            wildcards ('.*\') are automatically added at the beginning and end.
-            For example, 'x' matches all variables that contain "x".  Use '^x$' 
-            to match only the variables that begin with "x" and 'x$' to match 
-            only the variables that end with "x".
+            wildcards ('.*') are automatically added at the beginning and the 
+            end.  For example, 'x' matches all variables that contain "x".  Use 
+            '^x$' to match only the variables that begin with "x" and 'x$' to 
+            match only the variables that end with "x".
 
             Note that '.' is a subclass separator in Modelica but a wildcard in 
-            regular expressions.  Escape the subclass separator as '\.'.
+            regular expressions.  Escape the subclass separator as '\\.'.
 
         - *re*: *True* to use regular expressions (*False* to use shell style)
 
