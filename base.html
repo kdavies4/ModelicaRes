@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.base &mdash; ModelicaRes v0.9.x Documentation</title>
+    <title>modelicares.base &mdash; Analyze Modelica results in Python</title>
     
     <link rel="stylesheet" href="javascripts/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="javascripts/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.9.x',
+        VERSION:     '0.10.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,11 +24,12 @@
     <script type="text/javascript" src="javascripts/underscore.js"></script>
     <script type="text/javascript" src="javascripts/doctools.js"></script>
     <script type="text/javascript" src="javascripts/copybutton.js"></script>
+    <script type="text/javascript" src="javascripts/analytics.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.9.x Documentation"
+          title="Search within Analyze Modelica results in Python"
           href="javascripts/opensearch.xml"/>
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.9.x Documentation" href="index.html" />
+    <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
     <link rel="prev" title="modelicares.texunit" href="texunit.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
@@ -49,7 +50,7 @@
         <li class="right" >
           <a href="texunit.html" title="modelicares.texunit"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.9.x Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -81,7 +82,14 @@
     Enter search terms or a module, class or function name.
     </p>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
+  <ul>
+    <li><a itemprop="downloadUrl"
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.10.0.tar.gz"
+           rel="nofollow">Latest version (v0.10.0)</a></li>
+    <li><a href="Changelog.html">Changelog</a></li>
+    <li><a href="ModelicaRes.pdf" onclick=”var that=this;_gaq.push(['_trackEvent','Download','PDF',this.href]);setTimeout(function(){location.href=that.href;},200);return false;”>PDF documentation</a></li>
+  </ul>
         </div>
       </div>
 
@@ -139,7 +147,9 @@ axis</li>
 <dl class="class">
 <dt id="modelicares.base.Quantity">
 <em class="property">class </em><tt class="descclassname">modelicares.base.</tt><tt class="descname">Quantity</tt><a class="headerlink" href="#modelicares.base.Quantity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Quantity(number, factor, offset, unit)</p>
+<dd><p>Named tuple class for a constant physical quantity</p>
+<p>The factor and then the offset are applied to the number to arrive at the
+quantity expressed in terms of the unit.</p>
 <dl class="method">
 <dt id="modelicares.base.Quantity.__repr__">
 <tt class="descname">__repr__</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.base.Quantity.__repr__" title="Permalink to this definition">¶</a></dt>
@@ -1056,12 +1066,12 @@ before the label will be recentered</p>
         <li class="right" >
           <a href="texunit.html" title="modelicares.texunit"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.9.x Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 29, 2014.
+      Last updated on Apr 30, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>

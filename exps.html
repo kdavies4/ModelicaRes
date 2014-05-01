@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.exps &mdash; ModelicaRes v0.9.x Documentation</title>
+    <title>modelicares.exps &mdash; Analyze Modelica results in Python</title>
     
     <link rel="stylesheet" href="javascripts/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="javascripts/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.9.x',
+        VERSION:     '0.10.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,11 +24,12 @@
     <script type="text/javascript" src="javascripts/underscore.js"></script>
     <script type="text/javascript" src="javascripts/doctools.js"></script>
     <script type="text/javascript" src="javascripts/copybutton.js"></script>
+    <script type="text/javascript" src="javascripts/analytics.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.9.x Documentation"
+          title="Search within Analyze Modelica results in Python"
           href="javascripts/opensearch.xml"/>
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.9.x Documentation" href="index.html" />
+    <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
     <link rel="next" title="modelicares.texunit" href="texunit.html" />
     <link rel="prev" title="modelicares.multi" href="multi.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
@@ -53,7 +54,7 @@
         <li class="right" >
           <a href="multi.html" title="modelicares.multi"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.9.x Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -85,7 +86,14 @@
     Enter search terms or a module, class or function name.
     </p>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
+  <ul>
+    <li><a itemprop="downloadUrl"
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.10.0.tar.gz"
+           rel="nofollow">Latest version (v0.10.0)</a></li>
+    <li><a href="Changelog.html">Changelog</a></li>
+    <li><a href="ModelicaRes.pdf" onclick=”var that=this;_gaq.push(['_trackEvent','Download','PDF',this.href]);setTimeout(function(){location.href=that.href;},200);return false;”>PDF documentation</a></li>
+  </ul>
         </div>
       </div>
 
@@ -120,10 +128,10 @@ experiments.  Finally, the generator is passed to the <a class="reference intern
 <ul class="simple">
 <li><a class="reference internal" href="#modelicares.exps.ParamDict" title="modelicares.exps.ParamDict"><tt class="xref py py-class docutils literal"><span class="pre">ParamDict</span></tt></a> - Dictionary that prints its items as nested tuple-based
 modifiers, formatted for <a class="reference external" href="http://www.modelica.org/">Modelica</a></li>
+<li><a class="reference internal" href="#modelicares.exps.Experiment" title="modelicares.exps.Experiment"><tt class="xref py py-class docutils literal"><span class="pre">Experiment</span></tt></a> - Named tuple class to represent a simulation experiment</li>
 </ul>
 <p><strong>Functions:</strong></p>
 <ul class="simple">
-<li><tt class="xref py py-meth docutils literal"><span class="pre">browse()</span></tt> - Launch a variable browser</li>
 <li><a class="reference internal" href="#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-meth docutils literal"><span class="pre">gen_experiments()</span></tt></a> - Return a generator for a set of simulation 
 experiments using permutation or simple element-wise grouping</li>
 <li><a class="reference internal" href="#modelicares.exps.modelica_array" title="modelicares.exps.modelica_array"><tt class="xref py py-meth docutils literal"><span class="pre">modelica_array()</span></tt></a> - Convert a <a class="reference external" href="http://numpy.scipy.org/">NumPy</a> array to a <a class="reference external" href="http://www.modelica.org/">Modelica</a>-formatted 
@@ -139,13 +147,24 @@ file</li>
 </ul>
 <p><strong>Submodules:</strong></p>
 <ul class="simple">
-<li><tt class="xref py py-mod docutils literal"><span class="pre">doe</span></tt> - Functions for design of experiments (DOE)</li>
+<li><a class="reference internal" href="exps.doe.html#module-modelicares.exps.doe" title="modelicares.exps.doe"><tt class="xref py py-mod docutils literal"><span class="pre">doe</span></tt></a> - Functions for design of experiments (DOE)</li>
 </ul>
 <dl class="class">
 <dt id="modelicares.exps.Experiment">
 <em class="property">class </em><tt class="descclassname">modelicares.exps.</tt><tt class="descname">Experiment</tt><a class="headerlink" href="#modelicares.exps.Experiment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
-<p>Experiment(model, params, args)</p>
+<p>Named tuple class to represent a simulation experiment</p>
+<p>Instances of this class may be used in the <em>experiments</em> argument of
+<a class="reference internal" href="#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a> and <a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-meth docutils literal"><span class="pre">run_models()</span></tt></a>, although there are some
+differences in the entries (see those functions for details).</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">experiment</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="s">&#39;ChuaCircuit&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;L.L&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">},</span> <span class="n">args</span><span class="o">=</span><span class="p">{})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">experiment</span><span class="o">.</span><span class="n">model</span>
+<span class="go">&#39;ChuaCircuit&#39;</span>
+</pre></div>
+</div>
 <dl class="method">
 <dt id="modelicares.exps.Experiment.__repr__">
 <tt class="descname">__repr__</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.exps.Experiment.__repr__" title="Permalink to this definition">¶</a></dt>
@@ -223,7 +242,7 @@ included for instance names that contain symbols (e.g., &#8220;&#8216;H+&#8217;&
 
 <dl class="function">
 <dt id="modelicares.exps.gen_experiments">
-<tt class="descclassname">modelicares.exps.</tt><tt class="descname">gen_experiments</tt><big>(</big><em>models=None</em>, <em>params={}</em>, <em>args={}</em>, <em>design=&lt;function fullfact at 0x7fd4d8c49f50&gt;</em><big>)</big><a class="headerlink" href="#modelicares.exps.gen_experiments" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modelicares.exps.</tt><tt class="descname">gen_experiments</tt><big>(</big><em>models=None</em>, <em>params={}</em>, <em>args={}</em>, <em>design=&lt;function fullfact at 0x7f62e4e40050&gt;</em><big>)</big><a class="headerlink" href="#modelicares.exps.gen_experiments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a generator for a set of simulation experiments using permutation
 or simple element-wise grouping.</p>
 <p>The generator yields instances of <a class="reference internal" href="#modelicares.exps.Experiment" title="modelicares.exps.Experiment"><tt class="xref py py-class docutils literal"><span class="pre">Experiment</span></tt></a>&#8212;named tuples of
@@ -658,12 +677,12 @@ save results from 12 simulation experiments.</p>
         <li class="right" >
           <a href="multi.html" title="modelicares.multi"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.9.x Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 29, 2014.
+      Last updated on Apr 30, 2014.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
