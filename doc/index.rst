@@ -70,7 +70,7 @@ math and matrix functions from NumPy_.
   to set up and manage simulation experiments.  The :mod:`modelicares.texunit`
   submodule has functions to translate Modelica_ *unit* and *displayUnit*
   strings into LaTeX_-formatted strings.  The last submodule,
-  :mod:`modelicares.base`, has general supporting functions.
+  :mod:`modelicares.util`, has general supporting functions.
 
   **Installation**
 
@@ -148,7 +148,7 @@ math and matrix functions from NumPy_.
   multi
   exps
   texunit
-  base
+  util
 
 .. only:: html
 
@@ -162,7 +162,7 @@ math and matrix functions from NumPy_.
   tools to set up and manage simulation experiments.  The
   :mod:`modelicares.texunit` submodule has functions to translate Modelica_
   *unit* and *displayUnit* strings into LaTeX_-formatted strings.  The last
-  submodule, :mod:`modelicares.base`, has general supporting functions.
+  submodule, :mod:`modelicares.util`, has general supporting functions.
 
   For a list of changes, please see the `changelog <Changelog.html>`_.  A PDF
   version of this documentation is available `here <ModelicaRes.pdf>`_.

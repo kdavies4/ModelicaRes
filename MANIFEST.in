@@ -3,7 +3,6 @@ include *.txt
 include *.rst
 include MANIFEST.in
 include bin/loadres
-exclude 00-*
 
 # Examples
 include examples/*.md
@@ -37,5 +36,5 @@ include external/control/doc/*
 include external/control/control.egg-info/*
 
 # Development scripts
+exclude 00-*
 exclude examples/00-*
-exclude modelicares/00-*

@@ -5,7 +5,7 @@
 
 # Run the doc tests and recreate the example images.
 python modelicares/__init__.py
-python modelicares/base.py
+python modelicares/util.py
 python modelicares/exps/__init__.py
 python -m modelicares.exps.doe
 python modelicares/linres.py

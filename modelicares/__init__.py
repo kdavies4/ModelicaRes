@@ -4,11 +4,11 @@
 This module provides direct access to the most important functions and classes
 from its submodules.  These are:
 
-- Basic supporting classes and functions (:mod:`~modelicares.base` module):
-  :meth:`~base.add_arrows`, :meth:`~base.add_hlines`, :meth:`~base.add_vlines`,
-  :meth:`~base.animate`, :class:`~base.ArrowLine`, :meth:`~base.closeall`,
-  :meth:`~base.figure`, :meth:`~base.load_csv`, :meth:`~base.save`,
-  :meth:`~base.saveall`, and :meth:`~base.setup_subplots`
+- Basic supporting classes and functions (:mod:`~modelicares.util` module):
+  :meth:`~util.add_arrows`, :meth:`~util.add_hlines`, :meth:`~util.add_vlines`,
+  :meth:`~util.animate`, :class:`~util.ArrowLine`, :meth:`~util.closeall`,
+  :meth:`~util.figure`, :meth:`~util.load_csv`, :meth:`~util.save`,
+  :meth:`~util.saveall`, and :meth:`~util.setup_subplots`
 
 - To manage simulation experiments (:mod:`~modelicares.exps` module):
   :class:`~exps.Experiment`, :mod:`~modelicares.exps.doe`, :meth:`~exps.gen_experiments`,
@@ -35,7 +35,7 @@ __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
 __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
-__version__ = "0.10.x"
+__version__ = "0.11.x"
 
 
 import sys
@@ -56,7 +56,7 @@ major, minor1, minor2, s, tmp = sys.version_info
 #
 # These will be available directly from modelicares; others must be loaded from
 # their submodules.
-from modelicares.base import (add_arrows, add_hlines, add_vlines, animate, ArrowLine, 
+from modelicares.util import (add_arrows, add_hlines, add_vlines, animate, ArrowLine, 
     closeall, figure, load_csv, save, saveall, setup_subplots)
 from modelicares.exps import (Experiment, gen_experiments, ParamDict, read_params, 
     run_models, write_params, write_script, doe)

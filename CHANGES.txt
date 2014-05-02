@@ -1,8 +1,10 @@
 Changelog
 =========
 
-0.10.x (2014-*-**) -- Updates:
+0.11.x (2014-*-**) -- Updates:
 
+   - Renamed :meth:`~modelicares.base` to :meth:`~modelicares.util` for clarity.
+     It is a package of utility functions and classes, not base classes.
    - Removed :meth:`~modelicares.simres.merge_times`.  It is not used internally
      and probably is not useful externally.
 

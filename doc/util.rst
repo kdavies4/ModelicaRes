@@ -1,10 +1,10 @@
-:mod:`modelicares.base`
+:mod:`modelicares.util`
 =======================
 
-.. automodule:: modelicares.base
+.. automodule:: modelicares.util
    :members:
    :undoc-members:
    :exclude-members: ArrowLine
 
-.. autoclass:: modelicares.base.ArrowLine
+.. autoclass:: modelicares.util.ArrowLine
    :exclude-members: Path

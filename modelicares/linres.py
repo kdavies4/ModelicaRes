@@ -22,8 +22,8 @@ from scipy.io import loadmat
 from matplotlib.cbook import iterable
 
 from control.matlab import ss
-from freqplot import bode_plot, nyquist_plot
-from modelicares.base import figure, add_hlines, add_vlines
+from modelicares.freqplot import bode_plot, nyquist_plot
+from modelicares.util import figure, add_hlines, add_vlines
 
 class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze

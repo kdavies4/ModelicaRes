@@ -34,7 +34,7 @@ from itertools import cycle
 from freqplot import bode_plot, nyquist_plot
 from modelicares.linres import LinRes
 from modelicares.simres import SimRes
-from modelicares.base import figure, add_hlines, add_vlines
+from modelicares.util import figure, add_hlines, add_vlines
 
 
 def multiload(locations='*'):
@@ -141,7 +141,7 @@ def multiplot(sims, suffixes='', color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
          .. Seealso:: http://matplotlib.sourceforge.net/api/collections_api.html
 
     - *\*\*kwargs*: Propagated to :meth:`simres.SimRes.plot` (and thus to
-      :meth:`base.plot` and finally :meth:`matplotlib.pyplot.plot`)
+      :meth:`util.plot` and finally :meth:`matplotlib.pyplot.plot`)
 
     **Returns:**
 

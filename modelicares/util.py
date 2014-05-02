@@ -1628,7 +1628,7 @@ class ArrowLine(Line2D):
            >>> line = ArrowLine(t, s, color='b', ls='-', lw=2, arrow='>',
            ...                  arrowsize=20)
            >>> ax.add_line(line) # doctest: +ELLIPSIS
-           <modelicares.base.ArrowLine object at 0x...>
+           <modelicares.util.ArrowLine object at 0x...>
            >>> ax.set_xlim(-3, 3)
            (-3, 3)
            >>> ax.set_ylim(-3, 3)
