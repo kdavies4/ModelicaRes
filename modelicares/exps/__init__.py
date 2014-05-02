@@ -37,10 +37,7 @@ experiments.  Finally, the generator is passed to the :meth:`write_script` or
 - :meth:`gen_experiments` - Return a generator for a set of simulation 
   experiments using permutation or simple element-wise grouping
 
-- :meth:`modelica_array` - Convert a NumPy_ array to a Modelica_-formatted 
-  string
-
-- :meth:`modelica_boolean` - Convert a Boolean variable to a Modelica_ string
+- :meth:`modelica_str` - Express a Python variable as a Modelica string
 
 - :meth:`read_params` - Read parameter values from an initialization or final 
   values file
@@ -229,52 +226,52 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
         print("Error in call to gen_experiments(): models and all of the "
               "entries in params and args must be lists.")
 
-def modelica_array(x):
-    """Convert a NumPy_ array to a Modelica_-formatted string.
+def modelica_str(x):
+    """Express a Python variable as a Modelica string
 
-    Square brackets are curled and Booleans are cast to lowercase.
+    A Boolean variable (:class:`bool`) becomes 'true' or 'false' (lowercase).
 
-    **Example:**
+    For NumPy_ arrays, square brackets are curled.
+
+    **Examples:**
+
+    Booleans:
+
+    .. code-block:: python
+
+       >>> from modelicares import *
+
+       >>> # Booleans:
+       >>> modelica_str(True)
+       'true'
+       >>> modelica_str(False)
+       'false'
+
+    Arrays:
 
     .. code-block:: python
 
        >>> from numpy import array
        >>> from modelicares import *
 
-       >>> x = array([[1, 2], [3, 4]])
-       >>> modelica_array(x)
+       >>> modelica_str(array([[1, 2], [3, 4]]))
        '{{1, 2}, {3, 4}}'
 
-       >>> modelica_array(array([[True, True], [False, False]]))
+       >>> modelica_str(array([[True, True], [False, False]]))
        '{{true, true}, {false, false}}'
     """
-    assert isinstance(x, np.ndarray), "Only numpy arrays are supported."
-    x = str(x)
-    for old, new in [('\[', '{'), ('\]', '}'), (r'\n', ''),
-                     (' ?True', 'true'), ('False', 'false'), (' +', ', ')]:
-        # Python 2.7 puts an extra space before True when representing an
-        # array.
-        x = re.sub(old, new, x)
-    return x
-
-
-def modelica_boolean(x):
-    """Convert a Boolean variable (:class:`bool`) to a Modelica_ string ('true'
-    or 'false').
-
-    **Example:**
-
-    .. code-block:: python
-
-       >>> from modelicares import *
-
-       >>> modelica_boolean(True)
-       'true'
-       >>> modelica_boolean(False)
-       'false'
-    """
-    return 'true' if x else 'false'
-
+    if isinstance(x, bool):
+        return 'true' if x else 'false'
+    elif isinstance(x, np.ndarray):
+        x = str(x)
+        for old, new in [('\[', '{'), ('\]', '}'), (r'\n', ''),
+                         (' ?True', 'true'), ('False', 'false'), (' +', ', ')]:
+            # Python 2.7 puts an extra space before True when representing an
+            # array.
+            x = re.sub(old, new, x)
+        return x
+    else:
+        return str(x)
 
 def read_params(names, fname='dsin.txt'):
     """Read parameter values from an initialization or final values file (e.g., 
@@ -828,13 +825,9 @@ class ParamDict(dict):
             for key, value in d.items():
                 if isinstance(value, ParamDict):
                     elements.append('%s%s' % (key, value))
-                else:
-                    if isinstance(value, bool):
-                        value = modelica_boolean(value)
-                    elif isinstance(value, np.ndarray):
-                        value = modelica_array(value)
-                    if value is not None:
-                        elements.append('%s=%s' % (key, value))
+                elif value is not None:
+                    value = modelica_str(value)
+                    elements.append(key + '=' + value)
             return '(%s)' % ', '.join(elements) if elements else ''
 
         # This method to build a nested dictionary adapted from DyMat version
