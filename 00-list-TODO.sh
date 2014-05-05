@@ -6,9 +6,10 @@
 echo modelicares folder:
 grep -c TODO --color modelicares/*.py
 echo
-grep TODO --color modelicares/*.py
+grep TODO -n --color modelicares/*.py
 echo
+
 echo bin folder:
 grep -c TODO --color bin/*
 echo
-grep TODO --color bin/*
+grep TODO -n --color bin/*

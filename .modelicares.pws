@@ -1,11 +1,13 @@
-personal_ws-1.1 en 269 
+personal_ws-1.1 en 277 
 hspace
 cla
 imshow
+wildcard
 Aclass
 sim
 doctest
 paren
+Beutlich
 JavaScript
 exponentials
 sudo
@@ -69,11 +71,12 @@ abspath
 ChuaCircuit
 executables
 sys
+distutils
 Chua
 dslog
 heatPort
-pylab
 PyLab
+pylab
 GTRC
 matplotlib
 fahrenheit
@@ -170,18 +173,19 @@ PreviewPanel
 savefig
 colorbar
 arrowedgecolor
+Arnout
 arrowfacecolor
 fixedstepsize
 formatter
 outputInterval
 lw
-ok
 np
+ok
 Indentification
 WxApp
 sankeyfig
-os
 nx
+os
 linearized
 getitem
 OnDragInit
@@ -200,6 +204,7 @@ th
 iterable
 inputName
 ofat
+dsfinal
 ss
 piecewise
 ParamDict
@@ -227,7 +232,9 @@ num
 xy
 arnoutaertgeerts
 repr
+Aertgeerts
 Github
+GitHub
 vlines
 textFreq
 texunit
@@ -265,6 +272,7 @@ subfigure
 overlayed
 Dassl
 whitespace
+Sjölund
 simulateModel
 recentered
 ABCD

@@ -3,6 +3,7 @@ Changelog
 
 0.11.x (2014-*-**) -- Updates:
 
+   - Added pattern matching to :meth:`~modelicares.simres.SimRes.nametree`.
    - Merged :meth:`~modelicares.exps.modelica_array` and
      :meth:`~modelicares.exps.modelica_boolean` into a new function,
      :meth:`~modelicares.exps.modelica_str`.

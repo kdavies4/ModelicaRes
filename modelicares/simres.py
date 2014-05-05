@@ -991,7 +991,8 @@ class SimRes(object):
            >>> sim.names('p\.v$', re=True)
            [u'C2.p.v', u'Gnd.p.v', u'L.p.v', u'Nr.p.v', u'C1.p.v', u'Ro.p.v', u'G.p.v']
         """
-        if pattern is None:
+        if pattern is None or (pattern in ['.*', '.+', '.', '.?', ''] if re 
+                               else pattern == '*'):
             return list(self._traj) # Shortcut
         else:
             if re:
@@ -1000,14 +1001,16 @@ class SimRes(object):
                 matcher = lambda name: fnmatchcase(name, pattern)
             return filter(matcher, self._traj.keys())
 
-    def nametree(self):
+    def nametree(self, pattern=None, re=False):
         """Return a tree of all variable names with respect to the path names.
 
         The tree represents the structure of the Modelica_ model.  It is
         returned as a nested dictionary.  The keys are the path elements and
         the values are sub-dictionaries or variable names.
 
-        There are no arguments.
+        All names are included by default, but the names can be filtered using 
+        *pattern* and *re*.  See :mod:`names` for a description of those 
+        arguments.
 
         **Example:**
 
@@ -1021,7 +1024,7 @@ class SimRes(object):
         # http://www.j-raedler.de/2011/09/dymat-reading-modelica-results-with-python/,
         # BSD License).
         root = {}
-        for name in self._traj.keys():
+        for name in self.names(pattern, re):
             branch = root
             elements = name.split('.')
             for element in elements[:-1]:

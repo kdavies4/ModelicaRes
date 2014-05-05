@@ -133,7 +133,7 @@ def bode_plot(syslist, omega=None, dB=False, Hz=False, deg=True,
     mags, phases, omegas = [], [], []
     for sys in syslist:
         if (sys.inputs > 1 or sys.outputs > 1):
-            #TODO: Add MIMO bode plots.
+            # TODO: Add MIMO bode plots.
             raise NotImplementedError("Bode is currently only implemented for SISO systems.")
         else:
             if (omega == None):
