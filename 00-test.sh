@@ -10,7 +10,4 @@
 #    python loadres --test
 #    rm examples
 #)
-for f in modelicares/*.py; do
-    python $f
-done
-python -m modelicares.exps.doe
+python modelicares/__init__.py

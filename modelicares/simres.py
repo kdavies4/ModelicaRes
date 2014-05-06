@@ -261,9 +261,8 @@ class SimRes(object):
         **Returns:** *None* if the file contains linearization results rather
         than simulation results.
         """
-        # This performs the task of tload.m from Dymola version 7.4:
-        #     on Unix/Linux: /opt/dymola/mfiles/traj/tload.m
-        #     on Windows: C:\Program Files\Dymola 7.4\Mfiles\traj\tload.m
+        # This performs the task of mfiles/traj/tload.m from the Dymola 
+        # installation.
 
         TrajEntry = namedtuple('TrajEntry', ['data_set', 'negated', 'data_row',
                                              'description', 'unit',
@@ -275,9 +274,9 @@ class SimRes(object):
             """Parse the variable description string into (description, unit,
             displayUnit).
             """
-            description = util.chars_to_str_enc(description)
+            description = util.chars_to_str(description[0:-1]).encode('latin-1')
             try:
-                description, unit = description[0:-1].rsplit(' [', 1)
+                description, unit = description.rsplit(' [', 1)
                 try:
                     unit, displayUnit = unit.rsplit('|', 1)
                 except ValueError:
@@ -286,97 +285,86 @@ class SimRes(object):
                 return description, '', ''
             return description, unit, displayUnit
 
-        # Load the file.
+        # Load the file and check if it contains the correct variable names.
+        mat = loadmat(fname, chars_as_strings=False)
+        # Characters aren't converted to strings because the arrays may be 
+        # rotated.
         try:
-            dsres = loadmat(fname, struct_as_record=True,
-                chars_as_strings=False)
-        except IOError:
-            print('File "%s" could not be loaded.  Check that it exists.' %
-                  fname)
-            raise
-
-        # Check and extract the Aclass variable (for convenience).
-        if 'Aclass' in dsres:
-            Aclass = dsres['Aclass']
-        elif 'class' in dsres:
-            Aclass = dsres['class']
-        else:
-            raise AssertionError('Neither "Aclass" nor "class" is present in '
-                                 '"%s".' % fname)
+            Aclass = mat['Aclass']
+        except KeyError:
+            try:
+                Aclass = mat['class']
+            except KeyError:
+                raise KeyError('Neither "Aclass" nor "class" is present in "%s".'
+                               % fname)
 
         # Check if the file has the correct class name.
-        line = util.chars_to_str(Aclass[0])
-        if not line.startswith('Atrajectory'):
-            if line.startswith('AlinearSystem'):
-                raise AssertionError('File "%s" is not of class Atrajectory '
-                                     'or AlinearSystem.' % fname)
+        result_type = util.chars_to_str(Aclass[0])
+        if result_type <> 'Atrajectory':
+            if result_type == 'AlinearSystem':
+                raise KeyError('File "%s" is a linearization result.  ' % fname
+                               'Use modelicares.linres.LinRes instead.')
+            else:
+                raise KeyError('File "%s" does not appear to be a simulation '
+                               'or linearization result.' % fname)
 
-        # Check the dsres version.
+        # Check the mat version.
         version = util.chars_to_str(Aclass[1])
-        assert version.startswith('1.1'), ('Only dsres files of version 1.1 '
-            'are supported, but "%s" is version %s.' % (fname, version))
+        assert version == '1.1', ('Only mat files of version 1.1 are supported.  '
+                                  '"%s" is version %s.' % (fname, version))
 
         # Determine if the matrices are transposed.
-        n_row = len(Aclass)
-        assert n_row >= 2, ('"Aclass" or "class" has fewer than 2 lines in '
-            '"%s".' % fname)
-        transposed = (n_row >= 4
-                      and util.chars_to_str(Aclass[3]).startswith('binTrans'))
+        transposed = (len(Aclass) >= 4
+                      and util.chars_to_str(Aclass[3]) == 'binTrans')
 
         # Load the name, description, parts of dataInfo, and data_i variables.
         self._traj = {}
         n_data_sets = 0
-        try:
-            if transposed:
-                for i in range(dsres['dataInfo'].shape[1]):
-                    name = util.chars_to_str_enc(dsres['name'][:, i])
-                    data_set, sign_index = dsres['dataInfo'][0:2, i]
-                    description, unit, displayUnit = _parse_description(
-                        dsres['description'][:, i])
-                    if data_set == 1 or not constants_only:
-                        self._traj[name] = TrajEntry(data_set=data_set-1,
-                                                     negated=sign_index<0,
-                                                     data_row=abs(sign_index)-1,
-                                                     description=description,
-                                                     unit=unit,
-                                                     displayUnit=displayUnit)
-                    if data_set > n_data_sets: n_data_sets = data_set
-                if constants_only:
-                    self._data = [dsres['data_1']]
-                else:
-                    self._data = [dsres['data_%i' % (i+1)]
-                                  for i in range(n_data_sets)]
+        if transposed:
+            for i in range(mat['dataInfo'].shape[1]):
+                name = util.chars_to_str(mat['name'][:, i])
+                data_set = mat['dataInfo'][0, i]
+                sign_index = mat['dataInfo'][1, i]
+                description, unit, displayUnit = _parse_description(
+                    mat['description'][:, i])
+                if data_set == 1 or not constants_only:
+                    self._traj[name] = TrajEntry(data_set=data_set-1,
+                                                 negated=sign_index<0,
+                                                 data_row=abs(sign_index)-1,
+                                                 description=description,
+                                                 unit=unit,
+                                                 displayUnit=displayUnit)
+                n_data_sets = max(data_set, n_data_sets)
+            if constants_only:
+                self._data = [mat['data_1']]
             else:
-                for i in range(dsres['dataInfo'].shape[0]):
-                    name = util.chars_to_str_enc(dsres['name'][i, :])
-                    data_set, sign_index = dsres['dataInfo'][i, 0:2]
-                    description, unit, displayUnit = _parse_description(
-                        dsres['description'][i, :])
-                    if data_set == 1 or not constants_only:
-                        self._traj[name] = TrajEntry(data_set=data_set-1,
-                                                     negated=sign_index<0,
-                                                     data_row=abs(sign_index)-1,
-                                                     description=description,
-                                                     unit=unit,
-                                                     displayUnit=displayUnit)
-                    if data_set > n_data_sets:
-                        n_data_sets = data_set
-                if constants_only:
-                    self._data = [dsres['data_1'].T]
-                else:
-                    self._data = [dsres['data_%i' % (i+1)].T
-                                  for i in range(n_data_sets)]
-            # Note 1: The indices are converted from Modelica (1-based) to
-            # Python (0-based).
-            # Note 2:  Dymola 7.4 uses the transposed version, so it is the
-            # standard here (for optimal speed).  Therefore, the "normal"
-            # version is transposed, and what would be "data_column" is
-            # "data_row".
-            #print('Loaded simulation result from ' + fname + ".")
-        except KeyError:
-            print('"name" or "dataInfo" or "data_i" may be missing in "%s".' %
-                  fname)
-            raise
+                self._data = [mat['data_%i' % (i+1)]
+                              for i in range(n_data_sets)]
+        else:
+            for i in range(mat['dataInfo'].shape[0]):
+                name = util.chars_to_str(mat['name'][i, :])
+                data_set = mat['dataInfo'][i, 0]
+                sign_index = mat['dataInfo'][i, 1]
+                description, unit, displayUnit = _parse_description(
+                    mat['description'][i, :])
+                if data_set == 1 or not constants_only:
+                    self._traj[name] = TrajEntry(data_set=data_set-1,
+                                                 negated=sign_index<0,
+                                                 data_row=abs(sign_index)-1,
+                                                 description=description,
+                                                 unit=unit,
+                                                 displayUnit=displayUnit)
+                n_data_sets = max(data_set, n_data_sets)
+            if constants_only:
+                self._data = [mat['data_1'].T]
+            else:
+                self._data = [mat['data_%i' % (i+1)].T
+                              for i in range(n_data_sets)]
+        # Note 1: The indices are converted from Modelica (1-based) to Python
+        # (0-based).
+        # Note 2:  Dymola 7.4 uses the transposed version, so it is the standard
+        # here (for optimal speed).  Therefore, the "normal" version is 
+        # transposed.
 
     def browse(self):
         """Launch a variable browser.
@@ -655,7 +643,7 @@ class SimRes(object):
 
            >>> sim = SimRes('examples/ChuaCircuit.mat')
            >>> sim.get_times('L.v') # doctest: +ELLIPSIS
-           array([    0.        , ...  2500.        ], dtype=float32)
+           array([...], dtype=float32)
         """
         return self._get(names, lambda name:
                          f(self._data[self._traj[name].data_set][0, i]))
@@ -714,7 +702,7 @@ class SimRes(object):
 
            >>> sim = SimRes('examples/ChuaCircuit.mat')
            >>> sim.get_values('L.v') # doctest: +ELLIPSIS
-           array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)
+           array([...], dtype=float32)
 
         If the variable cannot be found, then possible matches are listed:
 
@@ -770,8 +758,8 @@ class SimRes(object):
            >>> from modelicares import SimRes
 
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_values_at_times('L.v', [0, 2000])
-           array([ 0.        ,  0.15459341])
+           >>> sim.get_values_at_times('L.v', [0, 2000]) # doctest: +ELLIPSIS
+           array([...])
         """
         from scipy.interpolate import interp1d
 
@@ -815,7 +803,7 @@ class SimRes(object):
 
            >>> sim = SimRes('examples/ChuaCircuit.mat')
            >>> sim.get_tuple('L.v') # doctest: +ELLIPSIS
-           (array([    0.        , ... ,  2500.        ], dtype=float32), array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32))
+           (array([...], dtype=float32), array([...], dtype=float32))
 
         Note that this is a tuple of vectors, not a vector of tuples. 
         """
@@ -1097,10 +1085,6 @@ class SimRes(object):
 
         **Example:**
 
-        .. testsetup::
-           >>> from modelicares import closeall
-           >>> closeall()
-
         .. code-block:: python
 
            >>> from modelicares import SimRes, save
@@ -1114,6 +1098,11 @@ class SimRes(object):
            >>> save()
            Saved examples/ChuaCircuit.pdf
            Saved examples/ChuaCircuit.png
+
+        .. testsetup::
+           >>> import matplotlib.pyplot as plt
+           >>> plt.show()
+           >>> plt.close()
 
         .. only:: html
 
@@ -1300,10 +1289,6 @@ class SimRes(object):
 
         **Example:**
 
-        .. testsetup::
-           >>> from modelicares import closeall
-           >>> closeall()
-
         .. code-block:: python
 
            >>> from modelicares import SimRes, save
@@ -1321,6 +1306,11 @@ class SimRes(object):
            >>> save()
            Saved examples/ThreeTanks.pdf
            Saved examples/ThreeTanks.png
+
+        .. testsetup::
+           >>> import matplotlib.pyplot as plt
+           >>> plt.show()
+           >>> plt.close()
 
         .. only:: html
 
@@ -1449,10 +1439,10 @@ class SimRes(object):
 
            # Tuple of time and value vectors for a variable:
            >>> sim('L.i') # doctest: +ELLIPSIS
-           (array([    0.        , ... 2500.        ], dtype=float32), array([ 0.        , ... 2.04866147], dtype=float32))
+           (array([...], dtype=float32), array([...], dtype=float32))
            >>> # This is equivalent to:
            >>> sim.get_tuple('L.i') # doctest: +ELLIPSIS
-           (array([    0.        , ... 2500.        ], dtype=float32), array([ 0.        , ... 2.04866147], dtype=float32))
+           (array([...], dtype=float32), array([...], dtype=float32))
 
            # Descriptions of a list of variables:
            >>> sim(['L.L', 'C1.C'], SimRes.get_description)
@@ -1514,10 +1504,10 @@ class SimRes(object):
            >>> sim = SimRes('examples/ChuaCircuit.mat')
 
            >>> sim['L.i'] # doctest: +ELLIPSIS
-           (array([    0.        , ... 2500.        ], dtype=float32), array([ 0.        , ... 2.04866147], dtype=float32))
+           (array([...], dtype=float32), array([...], dtype=float32))
            >>> # This is equivalent to:
            >>> sim.get_tuple('L.i') # doctest: +ELLIPSIS
-           (array([    0.        , ... 2500.        ], dtype=float32), array([ 0.        , ... 2.04866147], dtype=float32))
+           (array([...], dtype=float32), array([...], dtype=float32))
 
         """
         return self.get_tuple(names)

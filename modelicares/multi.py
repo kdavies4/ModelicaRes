@@ -151,10 +151,6 @@ def multiplot(sims, suffixes='', color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
 
     **Example:**
 
-    .. testsetup::
-       >>> from modelicares import closeall
-       >>> closeall()
-
     .. code-block:: python
 
        >>> from glob import glob
@@ -170,6 +166,11 @@ def multiplot(sims, suffixes='', color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
        >>> save()
        Saved examples/ChuaCircuits.pdf
        Saved examples/ChuaCircuits.png
+
+    .. testsetup::
+       >>> import matplotlib.pyplot as plt
+       >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -218,7 +219,7 @@ def multibode(lins, axes=None, pair=(0, 0), label='bode', title="Bode Plot",
               labels='', colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
               styles=[(None,None), (3,3), (1,1), (3,2,1,2)], leg_kwargs={},
               **kwargs):
-    r"""Plot multiple linearizations onto a single Bode diagram.
+    """Plot multiple linearizations onto a single Bode diagram.
 
     **Arguments:**
 
@@ -274,10 +275,6 @@ def multibode(lins, axes=None, pair=(0, 0), label='bode', title="Bode Plot",
 
     **Example:**
 
-    .. testsetup::
-       >>> from modelicares import closeall
-       >>> closeall()
-
     .. code-block:: python
 
        >>> import os
@@ -298,6 +295,11 @@ def multibode(lins, axes=None, pair=(0, 0), label='bode', title="Bode Plot",
        >>> save()
        Saved examples/PIDs-bode.pdf
        Saved examples/PIDs-bode.png
+
+    .. testsetup::
+       >>> import matplotlib.pyplot as plt
+       >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -343,9 +345,7 @@ def multibode(lins, axes=None, pair=(0, 0), label='bode', title="Bode Plot",
     # Create the plots.
     for i, (lin, label) in enumerate(zip(lins, labels)):
         if lin.sys.inputs > 1 or lin.sys.outputs > 1:
-            # Extract the SISO TF. TODO: Is there a better way to do this?
-            sys = ss(self.sys.A, self.sys.B[:, pair[0]], self.sys.C[pair[1], :],
-                     self.sys.D[pair[1], pair[0]])
+            sys = self._to_siso(pair[0], pair[1])
         else:
             sys = lin.sys
         bode_plot(sys, Hz=True, label=label,
@@ -418,10 +418,6 @@ def multinyquist(lins, ax=None, pair=(0, 0), label='nyquist',
 
     **Example:**
 
-    .. testsetup::
-       >>> from modelicares import closeall
-       >>> closeall()
-
     .. code-block:: python
 
        >>> import os
@@ -443,6 +439,11 @@ def multinyquist(lins, ax=None, pair=(0, 0), label='nyquist',
        >>> save()
        Saved examples/PIDs-nyquist.pdf
        Saved examples/PIDs-nyquist.png
+
+    .. testsetup::
+       >>> import matplotlib.pyplot as plt
+       >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -483,9 +484,7 @@ def multinyquist(lins, ax=None, pair=(0, 0), label='nyquist',
     textFreq = kwargs.pop('textFreq', None)
     for i, (lin, label) in enumerate(zip(lins, labels)):
         if lin.sys.inputs > 1 or lin.sys.outputs > 1:
-            # Extract the SISO TF. TODO: Is there a better way to do this?
-            sys = ss(self.sys.A, self.sys.B[:, pair[0]], self.sys.C[pair[1], :],
-                     self.sys.D[pair[1], pair[0]])
+            sys = self._to_siso(pair[0], pair[1])
         else:
             sys = lin.sys
         nyquist_plot(sys, mark=False, label=label, ax=ax,

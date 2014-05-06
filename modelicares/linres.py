@@ -123,21 +123,19 @@ class LinRes(object):
         Returns *None* if the file contains simulation results rather than
         linearization results.  Otherwise, it raises an error.
         """
-        # This performs the task of tloadlin.m from Dymola version 7.4:
-        #     on Unix/Linux: /opt/dymola/mfiles/traj/tloadlin.m
-        #     on Windows: C:\Program Files\Dymola 7.4\Mfiles\traj\tloadlin.m
+        # This performs same task as mfiles/traj/tloadlin.m from the Dymola
+        # installation.
 
-        # Load the file.
+        # Load the file and check if it contains the correct variable names.
+        dslin = loadmat(fname)
         try:
-            dslin = loadmat(fname)
-        except IOError:
-            print('File "%s" could not be loaded.  Check that it exists.' %
-                  fname)
-            raise
-
-        # Check if the file contains the correct variable names.
-        assert 'Aclass' in dslin, ('There is no linear system in file "%s" '
-            '(matrix "Aclass" is missing).' % fname)
+            Aclass = dslin['Aclass']
+        except KeyError:
+            try:
+                Aclass = dslin['class']
+            except KeyError:
+                raise KeyError('Neither "Aclass" nor "class" is present in "%s".'
+                               % fname)
         assert 'nx' in dslin, ('There is no linear system in file "%s" '
             '(matrix "nx" is missing).' % fname)
         assert 'xuyName' in dslin, ('There is no linear system in file "%s" '
@@ -325,6 +323,11 @@ class LinRes(object):
            Saved examples/PID-bode.pdf
            Saved examples/PID-bode.png
 
+        .. testsetup::
+           >>> import matplotlib.pyplot as plt
+           >>> plt.show()
+           >>> plt.close()
+
         .. only:: html
 
            .. image:: ../examples/PID-bode.png
@@ -345,7 +348,7 @@ class LinRes(object):
 
         # Create a title if necessary.
         if title is None:
-            title = r"Bode Plot of %s" % self.fbase
+            title = "Bode Plot of %s" % self.fbase
 
         # Set up the color(s) and line style(s).
         if not iterable(colors):
@@ -434,10 +437,6 @@ class LinRes(object):
 
         **Example:**
 
-        .. testsetup::
-           >>> from modelicares import closeall
-           >>> closeall()
-
         .. code-block:: python
 
            >>> from modelicares import LinRes, save
@@ -451,6 +450,11 @@ class LinRes(object):
            >>> save()
            Saved examples/PID-nyquist.pdf
            Saved examples/PID-nyquist.png
+
+        .. testsetup::
+           >>> import matplotlib.pyplot as plt
+           >>> plt.show()
+           >>> plt.close()
 
         .. only:: html
 
@@ -472,7 +476,7 @@ class LinRes(object):
 
         # Create a title if necessary.
         if title is None:
-            title = r"Nyquist Plot of %s" % self.fbase
+            title = "Nyquist Plot of %s" % self.fbase
 
         # Set up the color(s).
         if not iterable(colors):

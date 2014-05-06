@@ -38,13 +38,6 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 __version__ = "0.11.x"
 
 
-import sys
-
-
-# All functions and classes
-#__all__ = ['util', 'exps', 'linres', 'multi', 'simres', 'texunit']
-
-
 # Essential functions and classes
 #
 # These will be available directly from modelicares; others must be loaded from
@@ -57,3 +50,19 @@ from modelicares.linres import LinRes
 from modelicares.multi import multiload, multiplot, multibode, multinyquist
 from modelicares.simres import SimRes
 from modelicares.texunit import label_number, label_quantity, unit2tex
+
+if __name__ == '__main__':
+    """Test the contents of this module.
+    """
+    import doctest
+    import modelicares
+
+    doctest.testfile('tests.txt')
+    #doctest.testmod(modelicares.util)
+    #doctest.testmod(modelicares.exps)
+    #doctest.testmod(modelicares.exps.doe)
+    #doctest.testmod(modelicares.linres)
+    #doctest.testmod(modelicares.multi)
+    #doctest.testmod(modelicares.simres)
+    #doctest.testmod(modelicares.gui)
+    exit()

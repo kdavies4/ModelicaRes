@@ -12,6 +12,7 @@ dist/
 MANIFEST
 *.mos
 .fuse*
+examples/*.mpg
 
 # Backup files
 .ipynb_checkpoints
