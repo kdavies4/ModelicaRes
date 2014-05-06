@@ -4,9 +4,9 @@
 # Kevin Davies, 12/7/2012
 
 echo modelicares folder:
-grep -c TODO --color modelicares/*.py
+grep -c TODO --color --exclude freqplot.py modelicares/*.py
 echo
-grep TODO -n --color modelicares/*.py
+grep TODO -n --color --exclude freqplot.py modelicares/*.py
 echo
 
 echo bin folder:

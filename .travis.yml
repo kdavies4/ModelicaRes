@@ -1,7 +1,25 @@
 language: python
+
 python:
-  - "2.7"
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
-install: python ./setup.py build; python ./setup.py install
-# command to run tests, e.g. python setup.py test
-script: "./00-test.sh"
+  - 2.7
+
+install: 
+  - sudo apt-get update && sudo apt-get -q install python-numpy 
+  - sudo apt-get -q install python-scipy 
+  - sudo apt-get -q install python-matplotlib
+  - sudo apt-get -q install ipython 
+  - sudo apt-get -q install python-pandas 
+#  - sudo apt-get install libwxbase2.8-0
+  - sudo apt-get -q install libwxgtk2.8-0
+#  - sudo apt-get install python-wxgtk2.8
+#  - sudo apt-get install python-wxversion
+  - sudo apt-get -q install python-wxtools
+  - sudo apt-get -q install python-easygui
+  - sudo apt-get -q install python-qt4
+#  - sudo apt-get install python-pip
+  - pip install numpy scipy matplotlib ipython pandas 
+  - pip install control
+  - python setup.py build && sudo python setup.py install
+
+script: 
+  - bash 00-test.sh

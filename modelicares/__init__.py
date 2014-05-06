@@ -41,13 +41,6 @@ __version__ = "0.11.x"
 import sys
 
 
-# Check the Python version.
-major, minor1, minor2, s, tmp = sys.version_info
-#if not (major == 2 and minor1 == 7):
-#    raise ImportError('Currently, modelicares requires Python 2.7.')
-# TODO:  Add support for Python 3.x once wx supports it.
-
-
 # All functions and classes
 #__all__ = ['util', 'exps', 'linres', 'multi', 'simres', 'texunit']
 

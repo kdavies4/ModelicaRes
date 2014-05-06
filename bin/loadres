@@ -14,11 +14,11 @@ classes and functions of ModelicaRes are directly available as well.
 **Setup and example:**
 
 Copy this script (*loadres*) to the current directory along with the *examples* 
-folder.  Then, execute the following command:
+folder.  Then execute the following command:
 
 .. code-block:: sh
 
-   $ loadres examples
+   $ python loadres examples
    Valid: SimRes('.../examples/ChuaCircuit.mat')
    Valid: SimRes('.../examples/ThreeTanks.mat')
    Valid: LinRes('.../examples/PID.mat')
@@ -27,6 +27,7 @@ folder.  Then, execute the following command:
 
 where '...' depends on the local system.  If this fails, install the `easygui 
 package <http://easygui.sourceforge.net/>`_.
+
 
 .. _Modelica: http://www.modelica.org/
 .. _Python: http://www.python.org/
@@ -43,7 +44,6 @@ import os
 import time
 
 from sys import argv
-#from wx import App, DirSelector, FileSelector
 from easygui import fileopenbox, diropenbox
 
 from modelicares import SimRes, LinRes, multiload
@@ -69,25 +69,18 @@ if __name__ == '__main__':
             loc = fileopenbox(msg="Choose a data file.",
                               default=os.path.join(DEFAULT_PATH, "*.mat"),
                               filetypes=['*.mat'])
-            # easygui is ugly, but wx seems to make the working session slow:
-            #app = App()
-            #fname = FileSelector("Choose a data file.",
-            #                     default_path=DEFAULT_PATH, wildcard='*.mat')
             print loc
         elif choice == 1: # Folder
             loc = diropenbox("Choose a folder with data file(s).",
                              default=DEFAULT_PATH)
-            #app = App()
-            #loc = DirSelector("Choose a folder with data file(s).",
-            #                  defaultPath=DEFAULT_PATH)
         else:
             _local_exit()
         if not loc:
             _local_exit()
-    elif argv[1] == '--test':
-        import doctest
-        doctest.testmod()
-        exit()
+    #elif argv[1] == '--test':
+    #    import shelldoctest
+    #    shelldoctest.testmod()
+    #    exit()
     else:
         loc = argv[1:]
 
