@@ -19,6 +19,7 @@ import numpy as np
 
 
 from scipy.io import loadmat
+from scipy.signal import ss2tf
 from matplotlib.cbook import iterable
 
 from control.matlab import ss
@@ -34,6 +35,8 @@ class LinRes(object):
     - :meth:`bode` - Create a Bode plot of the system's response
 
     - :meth:`nyquist` - Create a Nyquist plot of the system's response
+
+    - :meth:`to_tf` - Return a transfer function given input and output names
     """
 
     def __init__(self, fname='dslin.mat'):
@@ -54,11 +57,11 @@ class LinRes(object):
 
            - *A*, *B*, *C*, *D*: Matrices of the linear system
 
-           - *stateName*: List of name(s) of the states (x)
+           - *state_names*: List of names of the states (x)
 
-           - *inputName*: List of name(s) of the inputs (u)
+           - *input_names*: List of names of the inputs (u)
 
-           - *outputName*: List of name(s) of the outputs (y)
+           - *output_names*: List of names of the outputs (y)
 
         **Arguments:**
 
@@ -187,17 +190,73 @@ class LinRes(object):
 
         # Extract the names.
         if n_x > 0: # States
-            self.sys.stateName = map(encode, xuyName[:n_x])
+            self.sys.state_names = map(encode, xuyName[:n_x])
         else:
-            self.sys.stateName = []
+            self.sys.state_names = []
         if n_u > 0: # Inputs
-            self.sys.inputName = map(encode, xuyName[n_x:n_x+n_u])
+            self.sys.input_names = map(encode, xuyName[n_x:n_x+n_u])
         else:
-            self.sys.inputName = []
+            self.sys.input_names = []
         if n_y > 0: # Outputs
-            self.sys.outputName = map(encode, xuyName[n_x+n_u:])
+            self.sys.output_names = map(encode, xuyName[n_x+n_u:])
         else:
-            self.sys.outputName = []
+            self.sys.output_names = []
+
+    def _to_siso(self, i_u, i_y):
+        """Return a SISO system given input and output indices.
+        """
+        return ss(self.sys.A,         self.sys.B[:, i_u], 
+                  self.sys.C[i_y, :], self.sys.D[i_y, i_u])
+
+    def to_tf(self, i_u=None, i_y=None):
+        """Return a transfer function given input and output names.
+
+        **Arguments:**
+
+        - *i_u*: Index or name of the input
+
+             This must be specified unless the system has only one input.
+
+        - *i_y*: Index or name of the output
+
+             This must be specified unless the system has only one output.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import LinRes
+           >>> lin = LinRes('examples/PID')
+           >>> lin.to_tf()
+           (array([[  11.,  102.,  200.]]), array([   1.,  100.,    0.]))
+        """
+        # Get the input index.
+        if i_u is None:
+            if len(self.sys.input_names) == 1:
+                i_u = 0
+            else:
+                raise IndexError("i_u must be specified since this is a MI system.")
+        elif isinstance(i_u, basestring):
+            try:
+                i_u = self.sys.input_names.index(i_u)
+            except ValueError:
+                raise(ValueError('The input "%s" is invalid.' % i_u))
+
+        # Get the output index.
+        if i_y is None:
+            if len(self.sys.output_names) == 1:
+                i_y = 0
+            else:
+                raise IndexError("i_y must be specified since this is a MO system.")
+        elif isinstance(i_y, basestring):
+            try:
+                i_y = self.sys.output_names.index(i_y)
+            except ValueError:
+                raise(ValueError('The output "%s" is invalid.' % i_y))
+             
+        # Return the TF.
+        return ss2tf(self.sys.A,         self.sys.B, 
+                     self.sys.C[i_y, :], self.sys.D[i_y, :], input=i_u)
 
     def bode(self, axes=None, pairs=None, label='bode',
              title=None, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
@@ -309,11 +368,9 @@ class LinRes(object):
 
         # Create the plots.
         for i, (i_u, i_y) in enumerate(pairs):
-            # Extract the SISO TF. TODO: Is there a better way to do this?
-            sys = ss(self.sys.A, self.sys.B[:, i_u], self.sys.C[i_y, :],
-                     self.sys.D[i_y, i_u])
-            bode_plot(sys, Hz=True, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
-                      color=colors[np.mod(i, n_colors)], axes=axes,
+            bode_plot(self._to_siso(i_u, i_y), 
+                      label='$Y_{%i}/U_{%i}$' % (i_y, i_u),
+                      Hz=True, color=colors[np.mod(i, n_colors)], axes=axes,
                       style=styles[np.mod(i, n_styles)], **kwargs)
             # Note: controls.freqplot.bode() is currently only implemented for
             # SISO systems.
@@ -431,10 +488,8 @@ class LinRes(object):
 
         # Create the plots.
         for i, (i_u, i_y) in enumerate(pairs):
-            # Extract the SISO TF. TODO: Is there a better way to do this?
-            sys = ss(self.sys.A, self.sys.B[:, i_u], self.sys.C[i_y, :],
-                     self.sys.D[i_y, i_u])
-            nyquist_plot(sys, mark=False, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
+            nyquist_plot(self._to_siso(i_u, i_y), 
+                         label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u), mark=False,
                          color=colors[np.mod(i, n_colors)], ax=ax, **kwargs)
             # Note: controls.freqplot.nyquist() is currently only implemented
             # for SISO systems.

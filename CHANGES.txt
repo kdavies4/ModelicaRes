@@ -2,7 +2,9 @@ Changelog
 =========
 
 0.11.x (2014-*-**) -- Updates:
-
+  
+   - Added :meth:`~modelicares.linres.LinRes.to_tf` to return a selected 
+     transfer function from the state-space representation.
    - Added :meth:`~modelicares.simres.SimRes.to_pandas` to return a
      `Pandas DataFrame`_ of selected data.
    - Encoding all variable names as 'latin-1' and stripping null strings from 
