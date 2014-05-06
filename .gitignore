@@ -12,3 +12,6 @@ dist/
 MANIFEST
 *.mos
 .fuse*
+
+# Backup files
+.ipynb_checkpoints

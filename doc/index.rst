@@ -39,8 +39,7 @@ math and matrix functions from NumPy_.
      :alt: Sankey digarams of three tanks model
 
   The links below and in the sidebar describe the components of ModelicaRes.
-  For an introduction, please see :mod:`loadres`, which loads data files and
-  provides a Python_ interpreter to help analyze them.
+  For an introduction, please see the `tutorial <loadres.html>`_.
 
 .. only:: latex
 
@@ -57,8 +56,7 @@ math and matrix functions from NumPy_.
      :scale: 50 %
 
   The following chapters describe the components of ModelicaRes.  For an
-  introduction, please see :mod:`loadres`, which loads data files and provides a
-  Python_ interpreter to help analyze them.
+  introduction, please the tutorial.
 
   The top-level module, :mod:`modelicares`, provides direct access to the most
   important classes and functions.  Others must be accessed through their
@@ -164,7 +162,7 @@ math and matrix functions from NumPy_.
   *unit* and *displayUnit* strings into LaTeX_-formatted strings.  The last
   submodule, :mod:`modelicares.util`, has general supporting functions.
 
-  For a list of changes, please see the `changelog <Changelog.html>`_.  A PDF
+  For a list of changes, please see the `change log <Changelog.html>`_.  A PDF
   version of this documentation is available `here <ModelicaRes.pdf>`_.
 
   **Installation**
