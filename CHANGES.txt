@@ -3,6 +3,8 @@ Changelog
 
 0.11.x (2014-*-**) -- Updates:
 
+   - Added :meth:`~modelicares.simres.SimRes.to_pandas` to return a
+     `Pandas DataFrame`_ of selected data.
    - Encoding all variable names as 'latin-1' and stripping null strings from 
      the end. 
    - Changed the default action for :meth:`~modelicares.simres.SimRes.__call__`
@@ -184,3 +186,6 @@ Changelog
    - Updated documentation.
 
 0.1 (2012-11-8) -- Initial release
+
+
+.. _Pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame

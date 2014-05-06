@@ -23,12 +23,18 @@
 
 - :meth:`animate` - Encode a series of PNG images as a MPG movie
 
+- :meth:`chars_to_str` - Convert a string array to a string
+
+- :meth:`chars_to_str_enc` - Convert a string array to a string and encode it
+
 - :meth:`color` - Plot 2D scalar data on a color axis in 2D Cartesian
   coordinates
 
 - :meth:`closeall` - Close all open figures
 
 - :meth:`convert` - Convert the expression of a physical quantity between units
+
+- :meth:`encode` - Encode a unicode string and strip whitespace from the right
 
 - :meth:`expand_path` - Expand a file path by replacing '~' with the user
   directory and makes the path absolute
@@ -122,7 +128,7 @@ def chars_to_str(str_arr):
         buffer = str_arr.copy()).item()
 
 def encode(string, encoding='latin-1'):
-    """Encode a string and strip whitespace from the right.
+    """Encode a unicode string and strip whitespace from the right.
     """
     return string.encode(encoding).rstrip().rstrip('\x00')
 

@@ -81,7 +81,13 @@ class SimRes(object):
     - :meth:`plot` - Plot data as points and/or curves in 2D Cartesian
       coordinates
 
+    - :meth:`to_pandas` - Return a `Pandas DataFrame`_ with data from selected 
+      variables
+
     - :meth:`sankey` - Create a figure with Sankey diagram(s)
+
+
+    .. _Pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
 
     def __init__(self, fname='dsres.mat', constants_only=False):
@@ -99,7 +105,7 @@ class SimRes(object):
 
              The first data table typically contains all of the constants,
              parameters, and variables that don't vary.  If only that
-             information is needed, it will save some time and memory to set
+             information is needed, it may save time and memory to set
              *constants_only* to *True*.
 
         **Example:**
@@ -242,14 +248,14 @@ class SimRes(object):
 
             The first data table typically contains all of the constants,
             parameters, and variables that don't vary.  If only that information
-            is needed, it will save some time and memory to set *constants_only*
-            to *True*.
+            is needed, it may save time and memory to set *constants_only* to
+            *True*.
 
         The results are stored within this class as *_traj* and *_data*.
         *_traj* is a dictionary with keywords that correspond to each variable
-        name.  The entries are a tuple of (index to the data array, sign of the
-        values, column of the data array, description of the variable, base
-        unit of the variable, and display unit of the variable).  *_data* is a
+        name.  The entries are a tuple of (index to the data array, Boolean 
+        indicating if the values are negated, column of the data array, 
+        description of the variable, base unit, and display unit).  *_data* is a
         list of numpy arrays containing the trajectories.
 
         **Returns:** *None* if the file contains linearization results rather
@@ -259,7 +265,7 @@ class SimRes(object):
         #     on Unix/Linux: /opt/dymola/mfiles/traj/tload.m
         #     on Windows: C:\Program Files\Dymola 7.4\Mfiles\traj\tload.m
 
-        TrajEntry = namedtuple('TrajEntry', ['data_set', 'sign', 'data_row',
+        TrajEntry = namedtuple('TrajEntry', ['data_set', 'negated', 'data_row',
                                              'description', 'unit',
                                              'displayUnit'])
         """Named tuple class to represent a Dymosim trajectory entry"""
@@ -324,13 +330,13 @@ class SimRes(object):
             if transposed:
                 for i in range(dsres['dataInfo'].shape[1]):
                     name = util.chars_to_str_enc(dsres['name'][:, i])
-                    data_set, sign_ind = dsres['dataInfo'][0:2, i]
+                    data_set, sign_index = dsres['dataInfo'][0:2, i]
                     description, unit, displayUnit = _parse_description(
                         dsres['description'][:, i])
                     if data_set == 1 or not constants_only:
                         self._traj[name] = TrajEntry(data_set=data_set-1,
-                                                     sign=np.sign(sign_ind),
-                                                     data_row=abs(sign_ind)-1,
+                                                     negated=sign_index<0,
+                                                     data_row=abs(sign_index)-1,
                                                      description=description,
                                                      unit=unit,
                                                      displayUnit=displayUnit)
@@ -343,13 +349,13 @@ class SimRes(object):
             else:
                 for i in range(dsres['dataInfo'].shape[0]):
                     name = util.chars_to_str_enc(dsres['name'][i, :])
-                    data_set, sign_ind = dsres['dataInfo'][i, 0:2]
+                    data_set, sign_index = dsres['dataInfo'][i, 0:2]
                     description, unit, displayUnit = _parse_description(
                         dsres['description'][i, :])
                     if data_set == 1 or not constants_only:
                         self._traj[name] = TrajEntry(data_set=data_set-1,
-                                                     sign=np.sign(sign_ind),
-                                                     data_row=abs(sign_ind)-1,
+                                                     negated=sign_index<0,
+                                                     data_row=abs(sign_index)-1,
                                                      description=description,
                                                      unit=unit,
                                                      displayUnit=displayUnit)
@@ -728,9 +734,9 @@ class SimRes(object):
         def _get_values(entry):
             """Return the values of a variable given its *_traj* entry.
             """
-            return f(self._data[entry.data_set][entry.data_row, i]
-                    if entry.sign == 1 else
-                    -self._data[entry.data_set][entry.data_row, i])
+            return f(-self._data[entry.data_set][entry.data_row, i]
+                     if entry.negated else
+                     self._data[entry.data_set][entry.data_row, i])
 
         return self._get(names, lambda name: _get_values(self._traj[name]))
 
@@ -821,9 +827,9 @@ class SimRes(object):
         def _get_values(entry):
             """Return the values of a variable given its *_traj* entry.
             """
-            return (self._data[entry.data_set][entry.data_row, i]
-                   if entry.sign == 1 else
-                   -self._data[entry.data_set][entry.data_row, i])
+            return (-self._data[entry.data_set][entry.data_row, i]
+                    if entry.negated else
+                    self._data[entry.data_set][entry.data_row, i])
 
         def _get_tuple(entry):
             """Return the (times, values) of a variable given its *_traj* entry.
@@ -965,11 +971,11 @@ class SimRes(object):
 
            >>> # Names starting with "L.p", using shell-style matching:
            >>> sim.names('L.p*')
-           [u'L.p.i', u'L.p.v']
+           ['L.p.i', 'L.p.v']
 
            >>> # Names ending with "p.v", using re matching:
            >>> sim.names('p\.v$', re=True)
-           [u'C2.p.v', u'Gnd.p.v', u'L.p.v', u'Nr.p.v', u'C1.p.v', u'Ro.p.v', u'G.p.v']
+           ['C2.p.v', 'Gnd.p.v', 'L.p.v', 'Nr.p.v', 'C1.p.v', 'Ro.p.v', 'G.p.v']
         """
         if pattern is None or (pattern in ['.*', '.+', '.', '.?', ''] if re 
                                else pattern == '*'):
@@ -997,7 +1003,7 @@ class SimRes(object):
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
            >>> sim.nametree() # doctest: +ELLIPSIS
-           {u'G': {u'G': u'G.G', ... u'n': {u'i': u'G.n.i', u'v': u'G.n.v'}, ...}, u'L': {...}, ...}
+           {'G': {'G': 'G.G', ... 'n': {'i': 'G.n.i', 'v': 'G.n.v'}, ...}, 'L': {...}, ...}
         """
         # This method has been copied and modified from DyMat version 0.5
         # (Joerg Raedler,
@@ -1371,16 +1377,52 @@ class SimRes(object):
         return sankeys
 
     def to_pandas(self, names):
-        """Return a pandas_ data frame with data from selected variables.
+        """Return a `Pandas DataFrame`_ with data from selected variables.
 
-        - *names*: String or list of strings of the variable
-          names
+        The data frame has methods for further manipulation and exporting (e.g., 
+        :meth:`~pandas.DataFrame.to_clipboard`, 
+        :meth:`~pandas.DataFrame.to_csv`, :meth:`~pandas.DataFrame.to_excel`, 
+        :meth:`~pandas.DataFrame.to_hdf`, and 
+        :meth:`~pandas.DataFrame.to_html`). 
 
-        .. pandas: http://pandas.pydata.org/
+        **Arguments:**
+
+        - *names*: String or list of strings of the variable names
+
+        **Example:**
+
+        We'll grab the voltages across all of the components in the Chua
+        circuit.
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+
+           >>> sim = SimRes('examples/ChuaCircuit')
+           >>> sim.to_pandas(sim.names('^[^.]*.v$', re=True)) # doctest: +ELLIPSIS
+                       C1.v / V  C2.v / V   G.v / V   L.v / V  Nr.v / V  Ro.v / V
+           Time / s    ...
+           0.000000    4.000000  0.000000 -4.000000  0.000000  4.000000  0.000000
+           5.000000    3.882738  0.109426 -3.773312  0.109235  3.882738  0.000191
+           ...
+           <BLANKLINE>
+           [507 rows x 6 columns]
         """
-        if isinstance(names, basestring):
-            names = list(names)
-        return DataFrame(self.get_values(names), self.get_times(names))
+        def label(name):
+            """Generate text to label a number as a quantity expressed in a 
+            unit.
+            """
+            return name + ' / ' + self.get_unit(name)
+
+        names = util.flatten_list(names)
+        data_sets = {self._traj[name].data_set for name in names}
+        times = list(np.unique(np.array([self._data[data_set][0] 
+                                        for data_set in data_sets])))
+        values = {label(name): self.get_values_at_times(name, times) 
+                  for name in names}
+        time_label = label('Time')
+        values[time_label] = times
+        return DataFrame(values).set_index(time_label)
 
     def __call__(self, names, action=get_tuple, *args, **kwargs):
         """Upon a call to an instance of :class:`SimRes`, call a method on
