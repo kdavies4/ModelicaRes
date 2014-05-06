@@ -141,7 +141,7 @@ math and matrix functions from NumPy_.
 
 .. toctree::
 
-  loadres
+  Tutorial and loadres script <loadres>
   modelicares
   simres
   linres

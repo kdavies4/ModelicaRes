@@ -68,7 +68,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import re
 import numpy as np
-import modelicares.base as base
+import modelicares.util as util
 import doe
 
 from itertools import count
@@ -213,7 +213,7 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
        >>> # Also note that Python dictionaries do not preserve order (and it
        >>> # is not necessary here).
     """
-    params = base.flatten_dict(params)
+    params = util.flatten_dict(params)
     i_args = len(params) + 1
     experiment = lambda x: Experiment(
                              model=x[0],
@@ -283,7 +283,7 @@ def read_params(names, fname='dsin.txt'):
       Modelica_ dot notation)
 
          A parameter name includes array indices (if any) in Modelica_
-         representation (1-base indexing); the values are scalar.
+         representation (1-based indexing); the values are scalar.
 
     - *fname*: Name of the file (may include the file path)
 
@@ -330,7 +330,7 @@ def read_params(names, fname='dsin.txt'):
                 #           = 3: state derivative.
                 #           = 4: output.
                 #           = 5: input.
-                #           = 6: baseiliary variable.
+                #           = 6: auxiliary variable.
                 # column 6: Data type of variable.
                 #           = 0: real.
                 #           = 1: boolean.
@@ -457,7 +457,7 @@ def write_params(params, fname='dsin.txt'):
          Each key is a parameter name (including the full model path in
          Modelica_ dot notation) and each entry is a parameter value.  The
          parameter name includes array indices (if any) in Modelica_
-         representation (1-bases indexing).  The values must be representable
+         representation (1-based indexing).  The values must be representable
          as scalar numbers (integer or floating point).  *True* and *False*
          (not 'true' and 'false') are automatically mapped to 1 and 0.
          Enumerations must be given explicitly as the unsigned integer
@@ -698,9 +698,9 @@ def write_script(experiments=[(None, {}, {})], packages=[],
     # Preprocess the arguments.
     if not isinstance(experiments, (list, GeneratorType)):
         experiments = [experiments]
-    fname = base.expand_path(fname)
+    fname = util.expand_path(fname)
 
-    working_dir = base.expand_path(working_dir)
+    working_dir = util.expand_path(working_dir)
     results_dir = os.path.split(fname)[0]
     exe = '.exe' if os.name == 'nt' else ''
     for i, result in enumerate(results):
@@ -741,7 +741,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
             # Write to the Modelica script.
             mos.write('// Experiment %i\n' % i)
             if model:
-                params = ParamDict(base.flatten_dict(params))
+                params = ParamDict(util.flatten_dict(params))
                 args['problem'] =  '"%s%s"' % (model, params)
             if args:
                 mos.write('ok = %s%s;\n' % (command, ParamDict(args)))

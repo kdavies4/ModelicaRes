@@ -28,6 +28,7 @@ from matplotlib import rcParams
 from collections import namedtuple
 from fnmatch import fnmatchcase
 from difflib import get_close_matches
+from pandas import TimeSeries
 
 from modelicares.gui import Browser
 from modelicares.texunit import unit2tex, label_number
@@ -1390,7 +1391,10 @@ class SimRes(object):
                            unit=flow_unit, **kwargs).finish())
         return sankeys
 
-    def __call__(self, names, action=get_values, *args, **kwargs):
+    def to_pandas(self):
+        return self
+
+    def __call__(self, names, action=get_tuple, *args, **kwargs):
         """Upon a call to an instance of :class:`SimRes`, call a method on
         variable(s) given their name(s).
 
@@ -1401,7 +1405,7 @@ class SimRes(object):
 
         - *action*: Method for retrieving information about the variable(s)
 
-             The default is :meth:`get_values`.  *action* may be a list or
+             The default is :meth:`get_tuple`.  *action* may be a list or
              tuple, in which case the return value is a list or tuple.
 
         - *\*args*, *\*\*kwargs*: Additional arguments for *action*
@@ -1410,17 +1414,17 @@ class SimRes(object):
 
         .. code-block:: python
 
-           >>> from modelicares.simres import SimRes, Info
+           >>> from modelicares.simres import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
 
-           # Values of a single variable
-           >>> sim('L.v') # doctest: +ELLIPSIS
-           array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)
+           # Tuple of time and value vectors for a variable:
+           >>> sim('L.i') # doctest: +ELLIPSIS
+           (array([    0.        , ... 2500.        ], dtype=float32), array([ 0.        , ... 2.04866147], dtype=float32))
            >>> # This is equivalent to:
-           >>> sim.get_values('L.v') # doctest: +ELLIPSIS
-           array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)
+           >>> sim.get_tuple('L.i') # doctest: +ELLIPSIS
+           (array([    0.        , ... 2500.        ], dtype=float32), array([ 0.        , ... 2.04866147], dtype=float32))
 
-           # Values of a list of variables
+           # Descriptions of a list of variables:
            >>> sim(['L.L', 'C1.C'], SimRes.get_description)
            ['Inductance', 'Capacitance']
            >>> # This is equivalent to:
@@ -1428,6 +1432,7 @@ class SimRes(object):
            ['Inductance', 'Capacitance']
 
            # Other attributes
+           >>> from modelicares.simres import Info
            >>> print("The final value of %s is %.3f %s." %
            ...       sim('L.i', (Info.description, Info.FV, Info.unit)))
            The final value of Current flowing from pin p to pin n is 2.049 A.
@@ -1464,7 +1469,7 @@ class SimRes(object):
 
     def __getitem__(self, names):
         """Upon accessing a variable name within an instance of
-        :class:`SimRes`, return its values.
+        :class:`SimRes`, return a tuple of its time and value vectors.
 
         **Arguments**:
 
@@ -1478,13 +1483,14 @@ class SimRes(object):
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
 
-           >>> sim['L.v'] # doctest: +ELLIPSIS
-           array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)
+           >>> sim['L.i'] # doctest: +ELLIPSIS
+           (array([    0.        , ... 2500.        ], dtype=float32), array([ 0.        , ... 2.04866147], dtype=float32))
            >>> # This is equivalent to:
-           >>> sim.get_values('L.v') # doctest: +ELLIPSIS
-           array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)
+           >>> sim.get_tuple('L.i') # doctest: +ELLIPSIS
+           (array([    0.        , ... 2500.        ], dtype=float32), array([ 0.        , ... 2.04866147], dtype=float32))
+
         """
-        return self.get_values(names)
+        return self.get_tuple(names)
 
     def __len__(self):
         """Return the number of variables in the simulation.

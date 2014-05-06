@@ -3,6 +3,8 @@ Changelog
 
 0.11.x (2014-*-**) -- Updates:
 
+   - Changed the default action for :meth:`~modelicares.simres.SimRes.__call__`
+     to :meth:`~modelicares.simres.SimRes.get_tuple`.
    - Added pattern matching to :meth:`~modelicares.simres.SimRes.nametree`.
    - Merged :meth:`~modelicares.exps.modelica_array` and
      :meth:`~modelicares.exps.modelica_boolean` into a new function,

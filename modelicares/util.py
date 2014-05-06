@@ -603,7 +603,7 @@ def figure(label='', *args, **kwargs):
 
        >>> fig = figure("velocity_vs_time") # doctest: +ELLIPSIS
        >>> plt.getp(fig, 'label')
-       u'velocity_vs_time'
+       'velocity_vs_time'
 
     .. Note::  The *label* property is used as the base filename in the
        :meth:`saveall` method.

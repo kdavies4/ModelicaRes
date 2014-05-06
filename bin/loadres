@@ -11,10 +11,10 @@ PyLab_ is directly imported (``from pylab import *``) to provide many functions
 of NumPy_ and matplotlib_ (e.g., :meth:`sin` and :meth:`plot`).  The essential
 classes and functions of ModelicaRes are directly available as well.
 
-**Example:**
+**Tutorial:**
 
-To begin this example, copy this script (*loadres*) to the current directory 
-along with the *examples* folder.  
+First, copy this script (*loadres*) to the current directory along with the 
+*examples* folder.  Then, execute the following command:
 
 .. code-block:: sh
 
@@ -22,65 +22,151 @@ along with the *examples* folder.
    Valid: SimRes('.../examples/ChuaCircuit.mat')
    Valid: SimRes('.../examples/ThreeTanks.mat')
    Valid: LinRes('.../examples/PID.mat')
-   Simulation results have been loaded into sims[0] through sims[1].
+   Simulation results have been loaded into sim through sims[1].
    A linearization result has been loaded into lin.
 
-where '...' depends on the local system.
+where '...' depends on the local system.  If this fails, install the `easygui 
+package <http://easygui.sourceforge.net/>_.
 
-You can now explore the simulation results or create plots using the methods in
-:class:`~modelicares.simres.SimRes`.  For example,
+We can now explore the simulation results or create plots using the methods in
+:class:`~modelicares.simres.SimRes`.  We will look at the first simulation---the
+Chua circuit:
+
+.. testsetup::
+  >>> from modelicares import SimRes, LinRes
+  >>> sims = map(SimRes, ['../examples/ChuaCircuit.mat', '../examples/ThreeTanks.mat'])
+  >>> lin = LinRes('examples/PID.mat')
 
 .. code-block:: python
 
-   >>> sims[0].get_FV('L.v')
-   -0.25352862
-   >>> sims[0].get_unit('L.v')
-   'V'
+   >>> sim = sims[0]
+   >>> print(sim) # doctest: +ELLIPSIS
+   Modelica simulation results from ".../examples/ChuaCircuit.mat"
+
+To get the initial value and unit of the current flowing through the inductor 
+('L.i'), use :meth:`~modelicares.simres.SimRes.get_FV` and 
+:meth:`~modelicares.simres.SimRes.get_unit`:
+
+.. code-block:: python
+
+   >>> sim.get_IV('L.i')
+   0.0
+   >>> sim.get_unit('L.i')
+   'A'
+
+To return the final, minimum, maximum, and mean values, use 
+:meth:`~modelicares.simres.SimRes.get_FV`, 
+:meth:`~modelicares.simres.SimRes.get_min`, 
+:meth:`~modelicares.simres.SimRes.get_max`, and 
+:meth:`~modelicares.simres.SimRes.get_mean`:
+
+.. code-block:: python
+
+   >>> sim.get_FV('L.i')
+   2.0486615
+   >>> sim.get_min('L.i')
+   -3.3101323
+   >>> sim.get_max('L.i')
+   3.9185011
+   >>> sim.get_mean('L.i')
+   0.43196017
 
 If a variable cannot be found, then suggestions are given:
 
 .. code-block:: python
 
-   >>> sims[0].get_description('L.vv')
-   L.vv is not a valid variable name.
+   >>> sim.get_description('L.ii')
+   L.ii is not a valid variable name.
    <BLANKLINE>
-   Did you mean one of the these?
-          L.v
-          L.p.v
-          L.n.v
-   >>> sims[0].get_description('L.v')
-   'Voltage drop between the two pins (= p.v - n.v)'
+   Did you mean one of these?
+          L.i
+          L.p.i
+          L.n.i
 
-To return all values of a variable, use its string as an index:
+   >>> sim.get_description('L.i')
+   'Current flowing from pin p to pin n'
 
-.. code-block:: python
-
-   >>> sim['L.v']
-   array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)
-
-or an argument:
-
-.. code-block:: python
-
-   >>> sim('L.v')
-   array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)
-
-To see all the methods, use
-
-   >>> help(sims[0])
-
-or go to :class:`~modelicares.simres.SimRes`.  To search for variable names, use
+To search for variable names, use
 :meth:`~modelicares.simres.SimRes.names` with wildcards:
 
-   >>> sims[0].names('L.p*')
+   >>> sim.names('L.p*')
    [u'L.p.i', u'L.p.v']
 
-Likewise, you can explore the linearization result or create diagrams using the
+To see how many variables are in a simulation, use Python_'s built-in 
+:meth:`len` function:
+
+.. code-block:: python
+
+   >>> len(sim)
+   62
+
+To return all values of 'L.i', use 
+:meth:`~modelicares.simres.SimRes.get_values`:
+
+.. code-block:: python
+
+   >>> sim.get_values('L.i') # doctest: +ELLIPSIS
+   array([ 0.        , ... 2.04866147], dtype=float32)
+
+To return a tuple of time and value vectors of 'L.i', use 
+:meth:`~modelicares.simres.SimRes.get_tuple`:
+
+.. code-block:: python
+
+   >>> sim.get_tuple('L.i') # doctest: +ELLIPSIS
+   (array([    0.        , ... 2500.        ], dtype=float32), array([ 0.        , ... 2.04866147], dtype=float32))
+
+or simply index the variable name or provide it as an argument:
+
+.. code-block:: python
+
+   >>> sim['L.i'] # doctest: +ELLIPSIS
+   (array([    0.        , ... 2500.        ], dtype=float32), array([ 0.        , ... 2.04866147], dtype=float32))
+   >>> sim('L.i') # doctest: +ELLIPSIS
+   (array([    0.        , ... 2500.        ], dtype=float32), array([ 0.        , ... 2.04866147], dtype=float32))
+
+To plot 'L.i', use :meth:`~modelicares.simres.SimRes.plot`:
+
+   >>> sim.plot(ynames1='L.i') # doctest: +ELLIPSIS
+   (<matplotlib.axes.AxesSubplot object at 0x...>, None)
+
+   >>> import matplotlib.pyplot as plt
+   >>> plt.show()
+
+.. testsetup::
+   >>> sim.plot(ynames1='L.i') # doctest: +ELLIPSIS
+   (<matplotlib.axes.AxesSubplot object at 0x...>, None)
+   >>> plt.savefig('examples/ChuaCircuit1.png')
+   >>> plt.savefig('examples/ChuaCircuit1.pdf')
+
+.. only:: html
+
+   .. image:: ../examples/ChuaCircuit1.png
+      :scale: 70 %
+      :alt: plot of Chua circuit
+
+.. only:: latex
+
+   .. figure:: ../examples/ChuaCircuit1.pdf
+      :scale: 70 %
+
+      Plot of Chua circuit
+
+Notice that the title and labels were generated automatically.  For a list of 
+all available methods, use Python_'s :meth:`help` function:
+
+   >>> help(sim) # doctest: +ELLIPSIS
+   Help on SimRes in module modelicares.simres object:
+   ...
+
+or see :class:`~modelicares.simres.SimRes`.
+
+Likewise, we can explore the linearization result or create diagrams using the
 methods in :class:`~modelicares.linres.LinRes`:
 
 .. code-block:: python
 
-   >>> print lin
+   >>> print lin # doctest: +ELLIPSIS
    Modelica linearization results from ".../examples/PID.mat"
    >>> lin.sys.A
    matrix([[   0.,    0.],
@@ -142,6 +228,10 @@ if __name__ == '__main__':
             _local_exit()
         if not loc:
             _local_exit()
+    elif argv[1] == '--test':
+        import doctest
+        doctest.testmod()
+        exit()
     else:
         loc = argv[1:]
 

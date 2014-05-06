@@ -49,7 +49,7 @@ major, minor1, minor2, s, tmp = sys.version_info
 
 
 # All functions and classes
-#__all__ = ['base', 'exps', 'linres', 'multi', 'simres', 'texunit']
+#__all__ = ['util', 'exps', 'linres', 'multi', 'simres', 'texunit']
 
 
 # Essential functions and classes
