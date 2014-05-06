@@ -18,7 +18,12 @@ interpreter with math and matrix functions from NumPy_.
 
 For more information, please see the `main project site`_ or the doc folder of
 the package for the full documentation and many examples.  The  development site
-is https://github.com/kdavies4/modelicares.
+is https://github.com/kdavies4/modelicares.  Please also see the tutorial, which 
+is available as an `IPython notebook 
+<https://github.com/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_ 
+or online as a `static page 
+<http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_.
+
 
 Installation
 ~~~~~~~~~~~~

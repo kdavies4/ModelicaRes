@@ -28,33 +28,11 @@ from matplotlib import rcParams
 from collections import namedtuple
 from fnmatch import fnmatchcase
 from difflib import get_close_matches
-from pandas import TimeSeries
+from pandas import DataFrame
 
 from modelicares.gui import Browser
 from modelicares.texunit import unit2tex, label_number
 from modelicares import util
-
-
-def _chars_to_str(str_arr):
-    """Convert a string array to a string.
-    """
-    # Copied from scipy.io.matlab.miobase (without the 'self'), 2010-10-25
-    dt = np.dtype('U' + str(_small_product(str_arr.shape)))
-    return np.ndarray(shape=(),
-        dtype = dt,
-        buffer = str_arr.copy()).item()
-
-
-def _small_product(arr):
-    """Find the product of all numbers in an array.
-
-    This is faster than :meth:`product` for small arrays.
-    """
-    # Copied from scipy.io.matlab.miobase, 2010-10-25
-    res = 1
-    for e in arr:
-        res *= e
-    return res
 
 
 class SimRes(object):
@@ -291,6 +269,7 @@ class SimRes(object):
             """Parse the variable description string into (description, unit,
             displayUnit).
             """
+            description = util.chars_to_str_enc(description)
             try:
                 description, unit = description[0:-1].rsplit(' [', 1)
                 try:
@@ -320,14 +299,14 @@ class SimRes(object):
                                  '"%s".' % fname)
 
         # Check if the file has the correct class name.
-        line = _chars_to_str(Aclass[0])
+        line = util.chars_to_str(Aclass[0])
         if not line.startswith('Atrajectory'):
             if line.startswith('AlinearSystem'):
                 raise AssertionError('File "%s" is not of class Atrajectory '
                                      'or AlinearSystem.' % fname)
 
         # Check the dsres version.
-        version = _chars_to_str(Aclass[1])
+        version = util.chars_to_str(Aclass[1])
         assert version.startswith('1.1'), ('Only dsres files of version 1.1 '
             'are supported, but "%s" is version %s.' % (fname, version))
 
@@ -336,7 +315,7 @@ class SimRes(object):
         assert n_row >= 2, ('"Aclass" or "class" has fewer than 2 lines in '
             '"%s".' % fname)
         transposed = (n_row >= 4
-                      and _chars_to_str(Aclass[3]).startswith('binTrans'))
+                      and util.chars_to_str(Aclass[3]).startswith('binTrans'))
 
         # Load the name, description, parts of dataInfo, and data_i variables.
         self._traj = {}
@@ -344,10 +323,10 @@ class SimRes(object):
         try:
             if transposed:
                 for i in range(dsres['dataInfo'].shape[1]):
-                    name = _chars_to_str(dsres['name'][:, i]).rstrip()
+                    name = util.chars_to_str_enc(dsres['name'][:, i])
                     data_set, sign_ind = dsres['dataInfo'][0:2, i]
                     description, unit, displayUnit = _parse_description(
-                        _chars_to_str(dsres['description'][:, i]).encode('latin-1').rstrip())
+                        dsres['description'][:, i])
                     if data_set == 1 or not constants_only:
                         self._traj[name] = TrajEntry(data_set=data_set-1,
                                                      sign=np.sign(sign_ind),
@@ -363,10 +342,10 @@ class SimRes(object):
                                   for i in range(n_data_sets)]
             else:
                 for i in range(dsres['dataInfo'].shape[0]):
-                    name = _chars_to_str(dsres['name'][i, :]).encode('latin-1').rstrip()
+                    name = util.chars_to_str_enc(dsres['name'][i, :])
                     data_set, sign_ind = dsres['dataInfo'][i, 0:2]
                     description, unit, displayUnit = _parse_description(
-                        _chars_to_str(dsres['description'][i, :]).encode('latin-1').rstrip())
+                        dsres['description'][i, :])
                     if data_set == 1 or not constants_only:
                         self._traj[name] = TrajEntry(data_set=data_set-1,
                                                      sign=np.sign(sign_ind),
@@ -1391,8 +1370,17 @@ class SimRes(object):
                            unit=flow_unit, **kwargs).finish())
         return sankeys
 
-    def to_pandas(self):
-        return self
+    def to_pandas(self, names):
+        """Return a pandas_ data frame with data from selected variables.
+
+        - *names*: String or list of strings of the variable
+          names
+
+        .. pandas: http://pandas.pydata.org/
+        """
+        if isinstance(names, basestring):
+            names = list(names)
+        return DataFrame(self.get_values(names), self.get_times(names))
 
     def __call__(self, names, action=get_tuple, *args, **kwargs):
         """Upon a call to an instance of :class:`SimRes`, call a method on

@@ -11,10 +11,10 @@ PyLab_ is directly imported (``from pylab import *``) to provide many functions
 of NumPy_ and matplotlib_ (e.g., :meth:`sin` and :meth:`plot`).  The essential
 classes and functions of ModelicaRes are directly available as well.
 
-**Tutorial:**
+**Setup and example:**
 
-First, copy this script (*loadres*) to the current directory along with the 
-*examples* folder.  Then, execute the following command:
+Copy this script (*loadres*) to the current directory along with the *examples* 
+folder.  Then, execute the following command:
 
 .. code-block:: sh
 

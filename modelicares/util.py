@@ -101,6 +101,36 @@ quantity expressed in terms of the unit.
 #Conversion = namedtuple('Conversion', ['unit', 'factor', 'offset', 'new_unit'])
 
 
+def _small_product(arr):
+    """Find the product of all numbers in an array.
+
+    This is faster than :meth:`product` for small arrays.
+    """
+    # Copied from scipy.io.matlab.miobase, 2010-10-25
+    res = 1
+    for e in arr:
+        res *= e
+    return res
+
+def chars_to_str(str_arr):
+    """Convert a string array to a string.
+    """
+    # Copied from scipy.io.matlab.miobase (without the 'self'), 2010-10-25
+    dt = np.dtype('U' + str(_small_product(str_arr.shape)))
+    return np.ndarray(shape=(),
+        dtype = dt,
+        buffer = str_arr.copy()).item()
+
+def encode(string, encoding='latin-1'):
+    """Encode a string and strip whitespace from the right.
+    """
+    return string.encode(encoding).rstrip().rstrip('\x00')
+
+def chars_to_str_enc(str_arr):
+    """Convert a string array to a string and encode it.
+    """
+    return encode(chars_to_str(str_arr))
+
 def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
                lstar=0.05, label='',
                orientation='tangent', color='r'):

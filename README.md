@@ -19,7 +19,11 @@ Bode and Nyquist plots, and Sankey diagrams.  [ModelicaRes] can be scripted or
 run from a [Python] interpreter with math and matrix functions from [NumPy].
 
 For more information, please see the [main project site] or the [doc](doc)
-folder for the full documentation and many examples.
+folder for the full documentation and many examples.  A 
+tutorial is available as an [IPython notebook](examples/tutorial.ipynb) or 
+online as a 
+[static page](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb).
+
 
 ### Installation
 

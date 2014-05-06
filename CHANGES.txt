@@ -3,6 +3,8 @@ Changelog
 
 0.11.x (2014-*-**) -- Updates:
 
+   - Encoding all variable names as 'latin-1' and stripping null strings from 
+     the end. 
    - Changed the default action for :meth:`~modelicares.simres.SimRes.__call__`
      to :meth:`~modelicares.simres.SimRes.get_tuple`.
    - Added pattern matching to :meth:`~modelicares.simres.SimRes.nametree`.

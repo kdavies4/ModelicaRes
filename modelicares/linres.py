@@ -23,7 +23,7 @@ from matplotlib.cbook import iterable
 
 from control.matlab import ss
 from modelicares.freqplot import bode_plot, nyquist_plot
-from modelicares.util import figure, add_hlines, add_vlines
+from modelicares.util import figure, add_hlines, add_vlines, encode
 
 class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze
@@ -187,16 +187,15 @@ class LinRes(object):
 
         # Extract the names.
         if n_x > 0: # States
-            self.sys.stateName = [name.rstrip() for name in xuyName[:n_x]]
+            self.sys.stateName = map(encode, xuyName[:n_x])
         else:
             self.sys.stateName = []
         if n_u > 0: # Inputs
-            self.sys.inputName = [name.rstrip() for name in xuyName[n_x:
-                                                                    n_x+n_u]]
+            self.sys.inputName = map(encode, xuyName[n_x:n_x+n_u])
         else:
             self.sys.inputName = []
         if n_y > 0: # Outputs
-            self.sys.outputName = [name.rstrip() for name in xuyName[n_x+n_u:]]
+            self.sys.outputName = map(encode, xuyName[n_x+n_u:])
         else:
             self.sys.outputName = []
 
