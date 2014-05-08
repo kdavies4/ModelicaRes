@@ -33,8 +33,6 @@
 
 - :meth:`convert` - Convert the expression of a physical quantity between units
 
-- :meth:`encode` - Encode a unicode string and strip whitespace from the right
-
 - :meth:`expand_path` - Expand a file path by replacing '~' with the user
   directory and makes the path absolute
 
@@ -95,42 +93,12 @@ from matplotlib.lines import Line2D
 from matplotlib.cbook import iterable
 
 
-Quantity = namedtuple('Quantity', ['number', 'factor', 'offset', 'unit'])
-"""Named tuple class for a constant physical quantity
+def chars_to_str(str_arr, codec='latin-1'):
+    """Convert a string array to a string.
 
-The factor and then the offset are applied to the number to arrive at the
-quantity expressed in terms of the unit.
-"""
-
-
-# Create a class to contain information about a unit conversion.
-#Conversion = namedtuple('Conversion', ['unit', 'factor', 'offset', 'new_unit'])
-
-
-def _small_product(arr):
-    """Find the product of all numbers in an array.
-
-    This is faster than :meth:`product` for small arrays.
+    Remove trailing whitespace and null characters.  Encode using *codec*. 
     """
-    # Copied from scipy.io.matlab.miobase, 2010-10-25
-    res = 1
-    for e in arr:
-        res *= e
-    return res
-
-def chars_to_str(str_arr):
-    """Convert a string array to a string and remove trailing whitespace.
-    """
-    # Modified from scipy.io.matlab.miobase, 2010-10-25
-    dt = np.dtype('U' + str(_small_product(str_arr.shape)))
-    return np.ndarray(shape=(),
-                      dtype=dt,
-                      buffer=str_arr.copy()).item().rstrip()
-
-def encode(string, encoding='latin-1'):
-    """Encode a unicode string and strip whitespace from the right.
-    """
-    return string.encode(encoding).rstrip().rstrip('\x00')
+    return ''.join(str_arr).rstrip().rstrip('\x00').encode(codec)
 
 def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
                lstar=0.05, label='',

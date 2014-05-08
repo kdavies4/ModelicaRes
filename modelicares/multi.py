@@ -23,7 +23,6 @@ __credits__ = ["Kevin Bandy"]
 __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
-
 import os
 import numpy as np
 
@@ -466,7 +465,6 @@ def multinyquist(lins, ax=None, pair=(0, 0), label='nyquist',
     # Process the lins input.
     if not iterable(lins):
         lins = [lins]
-
 
     # Process the labels input.
     if labels == '':

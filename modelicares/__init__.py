@@ -42,10 +42,10 @@ __version__ = "0.11.x"
 #
 # These will be available directly from modelicares; others must be loaded from
 # their submodules.
-from modelicares.util import (add_arrows, add_hlines, add_vlines, animate, ArrowLine, 
-    closeall, figure, load_csv, save, saveall, setup_subplots)
-from modelicares.exps import (Experiment, gen_experiments, ParamDict, read_params, 
-    run_models, write_params, write_script, doe)
+from modelicares.util import (add_arrows, add_hlines, add_vlines, animate, 
+    ArrowLine, closeall, figure, load_csv, save, saveall, setup_subplots)
+from modelicares.exps import (Experiment, gen_experiments, ParamDict, 
+    read_params, run_models, write_params, write_script, doe)
 from modelicares.linres import LinRes
 from modelicares.multi import multiload, multiplot, multibode, multinyquist
 from modelicares.simres import SimRes

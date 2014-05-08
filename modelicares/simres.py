@@ -21,19 +21,16 @@ import os
 import numpy as np
 
 from re import compile as re_compile
-from scipy.io import loadmat
 from scipy.integrate import trapz
 from matplotlib.pyplot import figlegend
 from matplotlib import rcParams
-from collections import namedtuple
 from fnmatch import fnmatchcase
 from difflib import get_close_matches
 from pandas import DataFrame
 
-from modelicares.gui import Browser
-from modelicares.texunit import unit2tex, label_number
-from modelicares import util
-
+from . import util
+from .gui import Browser
+from .texunit import unit2tex, label_number
 
 class SimRes(object):
     """Class to load and analyze results from a Modelica_-based simulation
@@ -41,6 +38,8 @@ class SimRes(object):
     This class contains the following methods:
 
     - :meth:`browse` - Launch a variable browser
+
+    - :meth:`get_arrays` - Return array(s) of times and values for variable(s)
 
     - :meth:`get_description` - Return the description(s) of variable(s)
 
@@ -62,16 +61,12 @@ class SimRes(object):
 
     - :meth:`get_times` - Return vector(s) of the sample times of variable(s)
 
-    - :meth:`get_tuple` - Return tuple(s) of time and value vectors for 
-      variable(s)
-
     - :meth:`get_unit` - Return the *unit* attribute(s) of variable(s)
 
-    - :meth:`get_values` - Return vector(s) of the values of the samples of
-      variable(s)
+    - :meth:`get_values` - Return vector(s) of the values of variable(s)
 
-    - :meth:`get_values_at_times` - Return vector(s) of the values of the
-      samples of variable(s)
+    - :meth:`get_values_at_times` - Return vector(s) of the values of 
+      variable(s) at given times
 
     - :meth:`names` - Return a list of variable names that match a pattern
 
@@ -87,6 +82,8 @@ class SimRes(object):
     - :meth:`sankey` - Create a figure with Sankey diagram(s)
 
 
+TODO: attributes: fbase, dir
+
     .. _Pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
 
@@ -100,8 +97,8 @@ class SimRes(object):
 
              The file extension ('.mat') is optional.
 
-        - *constants_only*: *True*, if only the variables from the first data
-          table should be loaded
+        - *constants_only*: *True* to load only the variables from the first data
+          table
 
              The first data table typically contains all of the constants,
              parameters, and variables that don't vary.  If only that
@@ -113,7 +110,11 @@ class SimRes(object):
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
         """
-        self._load(fname, constants_only)
+
+        from .dsom import load
+        assert load(self, fname, constants_only) == 'simulation', \
+            '"%s" appears to be a linearization result.  ' \
+            'Use modelicares.linres.LinRes instead.' % fname
 
         # Save the base filename and the directory.
         self.dir, self.fbase = os.path.split(fname)
@@ -236,136 +237,6 @@ class SimRes(object):
                 figlegend(ax[0].lines, **leg_kwargs)
         return ax
 
-    def _load(self, fname='dsres.mat', constants_only=False):
-        """Load Modelica_ results from a MATLAB\ :sup:`®` file.
-
-        **Arguments:**
-
-        - *fname*: Name of the file (may include the path)
-
-        - *constants_only*: *True*, if only the variables from the first data
-          table should be loaded
-
-            The first data table typically contains all of the constants,
-            parameters, and variables that don't vary.  If only that information
-            is needed, it may save time and memory to set *constants_only* to
-            *True*.
-
-        The results are stored within this class as *_traj* and *_data*.
-        *_traj* is a dictionary with keywords that correspond to each variable
-        name.  The entries are a tuple of (index to the data array, Boolean 
-        indicating if the values are negated, column of the data array, 
-        description of the variable, base unit, and display unit).  *_data* is a
-        list of numpy arrays containing the trajectories.
-
-        **Returns:** *None* if the file contains linearization results rather
-        than simulation results.
-        """
-        # This performs the task of mfiles/traj/tload.m from the Dymola 
-        # installation.
-
-        TrajEntry = namedtuple('TrajEntry', ['data_set', 'negated', 'data_row',
-                                             'description', 'unit',
-                                             'displayUnit'])
-        """Named tuple class to represent a Dymosim trajectory entry"""
-
-
-        def _parse_description(description):
-            """Parse the variable description string into (description, unit,
-            displayUnit).
-            """
-            description = util.chars_to_str(description[0:-1]).encode('latin-1')
-            try:
-                description, unit = description.rsplit(' [', 1)
-                try:
-                    unit, displayUnit = unit.rsplit('|', 1)
-                except ValueError:
-                    return description, unit, ''
-            except ValueError:
-                return description, '', ''
-            return description, unit, displayUnit
-
-        # Load the file and check if it contains the correct variable names.
-        mat = loadmat(fname, chars_as_strings=False)
-        # Characters aren't converted to strings because the arrays may be 
-        # rotated.
-        try:
-            Aclass = mat['Aclass']
-        except KeyError:
-            try:
-                Aclass = mat['class']
-            except KeyError:
-                raise KeyError('Neither "Aclass" nor "class" is present in "%s".'
-                               % fname)
-
-        # Check if the file has the correct class name.
-        result_type = util.chars_to_str(Aclass[0])
-        if result_type <> 'Atrajectory':
-            if result_type == 'AlinearSystem':
-                raise KeyError('File "%s" is a linearization result.  ' % fname
-                               'Use modelicares.linres.LinRes instead.')
-            else:
-                raise KeyError('File "%s" does not appear to be a simulation '
-                               'or linearization result.' % fname)
-
-        # Check the mat version.
-        version = util.chars_to_str(Aclass[1])
-        assert version == '1.1', ('Only mat files of version 1.1 are supported.  '
-                                  '"%s" is version %s.' % (fname, version))
-
-        # Determine if the matrices are transposed.
-        transposed = (len(Aclass) >= 4
-                      and util.chars_to_str(Aclass[3]) == 'binTrans')
-
-        # Load the name, description, parts of dataInfo, and data_i variables.
-        self._traj = {}
-        n_data_sets = 0
-        if transposed:
-            for i in range(mat['dataInfo'].shape[1]):
-                name = util.chars_to_str(mat['name'][:, i])
-                data_set = mat['dataInfo'][0, i]
-                sign_index = mat['dataInfo'][1, i]
-                description, unit, displayUnit = _parse_description(
-                    mat['description'][:, i])
-                if data_set == 1 or not constants_only:
-                    self._traj[name] = TrajEntry(data_set=data_set-1,
-                                                 negated=sign_index<0,
-                                                 data_row=abs(sign_index)-1,
-                                                 description=description,
-                                                 unit=unit,
-                                                 displayUnit=displayUnit)
-                n_data_sets = max(data_set, n_data_sets)
-            if constants_only:
-                self._data = [mat['data_1']]
-            else:
-                self._data = [mat['data_%i' % (i+1)]
-                              for i in range(n_data_sets)]
-        else:
-            for i in range(mat['dataInfo'].shape[0]):
-                name = util.chars_to_str(mat['name'][i, :])
-                data_set = mat['dataInfo'][i, 0]
-                sign_index = mat['dataInfo'][i, 1]
-                description, unit, displayUnit = _parse_description(
-                    mat['description'][i, :])
-                if data_set == 1 or not constants_only:
-                    self._traj[name] = TrajEntry(data_set=data_set-1,
-                                                 negated=sign_index<0,
-                                                 data_row=abs(sign_index)-1,
-                                                 description=description,
-                                                 unit=unit,
-                                                 displayUnit=displayUnit)
-                n_data_sets = max(data_set, n_data_sets)
-            if constants_only:
-                self._data = [mat['data_1'].T]
-            else:
-                self._data = [mat['data_%i' % (i+1)].T
-                              for i in range(n_data_sets)]
-        # Note 1: The indices are converted from Modelica (1-based) to Python
-        # (0-based).
-        # Note 2:  Dymola 7.4 uses the transposed version, so it is the standard
-        # here (for optimal speed).  Therefore, the "normal" version is 
-        # transposed.
-
     def browse(self):
         """Launch a variable browser.
 
@@ -413,10 +284,13 @@ class SimRes(object):
 
         _do_work()
 
-    def _get(self, names, attr):
+    def _get(self, attr, names, i=slice(0, None), f=lambda x: x):
         """Return attribute(s) of variable(s).
 
         **Arguments:**
+
+        - *attr*: Method to retrieve the attribute given the name of a single 
+          variable
 
         - *names*: Name(s) of the variable(s) from which to get the
           attribute(s)
@@ -424,11 +298,12 @@ class SimRes(object):
              This may be a string or (possibly nested) list of strings
              representing the names of the variables.
 
-        - *attr*: Method to retrieve the attribute given the name of a single 
-          variable
+        - *i*: Index (-1 for last), list of indices, or slice of the values(s)
+          to return
 
-             E.g., for the *unit* attribute:
-             ``attr = lambda name: self._traj[name].unit``
+             By default, all values are returned.
+
+        - *f*: Function to be applied to each attribute (default is identity)
 
         If *names* is a string, then the output will be a single description.
         If *names* is a (optionally nested) list of strings, then the output
@@ -438,11 +313,11 @@ class SimRes(object):
             if isinstance(names, basestring):
                 # This test is explicit (not duck-typing) since a string is
                 # iterable.
-                return attr(names)
+                return f(attr(names)[i])
             else:
                 attrs = []
                 for name in names:
-                    a = self._get(name, attr) # Recursion
+                    a = self._get(attr, name, i, f) # Recursion
                     if a is None:
                         # Must be a KeyError---handled below.
                         return
@@ -452,7 +327,7 @@ class SimRes(object):
         except KeyError:
             print('%s is not a valid variable name.\n' % names)
             print("Did you mean one of these?")
-            for close_match in get_close_matches(names, self._traj.keys()):
+            for close_match in get_close_matches(names, self._meta.keys()):
                 print("       " + close_match)
             return
 
@@ -481,7 +356,7 @@ class SimRes(object):
            >>> sim.get_description('L.v')
            'Voltage drop between the two pins (= p.v - n.v)'
         """
-        return self._get(names, lambda name: self._traj[name].description)
+        return self._get(self._description, names)
 
     def get_displayUnit(self, names):
         """Return the Modelica_ *displayUnit* attribute(s) of variable(s).
@@ -508,58 +383,7 @@ class SimRes(object):
            >>> sim.get_displayUnit('G.T_heatPort')
            'degC'
         """
-        return self._get(names, lambda name: self._traj[name].displayUnit)
-
-    def get_indices_wi_times(self, names, t_1=None, t_2=None):
-        """Return the widest index pair(s) for which the time of signal(s) is
-        within given limits.
-
-        **Arguments:**
-
-        - *names*: String or (possibly nested) list of strings of the variable
-          names
-
-        - *t_1*: Lower bound of time
-
-        - *t_2*: Upper bound of time
-
-        If *names* is a string, then the output will be an array of values.  If
-        *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of arrays.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_indices_wi_times('L.v', t_1=500, t_2=2000)
-           (104, 412)
-        """
-        assert t_1 is None or t_2 is None or t_1 <= t_2, (
-            "The lower time limit is larger than the upper time limit.")
-
-        def _get_indices_wi_times(name):
-            """Return the sample times of a variable given its name
-            """
-            times = self.get_times(name)
-
-            # Find the lower index.
-            if t_1 != None:
-                i_1 = util.get_indices(times, t_1)[1]
-            else:
-                i_1 = 0
-
-            # Find the upper index and return.
-            if t_2 != None:
-                i_2 = util.get_indices(times, t_2)[0]
-            else:
-                i_2 = len(times) - 1
-
-            return i_1, i_2
-
-        return self._get(names, _get_indices_wi_times)
+        return self._get(self._displayUnit, names)
 
     def get_IV(self, names, f=lambda x: x):
         """Return the initial value(s) of variable(s).
@@ -569,8 +393,7 @@ class SimRes(object):
         - *names*: String or (possibly nested) list of strings of the variable
           names
 
-        - *f*: Function that should be applied to the value(s) (default is
-          identity)
+        - *f*: Function to be applied to each value (default is identity)
 
         If *names* is a string, then the output will be a single value.  If
         *names* is a (optionally nested) list of strings, then the output will
@@ -596,8 +419,7 @@ class SimRes(object):
         - *names*: String or (possibly nested) list of strings of variable
           names
 
-        - *f*: Function that should be applied to the value(s) (default is
-          identity)
+        - *f*: Function to be applied to each value (default is identity)
 
         If *names* is a string, then the output will be a single value.  If
         *names* is a (optionally nested) list of strings, then the output will
@@ -628,8 +450,7 @@ class SimRes(object):
 
              By default, all times are returned.
 
-        - *f*: Function that should be applied to all times (default is
-          identity)
+        - *f*: Function that operates on each vector (default is identity)
 
         If *names* is a string, then the output will be an array of times.  If
         *names* is a (optionally nested) list of strings, then the output will
@@ -645,8 +466,8 @@ class SimRes(object):
            >>> sim.get_times('L.v') # doctest: +ELLIPSIS
            array([...], dtype=float32)
         """
-        return self._get(names, lambda name:
-                         f(self._data[self._traj[name].data_set][0, i]))
+        _times = lambda name: self._times(self._meta[name])
+        return self._get(_times, names, i, f)
 
     def get_unit(self, names):
         """Return the *unit* attribute(s) of variable(s).
@@ -672,10 +493,10 @@ class SimRes(object):
            >>> sim.get_unit('L.v')
            'V'
         """
-        return self._get(names, lambda name: self._traj[name].unit)
+        return self._get(self._unit, names)
 
     def get_values(self, names, i=slice(0, None), f=lambda x: x):
-        """Return vector(s) of the values of the samples of variable(s).
+        """Return vector(s) of the values of variable(s).
 
         **Arguments:**
 
@@ -687,8 +508,7 @@ class SimRes(object):
 
              By default, all values are returned.
 
-        - *f*: Function that should be applied to all values (default is
-          identity)
+        - *f*: Function that operates on each vector (default is identity)
 
         If *names* is a string, then the output will be an array of values.  If
         *names* is a (optionally nested) list of strings, then the output will
@@ -719,14 +539,8 @@ class SimRes(object):
         The other *get_*\* methods also give this message when a variable cannot
         be found.
         """
-        def _get_values(entry):
-            """Return the values of a variable given its *_traj* entry.
-            """
-            return f(-self._data[entry.data_set][entry.data_row, i]
-                     if entry.negated else
-                     self._data[entry.data_set][entry.data_row, i])
-
-        return self._get(names, lambda name: _get_values(self._traj[name]))
+        _values = lambda name: self._values(self._meta[name])
+        return self._get(_values, names, i, f)
 
     def get_values_at_times(self, names, times, f=lambda x: x):
         """Return vector(s) of the values of the samples of variable(s) at
@@ -740,8 +554,7 @@ class SimRes(object):
         - *times*: Scalar, numeric list, or a numeric array of the times from
           which to pull samples
 
-        - *f*: Function that should be applied to all values (default is
-          identity)
+        - *f*: Function that operates on each vector (default is identity)
 
         If *names* is a string, then the output will be an array of values.  If
         *names* is a (optionally nested) list of strings, then the output will
@@ -763,23 +576,78 @@ class SimRes(object):
         """
         from scipy.interpolate import interp1d
 
-        def _get_value_at_times(name):
-            """Return the values of a variable at times given its name
+        def _values_at_times(index):
+            """Return the values of a variable at times given its index.
             """
-            if isinstance(name, list):
-                raise TypeError
-                return
-            get_values_at = interp1d(self.get_times(name),
-                                     self.get_values(name, f=f),
+            get_values_at = interp1d(self._times(index),
+                                     self._values(index),
                                      bounds_error=False)
             return get_values_at(times)
 
-        return self._get(names, _get_value_at_times)
+        return self._get(lambda name: _values_at_times(self._meta[name]), names, f=f)
 
-    def get_tuple(self, names, i=slice(0, None)):
-        """Return tuple(s) of time and value vectors for variable(s).
+    def get_arrays_at_times():
+        pass #TODO
 
-        Each tuple contains two vectors: one for times and one for values.
+    def get_arrays_wi_times():
+        pass #TODO
+
+    #def get_values_wi_times(): #TODO
+    def get_indices_wi_times(self, names, t_1=None, t_2=None):
+        """Return the widest index pair(s) for which the time of signal(s) is
+        within given limits.
+
+        **Arguments:**
+
+        - *names*: String or (possibly nested) list of strings of the variable
+          names
+
+        - *t_1*: Lower bound of time
+
+        - *t_2*: Upper bound of time
+
+        If *names* is a string, then the output will be an array of values.  If
+        *names* is a (optionally nested) list of strings, then the output will
+        be a (nested) list of arrays.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim.get_indices_wi_times('L.v', t_1=500, t_2=2000)
+           (104, 412)
+        """
+        assert t_1 is None or t_2 is None or t_1 <= t_2, (
+            "The lower time limit is larger than the upper time limit.")
+
+        def _indices_wi_times(name):
+            """Return the sample times of a variable given its name
+            """
+            times = self.get_times(name)
+
+            # Find the lower index.
+            if t_1 != None:
+                i_1 = util.get_indices(times, t_1)[1]
+            else:
+                i_1 = 0
+
+            # Find the upper index and return.
+            if t_2 != None:
+                i_2 = util.get_indices(times, t_2)[0]
+            else:
+                i_2 = len(times) - 1
+
+            return i_1, i_2
+
+        return self._get(_indices_wi_times, names)
+
+    def get_arrays(self, names, i=slice(0, None), f=lambda x: x):
+        """Return array(s) of times and values for variable(s).
+
+        The first column is time.  The values are in the second column.
 
         **Arguments:**
 
@@ -791,9 +659,11 @@ class SimRes(object):
 
              By default, all values are returned.
 
-        If *names* is a string, then the output will be a tuple.  If *names* is 
+        - *f*: Function that operates on each array (default is identity)
+
+        If *names* is a string, then the output will be an array.  If *names* is 
         a (optionally nested) list of strings, then the output will be a 
-        (nested) list of tuples.
+        (nested) list of arrays.
 
         **Example:**
 
@@ -802,29 +672,20 @@ class SimRes(object):
            >>> from modelicares import SimRes
 
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_tuple('L.v') # doctest: +ELLIPSIS
+           >>> sim.get_arrays('L.v') # doctest: +ELLIPSIS
            (array([...], dtype=float32), array([...], dtype=float32))
 
         Note that this is a tuple of vectors, not a vector of tuples. 
         """
-        def _get_times(entry):
-            """Return the times of a variable given its *_traj* entry.
-            """
-            return self._data[entry.data_set][0, i]
+        _array = lambda name: self._array(self._meta[name])
+        return self._get(_array, names, i, f)
 
-        def _get_values(entry):
-            """Return the values of a variable given its *_traj* entry.
-            """
-            return (-self._data[entry.data_set][entry.data_row, i]
-                    if entry.negated else
-                    self._data[entry.data_set][entry.data_row, i])
+    def _array(self, entry):
+        """Return an array of times and values for a variable given its entry.
 
-        def _get_tuple(entry):
-            """Return the (times, values) of a variable given its *_traj* entry.
-            """
-            return (_get_times(entry), _get_values(entry))
-
-        return self._get(names, lambda name: _get_tuple(self._traj[name]))
+        The first column is time.  The values are in the second column.
+        """
+        return np.array([self._times(entry), self._values(entry)]).T
 
     def get_max(self, names, f=lambda x: x):
         """Return the maximum value(s) of variable(s).
@@ -834,8 +695,8 @@ class SimRes(object):
         - *names*: String or (possibly nested) list of strings of variable
           names
 
-        - *f*: Function that should be applied before taking the maximum 
-          (default is identity)
+        - *f*: Function to be applied before taking the maximum (default is 
+          identity)
 
         If *names* is a string, then the output will be a single value.  If
         *names* is a (optionally nested) list of strings, then the output will
@@ -861,8 +722,8 @@ class SimRes(object):
         - *names*: String or (possibly nested) list of strings of variable
           names
 
-        - *f*: Function that should be applied before taking the mean (default 
-          is identity)
+        - *f*: Function to be applied before taking the mean (default is 
+          identity)
 
         If *names* is a string, then the output will be a single value.  If
         *names* is a (optionally nested) list of strings, then the output will
@@ -882,7 +743,7 @@ class SimRes(object):
                                       self.get_times(name))
         Deltat = lambda name: self.get_times(name, -1) - self.get_times(name, 0)
         mean = lambda name: integral(name)/Deltat(name)
-        return self._get(names, mean)
+        return self._get(mean, names)
 
     def get_min(self, names, f=lambda x: x):
         """Return the minimum value(s) of variable(s).
@@ -892,8 +753,8 @@ class SimRes(object):
         - *names*: String or (possibly nested) list of strings of variable
           names
 
-        - *f*: Function that should be applied before taking the minimum 
-          (default is identity)
+        - *f*: Function to be applied before taking the minimum (default is 
+          identity)
 
         If *names* is a string, then the output will be a single value.  If
         *names* is a (optionally nested) list of strings, then the output will
@@ -967,13 +828,13 @@ class SimRes(object):
         """
         if pattern is None or (pattern in ['.*', '.+', '.', '.?', ''] if re 
                                else pattern == '*'):
-            return list(self._traj) # Shortcut
+            return list(self._meta) # Shortcut
         else:
             if re:
                 matcher = re_compile(pattern).search
             else:
                 matcher = lambda name: fnmatchcase(name, pattern)
-            return filter(matcher, self._traj.keys())
+            return filter(matcher, self._meta.keys())
 
     def nametree(self, pattern=None, re=False):
         """Return a tree of all variable names with respect to the path names.
@@ -1366,7 +1227,7 @@ class SimRes(object):
                            unit=flow_unit, **kwargs).finish())
         return sankeys
 
-    def to_pandas(self, names):
+    def to_pandas(self, names=None):
         """Return a `Pandas DataFrame`_ with data from selected variables.
 
         The data frame has methods for further manipulation and exporting (e.g., 
@@ -1378,6 +1239,8 @@ class SimRes(object):
         **Arguments:**
 
         - *names*: String or list of strings of the variable names
+
+             If *names* is *None* (default), then all variables are included.
 
         **Example:**
 
@@ -1404,17 +1267,20 @@ class SimRes(object):
             """
             return name + ' / ' + self.get_unit(name)
 
-        names = util.flatten_list(names)
-        data_sets = {self._traj[name].data_set for name in names}
-        times = list(np.unique(np.array([self._data[data_set][0] 
-                                        for data_set in data_sets])))
+        # TODO: Fix, doesn't run for all variables at once
+        if names is None:
+            names = self.names()
+            names.remove('Time')
+        else: 
+            names = util.flatten_list(names)
+        times = self._unique_times(names)
         values = {label(name): self.get_values_at_times(name, times) 
                   for name in names}
         time_label = label('Time')
         values[time_label] = times
         return DataFrame(values).set_index(time_label)
 
-    def __call__(self, names, action=get_tuple, *args, **kwargs):
+    def __call__(self, names, action=get_arrays, *args, **kwargs):
         """Upon a call to an instance of :class:`SimRes`, call a method on
         variable(s) given their name(s).
 
@@ -1425,7 +1291,7 @@ class SimRes(object):
 
         - *action*: Method for retrieving information about the variable(s)
 
-             The default is :meth:`get_tuple`.  *action* may be a list or
+             The default is :meth:`get_arrays`.  *action* may be a list or
              tuple, in which case the return value is a list or tuple.
 
         - *\*args*, *\*\*kwargs*: Additional arguments for *action*
@@ -1441,7 +1307,7 @@ class SimRes(object):
            >>> sim('L.i') # doctest: +ELLIPSIS
            (array([...], dtype=float32), array([...], dtype=float32))
            >>> # This is equivalent to:
-           >>> sim.get_tuple('L.i') # doctest: +ELLIPSIS
+           >>> sim.get_arrays('L.i') # doctest: +ELLIPSIS
            (array([...], dtype=float32), array([...], dtype=float32))
 
            # Descriptions of a list of variables:
@@ -1461,8 +1327,7 @@ class SimRes(object):
             return action(self, names=names, *args, **kwargs)
         except TypeError:
             t = type(action)
-            return t(act(self, names=names, *args, **kwargs)
-                     for act in action)
+            return t(act(self, names=names, *args, **kwargs) for act in action)
 
     def __contains__(self, name):
         """Test if a variable is present in the simulation results.
@@ -1485,7 +1350,7 @@ class SimRes(object):
            >>> 'x' not in sim
            True
         """
-        return self._traj.__contains__(name)
+        return self._meta.__contains__(name)
 
     def __getitem__(self, names):
         """Upon accessing a variable name within an instance of
@@ -1506,11 +1371,11 @@ class SimRes(object):
            >>> sim['L.i'] # doctest: +ELLIPSIS
            (array([...], dtype=float32), array([...], dtype=float32))
            >>> # This is equivalent to:
-           >>> sim.get_tuple('L.i') # doctest: +ELLIPSIS
+           >>> sim.get_arrays('L.i') # doctest: +ELLIPSIS
            (array([...], dtype=float32), array([...], dtype=float32))
 
         """
-        return self.get_tuple(names)
+        return self.get_arrays(names)
 
     def __len__(self):
         """Return the number of variables in the simulation.
@@ -1526,7 +1391,7 @@ class SimRes(object):
            ...       (len(sim), sim.fbase))
            There are 62 variables in the ChuaCircuit simulation.
         """
-        return self._traj.__len__()
+        return self._meta.__len__()
 
     def __repr__(self):
         """Return a formal description of the :class:`SimRes` instance.
@@ -1590,8 +1455,8 @@ class Info:
     """Alias for :meth:`SimRes.get_min`"""
     times = SimRes.get_times
     """Alias for :meth:`SimRes.get_times`"""
-    tuple = SimRes.get_tuple
-    """Alias for :meth:`SimRes.get_tuple`"""
+    tuple = SimRes.get_arrays
+    """Alias for :meth:`SimRes.get_arrays`"""
     unit = SimRes.get_unit
     """Alias for :meth:`SimRes.get_unit`"""
     values = SimRes.get_values

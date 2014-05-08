@@ -9,8 +9,16 @@ Changelog
      `Pandas DataFrame`_ of selected data.
    - Encoding all variable names as 'latin-1' and stripping null strings from 
      the end. 
-   - Changed the default action for :meth:`~modelicares.simres.SimRes.__call__`
-     to :meth:`~modelicares.simres.SimRes.get_tuple`.
+   - Changed the action for :meth:`~modelicares.simres.SimRes.__call__`
+     and :meth:`~modelicares.simres.SimRes.__getitem__`  
+     from :meth:`~modelicares.simres.SimRes.get_values` 
+     to :meth:`~modelicares.simres.SimRes.get_tuples`.
+   - Added a function (*f*) as an argument to 
+     :meth:`~modelicares.simres.SimRes.get_tuples`
+   - :meth:`~modelicares.simres.SimRes.get_tuples` now returns list(s) of time,
+     value tuples rather than tuples of vectors of times and values
+   - Renamed :meth:`~modelicares.simres.SimRes.get_tuple`   
+     to :meth:`~modelicares.simres.SimRes.get_tuples`
    - Added pattern matching to :meth:`~modelicares.simres.SimRes.nametree`.
    - Merged :meth:`~modelicares.exps.modelica_array` and
      :meth:`~modelicares.exps.modelica_boolean` into a new function,

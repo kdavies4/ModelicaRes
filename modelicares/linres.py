@@ -17,14 +17,11 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import numpy as np
 
-
-from scipy.io import loadmat
 from scipy.signal import ss2tf
 from matplotlib.cbook import iterable
 
-from control.matlab import ss
 from modelicares.freqplot import bode_plot, nyquist_plot
-from modelicares.util import figure, add_hlines, add_vlines, encode
+from modelicares.util import figure, add_hlines, add_vlines, chars_to_str
 
 class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze
@@ -37,6 +34,8 @@ class LinRes(object):
     - :meth:`nyquist` - Create a Nyquist plot of the system's response
 
     - :meth:`to_tf` - Return a transfer function given input and output names
+
+TODO: attributes: ss, fbase, dir
     """
 
     def __init__(self, fname='dslin.mat'):
@@ -76,7 +75,11 @@ class LinRes(object):
            >>> from modelicares import LinRes
            >>> lin = LinRes('examples/PID')
         """
-        self._load(fname)
+
+        from .dsom import load
+        assert load(self, fname) == 'linearization', \
+            '"%s" appears to be a simulation result.  ' \
+            'Use modelicares.simres.SimRes instead.' % fname
 
         # Save the base filename and the directory.
         self.dir, self.fbase = os.path.split(fname)
@@ -114,91 +117,6 @@ class LinRes(object):
         """
         return ('Modelica linearization results from "%s"' %
                 os.path.join(self.dir, self.fbase + '.mat'))
-
-    def _load(self, fname='dslin.mat'):
-        """Load a linearized Modelica_ model from *fname*.
-
-        See :meth:`__init__` for details about the file format.
-
-        Returns *None* if the file contains simulation results rather than
-        linearization results.  Otherwise, it raises an error.
-        """
-        # This performs same task as mfiles/traj/tloadlin.m from the Dymola
-        # installation.
-
-        # Load the file and check if it contains the correct variable names.
-        dslin = loadmat(fname)
-        try:
-            Aclass = dslin['Aclass']
-        except KeyError:
-            try:
-                Aclass = dslin['class']
-            except KeyError:
-                raise KeyError('Neither "Aclass" nor "class" is present in "%s".'
-                               % fname)
-        assert 'nx' in dslin, ('There is no linear system in file "%s" '
-            '(matrix "nx" is missing).' % fname)
-        assert 'xuyName' in dslin, ('There is no linear system in file "%s" '
-            '(matrix "xuyName" is missing).' % fname)
-        assert 'ABCD' in dslin, ('There is no linear system in file "%s" '
-            '(matrix "ABCD" is missing).' % fname)
-
-        # Check if the file has the correct class name.
-        if not dslin['Aclass'][0].startswith('AlinearSystem'):
-            if dslin['Aclass'][0].startswith('Atrajectory'):
-                return None # The file contains simulation results.
-            raise AssertionError('File "%s" is not of class AlinearSystem or '
-                                 'Atrajectory.' % fname)
-
-        # Extract variables from the dictionary (for convenience).
-        ABCD = dslin['ABCD']
-        xuyName = dslin['xuyName']
-
-        # Check if the matrices have compatible dimensions.
-        n_x = dslin['nx'][0]
-        dim1 = ABCD.shape[0]
-        dim2 = ABCD.shape[1]
-        assert n_x <= dim1 and n_x <= dim2, (
-            'nx > number of rows/columns of matrix ABCD in file "%s"' % fname)
-        n_u = dim2 - n_x
-        n_y = dim1 - n_x
-        assert n_x > 0 and n_y > 0, ("As of version 0.4b, the control module "
-            "cannot accept systems with empty matrixes.")
-
-        # Extract the matrices.
-        if n_x > 0:
-            A = ABCD[:n_x, :n_x]
-            if n_u > 0:
-                B = ABCD[:n_x, n_x:]
-            else:
-                B = []
-            if n_y > 0:
-                C = ABCD[n_x:, :n_x]
-            else:
-                C = []
-        else:
-            A = []
-            B = []
-            C = []
-        if n_u > 0 and n_y > 0:
-            D = ABCD[n_x:, n_x:]
-        else:
-            D = []
-        self.sys = ss(A, B, C, D)
-
-        # Extract the names.
-        if n_x > 0: # States
-            self.sys.state_names = map(encode, xuyName[:n_x])
-        else:
-            self.sys.state_names = []
-        if n_u > 0: # Inputs
-            self.sys.input_names = map(encode, xuyName[n_x:n_x+n_u])
-        else:
-            self.sys.input_names = []
-        if n_y > 0: # Outputs
-            self.sys.output_names = map(encode, xuyName[n_x+n_u:])
-        else:
-            self.sys.output_names = []
 
     def _to_siso(self, i_u, i_y):
         """Return a SISO system given input and output indices.
