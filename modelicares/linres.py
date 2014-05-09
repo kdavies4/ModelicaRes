@@ -19,6 +19,7 @@ import numpy as np
 
 from scipy.signal import ss2tf
 from matplotlib.cbook import iterable
+from control.matlab import ss
 
 from modelicares.freqplot import bode_plot, nyquist_plot
 from modelicares.util import figure, add_hlines, add_vlines, chars_to_str
@@ -35,7 +36,13 @@ class LinRes(object):
 
     - :meth:`to_tf` - Return a transfer function given input and output names
 
-TODO: attributes: ss, fbase, dir
+    Attributes:
+
+    - :meth:`dir` - Directory from which the file was loaded
+
+    - :meth:`fbase` - Base filename, without the directory or extension
+
+    - :meth:`ss` - State-space system created from :meth:`control.matlab.ss`
     """
 
     def __init__(self, fname='dslin.mat'):

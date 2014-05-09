@@ -21,7 +21,8 @@ import os
 import numpy as np
 
 from re import compile as re_compile
-from scipy.integrate import trapz
+from scipy.integrate import trapz as integral
+from scipy.interpolate import interp1d
 from matplotlib.pyplot import figlegend
 from matplotlib import rcParams
 from fnmatch import fnmatchcase
@@ -35,19 +36,19 @@ from .texunit import unit2tex, label_number
 class SimRes(object):
     """Class to load and analyze results from a Modelica_-based simulation
 
-    This class contains the following methods:
+    Methods:
 
     - :meth:`browse` - Launch a variable browser
 
     - :meth:`get_arrays` - Return array(s) of times and values for variable(s)
 
+    - :meth:`get_arrays_wi_times` - Return array(s) of times and values for
+      variable(s) within a time range
+
     - :meth:`get_description` - Return the description(s) of variable(s)
 
     - :meth:`get_displayUnit` - Return the Modelica_ *displayUnit* attribute(s)
       of variable(s)
-
-    - :meth:`get_indices_wi_times` - Return the widest index pair(s) for which
-      the time of signal(s) is within given limits
 
     - :meth:`get_IV` - Return the initial value(s) of variable(s)
 
@@ -65,8 +66,11 @@ class SimRes(object):
 
     - :meth:`get_values` - Return vector(s) of the values of variable(s)
 
-    - :meth:`get_values_at_times` - Return vector(s) of the values of 
+    - :meth:`get_values_at_times` - Return vector(s) of the values of
       variable(s) at given times
+
+    - :meth:`get_values_wi_times` - Return vector(s) of the values of
+      variable(s) within a time range
 
     - :meth:`names` - Return a list of variable names that match a pattern
 
@@ -76,13 +80,17 @@ class SimRes(object):
     - :meth:`plot` - Plot data as points and/or curves in 2D Cartesian
       coordinates
 
-    - :meth:`to_pandas` - Return a `Pandas DataFrame`_ with data from selected 
+    - :meth:`to_pandas` - Return a `Pandas DataFrame`_ with data from selected
       variables
 
     - :meth:`sankey` - Create a figure with Sankey diagram(s)
 
+    Attributes:
 
-TODO: attributes: fbase, dir
+    - :meth:`dir` - Directory from which the file was loaded
+
+    - :meth:`fbase` - Base filename, without the directory or extension
+
 
     .. _Pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
@@ -284,22 +292,18 @@ TODO: attributes: fbase, dir
 
         _do_work()
 
-    def _get(self, attr, names, i=slice(0, None), f=lambda x: x):
+    def _get(self, attr, names, i=None, f=lambda x: x):
         """Return attribute(s) of variable(s).
 
         **Arguments:**
 
-        - *attr*: Method to retrieve the attribute given the name of a single 
+        - *attr*: Method to retrieve the attribute given the name of a single
           variable
 
-        - *names*: Name(s) of the variable(s) from which to get the
-          attribute(s)
+        - *names*: String or (possibly nested) list of strings of variable names
 
-             This may be a string or (possibly nested) list of strings
-             representing the names of the variables.
-
-        - *i*: Index (-1 for last), list of indices, or slice of the values(s)
-          to return
+        - *i*: Index (-1 for last, *None* for all), list of indices, or slice of
+          the values(s) to return
 
              By default, all values are returned.
 
@@ -311,19 +315,10 @@ TODO: attributes: fbase, dir
         """
         try:
             if isinstance(names, basestring):
-                # This test is explicit (not duck-typing) since a string is
-                # iterable.
-                return f(attr(names)[i])
+                return f(attr(names)) if i is None else f(attr(names)[i])
             else:
-                attrs = []
-                for name in names:
-                    a = self._get(attr, name, i, f) # Recursion
-                    if a is None:
-                        # Must be a KeyError---handled below.
-                        return
-                    else:
-                        attrs.append(a)
-                return attrs
+                # Recursion
+                return [self._get(attr, name, i, f) for name in names]
         except KeyError:
             print('%s is not a valid variable name.\n' % names)
             print("Did you mean one of these?")
@@ -331,16 +326,24 @@ TODO: attributes: fbase, dir
                 print("       " + close_match)
             return
 
+    def _slice(self, name, t1=None, t2=None):
+        """Return a slice that indexes a variable within and nearest to time
+        limits, given the variable name.
+        """
+        assert t1 is None or t2 is None or t1 <= t2, (
+            "The lower time limit is larger than the upper time limit.")
+
+        times = self.get_times(name)
+        i1 = None if t1 is None else util.get_indices(times, t1)[1]
+        i2 = None if t2 is None else (util.get_indices(times, t2)[0] + 1)
+        return slice(i1, i2)
+
     def get_description(self, names):
         """Return the description(s) of variable(s).
 
         **Arguments:**
 
-        - *names*: Name(s) of the variable(s) from which to get the
-          description(s)
-
-             This may be a string or (possibly nested) list of strings
-             representing the names of the variables.
+        - *names*: String or (possibly nested) list of strings of variable names
 
         If *names* is a string, then the output will be a single description.
         If *names* is a (optionally nested) list of strings, then the output
@@ -363,11 +366,7 @@ TODO: attributes: fbase, dir
 
         **Arguments:**
 
-        - *names*: Name(s) of the variable(s) from which to get the display
-          unit(s)
-
-             This may be a string or (possibly nested) list of strings
-             representing the names of the variables.
+        - *names*: String or (possibly nested) list of strings of variable names
 
         If *names* is a string, then the output will be a single display unit.
         If *names* is a (optionally nested) list of strings, then the output
@@ -390,8 +389,7 @@ TODO: attributes: fbase, dir
 
         **Arguments:**
 
-        - *names*: String or (possibly nested) list of strings of the variable
-          names
+        - *names*: String or (possibly nested) list of strings of variable names
 
         - *f*: Function to be applied to each value (default is identity)
 
@@ -437,24 +435,23 @@ TODO: attributes: fbase, dir
         """
         return self.get_values(names, i=-1, f=f)
 
-    def get_times(self, names, i=slice(0, None), f=lambda x: x):
+    def get_times(self, names, i=None, f=lambda x: x):
         """Return vector(s) of the sample times of variable(s).
 
         **Arguments:**
 
-        - *names*: String or (possibly nested) list of strings of the variable
-          names
+        - *names*: String or (possibly nested) list of strings of variable names
 
-        - *i*: Index (-1 for last), list of indices, or slice of the time(s) to
-          return
+        - *i*: Index (-1 for last, *None* for all), list of indices, or slice of
+          the values(s) to return
 
-             By default, all times are returned.
+             By default, all values are returned.
 
         - *f*: Function that operates on each vector (default is identity)
 
-        If *names* is a string, then the output will be an array of times.  If
+        If *names* is a string, then the output will be a vector of times.  If
         *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of arrays.
+        be a (nested) list of vectors.
 
         **Example:**
 
@@ -474,10 +471,7 @@ TODO: attributes: fbase, dir
 
         **Arguments:**
 
-        - *names*: Name(s) of the variable(s) from which to get the unit(s)
-
-             This may be a string or (possibly nested) list of strings
-             representing the names of the variables.
+        - *names*: String or (possibly nested) list of strings of variable names
 
         If *names* is a string, then the output will be a single unit.  If
         *names* is a (optionally nested) list of strings, then the output will
@@ -495,24 +489,23 @@ TODO: attributes: fbase, dir
         """
         return self._get(self._unit, names)
 
-    def get_values(self, names, i=slice(0, None), f=lambda x: x):
+    def get_values(self, names, i=None, f=lambda x: x):
         """Return vector(s) of the values of variable(s).
 
         **Arguments:**
 
-        - *names*: String or (possibly nested) list of strings of the variable
-          names
+        - *names*: String or (possibly nested) list of strings of variable names
 
-        - *i*: Index (-1 for last), list of indices, or slice of the values(s)
-          to return
+        - *i*: Index (-1 for last, *None* for all), list of indices, or slice of
+          the values(s) to return
 
              By default, all values are returned.
 
         - *f*: Function that operates on each vector (default is identity)
 
-        If *names* is a string, then the output will be an array of values.  If
+        If *names* is a string, then the output will be a vector of values.  If
         *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of arrays.
+        be a (nested) list of vectors.
 
         **Example:**
 
@@ -543,22 +536,20 @@ TODO: attributes: fbase, dir
         return self._get(_values, names, i, f)
 
     def get_values_at_times(self, names, times, f=lambda x: x):
-        """Return vector(s) of the values of the samples of variable(s) at
-        given times.
+        """Return vector(s) of the values of variable(s) at given times.
 
         **Arguments:**
 
-        - *names*: String or (possibly nested) list of strings of the variable
-          names
+        - *names*: String or (possibly nested) list of strings of variable names
 
         - *times*: Scalar, numeric list, or a numeric array of the times from
           which to pull samples
 
         - *f*: Function that operates on each vector (default is identity)
 
-        If *names* is a string, then the output will be an array of values.  If
+        If *names* is a string, then the output will be a vector of values.  If
         *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of arrays.
+        be a (nested) list of vectors.
 
         If *times* is not provided, all of the samples will be returned.  If
         necessary, the values will be interpolated over time.  The function *f*
@@ -574,41 +565,37 @@ TODO: attributes: fbase, dir
            >>> sim.get_values_at_times('L.v', [0, 2000]) # doctest: +ELLIPSIS
            array([...])
         """
-        from scipy.interpolate import interp1d
-
-        def _values_at_times(index):
-            """Return the values of a variable at times given its index.
+        def _values_at_times(name):
+            """Return the values of a variable at times given its name.
             """
-            get_values_at = interp1d(self._times(index),
-                                     self._values(index),
-                                     bounds_error=False)
-            return get_values_at(times)
+            entry = self._meta[name]
+            get_values_at_ = interp1d(self._times(entry),
+                                      self._values(entry),
+                                      bounds_error=False)
+            return get_values_at_(times)
 
-        return self._get(lambda name: _values_at_times(self._meta[name]), names, f=f)
+        return self._get(_values_at_times, names, f=f)
 
-    def get_arrays_at_times():
-        pass #TODO
+    def get_arrays_wi_times(self, names, t1=None, t2=None, f=lambda x: x):
+        """Return arrays(s) of times and values of variable(s) within a time
+        range.
 
-    def get_arrays_wi_times():
-        pass #TODO
-
-    #def get_values_wi_times(): #TODO
-    def get_indices_wi_times(self, names, t_1=None, t_2=None):
-        """Return the widest index pair(s) for which the time of signal(s) is
-        within given limits.
+        In each array, the first column is time and the second column contains
+        the values.
 
         **Arguments:**
 
-        - *names*: String or (possibly nested) list of strings of the variable
-          names
+        - *names*: String or (possibly nested) list of strings of variable names
 
-        - *t_1*: Lower bound of time
+        - *t1*: Lower time bound
 
-        - *t_2*: Upper bound of time
+        - *t2*: Upper time bound
 
-        If *names* is a string, then the output will be an array of values.  If
-        *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of arrays.
+        - *f*: Function that operates on each vector (default is identity)
+
+        If *names* is a string, then the output will be an array.  If *names* is
+        a (optionally nested) list of strings, then the output will be a
+        (nested) list of arrays.
 
         **Example:**
 
@@ -617,52 +604,75 @@ TODO: attributes: fbase, dir
            >>> from modelicares import SimRes
 
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_indices_wi_times('L.v', t_1=500, t_2=2000)
-           (104, 412)
+           >>> sim.get_arrays_wi_times('L.v', t1=0, t2=15)
+           [104, 412]
+           >>> sim.get_arrays_wi_times('L.v', t1=1, t2=14)
         """
-        assert t_1 is None or t_2 is None or t_1 <= t_2, (
-            "The lower time limit is larger than the upper time limit.")
-
-        def _indices_wi_times(name):
-            """Return the sample times of a variable given its name
+        def _array_wi_times(name):
+            """Return an array of times and values for a variable up to and
+            including time bounds, given the variable name.
             """
-            times = self.get_times(name)
+            entry = self._meta[name]
+            return np.array([self._times(entry),
+                             self._values(entry)]).T[self._slice(name, t1, t2)]
 
-            # Find the lower index.
-            if t_1 != None:
-                i_1 = util.get_indices(times, t_1)[1]
-            else:
-                i_1 = 0
+        return self._get(_array_wi_times, names, f=f)
 
-            # Find the upper index and return.
-            if t_2 != None:
-                i_2 = util.get_indices(times, t_2)[0]
-            else:
-                i_2 = len(times) - 1
-
-            return i_1, i_2
-
-        return self._get(_indices_wi_times, names)
-
-    def get_arrays(self, names, i=slice(0, None), f=lambda x: x):
-        """Return array(s) of times and values for variable(s).
-
-        The first column is time.  The values are in the second column.
+    def get_values_wi_times(self, names, t1=None, t2=None, f=lambda x: x):
+        """Return vector(s) of the values of variable(s) within a time range.
 
         **Arguments:**
 
-        - *names*: String or (possibly nested) list of strings of the variable
-          names
+        - *names*: String or (possibly nested) list of strings of variable names
 
-        - *i*: Index (-1 for last), list of indices, or slice of the values(s)
-          to return
+        - *t1*: Lower time bound
+
+        - *t2*: Upper time bound
+
+        - *f*: Function that operates on each vector (default is identity)
+
+        If *names* is a string, then the output will be a vector of values.  If
+        *names* is a (optionally nested) list of strings, then the output will
+        be a (nested) list of vectors.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim.get_values_wi_times('L.v', t1=0, t2=15)
+           [104, 412]
+           >>> sim.get_values_wi_times('L.v', t1=1, t2=14)
+        """
+        def _values_wi_times(name):
+            """Return the values of a variable up to and including time bounds,
+            given the variable name.
+            """
+            return self._values(self._meta[name])[self._slice(name, t1, t2)]
+
+        return self._get(_values_wi_times, names, f=f)
+
+    def get_arrays(self, names, i=None, f=lambda x: x):
+        """Return array(s) of times and values for variable(s).
+
+        In each array, the first column is time and the second column contains
+        the values.
+
+        **Arguments:**
+
+        - *names*: String or (possibly nested) list of strings of variable names
+
+        - *i*: Index (-1 for last, *None* for all), list of indices, or slice of
+          the values(s) to return
 
              By default, all values are returned.
 
         - *f*: Function that operates on each array (default is identity)
 
-        If *names* is a string, then the output will be an array.  If *names* is 
-        a (optionally nested) list of strings, then the output will be a 
+        If *names* is a string, then the output will be an array.  If *names* is
+        a (optionally nested) list of strings, then the output will be a
         (nested) list of arrays.
 
         **Example:**
@@ -674,18 +684,15 @@ TODO: attributes: fbase, dir
            >>> sim = SimRes('examples/ChuaCircuit.mat')
            >>> sim.get_arrays('L.v') # doctest: +ELLIPSIS
            (array([...], dtype=float32), array([...], dtype=float32))
-
-        Note that this is a tuple of vectors, not a vector of tuples. 
         """
-        _array = lambda name: self._array(self._meta[name])
+        def _array(name):
+            """Return an array of times and values for a variable given its
+            name.
+            """
+            entry = self._meta[name]
+            return np.array([self._times(entry), self._values(entry)]).T
+
         return self._get(_array, names, i, f)
-
-    def _array(self, entry):
-        """Return an array of times and values for a variable given its entry.
-
-        The first column is time.  The values are in the second column.
-        """
-        return np.array([self._times(entry), self._values(entry)]).T
 
     def get_max(self, names, f=lambda x: x):
         """Return the maximum value(s) of variable(s).
@@ -695,7 +702,7 @@ TODO: attributes: fbase, dir
         - *names*: String or (possibly nested) list of strings of variable
           names
 
-        - *f*: Function to be applied before taking the maximum (default is 
+        - *f*: Function to be applied before taking the maximum (default is
           identity)
 
         If *names* is a string, then the output will be a single value.  If
@@ -722,7 +729,7 @@ TODO: attributes: fbase, dir
         - *names*: String or (possibly nested) list of strings of variable
           names
 
-        - *f*: Function to be applied before taking the mean (default is 
+        - *f*: Function to be applied before taking the mean (default is
           identity)
 
         If *names* is a string, then the output will be a single value.  If
@@ -739,11 +746,15 @@ TODO: attributes: fbase, dir
            >>> sim.get_mean('L.v')
            0.014733823
         """
-        integral = lambda name: trapz(self.get_values(name, f=f), 
-                                      self.get_times(name))
-        Deltat = lambda name: self.get_times(name, -1) - self.get_times(name, 0)
-        mean = lambda name: integral(name)/Deltat(name)
-        return self._get(mean, names)
+        def _mean(name):
+            """Return the mean of a variable given its name.
+            """
+            values = self.get_values(name, f=f)
+            t = self.get_times(name)
+            return integral(values, t)/(t[-1] - t[0])
+
+        return self._get(_mean, names, f=f)
+
 
     def get_min(self, names, f=lambda x: x):
         """Return the minimum value(s) of variable(s).
@@ -753,7 +764,7 @@ TODO: attributes: fbase, dir
         - *names*: String or (possibly nested) list of strings of variable
           names
 
-        - *f*: Function to be applied before taking the minimum (default is 
+        - *f*: Function to be applied before taking the minimum (default is
           identity)
 
         If *names* is a string, then the output will be a single value.  If
@@ -781,7 +792,7 @@ TODO: attributes: fbase, dir
 
         - *pattern*: Case-sensitive string used for matching
 
-          - If *re* is *False* (next argument), then the pattern follows the 
+          - If *re* is *False* (next argument), then the pattern follows the
             Unix shell style:
 
             ============   ============================
@@ -793,22 +804,22 @@ TODO: attributes: fbase, dir
             [!seq]         Matches any char not in seq
             ============   ============================
 
-            Wildcard characters ('\*') are not automatically added at the 
+            Wildcard characters ('\*') are not automatically added at the
             beginning or the end of the pattern.  For example, 'x\*' matches
-            variables that begin with "x", whereas '\*x\*' matches all variables 
+            variables that begin with "x", whereas '\*x\*' matches all variables
             that contain "x".
 
           - If *re* is *True*, regular expressions are used a la `Python's re
             module <http://docs.python.org/2/library/re.html>`_.  See also
             http://docs.python.org/2/howto/regex.html#regex-howto.
 
-            Since :mod:`re.search` is used to produce the matches, it is as if 
-            wildcards ('.*') are automatically added at the beginning and the 
-            end.  For example, 'x' matches all variables that contain "x".  Use 
-            '^x$' to match only the variables that begin with "x" and 'x$' to 
+            Since :mod:`re.search` is used to produce the matches, it is as if
+            wildcards ('.*') are automatically added at the beginning and the
+            end.  For example, 'x' matches all variables that contain "x".  Use
+            '^x$' to match only the variables that begin with "x" and 'x$' to
             match only the variables that end with "x".
 
-            Note that '.' is a subclass separator in Modelica but a wildcard in 
+            Note that '.' is a subclass separator in Modelica but a wildcard in
             regular expressions.  Escape the subclass separator as '\\.'.
 
         - *re*: *True* to use regular expressions (*False* to use shell style)
@@ -826,7 +837,7 @@ TODO: attributes: fbase, dir
            >>> sim.names('p\.v$', re=True)
            ['C2.p.v', 'Gnd.p.v', 'L.p.v', 'Nr.p.v', 'C1.p.v', 'Ro.p.v', 'G.p.v']
         """
-        if pattern is None or (pattern in ['.*', '.+', '.', '.?', ''] if re 
+        if pattern is None or (pattern in ['.*', '.+', '.', '.?', ''] if re
                                else pattern == '*'):
             return list(self._meta) # Shortcut
         else:
@@ -843,8 +854,8 @@ TODO: attributes: fbase, dir
         returned as a nested dictionary.  The keys are the path elements and
         the values are sub-dictionaries or variable names.
 
-        All names are included by default, but the names can be filtered using 
-        *pattern* and *re*.  See :mod:`names` for a description of those 
+        All names are included by default, but the names can be filtered using
+        *pattern* and *re*.  See :mod:`names` for a description of those
         arguments.
 
         **Example:**
@@ -1230,11 +1241,11 @@ TODO: attributes: fbase, dir
     def to_pandas(self, names=None):
         """Return a `Pandas DataFrame`_ with data from selected variables.
 
-        The data frame has methods for further manipulation and exporting (e.g., 
-        :meth:`~pandas.DataFrame.to_clipboard`, 
-        :meth:`~pandas.DataFrame.to_csv`, :meth:`~pandas.DataFrame.to_excel`, 
-        :meth:`~pandas.DataFrame.to_hdf`, and 
-        :meth:`~pandas.DataFrame.to_html`). 
+        The data frame has methods for further manipulation and exporting (e.g.,
+        :meth:`~pandas.DataFrame.to_clipboard`,
+        :meth:`~pandas.DataFrame.to_csv`, :meth:`~pandas.DataFrame.to_excel`,
+        :meth:`~pandas.DataFrame.to_hdf`, and
+        :meth:`~pandas.DataFrame.to_html`).
 
         **Arguments:**
 
@@ -1262,19 +1273,18 @@ TODO: attributes: fbase, dir
            [507 rows x 6 columns]
         """
         def label(name):
-            """Generate text to label a number as a quantity expressed in a 
+            """Generate text to label a number as a quantity expressed in a
             unit.
             """
             return name + ' / ' + self.get_unit(name)
 
-        # TODO: Fix, doesn't run for all variables at once
         if names is None:
             names = self.names()
             names.remove('Time')
-        else: 
+        else:
             names = util.flatten_list(names)
         times = self._unique_times(names)
-        values = {label(name): self.get_values_at_times(name, times) 
+        values = {label(name): self.get_values_at_times(name, times)
                   for name in names}
         time_label = label('Time')
         values[time_label] = times
@@ -1286,8 +1296,7 @@ TODO: attributes: fbase, dir
 
         **Arguments**:
 
-        - *names*: String or (possibly nested) list of strings of the variable
-          names
+        - *names*: String or (possibly nested) list of strings of variable names
 
         - *action*: Method for retrieving information about the variable(s)
 
@@ -1358,8 +1367,7 @@ TODO: attributes: fbase, dir
 
         **Arguments**:
 
-        - *names*: String or (possibly nested) list of strings of the variable
-          names
+        - *names*: String or (possibly nested) list of strings of variable names
 
         **Examples:**
 
@@ -1378,7 +1386,9 @@ TODO: attributes: fbase, dir
         return self.get_arrays(names)
 
     def __len__(self):
-        """Return the number of variables in the simulation.
+        """Return the number of variables in the simulation
+
+        This includes the time variable.
 
         **Example:**
 
@@ -1437,12 +1447,16 @@ class Info:
        >>> Info.FV(sim, 'L.v')
        -0.25352862
     """
+    arrays = SimRes.get_arrays
+    """Alias for :meth:`SimRes.get_arrays`"""
+    arrays_wi_times = SimRes.get_arrays_wi_times
+    """Alias for :meth:`SimRes.get_arrays_wi_times`"""
+    values_wi_times = SimRes.get_values_wi_times
+    """Alias for :meth:`SimRes.get_values_wi_times`"""
     description = SimRes.get_description
     """Alias for :meth:`SimRes.get_description`"""
     displayUnit = SimRes.get_displayUnit
     """Alias for :meth:`SimRes.get_displayUnit`"""
-    indices_wi_times = SimRes.get_indices_wi_times
-    """Alias for :meth:`SimRes.get_indices_wi_times`"""
     IV = SimRes.get_IV
     """Alias for :meth:`SimRes.get_IV`"""
     FV = SimRes.get_FV
@@ -1455,14 +1469,14 @@ class Info:
     """Alias for :meth:`SimRes.get_min`"""
     times = SimRes.get_times
     """Alias for :meth:`SimRes.get_times`"""
-    tuple = SimRes.get_arrays
-    """Alias for :meth:`SimRes.get_arrays`"""
     unit = SimRes.get_unit
     """Alias for :meth:`SimRes.get_unit`"""
     values = SimRes.get_values
     """Alias for :meth:`SimRes.get_values`"""
     values_at_times = SimRes.get_values_at_times
     """Alias for :meth:`SimRes.get_values_at_times`"""
+    values_wi_times = SimRes.get_values_wi_times
+    """Alias for :meth:`SimRes.get_values_wi_times`"""
 
 
 if __name__ == '__main__':

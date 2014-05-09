@@ -3,6 +3,13 @@ Changelog
 
 0.11.x (2014-*-**) -- Updates:
   
+   - Added :meth:`~modelicares.simres.SimRes.get_arrays_wi_times`.
+   - Removed :meth:`~modelicares.simres.SimRes.get_indices_wi_times` and added
+     :meth:`~modelicares.simres.SimRes.get_values_wi_times`.
+   - :meth:`~modelicares.simres.SimRes.get_values`, 
+     :meth:`~modelicares.simres.SimRes.get_times`, and
+     :meth:`~modelicares.simres.SimRes.get_arrays` now return all samples when
+     *i*=*None*.
    - Added :meth:`~modelicares.linres.LinRes.to_tf` to return a selected 
      transfer function from the state-space representation.
    - Added :meth:`~modelicares.simres.SimRes.to_pandas` to return a

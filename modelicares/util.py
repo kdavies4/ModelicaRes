@@ -23,7 +23,7 @@
 
 - :meth:`animate` - Encode a series of PNG images as a MPG movie
 
-- :meth:`chars_to_str` - Convert a string array to a string and remove trailing 
+- :meth:`chars_to_str` - Convert a string array to a string and remove trailing
   whitespace
 
 - :meth:`color` - Plot 2D scalar data on a color axis in 2D Cartesian
@@ -96,7 +96,7 @@ from matplotlib.cbook import iterable
 def chars_to_str(str_arr, codec='latin-1'):
     """Convert a string array to a string.
 
-    Remove trailing whitespace and null characters.  Encode using *codec*. 
+    Remove trailing whitespace and null characters.  Encode using *codec*.
     """
     return ''.join(str_arr).rstrip().rstrip('\x00').encode(codec)
 
@@ -415,9 +415,9 @@ def animate(imagebase='_tmp', fname="animation", fps=10, clean=False):
        >>> plt.show()
        >>> plt.close()
     """
-    # TODO:  Consider using the animation module from matplotlib.  Should it
+    # TODO: Consider using the animation module from matplotlib.  Should it
     # supercede this function?
-    # TODO:  Add support for Windows.
+    # TODO: Add support for Windows.
 
     # Based on
     # http://matplotlib.sourceforge.net/faq/howto_faq.html#make-a-movie,
@@ -658,7 +658,7 @@ def _gen_offset_factor(label, tick_lo, tick_up, eagerness=0.325):
 
     3. Exponent of 1000 which can be factored from the number (pow1000)
     """
-    # TODO: Utilize matplotlib's support for units.
+    # TODO: Utilize matplotlib's support for units?
 
     def _label_offset_factor(label, offset_factor, offset_pow1000, pow1000):
         """Format an offset and factor into a LaTeX string and add to it an
@@ -723,7 +723,7 @@ def get_indices(x, target):
     **Example:**
 
        >>> from modelicares import *
-       >>> get_indices([0,1,2],1.6)
+       >>> get_indices([0, 1, 2], 1.6)
        (1, 2)
     """
     if target <= x[0]:
@@ -735,7 +735,7 @@ def get_indices(x, target):
         i_1 = 0
         i_2 = len(x) - 1
         while i_1 < i_2 - 1:
-            i_mid = int(np.floor((i_1 + i_2)/2))
+            i_mid = (i_1 + i_2)/2
             if x[i_mid] == target:
                 return i_mid, i_mid
             elif x[i_mid] > target:
