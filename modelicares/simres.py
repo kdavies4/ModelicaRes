@@ -5,7 +5,7 @@
 - :class:`SimRes` - Class to load and analyze results from a Modelica_-based
   simulation
 
-- :class:`Info` - Aliases for the "get" methods in :class:`SimRes`
+- :class:`Info` - Aliases for the "get" methods of :class:`SimRes`
 
 
 .. _Modelica: http://www.modelica.org/
@@ -32,6 +32,10 @@ from pandas import DataFrame
 from . import util
 from ._gui import Browser
 from .texunit import unit2tex, label_number
+
+# File readers
+from ._io.omdy import load as omdyload # OpenModelica/Dymola
+
 
 class SimRes(object):
     """Class to load and analyze results from a Modelica_-based simulation
@@ -80,19 +84,19 @@ class SimRes(object):
     - :meth:`plot` - Plot data as points and/or curves in 2D Cartesian
       coordinates
 
-    - :meth:`to_pandas` - Return a `Pandas DataFrame`_ with data from selected
+    - :meth:`to_pandas` - Return a `pandas DataFrame`_ with data from selected
       variables
 
     - :meth:`sankey` - Create a figure with Sankey diagram(s)
 
     Attributes:
 
-    - :meth:`dir` - Directory from which the file was loaded
+    - *dir* - Directory from which the file was loaded
 
-    - :meth:`fbase` - Base filename, without the directory or extension
+    - *fbase* - Base filename, without the directory or extension
 
 
-    .. _Pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
+    .. _pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
 
     def __init__(self, fname='dsres.mat', constants_only=False):
@@ -104,8 +108,8 @@ class SimRes(object):
 
              The file extension ('.mat') is optional.
 
-        - *constants_only*: *True* to load only the variables from the first data
-          table
+        - *constants_only*: *True* to load only the variables from the first
+          data table
 
              The first data table typically contains all of the constants,
              parameters, and variables that don't vary.  If only that
@@ -118,8 +122,8 @@ class SimRes(object):
            >>> sim = SimRes('examples/ChuaCircuit.mat')
         """
 
-        from ._io.omdy import load
-        assert load(self, fname, constants_only) == 'simulation', \
+        # Try to load as OpenModelica/Dymola.
+        assert omdyload(self, fname, constants_only) == 'simulation', \
             '"%s" appears to be a linearization result.  ' \
             'Use modelicares.linres.LinRes instead.' % fname
 
@@ -358,7 +362,8 @@ class SimRes(object):
            >>> sim.get_description('L.v')
            'Voltage drop between the two pins (= p.v - n.v)'
         """
-        return self._get(self._description, names)
+        _description = lambda name: self._meta[name].description
+        return self._get(_description, names)
 
     def get_displayUnit(self, names):
         """Return the Modelica_ *displayUnit* attribute(s) of variable(s).
@@ -381,7 +386,8 @@ class SimRes(object):
            >>> sim.get_displayUnit('G.T_heatPort')
            'degC'
         """
-        return self._get(self._displayUnit, names)
+        _displayUnit = lambda name: cls._meta[name].displayUnit
+        return self._get(_displayUnit, names)
 
     def get_IV(self, names, f=lambda x: x):
         """Return the initial value(s) of variable(s).
@@ -486,7 +492,8 @@ class SimRes(object):
            >>> sim.get_unit('L.v')
            'V'
         """
-        return self._get(self._unit, names)
+        _unit = lambda name: self._meta[name].unit
+        return self._get(_unit, names)
 
     def get_values(self, names, i=None, f=lambda x: x):
         """Return vector(s) of the values of variable(s).
@@ -718,7 +725,7 @@ class SimRes(object):
            >>> sim.get_max('L.v')
            0.77344114
         """
-        return self.get_values(names, f=lambda x: max(f(x)))
+        return self.get_values(names, f=lambda x: f(x).max())
 
     def get_mean(self, names, f=lambda x: x):
         """Return the time-averaged value(s) of variable(s).
@@ -780,7 +787,7 @@ class SimRes(object):
            >>> sim.get_min('L.v')
            -0.9450165
         """
-        return self.get_values(names, f=lambda x: min(f(x)))
+        return self.get_values(names, f=lambda x: f(x).min())
 
     def names(self, pattern=None, re=False):
         r"""Return a list of variable names that match a pattern.
@@ -1238,7 +1245,7 @@ class SimRes(object):
         return sankeys
 
     def to_pandas(self, names=None):
-        """Return a `Pandas DataFrame`_ with data from selected variables.
+        """Return a `pandas DataFrame`_ with data from selected variables.
 
         The data frame has methods for further manipulation and exporting (e.g.,
         :meth:`~pandas.DataFrame.to_clipboard`,
@@ -1434,32 +1441,31 @@ class SimRes(object):
 
 
 class Info:
-    """Aliases for the "get" methods in :class:`SimRes`
+    """Unbound aliases for the "get" methods in :class:`SimRes`
 
     **Example:**
 
     .. code-block:: python
 
        >>> from modelicares.simres import SimRes, Info
+       >>> FV = Info.FV
 
        >>> sim = SimRes('examples/ChuaCircuit.mat')
-       >>> Info.FV(sim, 'L.v')
+       >>> FV(sim, 'L.v')
        -0.25352862
     """
     arrays = SimRes.get_arrays
     """Alias for :meth:`SimRes.get_arrays`"""
     arrays_wi_times = SimRes.get_arrays_wi_times
     """Alias for :meth:`SimRes.get_arrays_wi_times`"""
-    values_wi_times = SimRes.get_values_wi_times
-    """Alias for :meth:`SimRes.get_values_wi_times`"""
     description = SimRes.get_description
     """Alias for :meth:`SimRes.get_description`"""
     displayUnit = SimRes.get_displayUnit
     """Alias for :meth:`SimRes.get_displayUnit`"""
-    IV = SimRes.get_IV
-    """Alias for :meth:`SimRes.get_IV`"""
     FV = SimRes.get_FV
     """Alias for :meth:`SimRes.get_FV`"""
+    IV = SimRes.get_IV
+    """Alias for :meth:`SimRes.get_IV`"""
     max = SimRes.get_max
     """Alias for :meth:`SimRes.get_max`"""
     mean = SimRes.get_mean
@@ -1482,4 +1488,3 @@ if __name__ == '__main__':
     """Test the contents of this file."""
     import doctest
     doctest.testmod()
-    exit()

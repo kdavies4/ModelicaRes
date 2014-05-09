@@ -1,33 +1,44 @@
-#!/usr/bin/env python
-"""Load results from Modelica_ simulation(s) and provide a Python_ interpreter
-to analyze the results.
+#!/usr/bin/python
+"""Load results from Modelica_ simulation(s) and/or linearzation(s) and provide
+a Python_ session to analyze the results.
 
-This script can be executed at the command line.  It will accept as arguments
-the names of result files or names of directories with result files.  The
-filenames may contain wildcards.  If no arguments are given, the script
-provides a dialog to choose a file or folder.  Finally, it provides working
-session of `IPython <http://www.ipython.org/>`_ with the results preloaded.
-PyLab_ is directly imported (``from pylab import *``) to provide many functions
-of NumPy_ and matplotlib_ (e.g., :meth:`sin` and :meth:`plot`).  The essential
-classes and functions of ModelicaRes are directly available as well.
+This script can be executed from the command line.  It accepts as arguments the
+names of result files or directories with result files.  Wildcards can be used.
+If no arguments are given, then the script provides a dialog to  choose a file
+or folder.  After loading files, it provides working session of `IPython
+<http://www.ipython.org/>`_ with the results preloaded.  PyLab_ is imported
+(``from pylab import *``) to provide many functions of NumPy_ and matplotlib_
+(e.g., :meth:`sin` and :meth:`plot`).  The essential classes and functions of
+ModelicaRes_ are imported as well (``from modelicares import *``).
 
 **Setup and example:**
 
-Copy this script (*loadres*) to the current directory along with the *examples*
-folder.  Then execute the following command:
+Copy the *examples* directory of the ModelicaRes_ distribution to a convenient
+location.  Open a command prompt at that location and execute the following
+command:
 
 .. code-block:: sh
 
-   $ python loadres examples
+   $ loadres ChuaCircuit PID
    Valid: SimRes('.../examples/ChuaCircuit.mat')
-   Valid: SimRes('.../examples/ThreeTanks.mat')
    Valid: LinRes('.../examples/PID.mat')
-   Simulation results have been loaded into sims[0] through sims[1].
+   A simulation result has been loaded into sim.
    A linearization result has been loaded into lin.
 
-where '...' depends on the local system.
+If this doesn't work, then the *loadres* script probably hasn't been installed
+to a location recognized by the operating system.  Instead, copy it to the
+*examples* directory and try again.  If necessary, call Python_ explicitly
+(``python loadres ChuaCircuit PID``).
+
+Please also see the tutorial, which is available as an `IPython notebook
+<https://github.com/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_
+or online as a `static page
+<http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_.
+Using the Python_ session started from the example above, you can follow the
+tutorial beginning with the "Analyzing the simulation results" section.
 
 
+.. _ModelicaRes: http://kdavies4.github.io/ModelicaRes
 .. _Modelica: http://www.modelica.org/
 .. _Python: http://www.python.org/
 .. _PyLab: http://www.scipy.org/PyLab
@@ -36,8 +47,9 @@ where '...' depends on the local system.
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
-__copyright__ = "Copyright 2012, Georgia Tech Research Corporation"
+__copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
+
 
 import os
 import time
@@ -46,34 +58,40 @@ from sys import argv
 from PyQt4.QtGui import QApplication, QFileDialog, QMessageBox, QPushButton
 
 from modelicares import SimRes, LinRes, multiload
-from modelicares.gui import boolbox
+
+
+default_path = os.path.expanduser("~/Documents/Modelica")
+
+File = QPushButton("File")
+Folder = QPushButton("Folder")
+
+def file_or_folder()
+    """Choose to load from a file or folder.
+    """
+    # TODO: Make the buttons appear in order: File, Folder, Cancel.
+    msgBox = QMessageBox()
+    msgBox.setText("Do you want to open one file\nor all files from a folder?")
+    msgBox.addButton(Folder, QMessageBox.AcceptRole)
+    msgBox.addButton(File, QMessageBox.AcceptRole)
+    msgBox.addButton(QMessageBox.Cancel)
+    msgBox.setDefaultButton(File)
+    msgBox.exec_()
+    return msgBox.clickedButton()
+
+def delayed_exit(t=0.5):
+    """Exit with a message and a delay.
+    """
+    print("Exiting...")
+    time.sleep(t)
+    exit()
 
 if __name__ == '__main__':
-    default_path = os.path.expanduser("~/Documents/Modelica")
-
-    def delayed_exit(t=0.5):
-        """Exit with a message and a delay."""
-        print("Exiting...")
-        time.sleep(t)
-        exit()
-
+    """Load Modelica_ results and provide a Python_ session to analyze them.
+    """
     # Determine the file location(s).
     if len(argv) == 1:
         app = QApplication([])
-
-        # Choose to choose a file or folder.
-        # TODO: Make the buttons appear in the order File, Folder, Cancel.
-        msgBox = QMessageBox()
-        msgBox.setText("Do you want to open one file\nor all files from a folder?")
-        File = QPushButton("File")
-        Folder = QPushButton("Folder")
-        msgBox.addButton(Folder, QMessageBox.AcceptRole)
-        msgBox.addButton(File, QMessageBox.AcceptRole)
-        msgBox.addButton(QMessageBox.Cancel)
-        msgBox.setDefaultButton(File)
-        msgBox.exec_()
-        choice = msgBox.clickedButton()
-
+        choice = file_or_folder()
         if choice == File:
             getFile = QFileDialog().getOpenFileName
             loc = str(getFile(None, "Choose a Modelica results file",
@@ -97,6 +115,7 @@ if __name__ == '__main__':
 
     # Load the file(s).
     sims, lins = multiload(loc)
+
     n_sims = len(sims)
     if n_sims == 1:
         sim = sims[0]
@@ -105,6 +124,7 @@ if __name__ == '__main__':
     elif n_sims > 1:
         print("Simulation results have been loaded into sims[0] through "
               "sims[%i]." % (n_sims-1))#, end="")
+
     n_lins = len(lins)
     if n_lins == 1:
         lin = lins[0]
@@ -117,23 +137,25 @@ if __name__ == '__main__':
         print("No files were loaded.")
         delayed_exit()
 
+    del File, Folder, loc, default_path
+
     # Open the IPython or standard Python interpreter.
     #    http://writeonly.wordpress.com/2008/09/08/embedding-a-python-shell-in-a-python-script/,
     #    accessed 11/2/2010
     from pylab import *
     from modelicares import *
     try:
+        # IPython
         from IPython import embed
         embed()
     except ImportError:
         try:
-            # Old version
+            # IPython via old API style
             from IPython.Shell import IPShellEmbed
             IPShellEmbed(argv=['-noconfirm_exit'])()
-            # Note: The -pylab option cannot be embedded (see
-            # http://article.gmane.org/gmane.comp.python.ipython.user/1190/match=pylab),
-            # so man
+            # Note: The -pylab option can't be embedded (see
+            # http://article.gmane.org/gmane.comp.python.ipython.user/1190/match=pylab).
         except ImportError:
+            # Standard Python
             from code import InteractiveConsole
-            # Calling this with globals ensures that we can see the environment.
             InteractiveConsole(globals()).interact()

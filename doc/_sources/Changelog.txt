@@ -1,0 +1,3 @@
+:orphan:
+
+.. include:: ../CHANGES.txt

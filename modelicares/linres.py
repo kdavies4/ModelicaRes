@@ -23,6 +23,10 @@ from control.matlab import ss
 from ._freqplot import bode_plot, nyquist_plot
 from .util import figure, add_hlines, add_vlines, chars_to_str
 
+# File readers
+from ._io.omdy import load as omdyload # OpenModelica/Dymola
+
+
 class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze
     those results
@@ -37,12 +41,11 @@ class LinRes(object):
 
     Attributes:
 
-    - :meth:`dir` - Directory from which the file was loaded
+    - *dir* - Directory from which the file was loaded
 
-    - :meth:`fbase` - Base filename, without the directory or extension
+    - *fbase* - Base filename, without the directory or extension
 
-    - :meth:`sys` - State-space system as an instance of
-      :class:`control.StateSpace`
+    - *sys* - State-space system as an instance of :class:`control.StateSpace`
 
          It contains:
 
@@ -78,8 +81,8 @@ class LinRes(object):
            >>> lin = LinRes('examples/PID')
         """
 
-        from ._io.omdy import load
-        assert load(self, fname) == 'linearization', \
+        # Try to load as OpenModelica/Dymola.
+        assert omdyload(self, fname) == 'linearization', \
             '"%s" appears to be a simulation result.  ' \
             'Use modelicares.simres.SimRes instead.' % fname
 
@@ -434,4 +437,3 @@ if __name__ == '__main__':
     """Test the contents of this file."""
     import doctest
     doctest.testmod()
-    exit()

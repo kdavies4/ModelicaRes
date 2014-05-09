@@ -1,4 +1,4 @@
-personal_ws-1.1 en 277 
+personal_ws-1.1 en 287 
 hspace
 cla
 imshow
@@ -19,6 +19,7 @@ tex
 filemap
 dir
 imagebase
+scipy
 simspecs
 PySimulator
 pysimulator
@@ -67,6 +68,7 @@ FMI
 arange
 grayscale
 Raedler
+hdf
 abspath
 ChuaCircuit
 executables
@@ -75,13 +77,14 @@ distutils
 Chua
 dslog
 heatPort
-PyLab
 pylab
+PyLab
 GTRC
 matplotlib
 fahrenheit
 circ
 linearizing
+wxPython
 exe
 txt
 xaaf
@@ -130,6 +133,7 @@ pathlengths
 wspace
 Redistributions
 autoscale
+PyQt
 len
 Gnuplot
 sankey
@@ -171,6 +175,7 @@ ltypes
 js
 PreviewPanel
 savefig
+util
 colorbar
 arrowedgecolor
 Arnout
@@ -179,13 +184,15 @@ fixedstepsize
 formatter
 outputInterval
 lw
-np
 ok
+np
+Nr
+codec
 Indentification
 WxApp
 sankeyfig
-nx
 os
+nx
 linearized
 getitem
 OnDragInit
@@ -199,6 +206,7 @@ py
 Ro
 xstar
 LaTeX
+tf
 linewidth
 th
 iterable
@@ -222,6 +230,7 @@ LossPower
 sublist
 submodule
 ctype
+DataFrame
 tuple
 vv
 linearizeModel
@@ -233,8 +242,8 @@ xy
 arnoutaertgeerts
 repr
 Aertgeerts
-Github
 GitHub
+Github
 vlines
 textFreq
 texunit
@@ -269,6 +278,7 @@ arg
 CFR
 linspace
 subfigure
+TODO
 overlayed
 Dassl
 whitespace

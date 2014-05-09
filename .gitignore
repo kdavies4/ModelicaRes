@@ -10,6 +10,7 @@ build/
 dist/
 /examples/*/*/*
 MANIFEST
+ModelicaRes.egg-info
 *.mos
 .fuse*
 examples/*.mpg

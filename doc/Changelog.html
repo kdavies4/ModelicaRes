@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Changelog &mdash; ModelicaRes v0.10.0 Documentation</title>
+    <title>Changelog &mdash; ModelicaRes v0.11.x Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.10.0',
+        VERSION:     '0.11.x',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,10 +25,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.10.0 Documentation"
+          title="Search within ModelicaRes v0.11.x Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.10.0 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.11.x Documentation" href="index.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
     <meta name="author" content="Kevin L. Davies">
@@ -45,7 +45,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.x Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -53,7 +53,7 @@
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.gif" alt="Logo"/>
             </a></p>
-<h3><a href="index.html">Table Of Contents</a></h3>
+<h3><a href="index.html">Table of Contents</a></h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
@@ -62,11 +62,11 @@
 <li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="base.html"><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
 </ul>
 
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
+<div id="searchbox" style="display: none" role="search">
+  <h3><a href="search.html">Search</a></h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
@@ -74,7 +74,6 @@
       <input type="hidden" name="area" value="default" />
     </form>
     <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
     </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
@@ -88,10 +87,47 @@
             
   <div class="section" id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
-<p>0.10.0 (2014-<strong>-</strong>) &#8211; Updates:</p>
+<p>0.11.x (2014-<em>-*</em>) &#8211; Updates:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Added <a class="reference internal" href="simres.html#modelicares.simres.SimRes.get_tuple" title="modelicares.simres.SimRes.get_tuple"><tt class="xref py py-meth docutils literal"><span class="pre">get_tuple()</span></tt></a> to get time, value
+<li>Eliminated dependence on <tt class="xref py py-mod docutils literal"><span class="pre">easygui</span></tt>; using <tt class="xref py py-mod docutils literal"><span class="pre">PyQt4</span></tt> instead</li>
+<li>Added <a class="reference internal" href="simres.html#modelicares.simres.SimRes.get_arrays_wi_times" title="modelicares.simres.SimRes.get_arrays_wi_times"><tt class="xref py py-meth docutils literal"><span class="pre">get_arrays_wi_times()</span></tt></a>.</li>
+<li>Removed <tt class="xref py py-meth docutils literal"><span class="pre">get_indices_wi_times()</span></tt> and added
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.get_values_wi_times" title="modelicares.simres.SimRes.get_values_wi_times"><tt class="xref py py-meth docutils literal"><span class="pre">get_values_wi_times()</span></tt></a>.</li>
+<li><a class="reference internal" href="simres.html#modelicares.simres.SimRes.get_values" title="modelicares.simres.SimRes.get_values"><tt class="xref py py-meth docutils literal"><span class="pre">get_values()</span></tt></a>,
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.get_times" title="modelicares.simres.SimRes.get_times"><tt class="xref py py-meth docutils literal"><span class="pre">get_times()</span></tt></a>, and
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.get_arrays" title="modelicares.simres.SimRes.get_arrays"><tt class="xref py py-meth docutils literal"><span class="pre">get_arrays()</span></tt></a> now return all samples when
+<em>i*=*None</em>.</li>
+<li>Added <a class="reference internal" href="linres.html#modelicares.linres.LinRes.to_tf" title="modelicares.linres.LinRes.to_tf"><tt class="xref py py-meth docutils literal"><span class="pre">to_tf()</span></tt></a> to return a selected
+transfer function from the state-space representation.</li>
+<li>Added <a class="reference internal" href="simres.html#modelicares.simres.SimRes.to_pandas" title="modelicares.simres.SimRes.to_pandas"><tt class="xref py py-meth docutils literal"><span class="pre">to_pandas()</span></tt></a> to return a
+<a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame">Pandas DataFrame</a> of selected data.</li>
+<li>Encoding all variable names as &#8216;latin-1&#8217; and stripping null strings from
+the end.</li>
+<li>Changed the action for <a class="reference internal" href="simres.html#modelicares.simres.SimRes.__call__" title="modelicares.simres.SimRes.__call__"><tt class="xref py py-meth docutils literal"><span class="pre">__call__()</span></tt></a>
+and <a class="reference internal" href="simres.html#modelicares.simres.SimRes.__getitem__" title="modelicares.simres.SimRes.__getitem__"><tt class="xref py py-meth docutils literal"><span class="pre">__getitem__()</span></tt></a>
+from <a class="reference internal" href="simres.html#modelicares.simres.SimRes.get_values" title="modelicares.simres.SimRes.get_values"><tt class="xref py py-meth docutils literal"><span class="pre">get_values()</span></tt></a>
+to <tt class="xref py py-meth docutils literal"><span class="pre">get_tuples()</span></tt>.</li>
+<li>Added a function (<em>f</em>) as an argument to
+<tt class="xref py py-meth docutils literal"><span class="pre">get_tuples()</span></tt></li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">get_tuples()</span></tt> now returns list(s) of time,
+value tuples rather than tuples of vectors of times and values</li>
+<li>Renamed <tt class="xref py py-meth docutils literal"><span class="pre">get_tuple()</span></tt>
+to <tt class="xref py py-meth docutils literal"><span class="pre">get_tuples()</span></tt></li>
+<li>Added pattern matching to <a class="reference internal" href="simres.html#modelicares.simres.SimRes.nametree" title="modelicares.simres.SimRes.nametree"><tt class="xref py py-meth docutils literal"><span class="pre">nametree()</span></tt></a>.</li>
+<li>Merged <tt class="xref py py-meth docutils literal"><span class="pre">modelica_array()</span></tt> and
+<tt class="xref py py-meth docutils literal"><span class="pre">modelica_boolean()</span></tt> into a new function,
+<a class="reference internal" href="exps.html#modelicares.exps.modelica_str" title="modelicares.exps.modelica_str"><tt class="xref py py-meth docutils literal"><span class="pre">modelica_str()</span></tt></a>.</li>
+<li>Renamed <tt class="xref py py-meth docutils literal"><span class="pre">base()</span></tt> to <a class="reference internal" href="util.html#module-modelicares.util" title="modelicares.util"><tt class="xref py py-meth docutils literal"><span class="pre">util()</span></tt></a> for clarity.
+It is a package of utility functions and classes, not base classes.</li>
+<li>Removed <tt class="xref py py-meth docutils literal"><span class="pre">merge_times()</span></tt>.  It is not used internally
+and probably is not useful externally.</li>
+</ul>
+</div></blockquote>
+<p>0.10.0 (2014-4-30) &#8211; Updates:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Added <tt class="xref py py-meth docutils literal"><span class="pre">get_tuple()</span></tt> to get time, value
 tuples for variables.</li>
 <li>Removed the <em>external/control</em> folder.  Instead, using PyPI/distutils to
 install the <a class="reference external" href="https://pypi.python.org/pypi/control">control package</a>.</li>
@@ -101,7 +137,8 @@ install the <a class="reference external" href="https://pypi.python.org/pypi/con
 <a class="reference internal" href="simres.html#modelicares.simres.SimRes.get_mean" title="modelicares.simres.SimRes.get_mean"><tt class="xref py py-meth docutils literal"><span class="pre">get_mean()</span></tt></a>).</li>
 <li>Removed <tt class="xref py py-meth docutils literal"><span class="pre">variables()</span></tt>,
 <tt class="xref py py-meth docutils literal"><span class="pre">variables()</span></tt>, and
-<tt class="xref py py-meth docutils literal"><span class="pre">glob()</span></tt>.  Use
+<tt class="xref py py-meth docutils literal"><span class="pre">glob()</span></tt> from
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes()</span></tt></a>.  Use
 <a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a> instead.</li>
 <li>Merged the pattern-matching functionality of
 <tt class="xref py py-meth docutils literal"><span class="pre">glob()</span></tt> into
@@ -213,7 +250,7 @@ of multiple linearizations.</li>
 <a class="reference internal" href="linres.html#modelicares.linres.LinRes.nyquist" title="modelicares.linres.LinRes.nyquist"><tt class="xref py py-meth docutils literal"><span class="pre">nyquist()</span></tt></a>.  The argument <em>ax</em> argument to
 <a class="reference internal" href="linres.html#modelicares.linres.LinRes.bode" title="modelicares.linres.LinRes.bode"><tt class="xref py py-meth docutils literal"><span class="pre">bode()</span></tt></a> is now <em>axes</em> instead&#8212;a tuple
 (pair) of axes.</li>
-<li>Fixed error with chosen directory in <a class="reference internal" href="base.html#modelicares.base.save" title="modelicares.base.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a></li>
+<li>Fixed error with chosen directory in <tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></li>
 <li>Added function to generate one-factor-at-a-time experiments.  The old
 <em>permute</em> argument to <a class="reference internal" href="exps.html#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-meth docutils literal"><span class="pre">gen_experiments()</span></tt></a> is now
 generalized to <em>design</em>, as in design of experiments.  Now, assign a
@@ -251,7 +288,7 @@ submodule.</li>
 <p>0.6.0 (2013-7-2) &#8211; Updates:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Added <a class="reference internal" href="base.html#modelicares.base.save" title="modelicares.base.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> to save the current figure.</li>
+<li>Added <tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt> to save the current figure.</li>
 <li>Added <em>use_paren</em> option to <a class="reference internal" href="simres.html#modelicares.simres.SimRes.plot" title="modelicares.simres.SimRes.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a>.</li>
 <li>Changed <a class="reference internal" href="exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a> to put results in folders
 instead of special renaming scheme.</li>
@@ -271,7 +308,7 @@ time.</li>
 <p>0.5.1 (2013-6-18) &#8211; Updates:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Fixed errors in <a class="reference internal" href="base.html#modelicares.base.load_csv" title="modelicares.base.load_csv"><tt class="xref py py-meth docutils literal"><span class="pre">load_csv()</span></tt></a>.</li>
+<li>Fixed errors in <tt class="xref py py-meth docutils literal"><span class="pre">load_csv()</span></tt>.</li>
 </ul>
 </div></blockquote>
 <p>0.5 (2013-6-5) &#8211; Updates:</p>
@@ -283,7 +320,7 @@ time.</li>
 <p>0.4 (2012-12-10) &#8211; Updates:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Added default of <em>label</em> = &#8216;&#8217; to <a class="reference internal" href="base.html#modelicares.base.figure" title="modelicares.base.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a>.</li>
+<li>Added default of <em>label</em> = &#8216;&#8217; to <tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt>.</li>
 <li>Updated documentation for Windows.</li>
 <li>Added check for Python version (currently requires 2.7).</li>
 </ul>
@@ -292,7 +329,7 @@ time.</li>
 <blockquote>
 <div><ul class="simple">
 <li>Added support for Windows.  <tt class="xref py py-mod docutils literal"><span class="pre">aux</span></tt> is now
-<a class="reference internal" href="base.html#module-modelicares.base" title="modelicares.base"><tt class="xref py py-mod docutils literal"><span class="pre">base</span></tt></a>.</li>
+<tt class="xref py py-mod docutils literal"><span class="pre">base</span></tt>.</li>
 </ul>
 </div></blockquote>
 <p>0.2 (2012-11-20) &#8211; Updates:</p>
@@ -320,13 +357,12 @@ time.</li>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.x Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 30, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+        &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
+      Last updated on May 09, 2014.
     </div>
   </body>
 </html>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.multi &mdash; ModelicaRes v0.10.0 Documentation</title>
+    <title>modelicares.multi &mdash; ModelicaRes v0.11.x Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.10.0',
+        VERSION:     '0.11.x',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,10 +25,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.10.0 Documentation"
+          title="Search within ModelicaRes v0.11.x Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.10.0 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.11.x Documentation" href="index.html" />
     <link rel="next" title="modelicares.exps" href="exps.html" />
     <link rel="prev" title="modelicares.linres" href="linres.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
@@ -53,7 +53,7 @@
         <li class="right" >
           <a href="linres.html" title="modelicares.linres"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.x Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -61,7 +61,7 @@
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.gif" alt="Logo"/>
             </a></p>
-<h3><a href="index.html">Table Of Contents</a></h3>
+<h3><a href="index.html">Table of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
@@ -70,11 +70,11 @@
 <li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="base.html"><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
 </ul>
 
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
+<div id="searchbox" style="display: none" role="search">
+  <h3><a href="search.html">Search</a></h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
@@ -82,7 +82,6 @@
       <input type="hidden" name="area" value="default" />
     </form>
     <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
     </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
@@ -195,7 +194,7 @@ and &#8220;-&#8221; for a solid line.</p>
 <span class="go">Saved examples/PIDs-bode.png</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/PIDs-bode.png"><img alt="Bode plot of PID with varying parameters" src="_images/PIDs-bode.png" style="width: 513.1px; height: 335.3px;" /></a>
+<a class="reference internal image-reference" href="_images/PIDs-bode.png"><img alt="Bode plot of PID with varying parameters" src="_images/PIDs-bode.png" style="width: 567.0px; height: 350.0px;" /></a>
 </dd></dl>
 
 <dl class="function">
@@ -326,7 +325,7 @@ first system will have text labels.</p>
 <span class="go">Saved examples/PIDs-nyquist.png</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/PIDs-nyquist.png"><img alt="Nyquist plot of PID with varying parameters" src="_images/PIDs-nyquist.png" style="width: 349.3px; height: 328.3px;" /></a>
+<a class="reference internal image-reference" href="_images/PIDs-nyquist.png"><img alt="Nyquist plot of PID with varying parameters" src="_images/PIDs-nyquist.png" style="width: 567.0px; height: 350.0px;" /></a>
 </dd></dl>
 
 <dl class="function">
@@ -370,7 +369,7 @@ that will be used sequentially</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>**kwargs</em>: Propagated to <tt class="xref py py-meth docutils literal"><span class="pre">simres.SimRes.plot()</span></tt> (and thus to
-<tt class="xref py py-meth docutils literal"><span class="pre">base.plot()</span></tt> and finally <tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt>)</p>
+<tt class="xref py py-meth docutils literal"><span class="pre">util.plot()</span></tt> and finally <tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt>)</p>
 </li>
 </ul>
 <p><strong>Returns:</strong></p>
@@ -394,7 +393,7 @@ that will be used sequentially</p>
 <span class="go">Saved examples/ChuaCircuits.png</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/ChuaCircuits.png"><img alt="plot of Chua circuit with varying inductance" src="_images/ChuaCircuits.png" style="width: 502.6px; height: 329.7px;" /></a>
+<a class="reference internal image-reference" href="_images/ChuaCircuits.png"><img alt="plot of Chua circuit with varying inductance" src="_images/ChuaCircuits.png" style="width: 567.0px; height: 350.0px;" /></a>
 </dd></dl>
 
 </div>
@@ -420,13 +419,12 @@ that will be used sequentially</p>
         <li class="right" >
           <a href="linres.html" title="modelicares.linres"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.x Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 30, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+        &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
+      Last updated on May 09, 2014.
     </div>
   </body>
 </html>

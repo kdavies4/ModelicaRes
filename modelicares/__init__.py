@@ -1,14 +1,14 @@
 #!/usr/bin/python
-"""Set up Modelica_ simulations and load, analyze, and plot the results.
+"""Functions and classes to set up Modelica_ simulations and load, analyze, and
+plot the results.
 
-This module provides direct access to the most important functions and classes
-from its submodules.  These are:
+**Functions:**
 
-- Basic supporting classes and functions (:mod:`~modelicares.util` module):
-  :meth:`~util.add_arrows`, :meth:`~util.add_hlines`, :meth:`~util.add_vlines`,
-  :meth:`~util.animate`, :class:`~util.ArrowLine`, :meth:`~util.closeall`,
-  :meth:`~util.figure`, :meth:`~util.load_csv`, :meth:`~util.save`,
-  :meth:`~util.saveall`, and :meth:`~util.setup_subplots`
+- :meth:`load` - Load a Modelica_ simulation or linearization result and return
+  an instance of the appropriate class
+
+This module also provides easy access to the most important functions and
+classes from its submodules.  These are:
 
 - To manage simulation experiments (:mod:`~modelicares.exps` module):
   :class:`~exps.Experiment`, :mod:`~modelicares.exps.doe`, :meth:`~exps.gen_experiments`,
@@ -28,6 +28,12 @@ from its submodules.  These are:
 - To label numbers and quantities (:mod:`~modelicares.texunit` module):
   :meth:`~texunit.label_number`, :meth:`~texunit.label_quantity`, and
   :meth:`~texunit.unit2tex`
+
+- Supporting classes and functions (:mod:`~modelicares.util` module):
+  :meth:`~util.add_arrows`, :meth:`~util.add_hlines`, :meth:`~util.add_vlines`,
+  :meth:`~util.animate`, :class:`~util.ArrowLine`, :meth:`~util.closeall`,
+  :meth:`~util.figure`, :meth:`~util.load_csv`, :meth:`~util.save`,
+  :meth:`~util.saveall`, and :meth:`~util.setup_subplots`
 
 .. _Modelica: http://www.modelica.org/
 """
@@ -52,23 +58,47 @@ from modelicares.simres import SimRes
 from modelicares.texunit import label_number, label_quantity, unit2tex
 
 
-def load(fname):
-    """TODO
+def load(fname, constants_only=False):
+    """Load a Modelica_ simulation or linearization result.
+
+    **Arguments:**
+
+    - *constants_only*: *True* to load only the variables from the first data
+      matrix, if the result is from a simulation
+
+    **Returns:** An instance of the appropriate class
+    (:class:`~modelicares.simres.SimRes` or :class:`~modelicares.linres.LinRes`)
+    or *None* if the file could not be loaded
     """
+    try:
+        return SimRes(fname)
+    except IOError:
+        print('"%s" could not be open.  Check that it exists.' % fname)
+    else:
+        try:
+           return LinRes(fname)
+        except:
+           return None
+
 
 if __name__ == '__main__':
-    """Test the contents of this module.
-    """
+    """Test the contents of this module."""
     import doctest
-    import modelicares # TODO: Use relative import?
+    from modelicares import *
+    from modelicares import _gui, _freqplot, _io
 
-# TODO: reenable
 
-    doctest.testfile('tests.txt')
-    #doctest.testmod(modelicares.util)
-    #doctest.testmod(modelicares.exps)
-    #doctest.testmod(modelicares.linres)
-    #doctest.testmod(modelicares.multi)
-    #doctest.testmod(modelicares.simres)
-    #doctest.testmod(modelicares.gui)
+# TODO: clean up, enable tests.txt
+
+    doctest.testmod(_io.ompy)
     exit()
+    doctest.testmod(exps)
+    doctest.testmod(_freqplot)
+    doctest.testmod(_gui)
+    doctest.testmod(linres)
+    doctest.testmod(multi)
+    doctest.testmod(simres)
+    doctest.testmod(texunit)
+    doctest.testmod(util)
+
+    #doctest.testfile('tests.txt')

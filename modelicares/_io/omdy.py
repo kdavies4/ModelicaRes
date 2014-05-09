@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Functions to load data from OpenModelica and Dymola result files
+"""Functions to load results from OpenModelica and Dymola
 """
 
 from collections import namedtuple
@@ -11,6 +11,9 @@ from control.matlab import ss
 from modelicares.util import chars_to_str
 
 # TODO: Add examples/docstrings.
+
+class A(object):
+    pass
 
 def load(cls, fname, constants_only=False):
     """Load Modelica_ simulation results from a MATLAB\ :sup:`®` file in
@@ -33,7 +36,33 @@ def load(cls, fname, constants_only=False):
 
     **Returns:** 'simulation' or 'linearization', depending on the type of
     results.
+
+    **Example:**
+
+    .. code-block:: python
+
+       >>> from modelicares._io.omdy import load
+
+       >>> class A(object):
+       ...     pass
+       >>> a = A()
+
+       >>> load(a, 'examples/ChuaCircuit.mat')
+       'asimulation'
+
+       >>> a._meta # doctest: +ELLIPSIS
+       {'L.p.i': MetaEntry(description='Current flowing into the pin', unit='A', displayUnit='', data_set=1, column=2, negated=False), ..., 'Ro.LossPower': MetaEntry(description='Loss power leaving component via HeatPort', unit='W', displayUnit='', data_set=1, column=5, negated=False)}
+
+       >>> a._values(a._meta['L.v']) # doctest: +ELLIPSIS
+       array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)
+
+       >>> a._times(a._meta['L.v']) # doctest: +ELLIPSIS
+       array([    0.        , ...,  2500.        ], dtype=float32)
+
+       >>> a._unique_times(['L.v', 'C1.v']) # doctest: +ELLIPSIS
+       array([    0.        , ...,  2500.        ], dtype=float32)
     """
+
     # Load the file and check if it contains the expected variables.
     mat = loadmat(fname, chars_as_strings=False)
     try:
@@ -73,7 +102,15 @@ def loadsim(cls, mat, Aclass, constants_only=False):
          description of the variable, unit, and display unit).  *_data* is a
          list of NumPy_ arrays containing the sample times and values.
 
-         Format-dependent helper methods are added as well.
+         Format-dependent helper methods are added as well:
+
+         - :meth:`_values`: Return the values of a variable given its *_meta*
+           entry
+
+         - :meth:`_times`: Return the times of a variable given its _meta entry
+
+         - :meth`_unique_times`: Return a vector of unique sampling times among
+           a set of variables, given their names.
 
     - *mat*: Dictionary of matrices
 
@@ -86,7 +123,9 @@ def loadsim(cls, mat, Aclass, constants_only=False):
          parameters, and variables that don't vary.  If only that information is
          needed, it may save resources to set *constants_only* to *True*.
 
-    There are no return values.
+    There are no return values.  *_meta*, *_data*, :meth:`_values`,
+    :meth:`_times`, :meth`_unique_times`, and  are monkey-patched to the
+    :class:`~modelicares.simres.SimRes` instance (see above).
 
 
     .. _NumPy: http://numpy.scipy.org/
@@ -94,10 +133,13 @@ def loadsim(cls, mat, Aclass, constants_only=False):
     # This performs the task of mfiles/traj/tload.m from the Dymola
     # installation.
 
-    MetaEntry = namedtuple('MetaEntry', ['data_set', 'row', 'negated',
-                                         'description', 'unit', 'displayUnit'])
+    MetaEntry = namedtuple('MetaEntry', ['description', 'unit', 'displayUnit',
+                                         'data_set', 'column', 'negated'])
     """Named tuple class to represent an entry in the meta data"""
-
+    # The first three fields (description, unit, and displayUnit) are standard
+    # for all data formats and are required by SimRes.  The others are specific
+    # to the OpenModelica/Dymola format and are only directly referenced in the
+    # functions below.
 
     def _parse_description(description):
         """Parse the variable description string into description, unit, and
@@ -135,27 +177,7 @@ def loadsim(cls, mat, Aclass, constants_only=False):
                 mat['description'][:, i])
             if data_set == 1 or not constants_only:
                 cls._meta[name] = MetaEntry(data_set=data_set-1,
-                                            row=abs(sign_row)-1,
-                                            negated=sign_row<0,
-                                            description=description,
-                                            unit=unit,
-                                            displayUnit=displayUnit)
-            n_data_sets = max(data_set, n_data_sets)
-        if constants_only:
-            cls._data = [mat['data_1']]
-        else:
-            cls._data = [mat['data_%i' % (i+1)]
-                          for i in range(n_data_sets)]
-    else:
-        for i in range(mat['dataInfo'].shape[0]):
-            name = chars_to_str(mat['name'][i, :])
-            data_set = mat['dataInfo'][i, 0]
-            sign_row = mat['dataInfo'][i, 1]
-            description, unit, displayUnit = _parse_description(
-                mat['description'][i, :])
-            if data_set == 1 or not constants_only:
-                cls._meta[name] = MetaEntry(data_set=data_set-1,
-                                            row=abs(sign_row)-1,
+                                            column=abs(sign_row)-1,
                                             negated=sign_row<0,
                                             description=description,
                                             unit=unit,
@@ -166,33 +188,43 @@ def loadsim(cls, mat, Aclass, constants_only=False):
         else:
             cls._data = [mat['data_%i' % (i+1)].T
                           for i in range(n_data_sets)]
+    else:
+        for i in range(mat['dataInfo'].shape[0]):
+            name = chars_to_str(mat['name'][i, :])
+            data_set = mat['dataInfo'][i, 0]
+            sign_row = mat['dataInfo'][i, 1]
+            description, unit, displayUnit = _parse_description(
+                mat['description'][i, :])
+            if data_set == 1 or not constants_only:
+                cls._meta[name] = MetaEntry(data_set=data_set-1,
+                                            column=abs(sign_row)-1,
+                                            negated=sign_row<0,
+                                            description=description,
+                                            unit=unit,
+                                            displayUnit=displayUnit)
+            n_data_sets = max(data_set, n_data_sets)
+        if constants_only:
+            cls._data = [mat['data_1']]
+        else:
+            cls._data = [mat['data_%i' % (i+1)]
+                          for i in range(n_data_sets)]
     # Note 1: The indices are converted from Modelica (1-based) to Python
     # (0-based).
-    # Note 2:  Dymola 7.4 uses the transposed version, so it's the standard here
-    # (for optimal speed).  Therefore, the "normal" version is transposed, and
-    # _meta[x].row is really the column of variable x.
 
     # Required helper functions
     # -------------------------
-    # Return the description of a variable given its name.
-    cls._description = lambda name: cls._meta[name].description
-    # Return the unit of a variable given its name.
-    cls._unit = lambda name: cls._meta[name].unit
-    # Return the displayUnit of a variable given its name.
-    cls._displayUnit = lambda name: cls._meta[name].displayUnit
-    # Return the times of a variable given its entry.
-    cls._times = lambda entry: cls._data[entry.data_set][0, :]
-    # Return the values of a variable given its entry.
-    cls._values = lambda entry: (-cls._data[entry.data_set][entry.row, :]
+    # Return the values of a variable given its _meta entry.
+    cls._values = lambda entry: (-cls._data[entry.data_set][:, entry.column]
                                  if entry.negated else
-                                 cls._data[entry.data_set][entry.row, :])
+                                 cls._data[entry.data_set][:, entry.column])
+    # Return the times of a variable given its _meta entry.
+    cls._times = lambda entry: cls._data[entry.data_set][:, 0]
     # Return a vector of unique sampling times among a set of variables, given
     # their names.
     cls._unique_times = lambda names: \
-        unique(concatenate([cls._data[data_set][0][:]
+        unique(concatenate([cls._data[data_set][:, 0]
                             for data_set in {cls._meta[name].data_set
                                              for name in names}], 1))
-
 
 def loadlin(cls, mat):
     """Load Modelica_ linearization results from a dictionary in OpenModelica or
@@ -224,7 +256,8 @@ def loadlin(cls, mat):
 
     - *Aclass*: A copy of the `Aclass` or `class` matrix, whichever is present
 
-    There are no return values.
+    There are no return values.  *sys* is monkey-patched to the
+    :class:`~modelicares.linres.LinRes` instance (see above).
     """
     # This performs same task as mfiles/traj/tloadlin.m from the Dymola
     # installation.
@@ -269,4 +302,3 @@ if __name__ == '__main__':
     """Test the contents of this file."""
     import doctest
     doctest.testmod()
-    exit()

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.linres &mdash; ModelicaRes v0.10.0 Documentation</title>
+    <title>modelicares.linres &mdash; ModelicaRes v0.11.x Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.10.0',
+        VERSION:     '0.11.x',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,10 +25,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.10.0 Documentation"
+          title="Search within ModelicaRes v0.11.x Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.10.0 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.11.x Documentation" href="index.html" />
     <link rel="next" title="modelicares.multi" href="multi.html" />
     <link rel="prev" title="modelicares.simres" href="simres.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
@@ -53,7 +53,7 @@
         <li class="right" >
           <a href="simres.html" title="modelicares.simres"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.x Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -61,7 +61,7 @@
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.gif" alt="Logo"/>
             </a></p>
-<h3><a href="index.html">Table Of Contents</a></h3>
+<h3><a href="index.html">Table of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
@@ -70,11 +70,11 @@
 <li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="base.html"><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
 </ul>
 
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
+<div id="searchbox" style="display: none" role="search">
+  <h3><a href="search.html">Search</a></h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
@@ -82,7 +82,6 @@
       <input type="hidden" name="area" value="default" />
     </form>
     <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
     </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
@@ -97,8 +96,7 @@
   <div class="section" id="module-modelicares.linres">
 <span id="modelicares-linres"></span><h1><a class="reference internal" href="#module-modelicares.linres" title="modelicares.linres"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.linres</span></tt></a><a class="headerlink" href="#module-modelicares.linres" title="Permalink to this headline">¶</a></h1>
 <p>Load, analyze, and plot the result of linearizing a <a class="reference external" href="http://www.modelica.org/">Modelica</a> model.</p>
-<p>This module contains one class: <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>.  It relies on <a class="reference external" href="http://sourceforge.net/apps/mediawiki/python-control">python-control</a>,
-which is included in the distribution.</p>
+<p>This module contains one class: <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>.</p>
 <dl class="class">
 <dt id="modelicares.linres.LinRes">
 <em class="property">class </em><tt class="descclassname">modelicares.linres.</tt><tt class="descname">LinRes</tt><big>(</big><em>fname='dslin.mat'</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinRes" title="Permalink to this definition">¶</a></dt>
@@ -109,26 +107,39 @@ those results</p>
 <ul class="simple">
 <li><a class="reference internal" href="#modelicares.linres.LinRes.bode" title="modelicares.linres.LinRes.bode"><tt class="xref py py-meth docutils literal"><span class="pre">bode()</span></tt></a> - Create a Bode plot of the system&#8217;s response</li>
 <li><a class="reference internal" href="#modelicares.linres.LinRes.nyquist" title="modelicares.linres.LinRes.nyquist"><tt class="xref py py-meth docutils literal"><span class="pre">nyquist()</span></tt></a> - Create a Nyquist plot of the system&#8217;s response</li>
+<li><a class="reference internal" href="#modelicares.linres.LinRes.to_tf" title="modelicares.linres.LinRes.to_tf"><tt class="xref py py-meth docutils literal"><span class="pre">to_tf()</span></tt></a> - Return a transfer function given input and output names</li>
 </ul>
-<p>On initialization, load and preprocess a linearized <a class="reference external" href="http://www.modelica.org/">Modelica</a> model
-(MATLAB<sup>®</sup> format).</p>
-<p>The model is in state space:</p>
-<div class="highlight-modelica"><div class="highlight"><pre><span class="nb">der</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">A</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">B</span><span class="o">*</span><span class="n">u</span><span class="p">;</span>
+<p>Attributes:</p>
+<ul>
+<li><p class="first"><tt class="xref py py-meth docutils literal"><span class="pre">dir()</span></tt> - Directory from which the file was loaded</p>
+</li>
+<li><p class="first"><tt class="xref py py-meth docutils literal"><span class="pre">fbase()</span></tt> - Base filename, without the directory or extension</p>
+</li>
+<li><p class="first"><tt class="xref py py-meth docutils literal"><span class="pre">sys()</span></tt> - State-space system as an instance of
+<tt class="xref py py-class docutils literal"><span class="pre">control.StateSpace</span></tt></p>
+<blockquote>
+<div><p>It contains:</p>
+<ul>
+<li><p class="first"><em>A</em>, <em>B</em>, <em>C</em>, <em>D</em>: Matrices of the linear system</p>
+<blockquote>
+<div><div class="highlight-modelica"><div class="highlight"><pre><span class="nb">der</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">A</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">B</span><span class="o">*</span><span class="n">u</span><span class="p">;</span>
      <span class="n">y</span> <span class="o">=</span> <span class="n">C</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">D</span><span class="o">*</span><span class="n">u</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>The linear system is stored as <em>sys</em> within this class.  It is an
-instance of <tt class="xref py py-class docutils literal"><span class="pre">control.StateSpace</span></tt>, which emulates the structure
-of a continuous-time model in MATLAB<sup>®</sup> (e.g., the output of
-<tt class="xref py py-meth docutils literal"><span class="pre">ss()</span></tt> in MATLAB<sup>®</sup>).  It contains:</p>
-<blockquote>
-<div><ul class="simple">
-<li><em>A</em>, <em>B</em>, <em>C</em>, <em>D</em>: Matrices of the linear system</li>
-<li><em>stateName</em>: List of name(s) of the states (x)</li>
-<li><em>inputName</em>: List of name(s) of the inputs (u)</li>
-<li><em>outputName</em>: List of name(s) of the outputs (y)</li>
+</div></blockquote>
+</li>
+<li><p class="first"><em>state_names</em>: List of names of the states (<em>x</em>)</p>
+</li>
+<li><p class="first"><em>input_names</em>: List of names of the inputs (<em>u</em>)</p>
+</li>
+<li><p class="first"><em>output_names</em>: List of names of the outputs (<em>y</em>)</p>
+</li>
 </ul>
 </div></blockquote>
+</li>
+</ul>
+<p>Upon initialization, load <a class="reference external" href="http://www.modelica.org/">Modelica</a> linearization results from a
+file.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><p class="first"><em>fname</em>: Name of the file (may include the path)</p>
@@ -243,7 +254,7 @@ and &#8220;-&#8221; for a solid line.</p>
 <span class="go">Saved examples/PID-bode.png</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/PID-bode.png"><img alt="example for LinRes.bode()" src="_images/PID-bode.png" style="width: 513.1px; height: 335.3px;" /></a>
+<a class="reference internal image-reference" href="_images/PID-bode.png"><img alt="example for LinRes.bode()" src="_images/PID-bode.png" style="width: 567.0px; height: 350.0px;" /></a>
 </dd></dl>
 
 <dl class="method">
@@ -312,7 +323,33 @@ Use &#8216;&#8217; for no title.</p>
 <span class="go">Saved examples/PID-nyquist.png</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/PID-nyquist.png"><img alt="example for LinRes.nyquist()" src="_images/PID-nyquist.png" style="width: 349.3px; height: 328.3px;" /></a>
+<a class="reference internal image-reference" href="_images/PID-nyquist.png"><img alt="example for LinRes.nyquist()" src="_images/PID-nyquist.png" style="width: 567.0px; height: 350.0px;" /></a>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.linres.LinRes.to_tf">
+<tt class="descname">to_tf</tt><big>(</big><em>i_u=None</em>, <em>i_y=None</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinRes.to_tf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a transfer function given input and output names.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><p class="first"><em>i_u</em>: Index or name of the input</p>
+<blockquote>
+<div><p>This must be specified unless the system has only one input.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><em>i_y</em>: Index or name of the output</p>
+<blockquote>
+<div><p>This must be specified unless the system has only one output.</p>
+</div></blockquote>
+</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">LinRes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lin</span> <span class="o">=</span> <span class="n">LinRes</span><span class="p">(</span><span class="s">&#39;examples/PID&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lin</span><span class="o">.</span><span class="n">to_tf</span><span class="p">()</span>
+<span class="go">(array([[  11.,  102.,  200.]]), array([   1.,  100.,    0.]))</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -340,13 +377,12 @@ Use &#8216;&#8217; for no title.</p>
         <li class="right" >
           <a href="simres.html" title="modelicares.simres"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.x Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 30, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+        &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
+      Last updated on May 09, 2014.
     </div>
   </body>
 </html>

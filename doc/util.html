@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>modelicares.base &mdash; ModelicaRes v0.10.0 Documentation</title>
+    <title>modelicares.util &mdash; ModelicaRes v0.11.x Documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.10.0',
+        VERSION:     '0.11.x',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,10 +25,10 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/copybutton.js"></script>
     <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within ModelicaRes v0.10.0 Documentation"
+          title="Search within ModelicaRes v0.11.x Documentation"
           href="_static/opensearch.xml"/>
     <link rel="shortcut icon" href="_static/favicon.ico"/>
-    <link rel="top" title="ModelicaRes v0.10.0 Documentation" href="index.html" />
+    <link rel="top" title="ModelicaRes v0.11.x Documentation" href="index.html" />
     <link rel="prev" title="modelicares.texunit" href="texunit.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
@@ -49,7 +49,7 @@
         <li class="right" >
           <a href="texunit.html" title="modelicares.texunit"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.x Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -57,7 +57,7 @@
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.gif" alt="Logo"/>
             </a></p>
-<h3><a href="index.html">Table Of Contents</a></h3>
+<h3><a href="index.html">Table of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
@@ -66,11 +66,11 @@
 <li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
 </ul>
 
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
+<div id="searchbox" style="display: none" role="search">
+  <h3><a href="search.html">Search</a></h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
@@ -78,7 +78,6 @@
       <input type="hidden" name="area" value="default" />
     </form>
     <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
     </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
@@ -90,93 +89,57 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="module-modelicares.base">
-<span id="modelicares-base"></span><h1><a class="reference internal" href="#module-modelicares.base" title="modelicares.base"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.base</span></tt></a><a class="headerlink" href="#module-modelicares.base" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-modelicares.util">
+<span id="modelicares-util"></span><h1><a class="reference internal" href="#module-modelicares.util" title="modelicares.util"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.util</span></tt></a><a class="headerlink" href="#module-modelicares.util" title="Permalink to this headline">¶</a></h1>
 <p>Classes and functions to help plot and interpret experimental data</p>
 <p><strong>Classes:</strong></p>
 <ul class="simple">
-<li><a class="reference internal" href="#modelicares.base.ArrowLine" title="modelicares.base.ArrowLine"><tt class="xref py py-class docutils literal"><span class="pre">ArrowLine</span></tt></a> - A matplotlib subclass to draw an arrowhead on a line</li>
-<li><a class="reference internal" href="#modelicares.base.Quantity" title="modelicares.base.Quantity"><tt class="xref py py-class docutils literal"><span class="pre">Quantity</span></tt></a> - Named tuple class for a constant physical quantity</li>
+<li><a class="reference internal" href="#modelicares.util.ArrowLine" title="modelicares.util.ArrowLine"><tt class="xref py py-class docutils literal"><span class="pre">ArrowLine</span></tt></a> - A matplotlib subclass to draw an arrowhead on a line</li>
+<li><tt class="xref py py-class docutils literal"><span class="pre">Quantity</span></tt> - Named tuple class for a constant physical quantity</li>
 </ul>
 <p><strong>Functions:</strong></p>
 <ul class="simple">
-<li><a class="reference internal" href="#modelicares.base.add_arrows" title="modelicares.base.add_arrows"><tt class="xref py py-meth docutils literal"><span class="pre">add_arrows()</span></tt></a> - Overlay arrows with annotations on top of a pre-plotted
+<li><a class="reference internal" href="#modelicares.util.add_arrows" title="modelicares.util.add_arrows"><tt class="xref py py-meth docutils literal"><span class="pre">add_arrows()</span></tt></a> - Overlay arrows with annotations on top of a pre-plotted
 line</li>
-<li><a class="reference internal" href="#modelicares.base.add_hlines" title="modelicares.base.add_hlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_hlines()</span></tt></a> - Add horizontal lines to a set of axes with optional
+<li><a class="reference internal" href="#modelicares.util.add_hlines" title="modelicares.util.add_hlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_hlines()</span></tt></a> - Add horizontal lines to a set of axes with optional
 labels</li>
-<li><a class="reference internal" href="#modelicares.base.add_vlines" title="modelicares.base.add_vlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_vlines()</span></tt></a> - Add vertical lines to a set of axes with optional
+<li><a class="reference internal" href="#modelicares.util.add_vlines" title="modelicares.util.add_vlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_vlines()</span></tt></a> - Add vertical lines to a set of axes with optional
 labels</li>
-<li><a class="reference internal" href="#modelicares.base.animate" title="modelicares.base.animate"><tt class="xref py py-meth docutils literal"><span class="pre">animate()</span></tt></a> - Encode a series of PNG images as a MPG movie</li>
-<li><a class="reference internal" href="#modelicares.base.color" title="modelicares.base.color"><tt class="xref py py-meth docutils literal"><span class="pre">color()</span></tt></a> - Plot 2D scalar data on a color axis in 2D Cartesian
+<li><a class="reference internal" href="#modelicares.util.animate" title="modelicares.util.animate"><tt class="xref py py-meth docutils literal"><span class="pre">animate()</span></tt></a> - Encode a series of PNG images as a MPG movie</li>
+<li><a class="reference internal" href="#modelicares.util.chars_to_str" title="modelicares.util.chars_to_str"><tt class="xref py py-meth docutils literal"><span class="pre">chars_to_str()</span></tt></a> - Convert a string array to a string and remove trailing
+whitespace</li>
+<li><a class="reference internal" href="#modelicares.util.color" title="modelicares.util.color"><tt class="xref py py-meth docutils literal"><span class="pre">color()</span></tt></a> - Plot 2D scalar data on a color axis in 2D Cartesian
 coordinates</li>
-<li><a class="reference internal" href="#modelicares.base.closeall" title="modelicares.base.closeall"><tt class="xref py py-meth docutils literal"><span class="pre">closeall()</span></tt></a> - Close all open figures</li>
-<li><a class="reference internal" href="#modelicares.base.convert" title="modelicares.base.convert"><tt class="xref py py-meth docutils literal"><span class="pre">convert()</span></tt></a> - Convert the expression of a physical quantity between units</li>
-<li><a class="reference internal" href="#modelicares.base.expand_path" title="modelicares.base.expand_path"><tt class="xref py py-meth docutils literal"><span class="pre">expand_path()</span></tt></a> - Expand a file path by replacing &#8216;~&#8217; with the user
+<li><a class="reference internal" href="#modelicares.util.closeall" title="modelicares.util.closeall"><tt class="xref py py-meth docutils literal"><span class="pre">closeall()</span></tt></a> - Close all open figures</li>
+<li><a class="reference internal" href="#modelicares.util.convert" title="modelicares.util.convert"><tt class="xref py py-meth docutils literal"><span class="pre">convert()</span></tt></a> - Convert the expression of a physical quantity between units</li>
+<li><a class="reference internal" href="#modelicares.util.expand_path" title="modelicares.util.expand_path"><tt class="xref py py-meth docutils literal"><span class="pre">expand_path()</span></tt></a> - Expand a file path by replacing &#8216;~&#8217; with the user
 directory and makes the path absolute</li>
-<li><a class="reference internal" href="#modelicares.base.flatten_dict" title="modelicares.base.flatten_dict"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_dict()</span></tt></a> - Flatten a nested dictionary</li>
-<li><a class="reference internal" href="#modelicares.base.flatten_list" title="modelicares.base.flatten_list"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_list()</span></tt></a> - Flatten a nested list</li>
-<li><a class="reference internal" href="#modelicares.base.figure" title="modelicares.base.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> - Create a figure and set its label</li>
-<li><a class="reference internal" href="#modelicares.base.get_indices" title="modelicares.base.get_indices"><tt class="xref py py-meth docutils literal"><span class="pre">get_indices()</span></tt></a> - Return the pair of indices that bound a target value in
+<li><a class="reference internal" href="#modelicares.util.flatten_dict" title="modelicares.util.flatten_dict"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_dict()</span></tt></a> - Flatten a nested dictionary</li>
+<li><a class="reference internal" href="#modelicares.util.flatten_list" title="modelicares.util.flatten_list"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_list()</span></tt></a> - Flatten a nested list</li>
+<li><a class="reference internal" href="#modelicares.util.figure" title="modelicares.util.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> - Create a figure and set its label</li>
+<li><a class="reference internal" href="#modelicares.util.get_indices" title="modelicares.util.get_indices"><tt class="xref py py-meth docutils literal"><span class="pre">get_indices()</span></tt></a> - Return the pair of indices that bound a target value in
 a monotonically increasing vector</li>
-<li><a class="reference internal" href="#modelicares.base.get_pow10" title="modelicares.base.get_pow10"><tt class="xref py py-meth docutils literal"><span class="pre">get_pow10()</span></tt></a> - Return the exponent of 10 for which the significand
+<li><a class="reference internal" href="#modelicares.util.get_pow10" title="modelicares.util.get_pow10"><tt class="xref py py-meth docutils literal"><span class="pre">get_pow10()</span></tt></a> - Return the exponent of 10 for which the significand
 of a number is within the range [1, 10)</li>
-<li><a class="reference internal" href="#modelicares.base.get_pow1000" title="modelicares.base.get_pow1000"><tt class="xref py py-meth docutils literal"><span class="pre">get_pow1000()</span></tt></a> - Return the exponent of 1000 for which the
+<li><a class="reference internal" href="#modelicares.util.get_pow1000" title="modelicares.util.get_pow1000"><tt class="xref py py-meth docutils literal"><span class="pre">get_pow1000()</span></tt></a> - Return the exponent of 1000 for which the
 significand of a number is within the range [1, 1000)</li>
-<li><a class="reference internal" href="#modelicares.base.load_csv" title="modelicares.base.load_csv"><tt class="xref py py-meth docutils literal"><span class="pre">load_csv()</span></tt></a> - Load a CSV file into a dictionary</li>
-<li><a class="reference internal" href="#modelicares.base.plot" title="modelicares.base.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a> - Plot 1D scalar data as points and/or line segments in 2D
+<li><a class="reference internal" href="#modelicares.util.load_csv" title="modelicares.util.load_csv"><tt class="xref py py-meth docutils literal"><span class="pre">load_csv()</span></tt></a> - Load a CSV file into a dictionary</li>
+<li><a class="reference internal" href="#modelicares.util.plot" title="modelicares.util.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a> - Plot 1D scalar data as points and/or line segments in 2D
 Cartesian coordinates</li>
-<li><a class="reference internal" href="#modelicares.base.quiver" title="modelicares.base.quiver"><tt class="xref py py-meth docutils literal"><span class="pre">quiver()</span></tt></a> - Plot 2D vector data as arrows in 2D Cartesian coordinates</li>
-<li><a class="reference internal" href="#modelicares.base.save" title="modelicares.base.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> - Save the current figures as images in a format or list of
+<li><a class="reference internal" href="#modelicares.util.quiver" title="modelicares.util.quiver"><tt class="xref py py-meth docutils literal"><span class="pre">quiver()</span></tt></a> - Plot 2D vector data as arrows in 2D Cartesian coordinates</li>
+<li><a class="reference internal" href="#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> - Save the current figures as images in a format or list of
 formats</li>
-<li><a class="reference internal" href="#modelicares.base.saveall" title="modelicares.base.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> - Save all open figures as images in a format or list of
+<li><a class="reference internal" href="#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> - Save all open figures as images in a format or list of
 formats</li>
-<li><a class="reference internal" href="#modelicares.base.setup_subplots" title="modelicares.base.setup_subplots"><tt class="xref py py-meth docutils literal"><span class="pre">setup_subplots()</span></tt></a> - Create an array of subplots and return their axes</li>
-<li><a class="reference internal" href="#modelicares.base.shift_scale_x" title="modelicares.base.shift_scale_x"><tt class="xref py py-meth docutils literal"><span class="pre">shift_scale_x()</span></tt></a> - Apply an offset and a factor as necessary to the x
+<li><a class="reference internal" href="#modelicares.util.setup_subplots" title="modelicares.util.setup_subplots"><tt class="xref py py-meth docutils literal"><span class="pre">setup_subplots()</span></tt></a> - Create an array of subplots and return their axes</li>
+<li><a class="reference internal" href="#modelicares.util.shift_scale_x" title="modelicares.util.shift_scale_x"><tt class="xref py py-meth docutils literal"><span class="pre">shift_scale_x()</span></tt></a> - Apply an offset and a factor as necessary to the x
 axis</li>
-<li><a class="reference internal" href="#modelicares.base.shift_scale_y" title="modelicares.base.shift_scale_y"><tt class="xref py py-meth docutils literal"><span class="pre">shift_scale_y()</span></tt></a> - Apply an offset and a factor as necessary to the y
+<li><a class="reference internal" href="#modelicares.util.shift_scale_y" title="modelicares.util.shift_scale_y"><tt class="xref py py-meth docutils literal"><span class="pre">shift_scale_y()</span></tt></a> - Apply an offset and a factor as necessary to the y
 axis</li>
 </ul>
-<dl class="class">
-<dt id="modelicares.base.Quantity">
-<em class="property">class </em><tt class="descclassname">modelicares.base.</tt><tt class="descname">Quantity</tt><a class="headerlink" href="#modelicares.base.Quantity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Named tuple class for a constant physical quantity</p>
-<p>The factor and then the offset are applied to the number to arrive at the
-quantity expressed in terms of the unit.</p>
-<dl class="method">
-<dt id="modelicares.base.Quantity.__repr__">
-<tt class="descname">__repr__</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.base.Quantity.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a nicely formatted representation string</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="modelicares.base.Quantity.factor">
-<tt class="descname">factor</tt><a class="headerlink" href="#modelicares.base.Quantity.factor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 1</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="modelicares.base.Quantity.number">
-<tt class="descname">number</tt><a class="headerlink" href="#modelicares.base.Quantity.number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 0</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="modelicares.base.Quantity.offset">
-<tt class="descname">offset</tt><a class="headerlink" href="#modelicares.base.Quantity.offset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 2</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="modelicares.base.Quantity.unit">
-<tt class="descname">unit</tt><a class="headerlink" href="#modelicares.base.Quantity.unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for field number 3</p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="function">
-<dt id="modelicares.base.add_arrows">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">add_arrows</tt><big>(</big><em>p, x_locs=[0], xstar_offset=0, ystar_offset=0, lstar=0.05, label='', orientation='tangent', color='r'</em><big>)</big><a class="headerlink" href="#modelicares.base.add_arrows" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.add_arrows">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">add_arrows</tt><big>(</big><em>p, x_locs=[0], xstar_offset=0, ystar_offset=0, lstar=0.05, label='', orientation='tangent', color='r'</em><big>)</big><a class="headerlink" href="#modelicares.util.add_arrows" title="Permalink to this definition">¶</a></dt>
 <dd><p>Overlay arrows with annotations on top of a pre-plotted line.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -208,15 +171,14 @@ the text</li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/add_arrows.pdf</span>
 <span class="go">Saved examples/add_arrows.png</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/add_arrows.png"><img alt="example of add_arrows()" src="_images/add_arrows.png" style="width: 494.2px; height: 303.1px;" /></a>
+<a class="reference internal image-reference" href="_images/add_arrows.png"><img alt="example of add_arrows()" src="_images/add_arrows.png" style="width: 567.0px; height: 350.0px;" /></a>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.add_hlines">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">add_hlines</tt><big>(</big><em>ax=None, positions=[0], labels=[], **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.base.add_hlines" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.add_hlines">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">add_hlines</tt><big>(</big><em>ax=None, positions=[0], labels=[], **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.util.add_hlines" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add horizontal lines to a set of axes with optional labels.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -254,15 +216,14 @@ the text</li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/add_hlines.pdf</span>
 <span class="go">Saved examples/add_hlines.png</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/add_hlines.png"><img alt="example of add_hlines()" src="_images/add_hlines.png" style="width: 494.2px; height: 298.2px;" /></a>
+<a class="reference internal image-reference" href="_images/add_hlines.png"><img alt="example of add_hlines()" src="_images/add_hlines.png" style="width: 567.0px; height: 350.0px;" /></a>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.add_vlines">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">add_vlines</tt><big>(</big><em>ax=None, positions=[0], labels=[], **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.base.add_vlines" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.add_vlines">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">add_vlines</tt><big>(</big><em>ax=None, positions=[0], labels=[], **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.util.add_vlines" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add vertical lines to a set of axes with optional labels.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -300,15 +261,14 @@ the text</li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/add_vlines.pdf</span>
 <span class="go">Saved examples/add_vlines.png</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/add_vlines.png"><img alt="example of add_vlines()" src="_images/add_vlines.png" style="width: 494.2px; height: 298.2px;" /></a>
+<a class="reference internal image-reference" href="_images/add_vlines.png"><img alt="example of add_vlines()" src="_images/add_vlines.png" style="width: 567.0px; height: 350.0px;" /></a>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.animate">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">animate</tt><big>(</big><em>imagebase='_tmp'</em>, <em>fname='animation'</em>, <em>fps=10</em>, <em>clean=False</em><big>)</big><a class="headerlink" href="#modelicares.base.animate" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.animate">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">animate</tt><big>(</big><em>imagebase='_tmp'</em>, <em>fname='animation'</em>, <em>fps=10</em>, <em>clean=False</em><big>)</big><a class="headerlink" href="#modelicares.util.animate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Encode a series of PNG images as a MPG movie.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -335,29 +295,42 @@ following command: <tt class="docutils literal"><span class="pre">sudo</span> <s
 function is not supported on Windows.</p>
 </div>
 <p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">rand</span>
-<span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">rand</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="c"># Create the frames.</span>
-<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>  <span class="c"># 50 frames</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">&#39;nearest&#39;</span><span class="p">)</span>
-    <span class="n">fname</span> <span class="o">=</span> <span class="s">&#39;_tmp</span><span class="si">%02d</span><span class="s">.png&#39;</span> <span class="o">%</span> <span class="n">i</span>
-    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Saving frame </span><span class="si">%i</span><span class="s"> (file </span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
-    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="c"># doctest: +ELLIPSIS</span>
+<span class="go"># Create the frames.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>  <span class="c"># 50 frames</span>
+<span class="gp">... </span>    <span class="n">ax</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rand</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">interpolation</span><span class="o">=</span><span class="s">&#39;nearest&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">fname</span> <span class="o">=</span> <span class="s">&#39;_tmp</span><span class="si">%02d</span><span class="s">.png&#39;</span> <span class="o">%</span> <span class="n">i</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="s">&quot;Saving frame </span><span class="si">%i</span><span class="s"> (file </span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">fname</span><span class="p">))</span>
+<span class="gp">... </span>    <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> 
+<span class="go">&lt;matplotlib.image.AxesImage object at 0x...&gt;</span>
+<span class="go">Saving frame 0 (file _tmp00.png)</span>
+<span class="gp">...</span>
+<span class="go">&lt;matplotlib.image.AxesImage object at 0x...&gt;</span>
+<span class="go">Saving frame 49 (file _tmp49.png)</span>
 
-<span class="c"># Assemble the frames into a movie.</span>
-<span class="n">animate</span><span class="p">(</span><span class="n">clean</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="go"># Assemble the frames into a movie.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">animate</span><span class="p">(</span><span class="n">fname</span><span class="o">=</span><span class="s">&quot;examples/animation&quot;</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> 
+<span class="gp">...</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.closeall">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">closeall</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.base.closeall" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.chars_to_str">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">chars_to_str</tt><big>(</big><em>str_arr</em>, <em>codec='latin-1'</em><big>)</big><a class="headerlink" href="#modelicares.util.chars_to_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a string array to a string.</p>
+<p>Remove trailing whitespace and null characters.  Encode using <em>codec</em>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="modelicares.util.closeall">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">closeall</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.util.closeall" title="Permalink to this definition">¶</a></dt>
 <dd><p>Close all open figures.</p>
 <p>This is a shortcut for the following:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib._pylab_helpers</span> <span class="kn">import</span> <span class="n">Gcf</span>
@@ -367,8 +340,8 @@ function is not supported on Windows.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.color">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">color</tt><big>(</big><em>ax</em>, <em>c</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.base.color" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.color">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">color</tt><big>(</big><em>ax</em>, <em>c</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.util.color" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot 2D scalar data on a color axis in 2D Cartesian coordinates.</p>
 <p>This uses a uniform grid.</p>
 <p><strong>Arguments:</strong></p>
@@ -379,34 +352,31 @@ function is not supported on Windows.</p>
 <tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.imshow()</span></tt></li>
 </ul>
 <p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">figure</span><span class="p">(</span><span class="s">&#39;examples/color&#39;</span><span class="p">)</span> 
-<span class="go">&lt;matplotlib.figure.Figure object at 0x...&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="s">&#39;examples/color&#39;</span><span class="p">)</span> 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span>
 <span class="gp">... </span>                   <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">color</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> 
 <span class="go">&lt;matplotlib.image.AxesImage object at 0x...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/color.pdf</span>
 <span class="go">Saved examples/color.png</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/color.png"><img alt="example of color()" src="_images/color.png" style="width: 471.8px; height: 298.9px;" /></a>
+<a class="reference internal image-reference" href="_images/color.png"><img alt="example of color()" src="_images/color.png" style="width: 567.0px; height: 350.0px;" /></a>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.convert">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">convert</tt><big>(</big><em>quantity</em><big>)</big><a class="headerlink" href="#modelicares.base.convert" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.convert">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">convert</tt><big>(</big><em>quantity</em><big>)</big><a class="headerlink" href="#modelicares.util.convert" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert the expression of a physical quantity between units.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
-<li><em>quantity</em>: Instance of <a class="reference internal" href="#modelicares.base.Quantity" title="modelicares.base.Quantity"><tt class="xref py py-class docutils literal"><span class="pre">Quantity</span></tt></a></li>
+<li><em>quantity</em>: Instance of <tt class="xref py py-class docutils literal"><span class="pre">Quantity</span></tt></li>
 </ul>
 <p><strong>Example:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
@@ -420,8 +390,8 @@ function is not supported on Windows.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.expand_path">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">expand_path</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#modelicares.base.expand_path" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.expand_path">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">expand_path</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#modelicares.util.expand_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Expand a file path by replacing &#8216;~&#8217; with the user directory and making
 the path absolute.</p>
 <p><strong>Example:</strong></p>
@@ -429,15 +399,15 @@ the path absolute.</p>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">expand_path</span><span class="p">(</span><span class="s">&#39;~/Documents&#39;</span><span class="p">)</span> 
 <span class="go">&#39;...Documents&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c"># where ... is &#39;/home/user/&#39; on Linux or &#39;C:\Users\user\&#39; on</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># where ... is &#39;/home/user/&#39; on Linux or &#39;C:\Users\user&#39; on</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c"># Windows (and &quot;user&quot; is the user id).</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.figure">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">figure</tt><big>(</big><em>label=''</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.base.figure" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.figure">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">figure</tt><big>(</big><em>label=''</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.util.figure" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a figure and set its label.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -448,19 +418,19 @@ the path absolute.</p>
 <p><strong>Example:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="s">&quot;velocity_vs_time&quot;</span><span class="p">)</span> 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">getp</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="s">&#39;label&#39;</span><span class="p">)</span>
-<span class="go">u&#39;velocity_vs_time&#39;</span>
+<span class="go">&#39;velocity_vs_time&#39;</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The <em>label</em> property is used as the base filename in the
-<a class="reference internal" href="#modelicares.base.saveall" title="modelicares.base.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> method.</p>
+<a class="reference internal" href="#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> method.</p>
 </div>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.flatten_dict">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">flatten_dict</tt><big>(</big><em>d</em>, <em>parent_key=''</em>, <em>separator='.'</em><big>)</big><a class="headerlink" href="#modelicares.base.flatten_dict" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.flatten_dict">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">flatten_dict</tt><big>(</big><em>d</em>, <em>parent_key=''</em>, <em>separator='.'</em><big>)</big><a class="headerlink" href="#modelicares.util.flatten_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flatten a nested dictionary.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -478,8 +448,8 @@ names</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.flatten_list">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">flatten_list</tt><big>(</big><em>l</em>, <em>ltypes=(&lt;type 'list'&gt;</em>, <em>&lt;type 'tuple'&gt;)</em><big>)</big><a class="headerlink" href="#modelicares.base.flatten_list" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.flatten_list">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">flatten_list</tt><big>(</big><em>l</em>, <em>ltypes=(&lt;type 'list'&gt;</em>, <em>&lt;type 'tuple'&gt;)</em><big>)</big><a class="headerlink" href="#modelicares.util.flatten_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flatten a nested list.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -500,8 +470,8 @@ names</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.get_indices">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">get_indices</tt><big>(</big><em>x</em>, <em>target</em><big>)</big><a class="headerlink" href="#modelicares.base.get_indices" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.get_indices">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">get_indices</tt><big>(</big><em>x</em>, <em>target</em><big>)</big><a class="headerlink" href="#modelicares.util.get_indices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the pair of indices that bound a target value in a monotonically
 increasing vector.</p>
 <p><strong>Arguments:</strong></p>
@@ -511,15 +481,15 @@ increasing vector.</p>
 </ul>
 <p><strong>Example:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">get_indices</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="mf">1.6</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_indices</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mf">1.6</span><span class="p">)</span>
 <span class="go">(1, 2)</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.get_pow10">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">get_pow10</tt><big>(</big><em>num</em><big>)</big><a class="headerlink" href="#modelicares.base.get_pow10" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.get_pow10">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">get_pow10</tt><big>(</big><em>num</em><big>)</big><a class="headerlink" href="#modelicares.util.get_pow10" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the exponent of 10 for which the significand of a number is
 within the range [1, 10).</p>
 <p><strong>Example:</strong></p>
@@ -530,8 +500,8 @@ within the range [1, 10).</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.get_pow1000">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">get_pow1000</tt><big>(</big><em>num</em><big>)</big><a class="headerlink" href="#modelicares.base.get_pow1000" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.get_pow1000">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">get_pow1000</tt><big>(</big><em>num</em><big>)</big><a class="headerlink" href="#modelicares.util.get_pow1000" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the exponent of 1000 for which the significand of a number is
 within the range [1, 1000).</p>
 <p><strong>Example:</strong></p>
@@ -542,8 +512,8 @@ within the range [1, 1000).</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.load_csv">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">load_csv</tt><big>(</big><em>fname</em>, <em>header_row=0</em>, <em>first_data_row=None</em>, <em>types=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.base.load_csv" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.load_csv">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">load_csv</tt><big>(</big><em>fname</em>, <em>header_row=0</em>, <em>first_data_row=None</em>, <em>types=None</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.util.load_csv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load a CSV file into a dictionary.</p>
 <p>The strings from the header row are used as dictionary keys.</p>
 <p><strong>Arguments:</strong></p>
@@ -579,8 +549,8 @@ made to cast each column into <tt class="xref py py-class docutils literal"><spa
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.plot">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">plot</tt><big>(</big><em>y, x=None, ax=None, label=None, color=['b', 'g', 'r', 'c', 'm', 'y', 'k'], marker=None, dashes=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)], **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.base.plot" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.plot">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">plot</tt><big>(</big><em>y, x=None, ax=None, label=None, color=['b', 'g', 'r', 'c', 'm', 'y', 'k'], marker=None, dashes=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)], **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.util.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot 1D scalar data as points and/or line segments in 2D Cartesian
 coordinates.</p>
 <p>This is similar to <tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt> (and actually calls that
@@ -644,27 +614,24 @@ that will be used sequentially</p>
 </ul>
 <p><strong>Returns:</strong> List of <tt class="xref py py-class docutils literal"><span class="pre">matplotlib.lines.Line2D</span></tt> objects</p>
 <p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">figure</span><span class="p">(</span><span class="s">&#39;examples/plot&#39;</span><span class="p">)</span> 
-<span class="go">&lt;matplotlib.figure.Figure object at 0x...&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="s">&#39;examples/plot&#39;</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plot</span><span class="p">([</span><span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span> 
 <span class="go">[[&lt;matplotlib.lines.Line2D object at 0x...&gt;], [&lt;matplotlib.lines.Line2D object at 0x...&gt;]]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/plot.pdf</span>
 <span class="go">Saved examples/plot.png</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/plot.png"><img alt="example of plot()" src="_images/plot.png" style="width: 477.4px; height: 303.1px;" /></a>
+<a class="reference internal image-reference" href="_images/plot.png"><img alt="example of plot()" src="_images/plot.png" style="width: 567.0px; height: 350.0px;" /></a>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.quiver">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">quiver</tt><big>(</big><em>ax</em>, <em>u</em>, <em>v</em>, <em>x=None</em>, <em>y=None</em>, <em>pad=0.05</em>, <em>pivot='middle'</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.base.quiver" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.quiver">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">quiver</tt><big>(</big><em>ax</em>, <em>u</em>, <em>v</em>, <em>x=None</em>, <em>y=None</em>, <em>pad=0.05</em>, <em>pivot='middle'</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.util.quiver" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot 2D vector data as arrows in 2D Cartesian coordinates.</p>
 <p>Uses a uniform grid.</p>
 <p><strong>Arguments:</strong></p>
@@ -694,15 +661,14 @@ field)</li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/quiver.pdf</span>
 <span class="go">Saved examples/quiver.png</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/quiver.png"><img alt="example of quiver()" src="_images/quiver.png" style="width: 471.8px; height: 298.2px;" /></a>
+<a class="reference internal image-reference" href="_images/quiver.png"><img alt="example of quiver()" src="_images/quiver.png" style="width: 567.0px; height: 350.0px;" /></a>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.save">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">save</tt><big>(</big><em>formats=['pdf', 'png'], fbase='1'</em><big>)</big><a class="headerlink" href="#modelicares.base.save" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.save">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">save</tt><big>(</big><em>formats=['pdf', 'png'], fbase='1'</em><big>)</big><a class="headerlink" href="#modelicares.util.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the current figures as images in a format or list of formats.</p>
 <p>The directory and base filenames are taken from the <em>label</em> property of the
 figures.  A slash (&#8220;/&#8221;) can be used as a path separator, even if the
@@ -720,7 +686,7 @@ property is empty, then a directory dialog is opened to chose a directory.</p>
 </ul>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">In general, <a class="reference internal" href="#modelicares.base.save" title="modelicares.base.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> should be called before
+<p class="last">In general, <a class="reference internal" href="#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> should be called before
 <tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.show()</span></tt> so that the figure(s) are still present
 in memory.</p>
 </div>
@@ -728,25 +694,25 @@ in memory.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">figure</span><span class="p">(</span><span class="s">&#39;temp_plot&#39;</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">figure</span><span class="p">(</span><span class="s">&#39;examples/temp&#39;</span><span class="p">)</span> 
 <span class="go">&lt;matplotlib.figure.Figure object at 0x...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> 
 <span class="go">[&lt;matplotlib.lines.Line2D object at 0x...&gt;]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
-<span class="go">Saved temp_plot.pdf</span>
-<span class="go">Saved temp_plot.png</span>
+<span class="go">Saved examples/temp.pdf</span>
+<span class="go">Saved examples/temp.png</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The <a class="reference internal" href="#modelicares.base.figure" title="modelicares.base.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> method can be used to directly create a
+<p class="last">The <a class="reference internal" href="#modelicares.util.figure" title="modelicares.util.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> method can be used to directly create a
 figure with a label.</p>
 </div>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.saveall">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">saveall</tt><big>(</big><em>formats=['pdf', 'png']</em><big>)</big><a class="headerlink" href="#modelicares.base.saveall" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.saveall">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">saveall</tt><big>(</big><em>formats=['pdf', 'png']</em><big>)</big><a class="headerlink" href="#modelicares.util.saveall" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save all open figures as images in a format or list of formats.</p>
 <p>The directory and base filenames are taken from the <em>label</em> property of the
 figures.  A slash (&#8220;/&#8221;) can be used as a path separator, even if the
@@ -759,7 +725,7 @@ In that case, the figures are saved as a sequence of numbers.</p>
 </ul>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">In general, <a class="reference internal" href="#modelicares.base.saveall" title="modelicares.base.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> should be called before
+<p class="last">In general, <a class="reference internal" href="#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> should be called before
 <tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.show()</span></tt> so that the figure(s) are still present
 in memory.</p>
 </div>
@@ -767,25 +733,25 @@ in memory.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">figure</span><span class="p">(</span><span class="s">&#39;temp_plot&#39;</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">figure</span><span class="p">(</span><span class="s">&#39;examples/temp&#39;</span><span class="p">)</span> 
 <span class="go">&lt;matplotlib.figure.Figure object at 0x...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> 
 <span class="go">[&lt;matplotlib.lines.Line2D object at 0x...&gt;]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
-<span class="go">Saved temp_plot.pdf</span>
-<span class="go">Saved temp_plot.png</span>
+<span class="go">Saved examples/temp.pdf</span>
+<span class="go">Saved examples/temp.png</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The <a class="reference internal" href="#modelicares.base.figure" title="modelicares.base.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> method can be used to directly create a
+<p class="last">The <a class="reference internal" href="#modelicares.util.figure" title="modelicares.util.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> method can be used to directly create a
 figure with a label.</p>
 </div>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.setup_subplots">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">setup_subplots</tt><big>(</big><em>n_plots</em>, <em>n_rows</em>, <em>title=''</em>, <em>subtitles=None</em>, <em>label='multiplot'</em>, <em>xlabel=''</em>, <em>xticklabels=None</em>, <em>xticks=None</em>, <em>ylabel=''</em>, <em>yticklabels=None</em>, <em>yticks=None</em>, <em>ctype=None</em>, <em>clabel=''</em>, <em>margin_left=0.125</em>, <em>margin_right=0.09999999999999998</em>, <em>margin_bottom=0.1</em>, <em>margin_top=0.125</em>, <em>margin_cbar=0.2</em>, <em>wspace=0.1</em>, <em>hspace=0.25</em>, <em>cbar_space=0.1</em>, <em>cbar_width=0.05</em><big>)</big><a class="headerlink" href="#modelicares.base.setup_subplots" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.setup_subplots">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">setup_subplots</tt><big>(</big><em>n_plots</em>, <em>n_rows</em>, <em>title=''</em>, <em>subtitles=None</em>, <em>label='multiplot'</em>, <em>xlabel=''</em>, <em>xticklabels=None</em>, <em>xticks=None</em>, <em>ylabel=''</em>, <em>yticklabels=None</em>, <em>yticks=None</em>, <em>ctype=None</em>, <em>clabel=''</em>, <em>margin_left=0.125</em>, <em>margin_right=0.09999999999999998</em>, <em>margin_bottom=0.1</em>, <em>margin_top=0.125</em>, <em>margin_cbar=0.2</em>, <em>wspace=0.1</em>, <em>hspace=0.25</em>, <em>cbar_space=0.1</em>, <em>cbar_width=0.05</em><big>)</big><a class="headerlink" href="#modelicares.util.setup_subplots" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an array of subplots and return their axes.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -871,23 +837,21 @@ on the left column)</p>
 <li>Number of columns of subplots</li>
 </ol>
 <p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">setup_subplots</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&#39;examples/setup_subplots&#39;</span><span class="p">)</span> 
 <span class="go">([&lt;matplotlib.axes...AxesSubplot object at 0x...&gt;, &lt;matplotlib.axes...AxesSubplot object at 0x...&gt;, &lt;matplotlib.axes...AxesSubplot object at 0x...&gt;, &lt;matplotlib.axes...AxesSubplot object at 0x...&gt;], 2)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/setup_subplots.pdf</span>
 <span class="go">Saved examples/setup_subplots.png</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/setup_subplots.png"><img alt="example of setup_subplots()" src="_images/setup_subplots.png" style="width: 483.0px; height: 303.1px;" /></a>
+<a class="reference internal image-reference" href="_images/setup_subplots.png"><img alt="example of setup_subplots()" src="_images/setup_subplots.png" style="width: 567.0px; height: 350.0px;" /></a>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.shift_scale_x">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">shift_scale_x</tt><big>(</big><em>ax</em>, <em>eagerness=0.325</em><big>)</big><a class="headerlink" href="#modelicares.base.shift_scale_x" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.shift_scale_x">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">shift_scale_x</tt><big>(</big><em>ax</em>, <em>eagerness=0.325</em><big>)</big><a class="headerlink" href="#modelicares.util.shift_scale_x" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply an offset and a factor as necessary to the x axis.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -904,8 +868,7 @@ before the label will be recentered</p>
 </li>
 </ul>
 <p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">texunit</span> <span class="kn">import</span> <span class="n">label_number</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -933,15 +896,14 @@ before the label will be recentered</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/shift_scale_x.pdf</span>
 <span class="go">Saved examples/shift_scale_x.png</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/shift_scale_x.png"><img alt="example of shift_scale_x()" src="_images/shift_scale_x.png" style="width: 488.6px; height: 333.9px;" /></a>
+<a class="reference internal image-reference" href="_images/shift_scale_x.png"><img alt="example of shift_scale_x()" src="_images/shift_scale_x.png" style="width: 567.0px; height: 350.0px;" /></a>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.base.shift_scale_y">
-<tt class="descclassname">modelicares.base.</tt><tt class="descname">shift_scale_y</tt><big>(</big><em>ax</em>, <em>eagerness=0.325</em><big>)</big><a class="headerlink" href="#modelicares.base.shift_scale_y" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.shift_scale_y">
+<tt class="descclassname">modelicares.util.</tt><tt class="descname">shift_scale_y</tt><big>(</big><em>ax</em>, <em>eagerness=0.325</em><big>)</big><a class="headerlink" href="#modelicares.util.shift_scale_y" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply an offset and a factor as necessary to the y axis.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -958,8 +920,7 @@ before the label will be recentered</p>
 </li>
 </ul>
 <p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">texunit</span> <span class="kn">import</span> <span class="n">label_number</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
 
@@ -990,15 +951,14 @@ before the label will be recentered</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/shift_scale_y.pdf</span>
 <span class="go">Saved examples/shift_scale_y.png</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/shift_scale_y.png"><img alt="example of shift_scale_y()" src="_images/shift_scale_y.png" style="width: 527.1px; height: 335.3px;" /></a>
+<a class="reference internal image-reference" href="_images/shift_scale_y.png"><img alt="example of shift_scale_y()" src="_images/shift_scale_y.png" style="width: 567.0px; height: 350.0px;" /></a>
 </dd></dl>
 
 <dl class="class">
-<dt id="modelicares.base.ArrowLine">
-<em class="property">class </em><tt class="descclassname">modelicares.base.</tt><tt class="descname">ArrowLine</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.base.ArrowLine" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.util.ArrowLine">
+<em class="property">class </em><tt class="descclassname">modelicares.util.</tt><tt class="descname">ArrowLine</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.util.ArrowLine" title="Permalink to this definition">¶</a></dt>
 <dd><p>A matplotlib subclass to draw an arrowhead on a line</p>
 <p>Initialize the line and arrow.</p>
 <p><strong>Arguments:</strong></p>
@@ -1014,8 +974,7 @@ before the label will be recentered</p>
 <tt class="xref py py-class docutils literal"><span class="pre">matplotlib.lines.Line2D</span></tt></li>
 </ul>
 <p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="s">&#39;examples/ArrowLine&#39;</span><span class="p">)</span> 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">autoscale_on</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
@@ -1024,7 +983,7 @@ before the label will be recentered</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">line</span> <span class="o">=</span> <span class="n">ArrowLine</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s">&#39;-&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">arrow</span><span class="o">=</span><span class="s">&#39;&gt;&#39;</span><span class="p">,</span>
 <span class="gp">... </span>                 <span class="n">arrowsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">add_line</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> 
-<span class="go">&lt;modelicares.base.ArrowLine object at 0x...&gt;</span>
+<span class="go">&lt;modelicares.util.ArrowLine object at 0x...&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 <span class="go">(-3, 3)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
@@ -1032,10 +991,9 @@ before the label will be recentered</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
 <span class="go">Saved examples/ArrowLine.pdf</span>
 <span class="go">Saved examples/ArrowLine.png</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/ArrowLine.png"><img alt="example of ArrowLine" src="_images/ArrowLine.png" style="width: 476.0px; height: 303.1px;" /></a>
+<a class="reference internal image-reference" href="_images/ArrowLine.png"><img alt="example of ArrowLine" src="_images/ArrowLine.png" style="width: 567.0px; height: 350.0px;" /></a>
 </dd></dl>
 
 </div>
@@ -1058,13 +1016,12 @@ before the label will be recentered</p>
         <li class="right" >
           <a href="texunit.html" title="modelicares.texunit"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.x Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 30, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+        &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
+      Last updated on May 09, 2014.
     </div>
   </body>
 </html>

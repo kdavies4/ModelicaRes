@@ -1,42 +1,43 @@
-Changelog
-=========
+Change log
+==========
 
-0.11.x (2014-*-**) -- Updates:
+The releases are numbered according to the `Semantic Versioning specification
+<http://semver.org>`_.
 
-   - Eliminated dependence on :mod:`easygui`; using :mod:`PyQt4` instead
-   - Added :meth:`~modelicares.simres.SimRes.get_arrays_wi_times`.
+v0.11.0_ (2014-*-**) -- Updates:
+
+   - Removed :class:`~modelicares.util.Quantity` and
+     :meth:`~modelicares.util.convert` from :mod:`~modelicares.util`
+   - Eliminated the dependence on :mod:`easygui`; using :mod:`PyQt4` instead.
    - Removed :meth:`~modelicares.simres.SimRes.get_indices_wi_times` and added
      :meth:`~modelicares.simres.SimRes.get_values_wi_times`.
    - :meth:`~modelicares.simres.SimRes.get_values`,
      :meth:`~modelicares.simres.SimRes.get_times`, and
      :meth:`~modelicares.simres.SimRes.get_arrays` now return all samples when
-     *i*=*None*.
+     *i* = *None*.
    - Added :meth:`~modelicares.linres.LinRes.to_tf` to return a selected
      transfer function from the state-space representation.
    - Added :meth:`~modelicares.simres.SimRes.to_pandas` to return a
-     `Pandas DataFrame`_ of selected data.
+     `pandas DataFrame`_ of selected data.
    - Encoding all variable names as 'latin-1' and stripping null strings from
      the end.
+   - Added :meth:`~modelicares.simres.SimRes.get_arrays_wi_times`.
    - Changed the action for :meth:`~modelicares.simres.SimRes.__call__`
      and :meth:`~modelicares.simres.SimRes.__getitem__`
      from :meth:`~modelicares.simres.SimRes.get_values`
-     to :meth:`~modelicares.simres.SimRes.get_tuples`.
-   - Added a function (*f*) as an argument to
-     :meth:`~modelicares.simres.SimRes.get_tuples`
-   - :meth:`~modelicares.simres.SimRes.get_tuples` now returns list(s) of time,
-     value tuples rather than tuples of vectors of times and values
-   - Renamed :meth:`~modelicares.simres.SimRes.get_tuple`
-     to :meth:`~modelicares.simres.SimRes.get_tuples`
+     to :meth:`~modelicares.simres.SimRes.get_arrays`.
+   - Removed :meth:`~modelicares.simres.SimRes.get_tuple`
+     and added :meth:`~modelicares.simres.SimRes.get_arrays` intead.
    - Added pattern matching to :meth:`~modelicares.simres.SimRes.nametree`.
    - Merged :meth:`~modelicares.exps.modelica_array` and
      :meth:`~modelicares.exps.modelica_boolean` into a new function,
      :meth:`~modelicares.exps.modelica_str`.
-   - Renamed :meth:`~modelicares.base` to :meth:`~modelicares.util` for clarity.
+   - Renamed :mod:`~modelicares.base` to :mod:`~modelicares.util` for clarity.
      It is a package of utility functions and classes, not base classes.
    - Removed :meth:`~modelicares.simres.merge_times`.  It is not used internally
      and probably is not useful externally.
 
-0.10.0 (2014-4-30) -- Updates:
+v0.10.0_ (2014-4-30) -- Updates:
 
    - Added :meth:`~modelicares.simres.SimRes.get_tuple` to get time, value
      tuples for variables.
@@ -57,7 +58,7 @@ Changelog
      regular expressions.  By default, :meth:`~modelicares.simres.SimRes.names`
      still returns all variable names.
 
-0.9.0 (2014-3-17) -- Updates:
+v0.9.0_ (2014-3-17) -- Updates:
 
    - Improved support for `IPython <http://ipython.org/>`_.
    - Added dependence on `easygui <http://easygui.sourceforge.net/>`_.
@@ -79,15 +80,15 @@ Changelog
    - Updated expected example output.
    - Updated *matplotlibrc*.
 
-0.8.2 (2013-10-16) -- Updates:
+v0.8.2_ (2013-10-16) -- Updates:
 
    - Fixed installation issues (:mod:`setup.py`).
 
-0.8.1 (2013-8-6) -- Updates:
+v0.8.1_ (2013-8-6) -- Updates:
 
    - Added missing :mod:`bin/loadres` script.
 
-0.8.0 (2013-8-6) -- Updates:
+v0.8.0_ (2013-8-6) -- Updates:
 
    - Updated :doc:`matplotlibrc` (default formatting).
    - Added patterns to :meth:`~modelicares.exps.write_params` to match more
@@ -109,7 +110,7 @@ Changelog
    - Removed the :mod:`simres.info` submodule.  It is better to use the methods
      of :class:`~modelicares.simres.SimRes` directly.
 
-0.7.2 (2013-7-9) -- Updates:
+v0.7.2_ (2013-7-9) -- Updates:
 
    - When a variable cannot be found, suggestions are now given.  See the
      example in :meth:`~modelicares.simres.SimRes.get_values`.
@@ -119,11 +120,11 @@ Changelog
    - :meth:`~modelicares.exps.write_script` now writes scripts that are more
      readable.
 
-0.7.1 (2013-7-7) -- Updates:
+v0.7.1_ (2013-7-7) -- Updates:
 
    - Added missing files to :doc:`MANIFEST`.
 
-0.7.0 (2013-7-7) -- Updates:
+v0.7.0_ (2013-7-7) -- Updates:
 
    - Added :meth:`~modelicares.multi.multibode` and
      :meth:`~modelicares.multi.multinyquist` to create Bode and Nyquist diagrams
@@ -140,7 +141,7 @@ Changelog
      function from :mod:`~modelicares.exps.doe` to that argument.
    - Square axes are now the default for Nyquist plots.
 
-0.6.2 (2013-7-4) -- Updates:
+v0.6.2_ (2013-7-4) -- Updates:
 
    - Updated `python-control <http://sourceforge.net/apps/mediawiki/python-control>`_
      to 0.6c.  The *mark* argument has been removed from
@@ -159,11 +160,11 @@ Changelog
    - Added methods from :class:`~modelicares.simres.Info` to :mod:`simres.info`
      submodule.
 
-0.6.1 (2013-7-2) -- Updates:
+v0.6.1_ (2013-7-2) -- Updates:
 
    - Fixed :doc:`README.txt`.
 
-0.6.0 (2013-7-2) -- Updates:
+v0.6.0_ (2013-7-2) -- Updates:
 
    - Added :meth:`~modelicares.base.save` to save the current figure.
    - Added *use_paren* option to :meth:`~modelicares.simres.SimRes.plot`.
@@ -171,7 +172,7 @@ Changelog
      instead of special renaming scheme.
    - Improved organization of the *examples* folder.
 
-0.5.2 (2013-6-30) -- Updates:
+v0.5.2_ (2013-6-30) -- Updates:
 
    - Fixed error so that by default
      :meth:`~modelicares.simres.SimRes.get_values` and
@@ -179,31 +180,51 @@ Changelog
      time.
    - Added function to scale time.
 
-0.5.1 (2013-6-18) -- Updates:
+v0.5.1_ (2013-6-18) -- Updates:
 
    - Fixed errors in :meth:`~modelicares.base.load_csv`.
 
-0.5 (2013-6-5) -- Updates:
+v0.5_ (2013-6-5) -- Updates:
 
    - Updated :doc:`README.txt`.
 
-0.4 (2012-12-10) -- Updates:
+v0.4_ (2012-12-10) -- Updates:
 
    - Added default of *label* = '' to :meth:`~modelicares.base.figure`.
    - Updated documentation for Windows.
    - Added check for Python version (currently requires 2.7).
 
-0.3 (2012-12-4) -- Updates:
+v0.3_ (2012-12-4) -- Updates:
 
    - Added support for Windows.  :mod:`~modelicares.aux` is now
      :mod:`~modelicares.base`.
 
-0.2 (2012-11-20) -- Updates:
+v0.2_ (2012-11-20) -- Updates:
 
    - Fixed bug when file or folder selection is canceled.
    - Updated documentation.
 
-0.1 (2012-11-8) -- Initial release
+v0.1_ (2012-11-8) -- Initial release
 
+
+.. _v0.11.0: https://github.com/kdavies4/ModelicaRes/archive/v0.11.0.zip
+.. _v0.10.0: https://github.com/kdavies4/ModelicaRes/archive/v0.10.0.zip
+.. _v0.9.0: https://github.com/kdavies4/ModelicaRes/archive/v0.9.0.zip
+.. _v0.8.2: https://github.com/kdavies4/ModelicaRes/archive/v0.8.2.zip
+.. _v0.8.1: https://github.com/kdavies4/ModelicaRes/archive/v0.8.1.zip
+.. _v0.8.0: https://github.com/kdavies4/ModelicaRes/archive/v0.8.0.zip
+.. _v0.7.2: https://github.com/kdavies4/ModelicaRes/archive/v0.7.2.zip
+.. _v0.7.1: https://github.com/kdavies4/ModelicaRes/archive/v0.7.1.zip
+.. _v0.7.0: https://github.com/kdavies4/ModelicaRes/archive/v0.7.0.zip
+.. _v0.6.2: https://github.com/kdavies4/ModelicaRes/archive/v0.6.2.zip
+.. _v0.6.1: https://github.com/kdavies4/ModelicaRes/archive/v0.6.1.zip
+.. _v0.6.0: https://github.com/kdavies4/ModelicaRes/archive/v0.6.0.zip
+.. _v0.5.2: https://github.com/kdavies4/ModelicaRes/archive/v0.5.2.zip
+.. _v0.5.1: https://github.com/kdavies4/ModelicaRes/archive/v0.5.1.zip
+.. _v0.5: https://github.com/kdavies4/ModelicaRes/archive/v0.5.zip
+.. _v0.4: https://github.com/kdavies4/ModelicaRes/archive/v0.4.zip
+.. _v0.3: https://github.com/kdavies4/ModelicaRes/archive/v0.3.zip
+.. _v0.2: https://github.com/kdavies4/ModelicaRes/archive/v0.2.zip
+.. _v0.1: https://github.com/kdavies4/ModelicaRes/archive/v0.1.zip
 
 .. _Pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame

@@ -32,7 +32,7 @@ cp -f build/html/* ./
 rm -r _images
 cp -r build/html/_images _images
 rm -r _sources
-cp build/html/_sources ./
+cp -rf build/html/_sources .
 git add _images
 git add _sources
 git add *.html

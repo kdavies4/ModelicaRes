@@ -12,3 +12,4 @@
 >>> print(sim.get_tuple('L.i')) # doctest: +ELLIPSIS
 (array([    0.   ,     5.   , ...,  2500.   ], dtype=float32), array([ 0.   ,  0.015, ...,  2.049], dtype=float32))
 
+# TODO: Add test for bin/loadres.  If not, place warning here.

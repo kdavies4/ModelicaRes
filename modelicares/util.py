@@ -7,8 +7,6 @@
 
 - :class:`ArrowLine` - A matplotlib subclass to draw an arrowhead on a line
 
-- :class:`Quantity` - Named tuple class for a constant physical quantity
-
 
 **Functions:**
 
@@ -30,8 +28,6 @@
   coordinates
 
 - :meth:`closeall` - Close all open figures
-
-- :meth:`convert` - Convert the expression of a physical quantity between units
 
 - :meth:`expand_path` - Expand a file path by replacing '~' with the user
   directory and makes the path absolute
@@ -79,7 +75,6 @@ __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
 import os
-import wx
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -91,6 +86,8 @@ from math import floor
 from matplotlib import rcParams
 from matplotlib.lines import Line2D
 from matplotlib.cbook import iterable
+from matplotlib._pylab_helpers import Gcf
+from PyQt4.QtGui import QApplication, QFileDialog
 
 
 def chars_to_str(str_arr, codec='latin-1'):
@@ -103,7 +100,7 @@ def chars_to_str(str_arr, codec='latin-1'):
 def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
                lstar=0.05, label='',
                orientation='tangent', color='r'):
-    """Overlay arrows with annotations on top of a pre-plotted line.
+    """Overlay arrows with annotations on a pre-plotted line.
 
     **Arguments:**
 
@@ -495,32 +492,10 @@ def closeall():
        >>> from matplotlib._pylab_helpers import Gcf
        >>> Gcf.destroy_all()
     """
-    from matplotlib._pylab_helpers import Gcf
     Gcf.destroy_all()
     #for manager in Gcf.get_all_fig_managers():
     #    manager.canvas.figure.close()
     #plt.close("all")
-
-def convert(quantity):
-    """Convert the expression of a physical quantity between units.
-
-    **Arguments:**
-
-    - *quantity*: Instance of :class:`Quantity`
-
-    **Example:**
-
-    .. code-block:: python
-
-       >>> from modelicares import *
-
-       >>> T = 293.15 # Temperature in K
-       >>> T_degC = convert(Quantity(T, factor=1, offset=-273.15, unit='C'))
-       >>> print(str(T) + " K is " + str(T_degC) + " degC.")
-       293.15 K is 20.0 degC.
-    """
-    return quantity.number*quantity.factor + quantity.offset
-
 
 def expand_path(path):
     """Expand a file path by replacing '~' with the user directory and making
@@ -1071,6 +1046,14 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
     plt.axis([l-pad*dx, r+pad*dx, b-pad*dy, t+pad*dy])
     return p
 
+def _get_directory(message="Choose a directory for the images"):
+    """Return a directory chosen by the user.
+    """
+    app = QApplication([])
+    getDir = QFileDialog().getExistingDirectory
+    chosen_directory = str(getDir(None, message))
+    app.exit(0)
+
 def save(formats=['pdf', 'png'], fbase='1'):
     """Save the current figures as images in a format or list of formats.
 
@@ -1113,12 +1096,6 @@ def save(formats=['pdf', 'png'], fbase='1'):
     .. Note::  The :meth:`figure` method can be used to directly create a
        figure with a label.
     """
-    from wx import DirSelector, App
-
-    # Initialize a dummy wx.App instance.  Dialogs can only be called after
-    # this is done [http://warp.byu.edu/site/content/131, accessed 10/9/2012].
-    app = App()
-
     # If formats is a singleton, turn it into a list.
     if not type(formats) is list:
         formats = [formats,]
@@ -1130,12 +1107,7 @@ def save(formats=['pdf', 'png'], fbase='1'):
     (directory, fbase_fig) = os.path.split(plt.getp(fig, 'label'))
     if not fbase_fig:
         if not directory:
-            # Initialize a dummy wx.App instance.  Dialogs can only be
-            # called after this is done
-            # [http://code.google.com/p/easywx/, accessed 10/7/2012].
-            #app = App()
-            directory = DirSelector("Choose a directory for the images.",
-                                    defaultPath=os.path.join(*['..']*4))
+            directory = _get_directory()
             if not directory:
                 return
     else:
@@ -1186,13 +1158,6 @@ def saveall(formats=['pdf', 'png']):
     .. Note::  The :meth:`figure` method can be used to directly create a
        figure with a label.
     """
-    from matplotlib._pylab_helpers import Gcf
-    from wx import DirSelector, App
-
-    # Initialize a dummy wx.App instance.  Dialogs can only be called after
-    # this is done [http://warp.byu.edu/site/content/131, accessed 10/9/2012].
-    app = App()
-
     # If formats is a singleton, turn it into a list.
     if not type(formats) is list:
         formats = [formats,]
@@ -1209,14 +1174,8 @@ def saveall(formats=['pdf', 'png']):
             fbase = str(i)
             i += 1
             if not directory:
-                if chosen_directory is None:
-                    # Initialize a dummy wx.App instance.  Dialogs can only be
-                    # called after this is done
-                    # [http://code.google.com/p/easywx/, accessed 10/7/2012].
-                    #app = App()
-                    chosen_directory = DirSelector(
-                        "Choose a directory for the images.",
-                        defaultPath=os.path.join(*['..']*4))
+                if not chosen_directory:
+                    chosen_directory = _get_directory()
                     if not chosen_directory:
                         return
                 directory = chosen_directory

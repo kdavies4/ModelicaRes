@@ -1,20 +1,28 @@
 #!/usr/bin/python
-"""Set up the ModelicaRes module.
+"""Set up the ModelicaRes package.
 
 See README.txt for instructions.
 """
 
-from distutils.core import setup
 from glob import glob
 
+from distutils.core import setup
+#try:
+#    from setuptools import setup
+#except ImportError:
+#    try:
+#        from setuptools.core import setup
+#    except ImportError:
+#        from distutils.core import setup
+
 setup(name='ModelicaRes',
-      version="0.10.x",
+      version="0.11.x",
       description='Utilities to set up and analyze Modelica simulation experiments',
       long_description=open('README.txt').read(),
       author='Kevin Davies',
       author_email='kdavies4@gmail.com',
       url='http://kdavies4.github.io/ModelicaRes/',
-      packages=['modelicares', 'modelicares.exps'],
+      packages=['modelicares', 'modelicares.exps', 'modelicares._io'],
       scripts=glob('bin/*'),
       classifiers=['Development Status :: 4 - Beta',
                    'Operating System :: POSIX :: Linux',
@@ -30,10 +38,12 @@ setup(name='ModelicaRes',
       keywords=['Modelica', 'plot', 'results', 'simulation', 'experiment',
                 'Dymola', 'matplotlib', 'pandas'],
       provides=['modelicares'],
-      requires=['python (==2.7)', 'numpy', 'scipy (>=0.10.0)',
-                'matplotlib (>=1.1.0)', 'pandas', 'PyQt4', 'wxPython',
-                'control'],
-      # Note: This package may run with scipy as early as 0.7.0.  However, the
-      # control package seems to need scipy >= 0.10.0 but does not stipulate the
-      # version.
+      install_requires=['numpy', 'scipy>=0.10.0', 'matplotlib>=1.3.1', 'pandas',
+                        'wxPython', 'control'],
+      requires=['numpy', 'scipy (>=0.10.0)', 'matplotlib (>=1.3.1)', 'pandas',
+                'PyQt4', 'wxPython', 'control'],
+      platforms='any',
       )
+      # This package may run with scipy as early as 0.7.0.  However, the control
+      # package seems to need scipy >= 0.10.0 but does not stipulate the
+      # version.

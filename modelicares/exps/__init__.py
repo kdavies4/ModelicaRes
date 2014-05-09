@@ -848,10 +848,7 @@ class ParamDict(dict):
 
 
 if __name__ == '__main__':
-    """Test the contents of this file."""
+    """Test the contents of this module."""
     import doctest
-    import modelicares.exps # TODO: Use relative import?
-
     doctest.testmod()
-    doctest.testmod(exps.doe) # TODO: Use relative import?
-    exit()
+    doctest.testmod(doe)
