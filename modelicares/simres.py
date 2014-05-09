@@ -30,7 +30,7 @@ from difflib import get_close_matches
 from pandas import DataFrame
 
 from . import util
-from .gui import Browser
+from ._gui import Browser
 from .texunit import unit2tex, label_number
 
 class SimRes(object):
@@ -119,7 +119,7 @@ class SimRes(object):
            >>> sim = SimRes('examples/ChuaCircuit.mat')
         """
 
-        from .dsom import load
+        from ._io.omdy import load
         assert load(self, fname, constants_only) == 'simulation', \
             '"%s" appears to be a linearization result.  ' \
             'Use modelicares.linres.LinRes instead.' % fname

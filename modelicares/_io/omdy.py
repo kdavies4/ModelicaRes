@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""TODO: Add description
+"""Functions to load data from OpenModelica and Dymola result files
 """
 
 from collections import namedtuple
@@ -56,7 +56,7 @@ def load(cls, fname, constants_only=False):
         print result_type
         raise TypeError('File "%s" does not appear to be a simulation '
                         'or linearization result.' % fname)
-  
+
 def loadsim(cls, mat, Aclass, constants_only=False):
     """Load Modelica_ results from a MATLAB\ :sup:`®` file.
 
@@ -74,18 +74,18 @@ cls: TODO
 
     The results are stored within this class as *_meta* and *_data*.
     *_meta* is a dictionary with keywords that correspond to each variable
-    name.  The entries are a tuple of (index to the data array, Boolean 
-    indicating if the values are negated, column of the data array, 
+    name.  The entries are a tuple of (index to the data array, Boolean
+    indicating if the values are negated, column of the data array,
     description of the variable, base unit, and display unit).  *_data* is a
     list of numpy arrays containing the trajectories.
 
     **Returns:** *None* if the file contains linearization results rather
     than simulation results.
     """
-    # This performs the task of mfiles/traj/tload.m from the Dymola 
+    # This performs the task of mfiles/traj/tload.m from the Dymola
     # installation.
 
-    MetaEntry = namedtuple('MetaEntry', ['data_set', 'row', 'negated', 
+    MetaEntry = namedtuple('MetaEntry', ['data_set', 'row', 'negated',
                                          'description', 'unit', 'displayUnit'])
     """Named tuple class to represent an entry in the meta data"""
 
@@ -160,7 +160,7 @@ cls: TODO
     # Note 1: The indices are converted from Modelica (1-based) to Python
     # (0-based).
     # Note 2:  Dymola 7.4 uses the transposed version, so it is the standard
-    # here (for optimal speed).  Therefore, the "normal" version is 
+    # here (for optimal speed).  Therefore, the "normal" version is
     # transposed, and _meta[x].row is really the column of variable x.
 
     # Required helper functions
@@ -177,11 +177,11 @@ cls: TODO
     cls._values = lambda entry: (-cls._data[entry.data_set][entry.row, :]
                                  if entry.negated else
                                  cls._data[entry.data_set][entry.row, :])
-    # Return a vector of unique sampling times among a set of variables, given 
-    # their names
+    # Return a vector of unique sampling times among a set of variables, given
+    # their names.
     cls._unique_times = lambda names: \
         unique(concatenate([cls._data[data_set][0][:]
-                            for data_set in {cls._meta[name].data_set 
+                            for data_set in {cls._meta[name].data_set
                                              for name in names}], 1))
 
 

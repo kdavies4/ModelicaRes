@@ -21,8 +21,8 @@ from scipy.signal import ss2tf
 from matplotlib.cbook import iterable
 from control.matlab import ss
 
-from modelicares.freqplot import bode_plot, nyquist_plot
-from modelicares.util import figure, add_hlines, add_vlines, chars_to_str
+from ._freqplot import bode_plot, nyquist_plot
+from .util import figure, add_hlines, add_vlines, chars_to_str
 
 class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze
@@ -47,8 +47,8 @@ class LinRes(object):
 
     def __init__(self, fname='dslin.mat'):
         """On initialization, load and preprocess a linearized Modelica_ model
-        (MATLAB\ :sup:`®` format).  
-        
+        (MATLAB\ :sup:`®` format).
+
         The model is in state space:
 
         .. code-block:: modelica
@@ -83,7 +83,7 @@ class LinRes(object):
            >>> lin = LinRes('examples/PID')
         """
 
-        from .dsom import load
+        from ._io.omdy import load
         assert load(self, fname) == 'linearization', \
             '"%s" appears to be a simulation result.  ' \
             'Use modelicares.simres.SimRes instead.' % fname
@@ -128,7 +128,7 @@ class LinRes(object):
     def _to_siso(self, i_u, i_y):
         """Return a SISO system given input and output indices.
         """
-        return ss(self.sys.A,         self.sys.B[:, i_u], 
+        return ss(self.sys.A,         self.sys.B[:, i_u],
                   self.sys.C[i_y, :], self.sys.D[i_y, i_u])
 
     def to_tf(self, i_u=None, i_y=None):
@@ -176,9 +176,9 @@ class LinRes(object):
                 i_y = self.sys.output_names.index(i_y)
             except ValueError:
                 raise(ValueError('The output "%s" is invalid.' % i_y))
-             
+
         # Return the TF.
-        return ss2tf(self.sys.A,         self.sys.B, 
+        return ss2tf(self.sys.A,         self.sys.B,
                      self.sys.C[i_y, :], self.sys.D[i_y, :], input=i_u)
 
     def bode(self, axes=None, pairs=None, label='bode',
@@ -296,13 +296,13 @@ class LinRes(object):
 
         # Create the plots.
         for i, (i_u, i_y) in enumerate(pairs):
-            bode_plot(self._to_siso(i_u, i_y), 
+            bode_plot(self._to_siso(i_u, i_y),
                       label='$Y_{%i}/U_{%i}$' % (i_y, i_u),
                       Hz=True, color=colors[np.mod(i, n_colors)], axes=axes,
                       style=styles[np.mod(i, n_styles)], **kwargs)
-            # Note: controls.freqplot.bode() is currently only implemented for
+            # Note: ._freqplot.bode() is currently only implemented for
             # SISO systems.
-            # 5/23/11: Since controls.freqplot.bode() already uses subplots for
+            # 5/23/11: Since ._freqplot.bode() already uses subplots for
             # the magnitude and phase plots, it would be difficult to modify
             # the code to put the Bode plots of a MIMO system into an array of
             # subfigures like MATLAB does.
@@ -417,10 +417,10 @@ class LinRes(object):
 
         # Create the plots.
         for i, (i_u, i_y) in enumerate(pairs):
-            nyquist_plot(self._to_siso(i_u, i_y), 
+            nyquist_plot(self._to_siso(i_u, i_y),
                          label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u), mark=False,
                          color=colors[np.mod(i, n_colors)], ax=ax, **kwargs)
-            # Note: controls.freqplot.nyquist() is currently only implemented
+            # Note: ._freqplot.nyquist() is currently only implemented
             # for SISO systems.
 
         # Decorate and finish.
