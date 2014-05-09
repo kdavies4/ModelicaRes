@@ -27,13 +27,13 @@ setup(name='ModelicaRes',
                    'Topic :: Utilities',
                    ],
       license='BSD-compatible (see LICENSE.txt)',
-      keywords=['Modelica', 'plot', 'results', 'simulation', 'experiment', 
+      keywords=['Modelica', 'plot', 'results', 'simulation', 'experiment',
                 'Dymola', 'matplotlib', 'pandas'],
       provides=['modelicares'],
-      requires=['python (==2.7)', 'numpy', 'scipy (>=0.10.0)', 
-                'matplotlib (>=1.1.0)', 'pandas', 'wxPython', 'easygui', 
+      requires=['python (==2.7)', 'numpy', 'scipy (>=0.10.0)',
+                'matplotlib (>=1.1.0)', 'pandas', 'PyQt4', 'wxPython',
                 'control'],
-      # Note: This package may run with scipy as early as 0.7.0.  However, the 
-      # control package seems to need scipy >= 0.10.0 but does not stipulate the 
+      # Note: This package may run with scipy as early as 0.7.0.  However, the
+      # control package seems to need scipy >= 0.10.0 but does not stipulate the
       # version.
       )

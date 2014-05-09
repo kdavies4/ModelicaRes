@@ -60,12 +60,13 @@ if __name__ == '__main__':
     """Test the contents of this module.
     """
     import doctest
-    import modelicares
+    import modelicares # TODO: Use relative import?
+
+# TODO: reenable
 
     doctest.testfile('tests.txt')
     #doctest.testmod(modelicares.util)
     #doctest.testmod(modelicares.exps)
-    #doctest.testmod(modelicares.exps.doe)
     #doctest.testmod(modelicares.linres)
     #doctest.testmod(modelicares.multi)
     #doctest.testmod(modelicares.simres)

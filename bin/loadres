@@ -13,7 +13,7 @@ classes and functions of ModelicaRes are directly available as well.
 
 **Setup and example:**
 
-Copy this script (*loadres*) to the current directory along with the *examples* 
+Copy this script (*loadres*) to the current directory along with the *examples*
 folder.  Then execute the following command:
 
 .. code-block:: sh
@@ -25,8 +25,7 @@ folder.  Then execute the following command:
    Simulation results have been loaded into sims[0] through sims[1].
    A linearization result has been loaded into lin.
 
-where '...' depends on the local system.  If this fails, install the `easygui 
-package <http://easygui.sourceforge.net/>`_.
+where '...' depends on the local system.
 
 
 .. _Modelica: http://www.modelica.org/
@@ -44,39 +43,51 @@ import os
 import time
 
 from sys import argv
-from easygui import fileopenbox, diropenbox
+from PyQt4.QtGui import QApplication, QFileDialog, QMessageBox, QPushButton
 
 from modelicares import SimRes, LinRes, multiload
 from modelicares.gui import boolbox
 
 if __name__ == '__main__':
-    DEFAULT_PATH = '../examples'
+    default_path = os.path.expanduser("~/Documents/Modelica")
 
-    def _local_exit(t=0.5):
+    def delayed_exit(t=0.5):
         """Exit with a message and a delay."""
         print("Exiting...")
         time.sleep(t)
         exit()
 
-    #choice = MessageDialog()
-
     # Determine the file location(s).
     if len(argv) == 1:
-        choice = boolbox("Open one file or all files from a folder?",
-                         title="File or folder", choices=('File', 'Folder'),
-                         default=0)
-        if choice == 0: # File
-            loc = fileopenbox(msg="Choose a data file.",
-                              default=os.path.join(DEFAULT_PATH, "*.mat"),
-                              filetypes=['*.mat'])
-            print loc
-        elif choice == 1: # Folder
-            loc = diropenbox("Choose a folder with data file(s).",
-                             default=DEFAULT_PATH)
+        app = QApplication([])
+
+        # Choose to choose a file or folder.
+        # TODO: Make the buttons appear in the order File, Folder, Cancel.
+        msgBox = QMessageBox()
+        msgBox.setText("Do you want to open one file\nor all files from a folder?")
+        File = QPushButton("File")
+        Folder = QPushButton("Folder")
+        msgBox.addButton(Folder, QMessageBox.AcceptRole)
+        msgBox.addButton(File, QMessageBox.AcceptRole)
+        msgBox.addButton(QMessageBox.Cancel)
+        msgBox.setDefaultButton(File)
+        msgBox.exec_()
+        choice = msgBox.clickedButton()
+
+        if choice == File:
+            getFile = QFileDialog().getOpenFileName
+            loc = str(getFile(None, "Choose a Modelica results file",
+                              default_path, "*.mat"))
+        elif choice == Folder:
+            getDir = QFileDialog().getExistingDirectory
+            loc = str(getDir(None, "Choose a folder with Modelica results",
+                             default_path))
         else:
-            _local_exit()
+            app.exit()
+            delayed_exit()
+        app.exit()
         if not loc:
-            _local_exit()
+            delayed_exit()
     #elif argv[1] == '--test':
     #    import shelldoctest
     #    shelldoctest.testmod()
@@ -104,7 +115,7 @@ if __name__ == '__main__':
               "lins[%i]." % (n_lins-1))#, end="")
     elif n_sims == 0:
         print("No files were loaded.")
-        _local_exit()
+        delayed_exit()
 
     # Open the IPython or standard Python interpreter.
     #    http://writeonly.wordpress.com/2008/09/08/embedding-a-python-shell-in-a-python-script/,

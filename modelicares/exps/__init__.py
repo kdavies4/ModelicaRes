@@ -34,18 +34,18 @@ experiments.  Finally, the generator is passed to the :meth:`write_script` or
 
 **Functions:**
 
-- :meth:`gen_experiments` - Return a generator for a set of simulation 
+- :meth:`gen_experiments` - Return a generator for a set of simulation
   experiments using permutation or simple element-wise grouping
 
 - :meth:`modelica_str` - Express a Python variable as a Modelica string
 
-- :meth:`read_params` - Read parameter values from an initialization or final 
+- :meth:`read_params` - Read parameter values from an initialization or final
   values file
 
-- :meth:`run_models` - Run Modelica_ models via pairs of executables and 
+- :meth:`run_models` - Run Modelica_ models via pairs of executables and
   initialization files (not yet implemented)
 
-- :meth:`write_params` - Write parameter values to a simulation initialization 
+- :meth:`write_params` - Write parameter values to a simulation initialization
   file
 
 - :meth:`write_script` - Write a Modelica_ script to run simulations
@@ -274,7 +274,7 @@ def modelica_str(x):
         return str(x)
 
 def read_params(names, fname='dsin.txt'):
-    """Read parameter values from an initialization or final values file (e.g., 
+    """Read parameter values from an initialization or final values file (e.g.,
     dsin.txt or dsfinal.txt).
 
     **Arguments:**
@@ -447,7 +447,7 @@ simspecs = [SimSpec(model + "(L(L=%s), C1(C=%s), C2(C=%s))" % params,
 
 
 def write_params(params, fname='dsin.txt'):
-    """Write parameter values to a simulation initialization file (e.g., 
+    """Write parameter values to a simulation initialization file (e.g.,
     dsin.txt).
 
     **Arguments:**
@@ -850,5 +850,8 @@ class ParamDict(dict):
 if __name__ == '__main__':
     """Test the contents of this file."""
     import doctest
+    import modelicares.exps # TODO: Use relative import?
+
     doctest.testmod()
+    doctest.testmod(exps.doe) # TODO: Use relative import?
     exit()

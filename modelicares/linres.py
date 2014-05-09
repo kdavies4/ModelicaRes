@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 """Load, analyze, and plot the result of linearizing a Modelica_ model.
 
-This module contains one class: :class:`LinRes`.  It relies on python-control_,
-which is included in the distribution.
+This module contains one class: :class:`LinRes`.
 
 .. _Modelica: http://www.modelica.org/
 .. _python-control: http://sourceforge.net/apps/mediawiki/python-control
@@ -42,32 +41,28 @@ class LinRes(object):
 
     - :meth:`fbase` - Base filename, without the directory or extension
 
-    - :meth:`ss` - State-space system created from :meth:`control.matlab.ss`
+    - :meth:`sys` - State-space system as an instance of
+      :class:`control.StateSpace`
+
+         It contains:
+
+         - *A*, *B*, *C*, *D*: Matrices of the linear system
+
+              .. code-block:: modelica
+
+                 der(x) = A*x + B*u;
+                      y = C*x + D*u;
+
+         - *state_names*: List of names of the states (*x*)
+
+         - *input_names*: List of names of the inputs (*u*)
+
+         - *output_names*: List of names of the outputs (*y*)
     """
 
     def __init__(self, fname='dslin.mat'):
-        """On initialization, load and preprocess a linearized Modelica_ model
-        (MATLAB\ :sup:`®` format).
-
-        The model is in state space:
-
-        .. code-block:: modelica
-
-             der(x) = A*x + B*u;
-                  y = C*x + D*u;
-
-        The linear system is stored as *sys* within this class.  It is an
-        instance of :class:`control.StateSpace`, which emulates the structure
-        of a continuous-time model in MATLAB\ :sup:`®` (e.g., the output of
-        :meth:`ss` in MATLAB\ :sup:`®`).  It contains:
-
-           - *A*, *B*, *C*, *D*: Matrices of the linear system
-
-           - *state_names*: List of names of the states (x)
-
-           - *input_names*: List of names of the inputs (u)
-
-           - *output_names*: List of names of the outputs (y)
+        """Upon initialization, load Modelica_ linearization results from a
+        file.
 
         **Arguments:**
 

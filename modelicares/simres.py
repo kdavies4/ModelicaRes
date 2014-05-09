@@ -96,8 +96,7 @@ class SimRes(object):
     """
 
     def __init__(self, fname='dsres.mat', constants_only=False):
-        """On initialization, load Modelica_ simulation results from a
-        MATLAB\ :sup:`®` file in Dymola\ :sup:`®` format.
+        """Upon initialization, load Modelica_ simulation results from a file.
 
         **Arguments:**
 
@@ -110,7 +109,7 @@ class SimRes(object):
 
              The first data table typically contains all of the constants,
              parameters, and variables that don't vary.  If only that
-             information is needed, it may save time and memory to set
+             information is needed, it may save resources to set
              *constants_only* to *True*.
 
         **Example:**

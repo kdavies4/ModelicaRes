@@ -10,28 +10,29 @@ from control.matlab import ss
 
 from modelicares.util import chars_to_str
 
+# TODO: Add examples/docstrings.
 
 def load(cls, fname, constants_only=False):
-    """Load a Dymosim or OpenModelica result from *fname*.
+    """Load Modelica_ simulation results from a MATLAB\ :sup:`®` file in
+    OpenModelica or Dymola\ :sup:`®` format.
 
-       The result may be of a simulation or linearization.
+    **Arguments:**
 
-        TODO: On initialization, load Modelica_ simulation results from a
-        MATLAB\ :sup:`®` file in Dymola\ :sup:`®` format.
+    - *cls*: Instance of a :class:`~modelicares.simres.SimRes` or
+      :class:`~modelicares.simres.SimRes` class
 
-        **Arguments:**
+         The data and supporting methods will be attached to this instance.
 
-        - *fname*: Name of the file (may include the path)
+    - *fname*: Name of the results file (may include the path)
 
-         The file extension ('.mat') is optional.
+         This may be from a simulation or linearization.  The file extension
+         ('.mat') is optional.
 
     - *constants_only*: *True* to load only the variables from the first data
-      table
+      matrix, if the result is from a simulation
 
-         The first data table typically contains all of the constants,
-         parameters, and variables that don't vary.  If only that
-         information is needed, it may save time and memory to set
-         *constants_only* to *True*.
+    **Returns:** 'simulation' or 'linearization', depending on the type of
+    results.
     """
     # Load the file and check if it contains the expected variables.
     mat = loadmat(fname, chars_as_strings=False)
@@ -58,29 +59,37 @@ def load(cls, fname, constants_only=False):
                         'or linearization result.' % fname)
 
 def loadsim(cls, mat, Aclass, constants_only=False):
-    """Load Modelica_ results from a MATLAB\ :sup:`®` file.
+    """Load Modelica_ simulation results from a dictionary in OpenModelica or
+    Dymola\ :sup:`®` format.
 
     **Arguments:**
 
-cls: TODO
+    - *cls*: Instance of a :class:`~modelicares.simres.SimRes` class
 
-    - *constants_only*: *True*, if only the variables from the first data
-      table should be loaded
+         The results are stored within *cls* as *_meta* and *_data*.  *_meta* is
+         a dictionary where the keywords are the variable names.  The entries
+         are a tuple of (index to the data array, row or column of the data
+         array, a Boolean variable indicating if the values are negated,
+         description of the variable, unit, and display unit).  *_data* is a
+         list of NumPy_ arrays containing the sample times and values.
 
-        The first data table typically contains all of the constants,
-        parameters, and variables that don't vary.  If only that information
-        is needed, it may save time and memory to set *constants_only* to
-        *True*.
+         Format-dependent helper methods are added as well.
 
-    The results are stored within this class as *_meta* and *_data*.
-    *_meta* is a dictionary with keywords that correspond to each variable
-    name.  The entries are a tuple of (index to the data array, Boolean
-    indicating if the values are negated, column of the data array,
-    description of the variable, base unit, and display unit).  *_data* is a
-    list of numpy arrays containing the trajectories.
+    - *mat*: Dictionary of matrices
 
-    **Returns:** *None* if the file contains linearization results rather
-    than simulation results.
+    - *Aclass*: A copy of the `Aclass` or `class` matrix, whichever is present
+
+    - *constants_only*: *True* to load only the variables from the first data
+      matrix
+
+         The first data matrix usually contains all of the constants,
+         parameters, and variables that don't vary.  If only that information is
+         needed, it may save resources to set *constants_only* to *True*.
+
+    There are no return values.
+
+
+    .. _NumPy: http://numpy.scipy.org/
     """
     # This performs the task of mfiles/traj/tload.m from the Dymola
     # installation.
@@ -91,8 +100,8 @@ cls: TODO
 
 
     def _parse_description(description):
-        """Parse the variable description string into (description, unit,
-        displayUnit).
+        """Parse the variable description string into description, unit, and
+        displayUnit.
         """
         description = chars_to_str(description)[0:-1]
         try:
@@ -159,9 +168,9 @@ cls: TODO
                           for i in range(n_data_sets)]
     # Note 1: The indices are converted from Modelica (1-based) to Python
     # (0-based).
-    # Note 2:  Dymola 7.4 uses the transposed version, so it is the standard
-    # here (for optimal speed).  Therefore, the "normal" version is
-    # transposed, and _meta[x].row is really the column of variable x.
+    # Note 2:  Dymola 7.4 uses the transposed version, so it's the standard here
+    # (for optimal speed).  Therefore, the "normal" version is transposed, and
+    # _meta[x].row is really the column of variable x.
 
     # Required helper functions
     # -------------------------
@@ -186,19 +195,36 @@ cls: TODO
 
 
 def loadlin(cls, mat):
-    """TODO update: Load a linearized Modelica_ model from *fname*.
+    """Load Modelica_ linearization results from a dictionary in OpenModelica or
+    Dymola\ :sup:`®` format.
 
-    TODO update: See :meth:`__init__` for details about the file format.
+    **Arguments:**
 
-cls: TODO
+    - *cls*: Instance of a :class:`~modelicares.linres.LinRes` class
 
-    TODO update: Returns *None* if the file contains simulation results rather than
-    linearization results.  Otherwise, it raises an error.
+         The state-space system is stored within *cls* as *sys*---an instance of
+         :class:`control.StateSpace`
 
-    See :meth:`__init__` for details about the file format.
+         It contains:
 
-    Returns *None* if the file contains simulation results rather than
-    linearization results.  Otherwise, it raises an error.
+         - *A*, *B*, *C*, *D*: Matrices of the linear system
+
+              .. code-block:: modelica
+
+                 der(x) = A*x + B*u;
+                      y = C*x + D*u;
+
+         - *state_names*: List of names of the states (*x*)
+
+         - *input_names*: List of names of the inputs (*u*)
+
+         - *output_names*: List of names of the outputs (*y*)
+
+    - *mat*: Dictionary of matrices
+
+    - *Aclass*: A copy of the `Aclass` or `class` matrix, whichever is present
+
+    There are no return values.
     """
     # This performs same task as mfiles/traj/tloadlin.m from the Dymola
     # installation.
@@ -237,3 +263,10 @@ cls: TODO
     cls.sys.state_names = [chars_to_str(xuyName[i]) for i in range(n_x)]
     cls.sys.input_names = [chars_to_str(xuyName[i]) for i in range(n_x, n_x+n_u)]
     cls.sys.output_names = [chars_to_str(xuyName[i]) for i in range(n_x+n_u, n_x+n_u+n_y)]
+
+
+if __name__ == '__main__':
+    """Test the contents of this file."""
+    import doctest
+    doctest.testmod()
+    exit()
