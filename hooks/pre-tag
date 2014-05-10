@@ -1,0 +1,62 @@
+#!/bin/bash
+# Release this package before tag.
+
+# Confirm continue
+echo
+cat < notes-before-tag.txt
+echo
+read -r -p 'Do you want to continue (y/n)? ' choice
+if [[ "$choice" != "Y" && "$choice" != "y" ]]; then
+    echo aborting...
+    exit
+fi
+
+# Build and install.
+python setup.py build
+sudo python setup.py install
+
+# Run the doc tests and recreate the example images.
+bash 00-test.sh
+cd examples
+bash 00-crop-png.sh
+cd ..
+
+# Make the local documentation.
+cd doc
+python make.py html
+python make.py latex
+
+# Copy the HTML and PDF documentation to the root of the doc folder.
+rm *.html
+cp -f build/html/* ./
+rm -r _images
+cp -r build/html/_images _images
+rm -r _sources
+cp -rf build/html/_sources .
+git add _images
+git add _sources
+git add *.html
+git add *.inv
+git add *.js
+cp -f build/latex/ModelicaRes.pdf ./
+cd ..
+
+# Make a distributable copy.
+python setup.py sdist --formats=gztar,zip
+# Use the zip command to change all line endings to Windows format.
+name=`python setup.py --fullname`
+cd dist
+rm $name.zip
+tar -xf $name.tar.gz
+zip -rl $name.zip $name
+rm -r $name
+cd ..
+
+# Make the web documentation.
+git commit -am "Auto-updated documentation"
+branch=`git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3` # Original branch
+git checkout gh-pages
+bash 00-make-gh-pages.sh
+git checkout $branch
+
+cat < notes-after-tag.txt

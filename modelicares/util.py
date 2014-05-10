@@ -7,8 +7,6 @@
 
 - :class:`ArrowLine` - A matplotlib subclass to draw an arrowhead on a line
 
-- :class:`Quantity` - Named tuple class for a constant physical quantity
-
 
 **Functions:**
 
@@ -23,12 +21,13 @@
 
 - :meth:`animate` - Encode a series of PNG images as a MPG movie
 
+- :meth:`chars_to_str` - Convert a string array to a string and remove trailing
+  whitespace
+
 - :meth:`color` - Plot 2D scalar data on a color axis in 2D Cartesian
   coordinates
 
 - :meth:`closeall` - Close all open figures
-
-- :meth:`convert` - Convert the expression of a physical quantity between units
 
 - :meth:`expand_path` - Expand a file path by replacing '~' with the user
   directory and makes the path absolute
@@ -76,10 +75,10 @@ __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
 import os
-import wx
 import numpy as np
 import matplotlib.pyplot as plt
 
+from glob import glob
 from collections import MutableMapping, namedtuple
 from itertools import cycle
 from decimal import Decimal
@@ -87,24 +86,21 @@ from math import floor
 from matplotlib import rcParams
 from matplotlib.lines import Line2D
 from matplotlib.cbook import iterable
+from matplotlib._pylab_helpers import Gcf
+from PyQt4.QtGui import QApplication, QFileDialog
 
 
-Quantity = namedtuple('Quantity', ['number', 'factor', 'offset', 'unit'])
-"""Named tuple class for a constant physical quantity
+def chars_to_str(str_arr, codec='latin-1'):
+    """Convert a string array to a string.
 
-The factor and then the offset are applied to the number to arrive at the
-quantity expressed in terms of the unit.
-"""
-
-
-# Create a class to contain information about a unit conversion.
-#Conversion = namedtuple('Conversion', ['unit', 'factor', 'offset', 'new_unit'])
-
+    Remove trailing whitespace and null characters.  Encode using *codec*.
+    """
+    return ''.join(str_arr).rstrip().rstrip('\x00').encode(codec)
 
 def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
                lstar=0.05, label='',
                orientation='tangent', color='r'):
-    r"""Overlay arrows with annotations on top of a pre-plotted line.
+    """Overlay arrows with annotations on a pre-plotted line.
 
     **Arguments:**
 
@@ -146,7 +142,10 @@ def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
        >>> save()
        Saved examples/add_arrows.pdf
        Saved examples/add_arrows.png
+
+    .. testsetup::
        >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -159,7 +158,7 @@ def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
        .. figure:: ../examples/add_arrows.pdf
           :scale: 70 %
 
-          Example of add_arrows()
+          Example of :meth:`add_arrows`
     """
     from math import atan, cos, sin
 
@@ -209,7 +208,7 @@ def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
 
 
 def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
-    r"""Add horizontal lines to a set of axes with optional labels.
+    """Add horizontal lines to a set of axes with optional labels.
 
     **Arguments:**
 
@@ -248,7 +247,10 @@ def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
        >>> save()
        Saved examples/add_hlines.pdf
        Saved examples/add_hlines.png
+
+    .. testsetup::
        >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -261,7 +263,7 @@ def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
        .. figure:: ../examples/add_hlines.pdf
           :scale: 70 %
 
-          Example of add_hlines()
+          Example of :meth:`add_hlines`
     """
     # Process the inputs.
     if not ax:
@@ -319,7 +321,10 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
        >>> save()
        Saved examples/add_vlines.pdf
        Saved examples/add_vlines.png
+
+    .. testsetup::
        >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -332,7 +337,7 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
        .. figure:: ../examples/add_vlines.pdf
           :scale: 70 %
 
-          Example of add_vlines()
+          Example of :meth:`add_vlines`
     """
     # Process the inputs.
     if not ax:
@@ -379,41 +384,52 @@ def animate(imagebase='_tmp', fname="animation", fps=10, clean=False):
 
     .. code-block:: python
 
-       import matplotlib.pyplot as plt
-       from numpy.random import rand
-       from modelicares import *
+       >>> import matplotlib.pyplot as plt
+       >>> from numpy.random import rand
+       >>> from modelicares import *
 
        # Create the frames.
-       fig = plt.figure(figsize=(5,5))
-       ax = fig.add_subplot(111)
-       for i in range(50):  # 50 frames
-           ax.cla()
-           ax.imshow(rand(5,5), interpolation='nearest')
-           fname = '_tmp%02d.png' % i
-           print("Saving frame %i (file %s)" % (i, fname))
-           fig.savefig(fname) # doctest: +ELLIPSIS
+       >>> fig = plt.figure(figsize=(5,5))
+       >>> ax = fig.add_subplot(111)
+       >>> for i in range(50):  # 50 frames
+       ...     ax.cla()
+       ...     ax.imshow(rand(5,5), interpolation='nearest')
+       ...     fname = '_tmp%02d.png' % i
+       ...     print("Saving frame %i (file %s)" % (i, fname))
+       ...     fig.savefig(fname) # doctest: +ELLIPSIS
+       <matplotlib.image.AxesImage object at 0x...>
+       Saving frame 0 (file _tmp00.png)
+       ...
+       <matplotlib.image.AxesImage object at 0x...>
+       Saving frame 49 (file _tmp49.png)
 
        # Assemble the frames into a movie.
-       animate(clean=True)
+       >>> animate(fname="examples/animation", clean=True) # doctest: +ELLIPSIS
+       ...
+
+    .. testsetup::
+       >>> import matplotlib.pyplot as plt
+       >>> plt.show()
+       >>> plt.close()
     """
-    # Note:  The output of the code above is too large for inline doctest.
-    # TODO:  Consider using the animation module from matplotlib.  Should it
+    # TODO: Consider using the animation module from matplotlib.  Should it
     # supercede this function?
-    # TODO:  Add support for Windows.
+    # TODO: Add support for Windows.
 
     # Based on
     # http://matplotlib.sourceforge.net/faq/howto_faq.html#make-a-movie,
     # accessed 11/2/10
-    if not fname.lower().endswith('.mpg'):
-        fname += '.mpg'
-    print('Making movie "%s".  This may take a while.' % fname)
-    os.system("mencoder 'mf://%s*.png' -mf type=png:fps=%i -ovc lavc "
-              "-lavcopts vcodec=wmv2 -oac copy -o %s"%(imagebase, fps, fname))
-    if clean:
-        from glob import glob
-        for image in glob(imagebase + '*.png'):
-            os.remove(image)
-
+    if os.name == 'posix':
+        if not fname.lower().endswith('.mpg'):
+            fname += '.mpg'
+        print('Making movie "%s".  This may take a while.' % fname)
+        os.system("mencoder 'mf://%s*.png' -quiet -mf type=png:fps=%i -ovc lavc "
+                  "-lavcopts vcodec=wmv2 -oac copy -o %s" % (imagebase, fps, fname))
+        if clean:
+            for image in glob(imagebase + '*.png'):
+                os.remove(image)
+    else:
+         raise(NotImplementedError("The animate function is only implemented on POSIX platforms."))
 
 def color(ax, c, *args, **kwargs):
     """Plot 2D scalar data on a color axis in 2D Cartesian coordinates.
@@ -433,22 +449,24 @@ def color(ax, c, *args, **kwargs):
 
     .. code-block:: python
 
-       >>> import matplotlib.pyplot as plt
        >>> import numpy as np
        >>> from modelicares import *
 
-       >>> figure('examples/color') # doctest: +ELLIPSIS
-       <matplotlib.figure.Figure object at 0x...>
+       >>> fig = figure('examples/color') # doctest: +ELLIPSIS
        >>> x, y = np.meshgrid(np.arange(0, 2*np.pi, 0.2),
        ...                    np.arange(0, 2*np.pi, 0.2))
        >>> c = np.cos(x) + np.sin(y)
-       >>> ax = plt.subplot(111)
+       >>> ax = fig.add_subplot(111)
        >>> color(ax, c) # doctest: +ELLIPSIS
        <matplotlib.image.AxesImage object at 0x...>
        >>> save()
        Saved examples/color.pdf
        Saved examples/color.png
+
+    .. testsetup::
+       >>> import matplotlib.pyplot as plt
        >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -461,7 +479,7 @@ def color(ax, c, *args, **kwargs):
        .. figure:: ../examples/color.pdf
           :scale: 70 %
 
-          Example of color()
+          Example of :meth:`color`
     """
     return ax.imshow(c, *args, **kwargs)
 
@@ -474,35 +492,13 @@ def closeall():
        >>> from matplotlib._pylab_helpers import Gcf
        >>> Gcf.destroy_all()
     """
-    from matplotlib._pylab_helpers import Gcf
     Gcf.destroy_all()
     #for manager in Gcf.get_all_fig_managers():
     #    manager.canvas.figure.close()
     #plt.close("all")
 
-def convert(quantity):
-    """Convert the expression of a physical quantity between units.
-
-    **Arguments:**
-
-    - *quantity*: Instance of :class:`Quantity`
-
-    **Example:**
-
-    .. code-block:: python
-
-       >>> from modelicares import *
-
-       >>> T = 293.15 # Temperature in K
-       >>> T_degC = convert(Quantity(T, factor=1, offset=-273.15, unit='C'))
-       >>> print(str(T) + " K is " + str(T_degC) + " degC.")
-       293.15 K is 20.0 degC.
-    """
-    return quantity.number*quantity.factor + quantity.offset
-
-
 def expand_path(path):
-    r"""Expand a file path by replacing '~' with the user directory and making
+    """Expand a file path by replacing '~' with the user directory and making
     the path absolute.
 
     **Example:**
@@ -603,7 +599,7 @@ def figure(label='', *args, **kwargs):
 
        >>> fig = figure("velocity_vs_time") # doctest: +ELLIPSIS
        >>> plt.getp(fig, 'label')
-       u'velocity_vs_time'
+       'velocity_vs_time'
 
     .. Note::  The *label* property is used as the base filename in the
        :meth:`saveall` method.
@@ -637,7 +633,7 @@ def _gen_offset_factor(label, tick_lo, tick_up, eagerness=0.325):
 
     3. Exponent of 1000 which can be factored from the number (pow1000)
     """
-    # TODO: Utilize matplotlib's support for units.
+    # TODO: Utilize matplotlib's support for units?
 
     def _label_offset_factor(label, offset_factor, offset_pow1000, pow1000):
         """Format an offset and factor into a LaTeX string and add to it an
@@ -702,7 +698,7 @@ def get_indices(x, target):
     **Example:**
 
        >>> from modelicares import *
-       >>> get_indices([0,1,2],1.6)
+       >>> get_indices([0, 1, 2], 1.6)
        (1, 2)
     """
     if target <= x[0]:
@@ -714,7 +710,7 @@ def get_indices(x, target):
         i_1 = 0
         i_2 = len(x) - 1
         while i_1 < i_2 - 1:
-            i_mid = int(np.floor((i_1 + i_2)/2))
+            i_mid = (i_1 + i_2)/2
             if x[i_mid] == target:
                 return i_mid, i_mid
             elif x[i_mid] > target:
@@ -903,24 +899,23 @@ def plot(y, x=None, ax=None, label=None,
 
     **Example:**
 
-    .. testsetup::
-       >>> closeall()
-
     .. code-block:: python
 
-       >>> import matplotlib.pyplot as plt
        >>> import numpy as np
        >>> from modelicares import *
 
-       >>> figure('examples/plot') # doctest: +ELLIPSIS
-       <matplotlib.figure.Figure object at 0x...>
-       >>> ax = plt.subplot(111)
+       >>> fig = figure('examples/plot') # doctest: +ELLIPSIS
+       >>> ax = fig.add_subplot(111)
        >>> plot([range(11), range(10, -1, -1)], ax=ax) # doctest: +ELLIPSIS
        [[<matplotlib.lines.Line2D object at 0x...>], [<matplotlib.lines.Line2D object at 0x...>]]
        >>> save()
        Saved examples/plot.pdf
        Saved examples/plot.png
+
+    .. testsetup::
+       >>> import matplotlib.pyplot as plt
        >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -933,7 +928,7 @@ def plot(y, x=None, ax=None, label=None,
        .. figure:: ../examples/plot.pdf
           :scale: 70 %
 
-          Example of plot()
+          Example of :meth:`plot`
     """
     # Create axes if necessary.
     if not ax:
@@ -1023,7 +1018,10 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
        >>> save()
        Saved examples/quiver.pdf
        Saved examples/quiver.png
+
+    .. testsetup::
        >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -1036,7 +1034,7 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
        .. figure:: ../examples/quiver.pdf
           :scale: 70 %
 
-          Example of quiver()
+          Example of :meth:`quiver`
     """
     if x is None or y is None:
         p = ax.quiver(u, v, pivot=pivot, **kwargs)
@@ -1047,6 +1045,14 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
     dx, dy = r-l, t-b
     plt.axis([l-pad*dx, r+pad*dx, b-pad*dy, t+pad*dy])
     return p
+
+def _get_directory(message="Choose a directory for the images"):
+    """Return a directory chosen by the user.
+    """
+    app = QApplication([])
+    getDir = QFileDialog().getExistingDirectory
+    chosen_directory = str(getDir(None, message))
+    app.exit(0)
 
 def save(formats=['pdf', 'png'], fbase='1'):
     """Save the current figures as images in a format or list of formats.
@@ -1070,31 +1076,26 @@ def save(formats=['pdf', 'png'], fbase='1'):
 
     **Example:**
 
-    .. testsetup::
-       >>> closeall()
-
     .. code-block:: python
 
        >>> import matplotlib.pyplot as plt
        >>> from modelicares import *
 
-       >>> figure('temp_plot') # doctest: +ELLIPSIS
+       >>> figure('examples/temp') # doctest: +ELLIPSIS
        <matplotlib.figure.Figure object at 0x...>
        >>> plt.plot(range(10)) # doctest: +ELLIPSIS
        [<matplotlib.lines.Line2D object at 0x...>]
        >>> save()
-       Saved temp_plot.pdf
-       Saved temp_plot.png
+       Saved examples/temp.pdf
+       Saved examples/temp.png
+
+    .. testsetup::
+       >>> plt.show()
+       >>> plt.close()
 
     .. Note::  The :meth:`figure` method can be used to directly create a
        figure with a label.
     """
-    from wx import DirSelector, App
-
-    # Initialize a dummy wx.App instance.  Dialogs can only be called after
-    # this is done [http://warp.byu.edu/site/content/131, accessed 10/9/2012].
-    app = App()
-
     # If formats is a singleton, turn it into a list.
     if not type(formats) is list:
         formats = [formats,]
@@ -1106,12 +1107,7 @@ def save(formats=['pdf', 'png'], fbase='1'):
     (directory, fbase_fig) = os.path.split(plt.getp(fig, 'label'))
     if not fbase_fig:
         if not directory:
-            # Initialize a dummy wx.App instance.  Dialogs can only be
-            # called after this is done
-            # [http://code.google.com/p/easywx/, accessed 10/7/2012].
-            #app = App()
-            directory = DirSelector("Choose a directory for the images.",
-                                    defaultPath=os.path.join(*['..']*4))
+            directory = _get_directory()
             if not directory:
                 return
     else:
@@ -1142,32 +1138,26 @@ def saveall(formats=['pdf', 'png']):
 
     **Example:**
 
-    .. testsetup::
-       >>> closeall()
-
     .. code-block:: python
 
        >>> import matplotlib.pyplot as plt
        >>> from modelicares import *
 
-       >>> figure('temp_plot') # doctest: +ELLIPSIS
+       >>> figure('examples/temp') # doctest: +ELLIPSIS
        <matplotlib.figure.Figure object at 0x...>
        >>> plt.plot(range(10)) # doctest: +ELLIPSIS
        [<matplotlib.lines.Line2D object at 0x...>]
        >>> save()
-       Saved temp_plot.pdf
-       Saved temp_plot.png
+       Saved examples/temp.pdf
+       Saved examples/temp.png
+
+    .. testsetup::
+       >>> plt.show()
+       >>> plt.close()
 
     .. Note::  The :meth:`figure` method can be used to directly create a
        figure with a label.
     """
-    from matplotlib._pylab_helpers import Gcf
-    from wx import DirSelector, App
-
-    # Initialize a dummy wx.App instance.  Dialogs can only be called after
-    # this is done [http://warp.byu.edu/site/content/131, accessed 10/9/2012].
-    app = App()
-
     # If formats is a singleton, turn it into a list.
     if not type(formats) is list:
         formats = [formats,]
@@ -1184,14 +1174,8 @@ def saveall(formats=['pdf', 'png']):
             fbase = str(i)
             i += 1
             if not directory:
-                if chosen_directory is None:
-                    # Initialize a dummy wx.App instance.  Dialogs can only be
-                    # called after this is done
-                    # [http://code.google.com/p/easywx/, accessed 10/7/2012].
-                    #app = App()
-                    chosen_directory = DirSelector(
-                        "Choose a directory for the images.",
-                        defaultPath=os.path.join(*['..']*4))
+                if not chosen_directory:
+                    chosen_directory = _get_directory()
                     if not chosen_directory:
                         return
                 directory = chosen_directory
@@ -1295,12 +1279,8 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
 
     **Example:**
 
-    .. testsetup::
-       >>> closeall()
-
     .. code-block:: python
 
-       >>> import matplotlib.pyplot as plt
        >>> from modelicares import *
 
        >>> setup_subplots(4, 2, label='examples/setup_subplots') # doctest: +ELLIPSIS
@@ -1308,7 +1288,11 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
        >>> save()
        Saved examples/setup_subplots.pdf
        Saved examples/setup_subplots.png
+
+    .. testsetup::
+       >>> import matplotlib.pyplot as plt
        >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -1321,7 +1305,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
        .. figure:: ../examples/setup_subplots.pdf
           :scale: 70 %
 
-       Example of setup_subplots()
+       Example of :meth:`setup_subplots`
     """
     from matplotlib.figure import SubplotParams
 
@@ -1445,7 +1429,6 @@ def shift_scale_x(ax, eagerness=0.325):
 
     .. code-block:: python
 
-       >>> import matplotlib.pyplot as plt
        >>> import numpy as np
        >>> from texunit import label_number
        >>> from modelicares import *
@@ -1474,7 +1457,11 @@ def shift_scale_x(ax, eagerness=0.325):
        >>> save()
        Saved examples/shift_scale_x.pdf
        Saved examples/shift_scale_x.png
+
+    .. testsetup::
+       >>> import matplotlib.pyplot as plt
        >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -1487,7 +1474,7 @@ def shift_scale_x(ax, eagerness=0.325):
        .. figure:: ../examples/shift_scale_x.pdf
           :scale: 70 %
 
-          Example of shift_scale_x()
+          Example of :meth:`shift_scale_x`
     """
     # The concept here is based on:
     # http://efreedom.com/Question/1-3677368/Matplotlib-Format-Axis-Offset-Values-Whole-Numbers-Specific-Number,
@@ -1518,7 +1505,6 @@ def shift_scale_y(ax, eagerness=0.325):
 
     .. code-block:: python
 
-       >>> import matplotlib.pyplot as plt
        >>> import numpy as np
        >>> from texunit import label_number
        >>> from modelicares import *
@@ -1550,7 +1536,11 @@ def shift_scale_y(ax, eagerness=0.325):
        >>> save()
        Saved examples/shift_scale_y.pdf
        Saved examples/shift_scale_y.png
+
+    .. testsetup::
+       >>> import matplotlib.pyplot as plt
        >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -1563,7 +1553,7 @@ def shift_scale_y(ax, eagerness=0.325):
        .. figure:: ../examples/shift_scale_y.pdf
           :scale: 70 %
 
-          Example of shift_scale_y()
+          Example of :meth:`shift_scale_y`
     """
     # The concept here is based on:
     # http://efreedom.com/Question/1-3677368/Matplotlib-Format-Axis-Offset-Values-Whole-Numbers-Specific-Number,
@@ -1618,7 +1608,6 @@ class ArrowLine(Line2D):
 
         .. code-block:: python
 
-           >>> import matplotlib.pyplot as plt
            >>> from modelicares import *
 
            >>> fig = figure('examples/ArrowLine') # doctest: +ELLIPSIS
@@ -1628,7 +1617,7 @@ class ArrowLine(Line2D):
            >>> line = ArrowLine(t, s, color='b', ls='-', lw=2, arrow='>',
            ...                  arrowsize=20)
            >>> ax.add_line(line) # doctest: +ELLIPSIS
-           <modelicares.base.ArrowLine object at 0x...>
+           <modelicares.util.ArrowLine object at 0x...>
            >>> ax.set_xlim(-3, 3)
            (-3, 3)
            >>> ax.set_ylim(-3, 3)
@@ -1636,7 +1625,11 @@ class ArrowLine(Line2D):
            >>> save()
            Saved examples/ArrowLine.pdf
            Saved examples/ArrowLine.png
+
+        .. testsetup::
+           >>> import matplotlib.pyplot as plt
            >>> plt.show()
+           >>> plt.close()
 
         .. only:: html
 
@@ -1649,7 +1642,7 @@ class ArrowLine(Line2D):
            .. figure:: ../examples/ArrowLine.pdf
               :scale: 70 %
 
-              Example of ArrowLine
+              Example of :class:`ArrowLine`
         """
         self._arrow = kwargs.pop('arrow', '-')
         self._arrowsize = kwargs.pop('arrowsize', 2*4)

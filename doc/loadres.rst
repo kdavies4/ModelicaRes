@@ -1,93 +1,46 @@
-:mod:`loadres`
+loadres script
 ==============
 
-Load results from Modelica_ simulation(s) and provide a Python_ interpreter
-to analyze the results.
+Load results from Modelica_ simulation(s) and/or linearzation(s) and provide
+a Python_ session to analyze the results.
 
-This script can be executed at the command line.  It will accept as arguments
-the names of result files or names of directories with result files.  The
-filenames may contain wildcards.  If no arguments are given, the script
-provides a dialog to choose a file or folder.  Finally, it provides working
-session of `IPython <http://www.ipython.org/>`_ with the results preloaded.
-PyLab_ is directly imported (``from pylab import *``) to provide many functions
-of NumPy_ and matplotlib_ (e.g., :meth:`sin` and :meth:`plot`).  The essential
-classes and functions of ModelicaRes are directly available as well.
+This script can be executed from the command line.  It accepts as arguments the
+names of result files or directories with result files.  Wildcards can be used.
+If no arguments are given, then the script provides a dialog to  choose a file
+or folder.  After loading files, it provides working session of `IPython
+<http://www.ipython.org/>`_ with the results preloaded.  PyLab_ is imported
+(``from pylab import *``) to provide many functions of NumPy_ and matplotlib_
+(e.g., :meth:`sin` and :meth:`plot`).  The essential classes and functions of
+ModelicaRes_ are imported as well (``from modelicares import *``).
 
-**Example:**
+**Setup and example:**
 
-To begin this example, copy this script (*loadres*) to the current directory 
-along with the *examples* folder. 
+Copy the *examples* directory of the ModelicaRes_ distribution to a convenient
+location.  Open a command prompt at that location and execute the following
+command:
 
 .. code-block:: sh
 
-   $ loadres examples
+   $ loadres ChuaCircuit PID
    Valid: SimRes('.../examples/ChuaCircuit.mat')
-   Valid: SimRes('.../examples/ThreeTanks.mat')
    Valid: LinRes('.../examples/PID.mat')
-   Simulation results have been loaded into sims[0] through sims[1].
+   A simulation result has been loaded into sim.
    A linearization result has been loaded into lin.
 
-where '...' depends on the local system.
+If this doesn't work, then the *loadres* script probably hasn't been installed
+to a location recognized by the operating system.  Instead, copy it to the
+*examples* directory and try again.  If necessary, call Python_ explicitly
+(``python loadres ChuaCircuit PID``).
 
-You can now explore the simulation results or create plots using the methods in
-:class:`~modelicares.simres.SimRes`.  For example,
+Please also see the tutorial, which is available as an `IPython notebook
+<https://github.com/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_
+or online as a `static page
+<http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_.
+Using the Python_ session started from the example above, you can follow the
+tutorial beginning with the "Analyzing the simulation results" section.
 
-.. code-block:: python
 
-   >>> sims[0].get_FV('L.v')
-   -0.25352862
-   >>> sims[0].get_unit('L.v')
-   'V'
-
-If a variable cannot be found, then suggestions are given:
-
-.. code-block:: python
-
-   >>> sims[0].get_description('L.vv')
-   L.vv is not a valid variable name.
-   <BLANKLINE>
-   Did you mean one of the these?
-          L.v
-          L.p.v
-          L.n.v
-   >>> sims[0].get_description('L.v')
-   'Voltage drop between the two pins (= p.v - n.v)'
-
-To return all values of a variable, use its string as an index:
-
-.. code-block:: python
-
-   >>> sim['L.v']
-   array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)
-
-or an argument:
-
-.. code-block:: python
-
-   >>> sim('L.v')
-   array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)
-
-To see all the methods, use
-
-   >>> help(sims[0])
-
-or go to :class:`~modelicares.simres.SimRes`.  To search for variable names, use
-:meth:`~modelicares.simres.SimRes.names` with wildcards:
-
-   >>> sims[0].names('L.p*')
-   [u'L.p.i', u'L.p.v']
-
-Likewise, you can explore the linearization result or create diagrams using the
-methods in :class:`~modelicares.linres.LinRes`:
-
-.. code-block:: python
-
-   >>> print lin
-   Modelica linearization results from ".../examples/PID.mat"
-   >>> lin.sys.A
-   matrix([[   0.,    0.],
-           [   0., -100.]])
-
+.. _ModelicaRes: http://kdavies4.github.io/ModelicaRes
 .. _Modelica: http://www.modelica.org/
 .. _Python: http://www.python.org/
 .. _PyLab: http://www.scipy.org/PyLab

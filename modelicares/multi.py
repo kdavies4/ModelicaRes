@@ -23,7 +23,6 @@ __credits__ = ["Kevin Bandy"]
 __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
-
 import os
 import numpy as np
 
@@ -31,20 +30,20 @@ from glob import glob
 from matplotlib.cbook import iterable
 from itertools import cycle
 
-from freqplot import bode_plot, nyquist_plot
-from modelicares.linres import LinRes
-from modelicares.simres import SimRes
-from modelicares.base import figure, add_hlines, add_vlines
-
+from ._freqplot import bode_plot, nyquist_plot
+from .simres import SimRes
+from .linres import LinRes
+from .util import figure, add_hlines, add_vlines
 
 def multiload(locations='*'):
     """Load multiple Modelica_ simulation and/or linearization results.
 
     **Arguments:**
 
-    - *locations*: Input filename, directory, or list of these
+    - *locations*: Filename, directory, or list of these from which to load the
+      files
 
-         Wildcards ('*') may be used in the path(s).
+         Wildcards ('*') are accepted.
 
     **Returns:**
 
@@ -54,11 +53,11 @@ def multiload(locations='*'):
 
     Either may be an empty list.
 
-    **Example:**
+    **Examples:**
 
     .. code-block:: python
 
-       >>> from modelicares import *
+       >>> from modelicares import multiload
 
        # By file:
        >>> multiload(['examples/ChuaCircuit.mat', 'examples/PID/*/*.mat']) # doctest: +ELLIPSIS
@@ -66,7 +65,6 @@ def multiload(locations='*'):
        Valid: LinRes('.../examples/PID/1/dslin.mat')
        Valid: LinRes('.../examples/PID/2/dslin.mat')
        ([SimRes('.../examples/ChuaCircuit.mat')], [LinRes('.../examples/PID/1/dslin.mat'), LinRes('.../examples/PID/2/dslin.mat')])
-
 
        # By directory:
        >>> multiload('examples') # doctest: +ELLIPSIS
@@ -76,7 +74,7 @@ def multiload(locations='*'):
        ([SimRes('...ChuaCircuit.mat'), SimRes('...ThreeTanks.mat')], [LinRes('...PID.mat')])
     """
 
-    # Make a list of files.
+    # Generate a list of files.
     fnames = []
     if isinstance(locations, basestring):
         locations = [locations]
@@ -90,19 +88,40 @@ def multiload(locations='*'):
                 fnames.append(location)
 
     # Load the files.
-    sims = [] # Simulation results
-    lins = [] # Linearization results
+    sims = []
+    lins = []
+    for fname in fnames:
+        try:
+            results = load(fname)
+            if isinstance(result, SimRes):
+                sims.append(result)
+            if isinstance(result, SimRes):
+                sims.append(result)
+
+        except:
+            pass
+
+    results = map(load, fnames)
+
+    # Sort the results into appropriate variables.
+    sims = [result for result in results if isinstance(result, SimRes)]
+    lins = [result for result in results if isinstance(result, LinRes)]
+    return sims, lins
+
     for fname in fnames:
         try:
             sims.append(SimRes(fname))
-            print("Valid: " + sims[-1].__repr__())
         except:
             try:
                 lins.append(LinRes(fname))
-                print("Valid: " + lins[-1].__repr__())
             except:
                 print("Could not load simulation or linearization data from "
                       "'%s'." % fname)
+            else:
+                print("Valid: " + lins[-1].__repr__())
+        else:
+            print("Valid: " + sims[-1].__repr__())
+
     return sims, lins
 
 def multiplot(sims, suffixes='', color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
@@ -141,7 +160,7 @@ def multiplot(sims, suffixes='', color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
          .. Seealso:: http://matplotlib.sourceforge.net/api/collections_api.html
 
     - *\*\*kwargs*: Propagated to :meth:`simres.SimRes.plot` (and thus to
-      :meth:`base.plot` and finally :meth:`matplotlib.pyplot.plot`)
+      :meth:`util.plot` and finally :meth:`matplotlib.pyplot.plot`)
 
     **Returns:**
 
@@ -150,10 +169,6 @@ def multiplot(sims, suffixes='', color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
     2. *ax2*: Secondary y axes
 
     **Example:**
-
-    .. testsetup::
-       >>> from modelicares import closeall
-       >>> closeall()
 
     .. code-block:: python
 
@@ -170,6 +185,11 @@ def multiplot(sims, suffixes='', color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
        >>> save()
        Saved examples/ChuaCircuits.pdf
        Saved examples/ChuaCircuits.png
+
+    .. testsetup::
+       >>> import matplotlib.pyplot as plt
+       >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -218,7 +238,7 @@ def multibode(lins, axes=None, pair=(0, 0), label='bode', title="Bode Plot",
               labels='', colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
               styles=[(None,None), (3,3), (1,1), (3,2,1,2)], leg_kwargs={},
               **kwargs):
-    r"""Plot multiple linearizations onto a single Bode diagram.
+    """Plot multiple linearizations onto a single Bode diagram.
 
     **Arguments:**
 
@@ -274,10 +294,6 @@ def multibode(lins, axes=None, pair=(0, 0), label='bode', title="Bode Plot",
 
     **Example:**
 
-    .. testsetup::
-       >>> from modelicares import closeall
-       >>> closeall()
-
     .. code-block:: python
 
        >>> import os
@@ -298,6 +314,11 @@ def multibode(lins, axes=None, pair=(0, 0), label='bode', title="Bode Plot",
        >>> save()
        Saved examples/PIDs-bode.pdf
        Saved examples/PIDs-bode.png
+
+    .. testsetup::
+       >>> import matplotlib.pyplot as plt
+       >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -343,9 +364,7 @@ def multibode(lins, axes=None, pair=(0, 0), label='bode', title="Bode Plot",
     # Create the plots.
     for i, (lin, label) in enumerate(zip(lins, labels)):
         if lin.sys.inputs > 1 or lin.sys.outputs > 1:
-            # Extract the SISO TF. TODO: Is there a better way to do this?
-            sys = ss(self.sys.A, self.sys.B[:, pair[0]], self.sys.C[pair[1], :],
-                     self.sys.D[pair[1], pair[0]])
+            sys = self._to_siso(pair[0], pair[1])
         else:
             sys = lin.sys
         bode_plot(sys, Hz=True, label=label,
@@ -418,10 +437,6 @@ def multinyquist(lins, ax=None, pair=(0, 0), label='nyquist',
 
     **Example:**
 
-    .. testsetup::
-       >>> from modelicares import closeall
-       >>> closeall()
-
     .. code-block:: python
 
        >>> import os
@@ -443,6 +458,11 @@ def multinyquist(lins, ax=None, pair=(0, 0), label='nyquist',
        >>> save()
        Saved examples/PIDs-nyquist.pdf
        Saved examples/PIDs-nyquist.png
+
+    .. testsetup::
+       >>> import matplotlib.pyplot as plt
+       >>> plt.show()
+       >>> plt.close()
 
     .. only:: html
 
@@ -466,7 +486,6 @@ def multinyquist(lins, ax=None, pair=(0, 0), label='nyquist',
     if not iterable(lins):
         lins = [lins]
 
-
     # Process the labels input.
     if labels == '':
         labels = [lin.fbase for lin in lins]
@@ -483,9 +502,7 @@ def multinyquist(lins, ax=None, pair=(0, 0), label='nyquist',
     textFreq = kwargs.pop('textFreq', None)
     for i, (lin, label) in enumerate(zip(lins, labels)):
         if lin.sys.inputs > 1 or lin.sys.outputs > 1:
-            # Extract the SISO TF. TODO: Is there a better way to do this?
-            sys = ss(self.sys.A, self.sys.B[:, pair[0]], self.sys.C[pair[1], :],
-                     self.sys.D[pair[1], pair[0]])
+            sys = self._to_siso(pair[0], pair[1])
         else:
             sys = lin.sys
         nyquist_plot(sys, mark=False, label=label, ax=ax,
@@ -509,4 +526,3 @@ if __name__ == '__main__':
     """Test the contents of this file."""
     import doctest
     doctest.testmod()
-    exit()

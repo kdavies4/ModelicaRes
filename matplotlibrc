@@ -24,8 +24,8 @@
 #### CONFIGURATION BEGINS HERE
 
 # the default backend; one of GTK GTKAgg GTKCairo GTK3Agg GTK3Cairo
-# CocoaAgg FltkAgg MacOSX QtAgg Qt4Agg TkAgg WX WXAgg Agg Cairo GDK PS
-# PDF SVG Template
+# CocoaAgg MacOSX Qt4Agg TkAgg WX WXAgg Agg Cairo GDK PS PDF SVG
+# Template
 # You can also deploy your own backend outside of matplotlib by
 # referring to the module name (which must be in the PYTHONPATH) as
 # 'module://my_backend'
@@ -50,10 +50,12 @@ backend      : Qt4Agg
 
 # When True, open the webbrowser to the plot that is shown
 # webagg.open_in_browser : True
+
 # if you are running pyplot inside a GUI and your backend choice
 # conflicts, we will automatically try to find a compatible one for
 # you if backend_fallback is True
 #backend_fallback: True
+
 #interactive  : False
 #toolbar      : toolbar2   # None | toolbar2  ("classic" is deprecated)
 #timezone     : UTC        # a pytz timezone string, eg US/Central or Europe/Paris
@@ -134,7 +136,7 @@ backend      : Qt4Agg
 # settings for axes and ticks. Special text sizes can be defined
 # relative to font.size, using the following values: xx-small, x-small,
 # small, medium, large, x-large, xx-large, larger, or smaller
-# font.size           : 12.0
+#font.size           : 12.0
 #font.serif          : Bitstream Vera Serif, New Century Schoolbook, Century Schoolbook L, Utopia, ITC Bookman, Bookman, Nimbus Roman No9 L, Times New Roman, Times, Palatino, Charter, serif
 #font.sans-serif     : Bitstream Vera Sans, Lucida Grande, Verdana, Geneva, Lucid, Arial, Helvetica, Avant Garde, sans-serif
 #font.cursive        : Apple Chancery, Textile, Zapf Chancery, Sand, cursive
@@ -210,8 +212,8 @@ backend      : Qt4Agg
 #mathtext.fontset : cm # Should be 'cm' (Computer Modern), 'stix',
                        # 'stixsans' or 'custom'
 #mathtext.fallback_to_cm : True  # When True, use symbols from the Computer Modern
-			         # fonts when a symbol can not be found in one of
-				 # the custom math fonts.
+                                 # fonts when a symbol can not be found in one of
+                                 # the custom math fonts.
 
 #mathtext.default : it # The default font to use for math.
                        # Can be any of the LaTeX font names, including
@@ -236,7 +238,8 @@ mathtext.default : regular # The default font to use for math.
 #axes.labelweight    : normal  # weight of the x and y labels
 #axes.labelcolor     : black
 #axes.axisbelow      : False   # whether axis gridlines and ticks are below
-                              # the axes elements (lines, text, etc)
+                               # the axes elements (lines, text, etc)
+
 #axes.formatter.limits : -7, 7 # use scientific notation if log10
                                # of the axis range is smaller than the
                                # first or larger than the second
@@ -251,8 +254,8 @@ mathtext.default : regular # The default font to use for math.
                                          # to an offset when the data range is very 
                                          # small compared to the minimum absolute 
                                          # value of the data.
-#axes.unicode_minus  : True    # use unicode for the minus symbol
 
+#axes.unicode_minus  : True    # use unicode for the minus symbol
                                # rather than hyphen.  See
                                # http://en.wikipedia.org/wiki/Plus_and_minus_signs#Character_codes
 #axes.color_cycle    : b, g, r, c, m, y, k  # color cycle for plot lines
@@ -342,9 +345,7 @@ figure.subplot.top      : 0.875    # the top of the subplots of the figure
 
 ### IMAGES
 #image.aspect : equal             # equal | auto | a number
-image.aspect : auto             # equal | auto | a number
 #image.interpolation  : bilinear  # see help(imshow) for options
-image.interpolation  : nearest  # see help(imshow) for options
 #image.cmap   : jet               # gray | jet etc...
 image.cmap   : hot               # gray | jet etc... (bone, gist_earth, gist_gray, gray, and hot look the best in black and white)
 # ModelicaRes:  This shows well in color or in black and white.
@@ -386,16 +387,16 @@ image.cmap   : hot               # gray | jet etc... (bone, gist_earth, gist_gra
 # the default savefig params can be different from the display params
 # e.g., you may want a higher resolution, or to make the figure
 # background white
-#savefig.dpi        : 100      # figure dots per inch
-#savefig.facecolor  : white    # figure facecolor when saving
-#savefig.edgecolor  : white    # figure edgecolor when saving
-#savefig.format     : png      # png, ps, pdf, svg
-#savefig.bbox       : standard # 'tight' or 'standard'.
+#savefig.dpi         : 100      # figure dots per inch
+#savefig.facecolor   : white    # figure facecolor when saving
+#savefig.edgecolor   : white    # figure edgecolor when saving
+#savefig.format      : png      # png, ps, pdf, svg
+#savefig.bbox        : standard # 'tight' or 'standard'.
                                 # 'tight' is incompatible with pipe-based animation
                                 # backends but will workd with temporary file based ones:
                                 # e.g. setting animation.writer to ffmpeg will not work,
                                 # use ffmpeg_file instead
-#savefig.pad_inches : 0.1      # Padding to be used when bbox is set to 'tight'
+#savefig.pad_inches  : 0.1      # Padding to be used when bbox is set to 'tight'
 #savefig.jpeg_quality: 95       # when a jpeg is saved, the default quality parameter.
 #savefig.directory   : ~        # default directory in savefig dialog box,
                                 # leave empty to always use current working directory
@@ -485,6 +486,6 @@ image.cmap   : hot               # gray | jet etc... (bone, gist_earth, gist_gra
                                    # $PATH is searched
 #animation.avconv_args: ''         # Additional arguments to pass to avconv
 #animation.mencoder_path: 'mencoder'
-			           # Path to mencoder binary. Without full path
+                                   # Path to mencoder binary. Without full path
                                    # $PATH is searched
 #animation.mencoder_args: ''       # Additional arguments to pass to mencoder

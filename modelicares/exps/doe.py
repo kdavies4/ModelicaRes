@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """Functions for design of experiments (DOE)
 
-These can be passed to the *design* argument of 
+These can be passed to the *design* argument of
 :meth:`~modelicares.exps.gen_experiments`.
 """
 
@@ -90,4 +90,3 @@ if __name__ == '__main__':
     """Test the contents of this file."""
     import doctest
     doctest.testmod()
-    exit()

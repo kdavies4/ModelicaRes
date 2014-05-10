@@ -34,21 +34,18 @@ experiments.  Finally, the generator is passed to the :meth:`write_script` or
 
 **Functions:**
 
-- :meth:`gen_experiments` - Return a generator for a set of simulation 
+- :meth:`gen_experiments` - Return a generator for a set of simulation
   experiments using permutation or simple element-wise grouping
 
-- :meth:`modelica_array` - Convert a NumPy_ array to a Modelica_-formatted 
-  string
+- :meth:`modelica_str` - Express a Python variable as a Modelica string
 
-- :meth:`modelica_boolean` - Convert a Boolean variable to a Modelica_ string
-
-- :meth:`read_params` - Read parameter values from an initialization or final 
+- :meth:`read_params` - Read parameter values from an initialization or final
   values file
 
-- :meth:`run_models` - Run Modelica_ models via pairs of executables and 
+- :meth:`run_models` - Run Modelica_ models via pairs of executables and
   initialization files (not yet implemented)
 
-- :meth:`write_params` - Write parameter values to a simulation initialization 
+- :meth:`write_params` - Write parameter values to a simulation initialization
   file
 
 - :meth:`write_script` - Write a Modelica_ script to run simulations
@@ -71,7 +68,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import re
 import numpy as np
-import modelicares.base as base
+import modelicares.util as util
 import doe
 
 from itertools import count
@@ -216,7 +213,7 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
        >>> # Also note that Python dictionaries do not preserve order (and it
        >>> # is not necessary here).
     """
-    params = base.flatten_dict(params)
+    params = util.flatten_dict(params)
     i_args = len(params) + 1
     experiment = lambda x: Experiment(
                              model=x[0],
@@ -229,55 +226,55 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
         print("Error in call to gen_experiments(): models and all of the "
               "entries in params and args must be lists.")
 
-def modelica_array(x):
-    """Convert a NumPy_ array to a Modelica_-formatted string.
+def modelica_str(x):
+    """Express a Python variable as a Modelica string
 
-    Square brackets are curled and Booleans are cast to lowercase.
+    A Boolean variable (:class:`bool`) becomes 'true' or 'false' (lowercase).
 
-    **Example:**
+    For NumPy_ arrays, square brackets are curled.
+
+    **Examples:**
+
+    Booleans:
+
+    .. code-block:: python
+
+       >>> from modelicares import *
+
+       >>> # Booleans:
+       >>> modelica_str(True)
+       'true'
+       >>> modelica_str(False)
+       'false'
+
+    Arrays:
 
     .. code-block:: python
 
        >>> from numpy import array
        >>> from modelicares import *
 
-       >>> x = array([[1, 2], [3, 4]])
-       >>> modelica_array(x)
+       >>> modelica_str(array([[1, 2], [3, 4]]))
        '{{1, 2}, {3, 4}}'
 
-       >>> modelica_array(array([[True, True], [False, False]]))
+       >>> modelica_str(array([[True, True], [False, False]]))
        '{{true, true}, {false, false}}'
     """
-    assert isinstance(x, np.ndarray), "Only numpy arrays are supported."
-    x = str(x)
-    for old, new in [('\[', '{'), ('\]', '}'), (r'\n', ''),
-                     (' ?True', 'true'), ('False', 'false'), (' +', ', ')]:
-        # Python 2.7 puts an extra space before True when representing an
-        # array.
-        x = re.sub(old, new, x)
-    return x
-
-
-def modelica_boolean(x):
-    """Convert a Boolean variable (:class:`bool`) to a Modelica_ string ('true'
-    or 'false').
-
-    **Example:**
-
-    .. code-block:: python
-
-       >>> from modelicares import *
-
-       >>> modelica_boolean(True)
-       'true'
-       >>> modelica_boolean(False)
-       'false'
-    """
-    return 'true' if x else 'false'
-
+    if isinstance(x, bool):
+        return 'true' if x else 'false'
+    elif isinstance(x, np.ndarray):
+        x = str(x)
+        for old, new in [('\[', '{'), ('\]', '}'), (r'\n', ''),
+                         (' ?True', 'true'), ('False', 'false'), (' +', ', ')]:
+            # Python 2.7 puts an extra space before True when representing an
+            # array.
+            x = re.sub(old, new, x)
+        return x
+    else:
+        return str(x)
 
 def read_params(names, fname='dsin.txt'):
-    """Read parameter values from an initialization or final values file (e.g., 
+    """Read parameter values from an initialization or final values file (e.g.,
     dsin.txt or dsfinal.txt).
 
     **Arguments:**
@@ -286,7 +283,7 @@ def read_params(names, fname='dsin.txt'):
       Modelica_ dot notation)
 
          A parameter name includes array indices (if any) in Modelica_
-         representation (1-base indexing); the values are scalar.
+         representation (1-based indexing); the values are scalar.
 
     - *fname*: Name of the file (may include the file path)
 
@@ -333,7 +330,7 @@ def read_params(names, fname='dsin.txt'):
                 #           = 3: state derivative.
                 #           = 4: output.
                 #           = 5: input.
-                #           = 6: baseiliary variable.
+                #           = 6: auxiliary variable.
                 # column 6: Data type of variable.
                 #           = 0: real.
                 #           = 1: boolean.
@@ -450,7 +447,7 @@ simspecs = [SimSpec(model + "(L(L=%s), C1(C=%s), C2(C=%s))" % params,
 
 
 def write_params(params, fname='dsin.txt'):
-    """Write parameter values to a simulation initialization file (e.g., 
+    """Write parameter values to a simulation initialization file (e.g.,
     dsin.txt).
 
     **Arguments:**
@@ -460,7 +457,7 @@ def write_params(params, fname='dsin.txt'):
          Each key is a parameter name (including the full model path in
          Modelica_ dot notation) and each entry is a parameter value.  The
          parameter name includes array indices (if any) in Modelica_
-         representation (1-bases indexing).  The values must be representable
+         representation (1-based indexing).  The values must be representable
          as scalar numbers (integer or floating point).  *True* and *False*
          (not 'true' and 'false') are automatically mapped to 1 and 0.
          Enumerations must be given explicitly as the unsigned integer
@@ -701,9 +698,9 @@ def write_script(experiments=[(None, {}, {})], packages=[],
     # Preprocess the arguments.
     if not isinstance(experiments, (list, GeneratorType)):
         experiments = [experiments]
-    fname = base.expand_path(fname)
+    fname = util.expand_path(fname)
 
-    working_dir = base.expand_path(working_dir)
+    working_dir = util.expand_path(working_dir)
     results_dir = os.path.split(fname)[0]
     exe = '.exe' if os.name == 'nt' else ''
     for i, result in enumerate(results):
@@ -744,7 +741,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
             # Write to the Modelica script.
             mos.write('// Experiment %i\n' % i)
             if model:
-                params = ParamDict(base.flatten_dict(params))
+                params = ParamDict(util.flatten_dict(params))
                 args['problem'] =  '"%s%s"' % (model, params)
             if args:
                 mos.write('ok = %s%s;\n' % (command, ParamDict(args)))
@@ -828,13 +825,9 @@ class ParamDict(dict):
             for key, value in d.items():
                 if isinstance(value, ParamDict):
                     elements.append('%s%s' % (key, value))
-                else:
-                    if isinstance(value, bool):
-                        value = modelica_boolean(value)
-                    elif isinstance(value, np.ndarray):
-                        value = modelica_array(value)
-                    if value is not None:
-                        elements.append('%s=%s' % (key, value))
+                elif value is not None:
+                    value = modelica_str(value)
+                    elements.append(key + '=' + value)
             return '(%s)' % ', '.join(elements) if elements else ''
 
         # This method to build a nested dictionary adapted from DyMat version
@@ -855,7 +848,7 @@ class ParamDict(dict):
 
 
 if __name__ == '__main__':
-    """Test the contents of this file."""
+    """Test the contents of this module."""
     import doctest
     doctest.testmod()
-    exit()
+    doctest.testmod(doe)

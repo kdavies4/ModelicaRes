@@ -17,10 +17,11 @@ Example data files:
  5. [ThreeTanks.mat](ThreeTanks.mat): Simulation result of
     Modelica.Fluid.Examples.ThreeTanks.
 
+IPython notebooks:
+ 1. [tutorial.ipynb](tutorial.ipynb): Tutorial for ModelicRes.
+
 Scripts:
- 1. [control-demo.py](control-demo.py): Demo from the *control* module
-    (included external library; see [../external/control](../external/control)).
- 2. [load-csv.py](load-csv.py): Example of using *modelicares.load_csv()*.
+ 1. [load-csv.py](load-csv.py): Example of using *modelicares.load_csv()*.
 
 Folders:
  1. [ChuaCircuit](ChuaCircuit):  Contains an example script

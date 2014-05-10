@@ -1,30 +1,35 @@
 ModelicaRes
 -----------
 
-[ModelicaRes] is a free, open-source tool to manage [Modelica] simulations,
-interpret results, and create publishable figures.  It is possible to
+**Python utilities to set up and analyze Modelica simulation experiments**
 
-- Auto-generate simulation scripts,
-- Browse data,
-- Perform custom calculations, and
-- Produce various plots and diagrams.
+ModelicaRes is a free, open-source tool to conveniently manage [Modelica]
+simulations, interpret results, and create publishable figures in [Python].  It
+is possible to
+- auto-generate simulation scripts,
+- browse data,
+- perform custom calculations,
+- produce various plots and diagrams, and
+- export data to various formats via [pandas].
 
 ![Plot of Chua circuit with varying parameters](examples/ChuaCircuits-small.png)
 ![Sankey diagram of three tanks example](examples/ThreeTanks-small.png)
 
-The figures are generated via [matplotlib], which
-offers a rich set of plotting routines.  [ModelicaRes] includes convenient
-functions to automatically pre-format and label some figures, like xy plots,
-Bode and Nyquist plots, and Sankey diagrams.  [ModelicaRes] can be scripted or
-run from a [Python] interpreter with math and matrix functions from [NumPy].
+The figures are generated via [matplotlib], which offers a rich set of plotting
+routines.  ModelicaRes includes functions to automatically pre-format and
+label some figures, like xy plots, Bode and Nyquist plots, and Sankey diagrams.
+[odelicaRes can be scripted or used in an interactive [Python] session with math
+and matrix functions from [NumPy].
 
-For more information, please see the [main project site] or the [doc](doc)
-folder for the full documentation and many examples.
+Please see the tutorial, which is available as an
+[IPython notebook](examples/tutorial.ipynb) or online as a
+[static page](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb).
+For the full documentation and many more examples, see the [main website] or the
+[doc](doc) folder.
 
 ### Installation
 
-The easiest way to install this package is to use 
-[pip](https://pypi.python.org/pypi/pip):
+The easiest way to install this package is to use [pip]:
 
     pip install modelicares
 
@@ -32,11 +37,11 @@ On Linux, it may be necessary to have root privileges:
 
     sudo pip install modelicares
 
-Another way is to download and extract a copy of the package from the 
-[main project site], the 
-[master branch at GitHub](https://github.com/kdavies4/ModelicaRes), or the
-[PyPI page](http://pypi.python.org/pypi/ModelicaRes).  Run the following command 
-from the base folder:
+Another way is to download and extract a copy of the package The [main
+website] and the [release branch at GitHub] have copies with built
+documentation and compiled examples.  The copy on the [PyPI page] only has the
+files to install the package, build the documentation, and execute the examples.
+Once you have a copy, run the following command from the base folder:
 
     python setup.py install
 
@@ -44,60 +49,75 @@ Or, on Linux:
 
     sudo python setup.py install
 
+Some of the required packages may not install automatically.
+- The [SciPy] stack, including [matplotlib] and [pandas], can be installed
+  according to the instructions at http://www.scipy.org/install.html.
+- [PyQt] can be downloaded from
+  http://www.riverbankcomputing.co.uk/software/pyqt/download.
+- [wxPython] can be downloaded from http://www.wxpython.org/download.php.
+
 The [matplotlibrc](matplotlibrc) file has some recommended revisions to
-[matplotlib]'s defaults.  To use it, move or copy it to the working directory or 
+[matplotlib]'s defaults.  To use it, copy it to the working directory or
 [matplotlib]'s configuration directory.  See
 http://matplotlib.org/users/customizing.html for details.
 
 ### Credits
 
-The main author is Kevin Davies.  Improvements, bug fixes, and suggestions have 
-been provided by Arnout Aertgeerts, Kevin Bandy, Thomas Beutlich, 
-Martin Sjölund, Mike Tiller, and Michael Wetter.
-
-Third-party code has been included from:
-
+The main author is Kevin Davies.  Code has been included from:
+- Richard Murray
+  ([python-control](http://sourceforge.net/apps/mediawiki/python-control)),
+- Joerg Raedler (method to expand a [Modelica] variable tree---from [DyMat]),
 - Jason Grout
   ([ArrowLine](http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html)
-  class),
+  class), and
 - Jason Heeris
-  ([efficient base-10 logarithm](http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html)),
-- Richard Murray
-  ([python-control](http://sourceforge.net/apps/mediawiki/python-control)), and
-- Joerg Raedler (method to expand a [Modelica] variable tree---from [DyMat])
+  ([efficient base-10 logarithm](http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html)).
+
+Suggestions and bug fixes have been provided by Arnout Aertgeerts, Kevin Bandy,
+Thomas Beutlich, Martin Sjölund, Mike Tiller, and Michael Wetter.
 
 ### License terms and development
 
-[ModelicaRes] is published under a [BSD license](LICENSE.txt).  Please share any 
-modifications you make (preferably on a Github fork from 
-https://github.com/kdavies4/ModelicaRes) in order to help others.  If you find a 
-bug, please
+ModelicaRes is published under a [BSD-compatible license](LICENSE.txt).  Please
+share any modifications you make (preferably as a pull request to the ``master``
+branch of the [GitHub repository](https://github.com/kdavies4/ModelicaRes)) in
+order to help others.  If you find a bug, please
 [report it](https://github.com/kdavies4/ModelicaRes/issues/new).  If you have
 suggestions, please
 [share them](https://github.com/kdavies4/ModelicaRes/wiki/Suggestions).
 
 ### See also
 
-The following [Python] projects are related:
-
 - [awesim]\: helps run simulation experiments and organize results
 - [BuildingsPy]\: supports unit testing
-- [DyMat]\: exports [Modelica] simulation data to comma-separated values (CSV),
-  [Gnuplot](http://www.gnuplot.info/), MATLAB&reg;, and
-  [Network Common Data Form (netCDF)](http://www.unidata.ucar.edu/software/netcdf/)
+- [DyMat]\: exports [Modelica] simulation data to comma-separated values ([CSV]),
+  [Gnuplot], MATLAB&reg;, and Network Common Data Form ([netCDF])
 - [PyFMI]\: tools to work with models through the Functional Mock-Up Interface
-  (FMI) standard
-- [PySimulator]\: elaborate GUI; supports the FMI
+  ([FMI]) standard
+- [PySimulator]\: elaborate GUI; supports [FMI]
 
 
-[main project site]: http://kdavies4.github.io/ModelicaRes/
-[ModelicaRes]: http://kdavies4.github.io/ModelicaRes/
+[main website]: http://kdavies4.github.io/ModelicaRes
+[PyPI page]: http://pypi.python.org/pypi/ModelicaRes
+
 [Modelica]: http://www.modelica.org
 [Python]: http://www.python.org
-[NumPy]: http://numpy.scipy.org
+[pandas]: http://pandas.pydata.org
 [matplotlib]: http://www.matplotlib.org
+[NumPy]: http://numpy.scipy.org
+[SciPy]: http://www.scipy.org/index.html
+[PyQt4]: http://www.riverbankcomputing.co.uk/software/pyqt
+[wxPython]: http://www.wxpython.org
+[pip]: https://pypi.python.org/pypi/pip
 [awesim]: https://github.com/saroele/awesim
-[BuildingsPy]: http://simulationresearch.lbl.gov/modelica/buildingspy/
-[DyMat]: http://www.j-raedler.de/projects/dymat/
+[BuildingsPy]: http://simulationresearch.lbl.gov/modelica/buildingspy
+[DyMat]: http://www.j-raedler.de/projects/dymat
 [PyFMI]: https://pypi.python.org/pypi/PyFMI
 [PySimulator]: https://github.com/PySimulator/PySimulator
+[Gnuplot]: http://www.gnuplot.info
+[CSV]: http://en.wikipedia.org/wiki/Comma-separated_values
+[netCDF]: http://www.unidata.ucar.edu/software/netcdf
+[FMI]: https://www.fmi-standard.org
+[python-control]: http://sourceforge.net/apps/mediawiki/python-control
+[ArrowLine]: http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html
+[efficient base-10 logarithm]: http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html

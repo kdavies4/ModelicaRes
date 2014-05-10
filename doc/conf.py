@@ -68,7 +68,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'ModelicaRes'
-copyright = '2012-2013, Kevin Davies, Georgia Tech Research Corporation'
+copyright = '2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -160,6 +160,8 @@ html_sidebars = {'**': ['globaltoc.html', 'searchbox.html']}
 
 # If false, no module index is generated.
 #html_domain_indices = True
+
+html_show_sphinx = False
 
 # If true, links to the reST sources are added to the pages.
 html_show_sourcelink = False

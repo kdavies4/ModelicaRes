@@ -1,0 +1,15 @@
+# Additional tests besides those in the docstrings
+
+# Setup
+>>> import numpy as np
+>>> np.set_printoptions(precision=3)
+
+# SimRes.call()
+>>> from modelicares.simres import SimRes
+>>> sim = SimRes('examples/ChuaCircuit.mat')
+>>> print(sim('L.i')) # doctest: +ELLIPSIS
+(array([    0.   ,     5.   , ...,  2500.   ], dtype=float32), array([ 0.   ,  0.015, ...,  2.049], dtype=float32))
+>>> print(sim.get_tuple('L.i')) # doctest: +ELLIPSIS
+(array([    0.   ,     5.   , ...,  2500.   ], dtype=float32), array([ 0.   ,  0.015, ...,  2.049], dtype=float32))
+
+# TODO: Add test for bin/loadres.  If not, place warning here.

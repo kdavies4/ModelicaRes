@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 """Load, analyze, and plot the result of linearizing a Modelica_ model.
 
-This module contains one class: :class:`LinRes`.  It relies on python-control_,
-which is included in the distribution.
+This module contains one class: :class:`LinRes`.
 
 .. _Modelica: http://www.modelica.org/
 .. _python-control: http://sourceforge.net/apps/mediawiki/python-control
@@ -17,13 +16,16 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import numpy as np
 
-
-from scipy.io import loadmat
+from scipy.signal import ss2tf
 from matplotlib.cbook import iterable
-
 from control.matlab import ss
-from freqplot import bode_plot, nyquist_plot
-from modelicares.base import figure, add_hlines, add_vlines
+
+from ._freqplot import bode_plot, nyquist_plot
+from .util import figure, add_hlines, add_vlines, chars_to_str
+
+# File readers
+from ._io.omdy import load as omdyload # OpenModelica/Dymola
+
 
 class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze
@@ -34,31 +36,36 @@ class LinRes(object):
     - :meth:`bode` - Create a Bode plot of the system's response
 
     - :meth:`nyquist` - Create a Nyquist plot of the system's response
+
+    - :meth:`to_tf` - Return a transfer function given input and output names
+
+    Attributes:
+
+    - *dir* - Directory from which the file was loaded
+
+    - *fbase* - Base filename, without the directory or extension
+
+    - *sys* - State-space system as an instance of :class:`control.StateSpace`
+
+         It contains:
+
+         - *A*, *B*, *C*, *D*: Matrices of the linear system
+
+              .. code-block:: modelica
+
+                 der(x) = A*x + B*u;
+                      y = C*x + D*u;
+
+         - *state_names*: List of names of the states (*x*)
+
+         - *input_names*: List of names of the inputs (*u*)
+
+         - *output_names*: List of names of the outputs (*y*)
     """
 
     def __init__(self, fname='dslin.mat'):
-        """On initialization, load and preprocess a linearized Modelica_ model
-        (MATLAB\ :sup:`®` format).  
-        
-        The model is in state space:
-
-        .. code-block:: modelica
-
-             der(x) = A*x + B*u;
-                  y = C*x + D*u;
-
-        The linear system is stored as *sys* within this class.  It is an
-        instance of :class:`control.StateSpace`, which emulates the structure
-        of a continuous-time model in MATLAB\ :sup:`®` (e.g., the output of
-        :meth:`ss` in MATLAB\ :sup:`®`).  It contains:
-
-           - *A*, *B*, *C*, *D*: Matrices of the linear system
-
-           - *stateName*: List of name(s) of the states (x)
-
-           - *inputName*: List of name(s) of the inputs (u)
-
-           - *outputName*: List of name(s) of the outputs (y)
+        """Upon initialization, load Modelica_ linearization results from a
+        file.
 
         **Arguments:**
 
@@ -73,7 +80,11 @@ class LinRes(object):
            >>> from modelicares import LinRes
            >>> lin = LinRes('examples/PID')
         """
-        self._load(fname)
+
+        # Try to load as OpenModelica/Dymola.
+        assert omdyload(self, fname) == 'linearization', \
+            '"%s" appears to be a simulation result.  ' \
+            'Use modelicares.simres.SimRes instead.' % fname
 
         # Save the base filename and the directory.
         self.dir, self.fbase = os.path.split(fname)
@@ -112,93 +123,61 @@ class LinRes(object):
         return ('Modelica linearization results from "%s"' %
                 os.path.join(self.dir, self.fbase + '.mat'))
 
-    def _load(self, fname='dslin.mat'):
-        """Load a linearized Modelica_ model from *fname*.
-
-        See :meth:`__init__` for details about the file format.
-
-        Returns *None* if the file contains simulation results rather than
-        linearization results.  Otherwise, it raises an error.
+    def _to_siso(self, i_u, i_y):
+        """Return a SISO system given input and output indices.
         """
-        # This performs the task of tloadlin.m from Dymola version 7.4:
-        #     on Unix/Linux: /opt/dymola/mfiles/traj/tloadlin.m
-        #     on Windows: C:\Program Files\Dymola 7.4\Mfiles\traj\tloadlin.m
+        return ss(self.sys.A,         self.sys.B[:, i_u],
+                  self.sys.C[i_y, :], self.sys.D[i_y, i_u])
 
-        # Load the file.
-        try:
-            dslin = loadmat(fname)
-        except IOError:
-            print('File "%s" could not be loaded.  Check that it exists.' %
-                  fname)
-            raise
+    def to_tf(self, i_u=None, i_y=None):
+        """Return a transfer function given input and output names.
 
-        # Check if the file contains the correct variable names.
-        assert 'Aclass' in dslin, ('There is no linear system in file "%s" '
-            '(matrix "Aclass" is missing).' % fname)
-        assert 'nx' in dslin, ('There is no linear system in file "%s" '
-            '(matrix "nx" is missing).' % fname)
-        assert 'xuyName' in dslin, ('There is no linear system in file "%s" '
-            '(matrix "xuyName" is missing).' % fname)
-        assert 'ABCD' in dslin, ('There is no linear system in file "%s" '
-            '(matrix "ABCD" is missing).' % fname)
+        **Arguments:**
 
-        # Check if the file has the correct class name.
-        if not dslin['Aclass'][0].startswith('AlinearSystem'):
-            if dslin['Aclass'][0].startswith('Atrajectory'):
-                return None # The file contains simulation results.
-            raise AssertionError('File "%s" is not of class AlinearSystem or '
-                                 'Atrajectory.' % fname)
+        - *i_u*: Index or name of the input
 
-        # Extract variables from the dictionary (for convenience).
-        ABCD = dslin['ABCD']
-        xuyName = dslin['xuyName']
+             This must be specified unless the system has only one input.
 
-        # Check if the matrices have compatible dimensions.
-        n_x = dslin['nx'][0]
-        dim1 = ABCD.shape[0]
-        dim2 = ABCD.shape[1]
-        assert n_x <= dim1 and n_x <= dim2, (
-            'nx > number of rows/columns of matrix ABCD in file "%s"' % fname)
-        n_u = dim2 - n_x
-        n_y = dim1 - n_x
-        assert n_x > 0 and n_y > 0, ("As of version 0.4b, the control module "
-            "cannot accept systems with empty matrixes.")
+        - *i_y*: Index or name of the output
 
-        # Extract the matrices.
-        if n_x > 0:
-            A = ABCD[:n_x, :n_x]
-            if n_u > 0:
-                B = ABCD[:n_x, n_x:]
+             This must be specified unless the system has only one output.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import LinRes
+           >>> lin = LinRes('examples/PID')
+           >>> lin.to_tf()
+           (array([[  11.,  102.,  200.]]), array([   1.,  100.,    0.]))
+        """
+        # Get the input index.
+        if i_u is None:
+            if len(self.sys.input_names) == 1:
+                i_u = 0
             else:
-                B = []
-            if n_y > 0:
-                C = ABCD[n_x:, :n_x]
-            else:
-                C = []
-        else:
-            A = []
-            B = []
-            C = []
-        if n_u > 0 and n_y > 0:
-            D = ABCD[n_x:, n_x:]
-        else:
-            D = []
-        self.sys = ss(A, B, C, D)
+                raise IndexError("i_u must be specified since this is a MI system.")
+        elif isinstance(i_u, basestring):
+            try:
+                i_u = self.sys.input_names.index(i_u)
+            except ValueError:
+                raise(ValueError('The input "%s" is invalid.' % i_u))
 
-        # Extract the names.
-        if n_x > 0: # States
-            self.sys.stateName = [name.rstrip() for name in xuyName[:n_x]]
-        else:
-            self.sys.stateName = []
-        if n_u > 0: # Inputs
-            self.sys.inputName = [name.rstrip() for name in xuyName[n_x:
-                                                                    n_x+n_u]]
-        else:
-            self.sys.inputName = []
-        if n_y > 0: # Outputs
-            self.sys.outputName = [name.rstrip() for name in xuyName[n_x+n_u:]]
-        else:
-            self.sys.outputName = []
+        # Get the output index.
+        if i_y is None:
+            if len(self.sys.output_names) == 1:
+                i_y = 0
+            else:
+                raise IndexError("i_y must be specified since this is a MO system.")
+        elif isinstance(i_y, basestring):
+            try:
+                i_y = self.sys.output_names.index(i_y)
+            except ValueError:
+                raise(ValueError('The output "%s" is invalid.' % i_y))
+
+        # Return the TF.
+        return ss2tf(self.sys.A,         self.sys.B,
+                     self.sys.C[i_y, :], self.sys.D[i_y, :], input=i_u)
 
     def bode(self, axes=None, pairs=None, label='bode',
              title=None, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
@@ -267,6 +246,11 @@ class LinRes(object):
            Saved examples/PID-bode.pdf
            Saved examples/PID-bode.png
 
+        .. testsetup::
+           >>> import matplotlib.pyplot as plt
+           >>> plt.show()
+           >>> plt.close()
+
         .. only:: html
 
            .. image:: ../examples/PID-bode.png
@@ -287,7 +271,7 @@ class LinRes(object):
 
         # Create a title if necessary.
         if title is None:
-            title = r"Bode Plot of %s" % self.fbase
+            title = "Bode Plot of %s" % self.fbase
 
         # Set up the color(s) and line style(s).
         if not iterable(colors):
@@ -310,15 +294,13 @@ class LinRes(object):
 
         # Create the plots.
         for i, (i_u, i_y) in enumerate(pairs):
-            # Extract the SISO TF. TODO: Is there a better way to do this?
-            sys = ss(self.sys.A, self.sys.B[:, i_u], self.sys.C[i_y, :],
-                     self.sys.D[i_y, i_u])
-            bode_plot(sys, Hz=True, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
-                      color=colors[np.mod(i, n_colors)], axes=axes,
+            bode_plot(self._to_siso(i_u, i_y),
+                      label='$Y_{%i}/U_{%i}$' % (i_y, i_u),
+                      Hz=True, color=colors[np.mod(i, n_colors)], axes=axes,
                       style=styles[np.mod(i, n_styles)], **kwargs)
-            # Note: controls.freqplot.bode() is currently only implemented for
+            # Note: ._freqplot.bode() is currently only implemented for
             # SISO systems.
-            # 5/23/11: Since controls.freqplot.bode() already uses subplots for
+            # 5/23/11: Since ._freqplot.bode() already uses subplots for
             # the magnitude and phase plots, it would be difficult to modify
             # the code to put the Bode plots of a MIMO system into an array of
             # subfigures like MATLAB does.
@@ -378,10 +360,6 @@ class LinRes(object):
 
         **Example:**
 
-        .. testsetup::
-           >>> from modelicares import closeall
-           >>> closeall()
-
         .. code-block:: python
 
            >>> from modelicares import LinRes, save
@@ -395,6 +373,11 @@ class LinRes(object):
            >>> save()
            Saved examples/PID-nyquist.pdf
            Saved examples/PID-nyquist.png
+
+        .. testsetup::
+           >>> import matplotlib.pyplot as plt
+           >>> plt.show()
+           >>> plt.close()
 
         .. only:: html
 
@@ -416,7 +399,7 @@ class LinRes(object):
 
         # Create a title if necessary.
         if title is None:
-            title = r"Nyquist Plot of %s" % self.fbase
+            title = "Nyquist Plot of %s" % self.fbase
 
         # Set up the color(s).
         if not iterable(colors):
@@ -432,12 +415,10 @@ class LinRes(object):
 
         # Create the plots.
         for i, (i_u, i_y) in enumerate(pairs):
-            # Extract the SISO TF. TODO: Is there a better way to do this?
-            sys = ss(self.sys.A, self.sys.B[:, i_u], self.sys.C[i_y, :],
-                     self.sys.D[i_y, i_u])
-            nyquist_plot(sys, mark=False, label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u),
+            nyquist_plot(self._to_siso(i_u, i_y),
+                         label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u), mark=False,
                          color=colors[np.mod(i, n_colors)], ax=ax, **kwargs)
-            # Note: controls.freqplot.nyquist() is currently only implemented
+            # Note: ._freqplot.nyquist() is currently only implemented
             # for SISO systems.
 
         # Decorate and finish.
@@ -456,4 +437,3 @@ if __name__ == '__main__':
     """Test the contents of this file."""
     import doctest
     doctest.testmod()
-    exit()
