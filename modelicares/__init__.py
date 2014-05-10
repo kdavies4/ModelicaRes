@@ -43,7 +43,6 @@ __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
 __version__ = "0.11.x"
 
-
 # Essential functions and classes
 #
 # These will be available directly from modelicares; others must be loaded from

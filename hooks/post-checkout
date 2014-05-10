@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Delete .pyc files from the project
+# http://codeinthehole.com/writing/a-useful-git-post-checkout-hook-for-python-repos/
+# Go to the root of the project
+cd ./$(git rev-parse --show-cdup)
+# Find and delete all *.pyc files
+NUM_PYC_FILES=$( find . -name "*.pyc" | wc -l | tr -d ' ' )
+if [ $NUM_PYC_FILES -gt 0 ]; then
+    find . -name "*.pyc" -delete
+    echo "Deleted $NUM_PYC_FILES .pyc files"
+fi

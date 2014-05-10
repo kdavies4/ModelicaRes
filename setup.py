@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """Set up the ModelicaRes package.
 
-See README.txt for instructions.
+See README.md for instructions.
 """
 
 from glob import glob

@@ -84,6 +84,9 @@ class SimRes(object):
     - :meth:`plot` - Plot data as points and/or curves in 2D Cartesian
       coordinates
 
+    - :meth:`set_displayUnit` - Set the the Modelica_ *displayUnit* attribute of
+      a variable
+
     - :meth:`to_pandas` - Return a `pandas DataFrame`_ with data from selected
       variables
 
@@ -386,8 +389,30 @@ class SimRes(object):
            >>> sim.get_displayUnit('G.T_heatPort')
            'degC'
         """
-        _displayUnit = lambda name: cls._meta[name].displayUnit
+        _displayUnit = lambda name: self._meta[name].displayUnit
         return self._get(_displayUnit, names)
+
+    def set_displayUnit(self, name, displayUnit):
+        """Set the the Modelica_ *displayUnit* attribute of a variable.
+
+        **Arguments:**
+
+        - *name*: Name of the variable
+
+        - *displayUnit*: String representing the display unit to be assigned
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim.set_displayUnit('L.v', 'mV')
+           >>> sim.get_displayUnit('L.v')
+           'mV'
+        """
+        self._meta[name] = self._meta[name]._replace(displayUnit=displayUnit)
 
     def get_IV(self, names, f=lambda x: x):
         """Return the initial value(s) of variable(s).
@@ -1365,7 +1390,7 @@ class SimRes(object):
            >>> 'x' not in sim
            True
         """
-        return self._meta.__contains__(name)
+        return name in self._meta
 
     def __getitem__(self, names):
         """Upon accessing a variable name within an instance of

@@ -6,6 +6,7 @@ The releases are numbered according to the `Semantic Versioning specification
 
 v0.11.0_ (2014-*-**) -- Updates:
 
+   - Added :meth:`~modelicares.simres.SimRes.set_displayUnit`
    - Removed :class:`~modelicares.util.Quantity` and
      :meth:`~modelicares.util.convert` from :mod:`~modelicares.util`
    - Eliminated the dependence on :mod:`easygui`; using :mod:`PyQt4` instead.

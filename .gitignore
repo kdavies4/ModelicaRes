@@ -1,6 +1,6 @@
 # Images
-*.png
-*.pdf
+#*.png
+#*.pdf
 
 # Compiled files
 *.pyc
@@ -9,11 +9,12 @@ build/
 # Generated files
 dist/
 /examples/*/*/*
+doc/_images/math/*
 MANIFEST
 ModelicaRes.egg-info
-*.mos
 .fuse*
 examples/*.mpg
+*.mos
 
 # Backup files
 .ipynb_checkpoints
