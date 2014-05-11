@@ -87,6 +87,9 @@ class SimRes(object):
     - :meth:`set_displayUnit` - Set the the Modelica_ *displayUnit* attribute of
       a variable
 
+    - :meth:`set_displayUnit` - Set the the Modelica_ *description* attribute of
+      a variable
+
     - :meth:`to_pandas` - Return a `pandas DataFrame`_ with data from selected
       variables
 
@@ -98,6 +101,10 @@ class SimRes(object):
 
     - *fbase* - Base filename, without the directory or extension
 
+
+    .. testsetup::
+       >>> import numpy as np
+       >>> np.set_printoptions(precision=4)
 
     .. _pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
@@ -319,29 +326,45 @@ class SimRes(object):
         If *names* is a (optionally nested) list of strings, then the output
         will be a (nested) list of descriptions.
         """
-        try:
-            if isinstance(names, basestring):
-                return f(attr(names)) if i is None else f(attr(names)[i])
-            else:
-                # Recursion
+        #try:
+        if isinstance(names, basestring):
+            return f(attr(names)) if i is None else f(attr(names)[i])
+        else:
+            try:
+            # Recursion
                 return [self._get(attr, name, i, f) for name in names]
-        except KeyError:
-            print('%s is not a valid variable name.\n' % names)
-            print("Did you mean one of these?")
-            for close_match in get_close_matches(names, self._meta.keys()):
-                print("       " + close_match)
-            return
+            except KeyError:
+                print('%s is not a valid variable name.\n' % names)
+                print("Did you mean one of these?")
+                for close_match in get_close_matches(name, self._data.keys()):
+                    print("       " + close_match)
+                return
+            attrs = []
+            for name in names:
+                a = self._get(attr, name, i, f) # Recursion
+                if a is None:
+                    # Must be a KeyError---handled below.
+                    return
+                else:
+                    attrs.append(a)
+            return attrs
+        #except KeyError:
+        #    print('%s is not a valid variable name.\n' % names)
+        #    print("Did you mean one of these?")
+        #    for close_match in get_close_matches(names, self._data.keys()):
+        #        print("       " + close_match)
+            #return
 
     def _slice(self, name, t1=None, t2=None):
         """Return a slice that indexes a variable within and nearest to time
         limits, given the variable name.
         """
         assert t1 is None or t2 is None or t1 <= t2, (
-            "The lower time limit is larger than the upper time limit.")
+            "The lower time limit must be less than the upper time limit.")
 
-        times = self.get_times(name)
+        times = self._data[name].times
         i1 = None if t1 is None else util.get_indices(times, t1)[1]
-        i2 = None if t2 is None else (util.get_indices(times, t2)[0] + 1)
+        i2 = None if t2 is None else util.get_indices(times, t2)[0] + 1
         return slice(i1, i2)
 
     def get_description(self, names):
@@ -365,7 +388,7 @@ class SimRes(object):
            >>> sim.get_description('L.v')
            'Voltage drop between the two pins (= p.v - n.v)'
         """
-        _description = lambda name: self._meta[name].description
+        _description = lambda name: self._data[name].description
         return self._get(_description, names)
 
     def get_displayUnit(self, names):
@@ -389,7 +412,7 @@ class SimRes(object):
            >>> sim.get_displayUnit('G.T_heatPort')
            'degC'
         """
-        _displayUnit = lambda name: self._meta[name].displayUnit
+        _displayUnit = lambda name: self._data[name].displayUnit
         return self._get(_displayUnit, names)
 
     def set_displayUnit(self, name, displayUnit):
@@ -412,7 +435,31 @@ class SimRes(object):
            >>> sim.get_displayUnit('L.v')
            'mV'
         """
-        self._meta[name] = self._meta[name]._replace(displayUnit=displayUnit)
+        self._data[name] = self._data[name]._replace(displayUnit=displayUnit)
+
+    def set_description(self, name, description):
+        """Set the the Modelica_ *description* attribute of a variable.
+
+        **Arguments:**
+
+        - *name*: Name of the variable
+
+        - *description*: Description to be assigned
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim.get_description('L.v')
+           'Voltage drop between the two pins (= p.v - n.v)'
+           >>> sim.set_description('L.v', 'Voltage difference')
+           >>> sim.get_description('L.v')
+           'Voltage difference'
+        """
+        self._data[name] = self._data[name]._replace(description=description)
 
     def get_IV(self, names, f=lambda x: x):
         """Return the initial value(s) of variable(s).
@@ -460,8 +507,8 @@ class SimRes(object):
            >>> from modelicares import SimRes
 
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_FV('L.v')
-           -0.25352862
+           >>> sim.get_FV(['Time', 'L.v'])
+           [2500.0, -0.25352862]
         """
         return self.get_values(names, i=-1, f=f)
 
@@ -493,7 +540,7 @@ class SimRes(object):
            >>> sim.get_times('L.v') # doctest: +ELLIPSIS
            array([...], dtype=float32)
         """
-        _times = lambda name: self._times(self._meta[name])
+        _times = lambda name: self._data[name].times
         return self._get(_times, names, i, f)
 
     def get_unit(self, names):
@@ -517,7 +564,7 @@ class SimRes(object):
            >>> sim.get_unit('L.v')
            'V'
         """
-        _unit = lambda name: self._meta[name].unit
+        _unit = lambda name: self._data[name].unit
         return self._get(_unit, names)
 
     def get_values(self, names, i=None, f=lambda x: x):
@@ -552,8 +599,8 @@ class SimRes(object):
 
         .. code-block:: python
 
-           >>> sim.get_values(['L.vv']) # doctest: +ELLIPSIS
-           L.vv is not a valid variable name.
+           >>> sim.get_values(['L.vv']) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+           ['L.vv'] is not a valid variable name.
            <BLANKLINE>
            Did you mean one of these?
                   L.v
@@ -563,7 +610,7 @@ class SimRes(object):
         The other *get_*\* methods also give this message when a variable cannot
         be found.
         """
-        _values = lambda name: self._values(self._meta[name])
+        _values = lambda name: self._values(self._data[name])
         return self._get(_values, names, i, f)
 
     def get_values_at_times(self, names, times, f=lambda x: x):
@@ -599,9 +646,8 @@ class SimRes(object):
         def _values_at_times(name):
             """Return the values of a variable at times given its name.
             """
-            entry = self._meta[name]
-            get_values_at_ = interp1d(self._times(entry),
-                                      self._values(entry),
+            entry = self._data[name]
+            get_values_at_ = interp1d(entry.times, self._values(entry),
                                       bounds_error=False)
             return get_values_at_(times)
 
@@ -635,16 +681,17 @@ class SimRes(object):
            >>> from modelicares import SimRes
 
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_arrays_wi_times('L.v', t1=0, t2=15)
-           [104, 412]
-           >>> sim.get_arrays_wi_times('L.v', t1=1, t2=14)
+           >>> sim.get_arrays_wi_times('L.v', t1=0, t2=10)
+           array([[  0.    ,   0.    ],
+                  [  5.    ,   0.1092],
+                  [ 10.    ,   0.2108]], dtype=float32)
         """
         def _array_wi_times(name):
             """Return an array of times and values for a variable up to and
             including time bounds, given the variable name.
             """
-            entry = self._meta[name]
-            return np.array([self._times(entry),
+            entry = self._data[name]
+            return np.array([entry.times,
                              self._values(entry)]).T[self._slice(name, t1, t2)]
 
         return self._get(_array_wi_times, names, f=f)
@@ -673,15 +720,14 @@ class SimRes(object):
            >>> from modelicares import SimRes
 
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_values_wi_times('L.v', t1=0, t2=15)
-           [104, 412]
-           >>> sim.get_values_wi_times('L.v', t1=1, t2=14)
+           >>> sim.get_values_wi_times('L.v', t1=0, t2=15) # doctest: +NORMALIZE_WHITESPACE
+           array([ 0. , 0.1092, 0.2108, 0.3046], dtype=float32)
         """
         def _values_wi_times(name):
             """Return the values of a variable up to and including time bounds,
             given the variable name.
             """
-            return self._values(self._meta[name])[self._slice(name, t1, t2)]
+            return self._values(self._data[name])[self._slice(name, t1, t2)]
 
         return self._get(_values_wi_times, names, f=f)
 
@@ -713,15 +759,24 @@ class SimRes(object):
            >>> from modelicares import SimRes
 
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_arrays('L.v') # doctest: +ELLIPSIS
-           (array([...], dtype=float32), array([...], dtype=float32))
+           >>> sim.get_arrays('L.v') # doctest: +NORMALIZE_WHITESPACE
+           array([[  0.0000e+00,   0.0000e+00],
+                  [  5.0000e+00,   1.0923e-01],
+                  [  1.0000e+01,   2.1084e-01],
+                  ...,
+                  [  2.4950e+03,  -2.2577e-01],
+                  [  2.5000e+03,  -2.5353e-01],
+                  [  2.5000e+03,  -2.5353e-01]], dtype=float32)
+
+        Note that this is the same result as from :meth:`__call__` and
+        :meth:`__getitem__`.
         """
         def _array(name):
             """Return an array of times and values for a variable given its
             name.
             """
-            entry = self._meta[name]
-            return np.array([self._times(entry), self._values(entry)]).T
+            entry = self._data[name]
+            return np.array([entry.times, self._values(entry)]).T
 
         return self._get(_array, names, i, f)
 
@@ -780,9 +835,9 @@ class SimRes(object):
         def _mean(name):
             """Return the mean of a variable given its name.
             """
-            values = self.get_values(name, f=f)
-            t = self.get_times(name)
-            return integral(values, t)/(t[-1] - t[0])
+            entry = self._data[name]
+            t = entry.times
+            return integral(f(self._values(entry)), t)/(t[-1] - t[0])
 
         return self._get(_mean, names, f=f)
 
@@ -855,28 +910,24 @@ class SimRes(object):
 
         - *re*: *True* to use regular expressions (*False* to use shell style)
 
-        **Examples:**
+        **Example:**
 
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
 
-           >>> # Names starting with "L.p", using shell-style matching:
-           >>> sim.names('L.p*')
-           ['L.p.i', 'L.p.v']
-
-           >>> # Names ending with "p.v", using re matching:
-           >>> sim.names('p\.v$', re=True)
-           ['C2.p.v', 'Gnd.p.v', 'L.p.v', 'Nr.p.v', 'C1.p.v', 'Ro.p.v', 'G.p.v']
+           >>> # Names for voltages across all of the components:
+           >>> sim.names('^[^.]*.v$', re=True)
+           ['G.v', 'L.v', 'C2.v', 'Nr.v', 'Ro.v', 'C1.v']
         """
         if pattern is None or (pattern in ['.*', '.+', '.', '.?', ''] if re
                                else pattern == '*'):
-            return list(self._meta) # Shortcut
+            return list(self._data) # Shortcut
         else:
             if re:
                 matcher = re_compile(pattern).search
             else:
                 matcher = lambda name: fnmatchcase(name, pattern)
-            return filter(matcher, self._meta.keys())
+            return filter(matcher, self._data.keys())
 
     def nametree(self, pattern=None, re=False):
         """Return a tree of all variable names with respect to the path names.
@@ -893,8 +944,8 @@ class SimRes(object):
 
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.nametree() # doctest: +ELLIPSIS
-           {'G': {'G': 'G.G', ... 'n': {'i': 'G.n.i', 'v': 'G.n.v'}, ...}, 'L': {...}, ...}
+           >>> sim.nametree('L*v') # doctest: +ELLIPSIS
+           {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
         """
         # This method has been copied and modified from DyMat version 0.5
         # (Joerg Raedler,
@@ -1091,8 +1142,8 @@ class SimRes(object):
             y_1 = self.get_values(ynames1)
             y_2 = self.get_values(ynames2)
         else:
-            x = self.get_values(xname)
-            times = self.get_times(xname)
+            x = self._values(self._data[xname])
+            times = self._data[xname].times
             y_1 = self.get_values_at_times(ynames1, times)
             y_2 = self.get_values_at_times(ynames2, times)
 
@@ -1233,7 +1284,8 @@ class SimRes(object):
         # Get the data.
         n_plots = len(times)
         Qdots = self.get_values_at_times(names, times)
-        start_time, stop_time = self.get_times('Time', [0, -1])
+        start_time = self._data['Time'].times[0]
+        stop_time = self._data['Time'].times[-1]
 
         # Create a title if necessary.
         if title is None:
@@ -1294,32 +1346,33 @@ class SimRes(object):
            >>> from modelicares import SimRes
 
            >>> sim = SimRes('examples/ChuaCircuit')
-           >>> sim.to_pandas(sim.names('^[^.]*.v$', re=True)) # doctest: +ELLIPSIS
+           >>> sim.to_pandas(sim.names('^[^.]*.v$', re=True)) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
                        C1.v / V  C2.v / V   G.v / V   L.v / V  Nr.v / V  Ro.v / V
-           Time / s    ...
+           Time / s
            0.000000    4.000000  0.000000 -4.000000  0.000000  4.000000  0.000000
            5.000000    3.882738  0.109426 -3.773312  0.109235  3.882738  0.000191
            ...
-           <BLANKLINE>
-           [507 rows x 6 columns]
+           [514 rows x 6 columns]
         """
-        def label(name):
-            """Generate text to label a number as a quantity expressed in a
-            unit.
-            """
-            return name + ' / ' + self.get_unit(name)
+        # Simple function to label a variable with its unit:
+        label = lambda name: name + ' / ' + self._data[name].unit
 
+        # Create the list of variable names.
         if names is None:
             names = self.names()
-            names.remove('Time')
         else:
-            names = util.flatten_list(names)
-        times = self._unique_times(names)
-        values = {label(name): self.get_values_at_times(name, times)
-                  for name in names}
-        time_label = label('Time')
-        values[time_label] = times
-        return DataFrame(values).set_index(time_label)
+            names = set(util.flatten_list(names))
+
+        # Determine the values.
+        times = self._data['Time'].times
+        values = {'Time / s': times}
+        for name in names:
+            if np.array_equal(self._data[name].times, times):
+                values[label(name)] = self._values(self._data[name])
+            else:
+                values[label(name)] = self.get_values_at_times(name, times)
+
+        return DataFrame(values).set_index('Time / s')
 
     def __call__(self, names, action=get_arrays, *args, **kwargs):
         """Upon a call to an instance of :class:`SimRes`, call a method on
@@ -1343,19 +1396,20 @@ class SimRes(object):
            >>> from modelicares.simres import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
 
-           # Tuple of time and value vectors for a variable:
-           >>> sim('L.i') # doctest: +ELLIPSIS
-           (array([...], dtype=float32), array([...], dtype=float32))
-           >>> # This is equivalent to:
-           >>> sim.get_arrays('L.i') # doctest: +ELLIPSIS
-           (array([...], dtype=float32), array([...], dtype=float32))
+           # Array of time and value vectors for a variable:
+           >>> sim('L.v') # doctest: +NORMALIZE_WHITESPACE
+           array([[  0.0000e+00,   0.0000e+00],
+                  [  5.0000e+00,   1.0923e-01],
+                  [  1.0000e+01,   2.1084e-01],
+                  ...,
+                  [  2.4950e+03,  -2.2577e-01],
+                  [  2.5000e+03,  -2.5353e-01],
+                  [  2.5000e+03,  -2.5353e-01]], dtype=float32)
 
-           # Descriptions of a list of variables:
-           >>> sim(['L.L', 'C1.C'], SimRes.get_description)
-           ['Inductance', 'Capacitance']
-           >>> # This is equivalent to:
-           >>> sim.get_description(['L.L', 'C1.C'])
-           ['Inductance', 'Capacitance']
+        Note that this is the same result as from :meth:`get_arrays` and
+        :meth:`__getitem__`.
+
+        .. code-block:: python
 
            # Other attributes
            >>> from modelicares.simres import Info
@@ -1390,7 +1444,7 @@ class SimRes(object):
            >>> 'x' not in sim
            True
         """
-        return name in self._meta
+        return name in self._data
 
     def __getitem__(self, names):
         """Upon accessing a variable name within an instance of
@@ -1407,12 +1461,17 @@ class SimRes(object):
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
 
-           >>> sim['L.i'] # doctest: +ELLIPSIS
-           (array([...], dtype=float32), array([...], dtype=float32))
-           >>> # This is equivalent to:
-           >>> sim.get_arrays('L.i') # doctest: +ELLIPSIS
-           (array([...], dtype=float32), array([...], dtype=float32))
+           >>> sim['L.v'] # doctest: +NORMALIZE_WHITESPACE
+           array([[  0.0000e+00,   0.0000e+00],
+                  [  5.0000e+00,   1.0923e-01],
+                  [  1.0000e+01,   2.1084e-01],
+                  ...,
+                  [  2.4950e+03,  -2.2577e-01],
+                  [  2.5000e+03,  -2.5353e-01],
+                  [  2.5000e+03,  -2.5353e-01]], dtype=float32)
 
+        Note that this is the same result as from :meth:`get_arrays` and
+        :meth:`__call__`.
         """
         return self.get_arrays(names)
 
@@ -1432,7 +1491,7 @@ class SimRes(object):
            ...       (len(sim), sim.fbase))
            There are 62 variables in the ChuaCircuit simulation.
         """
-        return self._meta.__len__()
+        return self._data.__len__()
 
     def __repr__(self):
         """Return a formal description of the :class:`SimRes` instance.

@@ -405,7 +405,7 @@ def animate(imagebase='_tmp', fname="animation", fps=10, clean=False):
 
        # Assemble the frames into a movie.
        >>> animate(fname="examples/animation", clean=True) # doctest: +ELLIPSIS
-       ...
+       Making movie "examples/animation.mpg".  This may take a while.
 
     .. testsetup::
        >>> import matplotlib.pyplot as plt

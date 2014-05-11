@@ -4,7 +4,7 @@
 """
 
 from collections import namedtuple
-from numpy import unique, concatenate
+from numpy import unique, concatenate, take
 from scipy.io import loadmat
 from control.matlab import ss
 
@@ -12,8 +12,14 @@ from modelicares.util import chars_to_str
 
 # TODO: Add examples/docstrings.
 
-class A(object):
-    pass
+
+DataEntry = namedtuple('DataEntry', ['times', 'values', 'negated',
+                                     'description', 'unit', 'displayUnit'])
+"""Named tuple class to represent an entry in the data"""
+# All fields except *negated* are standard and are required by SimRes.
+# *negated* is specific to the OpenModelica/Dymola format and is only directly
+# referenced in the functions below.
+
 
 def load(cls, fname, constants_only=False):
     """Load Modelica_ simulation results from a MATLAB\ :sup:`®` file in
@@ -50,13 +56,13 @@ def load(cls, fname, constants_only=False):
        >>> load(a, 'examples/ChuaCircuit.mat')
        'asimulation'
 
-       >>> a._meta # doctest: +ELLIPSIS
-       {'L.p.i': MetaEntry(description='Current flowing into the pin', unit='A', displayUnit='', data_set=1, column=2, negated=False), ..., 'Ro.LossPower': MetaEntry(description='Loss power leaving component via HeatPort', unit='W', displayUnit='', data_set=1, column=5, negated=False)}
+       >>> a._data # doctest: +ELLIPSIS
+       {'L.p.i': DataEntry(description='Current flowing into the pin', unit='A', displayUnit='', data_set=1, column=2, negated=False), ..., 'Ro.LossPower': DataEntry(description='Loss power leaving component via HeatPort', unit='W', displayUnit='', data_set=1, column=5, negated=False)}
 
-       >>> a._values(a._meta['L.v']) # doctest: +ELLIPSIS
+       >>> a._values(a._data['L.v']) # doctest: +ELLIPSIS
        array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)
 
-       >>> a._times(a._meta['L.v']) # doctest: +ELLIPSIS
+       >>> a._times(a._data['L.v']) # doctest: +ELLIPSIS
        array([    0.        , ...,  2500.        ], dtype=float32)
 
        >>> a._unique_times(['L.v', 'C1.v']) # doctest: +ELLIPSIS
@@ -64,26 +70,31 @@ def load(cls, fname, constants_only=False):
     """
 
     # Load the file and check if it contains the expected variables.
-    mat = loadmat(fname, chars_as_strings=False)
+    if constants_only:
+        mat = loadmat(fname, chars_as_strings=False,
+                      variable_names=['Aclass', 'class', 'name', 'dataInfo',
+                                      'description', 'data_1', 'ABCD', 'nx',
+                                      'xuyName'])
+    else:
+        mat = loadmat(fname, chars_as_strings=False)
     try:
         Aclass = mat['Aclass']
     except KeyError:
         try:
             Aclass = mat['class']
         except KeyError:
-            raise KeyError('"%s" does not appear to be a Dymola or OpenModelica result file.  '
+            raise KeyError('"%s" does not appear to be an OpenModelica or Dymola result file.  '
                            '"Aclass" and "class" are both absent.' % fname)
 
-    # Check if the result type is correct.
-    result_type = chars_to_str(Aclass[0])
-    if result_type == 'Atrajectory':
+    # Process the rest of the data depending on the file type.
+    file_type = chars_to_str(Aclass[0])
+    if file_type == 'Atrajectory':
         loadsim(cls, mat, Aclass, constants_only)
         return 'simulation'
-    elif result_type == 'AlinearSystem':
+    elif file_type == 'AlinearSystem':
         loadlin(cls, mat)
         return 'linearization'
     else:
-        print result_type
         raise TypeError('File "%s" does not appear to be a simulation '
                         'or linearization result.' % fname)
 
@@ -95,7 +106,7 @@ def loadsim(cls, mat, Aclass, constants_only=False):
 
     - *cls*: Instance of a :class:`~modelicares.simres.SimRes` class
 
-         The results are stored within *cls* as *_meta* and *_data*.  *_meta* is
+         TODO update: The results are stored within *cls* as *_data* and *_data*.  *_data* is
          a dictionary where the keywords are the variable names.  The entries
          are a tuple of (index to the data array, row or column of the data
          array, a Boolean variable indicating if the values are negated,
@@ -104,10 +115,10 @@ def loadsim(cls, mat, Aclass, constants_only=False):
 
          Format-dependent helper methods are added as well:
 
-         - :meth:`_values`: Return the values of a variable given its *_meta*
+         - :meth:`_values`: Return the values of a variable given its *_data*
            entry
 
-         - :meth:`_times`: Return the times of a variable given its _meta entry
+         - :meth:`_times`: Return the times of a variable given its _data entry
 
          - :meth`_unique_times`: Return a vector of unique sampling times among
            a set of variables, given their names.
@@ -123,7 +134,7 @@ def loadsim(cls, mat, Aclass, constants_only=False):
          parameters, and variables that don't vary.  If only that information is
          needed, it may save resources to set *constants_only* to *True*.
 
-    There are no return values.  *_meta*, *_data*, :meth:`_values`,
+    There are no return values.  TODO update: *_data*, *_data*, :meth:`_values`,
     :meth:`_times`, :meth`_unique_times`, and  are monkey-patched to the
     :class:`~modelicares.simres.SimRes` instance (see above).
 
@@ -133,19 +144,11 @@ def loadsim(cls, mat, Aclass, constants_only=False):
     # This performs the task of mfiles/traj/tload.m from the Dymola
     # installation.
 
-    MetaEntry = namedtuple('MetaEntry', ['description', 'unit', 'displayUnit',
-                                         'data_set', 'column', 'negated'])
-    """Named tuple class to represent an entry in the meta data"""
-    # The first three fields (description, unit, and displayUnit) are standard
-    # for all data formats and are required by SimRes.  The others are specific
-    # to the OpenModelica/Dymola format and are only directly referenced in the
-    # functions below.
-
     def _parse_description(description):
         """Parse the variable description string into description, unit, and
         displayUnit.
         """
-        description = chars_to_str(description)[0:-1]
+        description = chars_to_str(description)[:-1]
         try:
             description, unit = description.rsplit(' [', 1)
             try:
@@ -161,70 +164,43 @@ def loadsim(cls, mat, Aclass, constants_only=False):
     assert version == '1.1', ('Only mat files of version 1.1 are supported, '
                               'but the version is %s.' % version)
 
-    # Determine if the matrices are transposed.
-    transposed = (len(Aclass) >= 4
-                  and chars_to_str(Aclass[3]) == 'binTrans')
+    # Determine if the data is transposed.
+    try:
+        transposed = chars_to_str(Aclass[3]) == 'binTrans'
+    except IndexError:
+        transposed = False
 
-    # Load the name, description, parts of dataInfo, and data_i variables.
-    cls._meta = {}
-    n_data_sets = 0
-    if transposed:
-        for i in range(mat['dataInfo'].shape[1]):
-            name = chars_to_str(mat['name'][:, i])
-            data_set = mat['dataInfo'][0, i]
-            sign_row = mat['dataInfo'][1, i]
-            description, unit, displayUnit = _parse_description(
-                mat['description'][:, i])
-            if data_set == 1 or not constants_only:
-                cls._meta[name] = MetaEntry(data_set=data_set-1,
-                                            column=abs(sign_row)-1,
-                                            negated=sign_row<0,
-                                            description=description,
-                                            unit=unit,
-                                            displayUnit=displayUnit)
-            n_data_sets = max(data_set, n_data_sets)
-        if constants_only:
-            cls._data = [mat['data_1'].T]
-        else:
-            cls._data = [mat['data_%i' % (i+1)].T
-                          for i in range(n_data_sets)]
-    else:
-        for i in range(mat['dataInfo'].shape[0]):
-            name = chars_to_str(mat['name'][i, :])
-            data_set = mat['dataInfo'][i, 0]
-            sign_row = mat['dataInfo'][i, 1]
-            description, unit, displayUnit = _parse_description(
-                mat['description'][i, :])
-            if data_set == 1 or not constants_only:
-                cls._meta[name] = MetaEntry(data_set=data_set-1,
-                                            column=abs(sign_row)-1,
-                                            negated=sign_row<0,
-                                            description=description,
-                                            unit=unit,
-                                            displayUnit=displayUnit)
-            n_data_sets = max(data_set, n_data_sets)
-        if constants_only:
-            cls._data = [mat['data_1']]
-        else:
-            cls._data = [mat['data_%i' % (i+1)]
-                          for i in range(n_data_sets)]
-    # Note 1: The indices are converted from Modelica (1-based) to Python
-    # (0-based).
+    # Process the name, description, parts of dataInfo, and data_i variables.
+    cls._data = {}
+    dataInfo = mat['dataInfo'].T if transposed else mat['dataInfo']
+    data_sets = dataInfo[:, 0]
+    current_data_set = 1
+    while True:
+        try:
+            data = (mat['data_%i' % current_data_set].T  if transposed else
+                    mat['data_%i' % current_data_set])
+            data.flags.writeable = False
+            times = data[:, 0]
+            for i, data_set in enumerate(data_sets):
+                if data_set == current_data_set:
+                    name = chars_to_str(mat['name'][:, i] if transposed else mat['name'][i, :])
+                    sign_column = dataInfo[i, 1]
+                    cls._data[name] = DataEntry(times,
+                                                data[:, abs(sign_column)-1],
+                                                sign_column<0,
+                                                *_parse_description(mat['description'][:, i] if transposed else mat['description'][i, :]))
+            current_data_set += 1
+        except:
+            break
+    # Note that numpy doesn't TODO transpose doesn't move or copy data (only the indexing scheme), and data in _data[].values and _data[].times is linked to (not copied from) the loaded data.
 
-    # Required helper functions
-    # -------------------------
-    # Return the values of a variable given its _meta entry.
-    cls._values = lambda entry: (-cls._data[entry.data_set][:, entry.column]
-                                 if entry.negated else
-                                 cls._data[entry.data_set][:, entry.column])
-    # Return the times of a variable given its _meta entry.
-    cls._times = lambda entry: cls._data[entry.data_set][:, 0]
-    # Return a vector of unique sampling times among a set of variables, given
-    # their names.
-    cls._unique_times = lambda names: \
-        unique(concatenate([cls._data[data_set][:, 0]
-                            for data_set in {cls._meta[name].data_set
-                                             for name in names}], 1))
+    # Time is from the last data set.
+    cls._data['Time'] = DataEntry(times, times, False, 'Time', 's', '')
+
+    # Required helper function
+    # ------------------------
+    # Return the values of a variable given its _data entry.
+    cls._values = lambda entry: -entry.values if entry.negated else entry.values
 
 def loadlin(cls, mat):
     """Load Modelica_ linearization results from a dictionary in OpenModelica or
@@ -262,37 +238,21 @@ def loadlin(cls, mat):
     # This performs same task as mfiles/traj/tloadlin.m from the Dymola
     # installation.
 
-    # Extract variables from the dictionary (for convenience).
-    ABCD = mat['ABCD']
-    xuyName = mat['xuyName']
-
     # Determine the number of states, inputs, and outputs.
+    ABCD = mat['ABCD']
     n_x = mat['nx'][0]
     n_u = ABCD.shape[1] - n_x
     n_y = ABCD.shape[0] - n_x
 
     # Extract the system matrices.
-    if n_x > 0:
-        A = ABCD[:n_x, :n_x]
-        if n_u > 0:
-            B = ABCD[:n_x, n_x:]
-        else:
-            B = []
-        if n_y > 0:
-            C = ABCD[n_x:, :n_x]
-        else:
-            C = []
-    else:
-        A = []
-        B = []
-        C = []
-    if n_u > 0 and n_y > 0:
-        D = ABCD[n_x:, n_x:]
-    else:
-        D = []
+    A = ABCD[:n_x, :n_x] if n_x > 0 else [[]]
+    B = ABCD[:n_x, n_x:] if n_x > 0 and n_u > 0 else [[]]
+    C = ABCD[n_x:, :n_x] if n_x > 0 and n_y > 0 else [[]]
+    D = ABCD[n_x:, n_x:] if n_u > 0 and n_y > 0 else [[]]
     cls.sys = ss(A, B, C, D)
 
     # Extract the variable names.
+    xuyName = mat['xuyName']
     cls.sys.state_names = [chars_to_str(xuyName[i]) for i in range(n_x)]
     cls.sys.input_names = [chars_to_str(xuyName[i]) for i in range(n_x, n_x+n_u)]
     cls.sys.output_names = [chars_to_str(xuyName[i]) for i in range(n_x+n_u, n_x+n_u+n_y)]
