@@ -44,8 +44,8 @@
 
 # Kevin Davies 4/29/14:
 # This module has been modified from version 0.6d of control.freqplot.  The
-# changes to bode_plot() and nyquist_plot() are marked with "ModelicaRes". 
-# Other functions have been removed or referenced to the standard installation 
+# changes to bode_plot() and nyquist_plot() are marked with "ModelicaRes".
+# Other functions have been removed or referenced to the standard installation
 # of the control package.
 
 import matplotlib.pyplot as plt
@@ -118,7 +118,7 @@ def bode_plot(syslist, omega=None, dB=False, Hz=False, deg=True,
     >>> sys = ss("1. -2; 3. -4", "5.; 7", "6. 8", "9.")
     >>> mag, phase, omega = bode(sys)
     """
-    
+
     # ModelicaRes 4/29/14:
     # Set default values for options
     #from . import config
@@ -127,16 +127,16 @@ def bode_plot(syslist, omega=None, dB=False, Hz=False, deg=True,
     #if (Hz is None): Hz = config.bode_Hz
 
     # If argument was a singleton, turn it into a list
-    if (not getattr(syslist, '__iter__', False)):
+    if not getattr(syslist, '__iter__', False):
         syslist = (syslist,)
 
     mags, phases, omegas = [], [], []
     for sys in syslist:
-        if (sys.inputs > 1 or sys.outputs > 1):
+        if sys.inputs > 1 or sys.outputs > 1:
             # TODO: Add MIMO bode plots.
             raise NotImplementedError("Bode is currently only implemented for SISO systems.")
         else:
-            if (omega == None):
+            if omega is None:
                 # Select a default range if none is provided
                 omega = default_frequency_range(syslist)
 
@@ -155,7 +155,7 @@ def bode_plot(syslist, omega=None, dB=False, Hz=False, deg=True,
             # Get the dimensions of the current axis, which we will divide up
             #! TODO: Not current implemented; just use subplot for now
 
-            if (Plot):
+            if Plot:
                 # ModelicaRes 7/5/13:
                 # Create axes if necessary.
                 if axes is None or (None, None):
@@ -271,11 +271,11 @@ def nyquist_plot(syslist, omega=None, Plot=True, color='b', label=None, mark=Tru
     >>> real, imag, freq = nyquist_plot(sys)
     """
     # If argument was a singleton, turn it into a list
-    if (not getattr(syslist, '__iter__', False)):
+    if not getattr(syslist, '__iter__', False):
         syslist = (syslist,)
 
     # Select a default range if none is provided
-    if (omega == None):
+    if omega is None:
         #! TODO: think about doing something smarter for discrete
         omega = default_frequency_range(syslist)
 
@@ -285,14 +285,14 @@ def nyquist_plot(syslist, omega=None, Plot=True, color='b', label=None, mark=Tru
         ax = plt.axes()
 
     # Interpolate between wmin and wmax if a tuple or list are provided
-    elif (isinstance(omega,list) | isinstance(omega,tuple)):
+    elif isinstance(omega, list) or isinstance(omega, tuple):
         # Only accept tuple or list of length 2
-        if (len(omega) != 2):
+        if len(omega) != 2:
             raise ValueError("Supported frequency arguments are (wmin,wmax) tuple or list, or frequency vector. ")
         omega = np.logspace(np.log10(omega[0]), np.log10(omega[1]),
                             num=50, endpoint=True, base=10.0)
     for sys in syslist:
-        if (sys.inputs > 1 or sys.outputs > 1):
+        if sys.inputs > 1 or sys.outputs > 1:
             #TODO: Add MIMO nyquist plots.
             raise NotImplementedError("Nyquist is currently only implemented for SISO systems.")
         else:
@@ -305,7 +305,7 @@ def nyquist_plot(syslist, omega=None, Plot=True, color='b', label=None, mark=Tru
             x = sp.multiply(mag, sp.cos(phase));
             y = sp.multiply(mag, sp.sin(phase));
 
-            if (Plot):
+            if Plot:
                 # Plot the primary curve and mirror image
                 # ModelicaRes 7/5/13:
                 #plt.plot(x, y, '-', color=color, *args, **kwargs);
@@ -319,7 +319,7 @@ def nyquist_plot(syslist, omega=None, Plot=True, color='b', label=None, mark=Tru
                     ax.plot([-1], [0], 'r+')
 
             # Label the frequencies of the points
-            if (labelFreq):
+            if labelFreq:
                 for xpt, ypt, omegapt in zip(x, y, omega)[::labelFreq]:
                     # Convert to Hz
                     f = omegapt/(2*sp.pi)

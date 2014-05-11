@@ -19,7 +19,11 @@
 - :meth:`add_vlines` - Add vertical lines to a set of axes with optional
   labels
 
-- :meth:`animate` - Encode a series of PNG images as a MPG movie
+- :meth:`applyfunction` - Decorator to apply a function to the output of a 
+  function
+
+- :meth:`applyindex` - Decorator to apply an index or slice to the output of a 
+  function
 
 - :meth:`chars_to_str` - Convert a string array to a string and remove trailing
   whitespace
@@ -27,7 +31,8 @@
 - :meth:`color` - Plot 2D scalar data on a color axis in 2D Cartesian
   coordinates
 
-- :meth:`closeall` - Close all open figures
+- :meth:`closeall` - Close all open figures (shortcut to the
+  :meth:`destroy_all` from :class:`matplotlib._pylab_helpers.Gcf`)
 
 - :meth:`expand_path` - Expand a file path by replacing '~' with the user
   directory and makes the path absolute
@@ -89,6 +94,9 @@ from matplotlib.cbook import iterable
 from matplotlib._pylab_helpers import Gcf
 from PyQt4.QtGui import QApplication, QFileDialog
 
+
+# Function to close all open figures
+closeall = Gcf.destroy_all
 
 def chars_to_str(str_arr, codec='latin-1'):
     """Convert a string array to a string.
@@ -356,80 +364,32 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
                 horizontalalignment='center', verticalalignment='center')
 
 
-def animate(imagebase='_tmp', fname="animation", fps=10, clean=False):
-    """Encode a series of PNG images as a MPG movie.
+def applyfunction(f, g):
+    """Return a function that applies a function *g* to its output, given a 
+    function that doesn't (*f*).
 
-    **Arguments:**
-
-    - *imagebase*: Base filename for the PNG images
-
-         The images should be located in the current directory as an
-         "*imagebase**xx*.png" sequence, where *xx* is a frame index.
-
-    - *fname*: Filename for the movie
-
-         ".mpg" will be appended if necessary.
-
-    - *fps*: Number of frames per second
-
-    - *clean*: *True*, if the PNG images should be deleted afterward
-
-    .. Note:: This function requires mencoder_.  On Linux, install it with the
-       following command: ``sudo apt-get install mencoder``.  Currently, this
-       function is not supported on Windows.
-
-    .. _mencoder: http://en.wikipedia.org/wiki/MEncoder
-
-    **Example:**
-
-    .. code-block:: python
-
-       >>> import matplotlib.pyplot as plt
-       >>> from numpy.random import rand
-       >>> from modelicares import *
-
-       # Create the frames.
-       >>> fig = plt.figure(figsize=(5,5))
-       >>> ax = fig.add_subplot(111)
-       >>> for i in range(50):  # 50 frames
-       ...     ax.cla()
-       ...     ax.imshow(rand(5,5), interpolation='nearest')
-       ...     fname = '_tmp%02d.png' % i
-       ...     print("Saving frame %i (file %s)" % (i, fname))
-       ...     fig.savefig(fname) # doctest: +ELLIPSIS
-       <matplotlib.image.AxesImage object at 0x...>
-       Saving frame 0 (file _tmp00.png)
-       ...
-       <matplotlib.image.AxesImage object at 0x...>
-       Saving frame 49 (file _tmp49.png)
-
-       # Assemble the frames into a movie.
-       >>> animate(fname="examples/animation", clean=True) # doctest: +ELLIPSIS
-       Making movie "examples/animation.mpg".  This may take a while.
-
-    .. testsetup::
-       >>> import matplotlib.pyplot as plt
-       >>> plt.show()
-       >>> plt.close()
+    If *g* is *None*, then no function is applied (pass through or 
+    identity).
     """
-    # TODO: Consider using the animation module from matplotlib.  Should it
-    # supercede this function?
-    # TODO: Add support for Windows.
+    @wraps(f)
+    def wrapped(*args, **kwargs):
+        return f(*args, **kwargs) if g is None else g(f(*args, **kwargs))
 
-    # Based on
-    # http://matplotlib.sourceforge.net/faq/howto_faq.html#make-a-movie,
-    # accessed 11/2/10
-    if os.name == 'posix':
-        if not fname.lower().endswith('.mpg'):
-            fname += '.mpg'
-        print('Making movie "%s".  This may take a while.' % fname)
-        os.system("mencoder 'mf://%s*.png' -quiet -mf type=png:fps=%i -ovc lavc "
-                  "-lavcopts vcodec=wmv2 -oac copy -o %s" % (imagebase, fps, fname))
-        if clean:
-            for image in glob(imagebase + '*.png'):
-                os.remove(image)
-    else:
-         raise(NotImplementedError("The animate function is only implemented on POSIX platforms."))
+    return wrapped
+
+
+def applyindex(f, i):
+    """Return a function that returns values at index or slice *i*, given a 
+    function that returns all values (*f*).
+
+    If *i* is *None*, then all values are returned (pass through).
+    """
+    @wraps(f)
+    def wrapped(*args, **kwargs):
+        return f(*args, **kwargs) if i is None else f(*args, **kwargs)[i]
+
+    return wrapped
+
 
 def color(ax, c, *args, **kwargs):
     """Plot 2D scalar data on a color axis in 2D Cartesian coordinates.
@@ -483,22 +443,8 @@ def color(ax, c, *args, **kwargs):
     """
     return ax.imshow(c, *args, **kwargs)
 
-
-def closeall():
-    """Close all open figures.
-
-    This is a shortcut for the following:
-
-       >>> from matplotlib._pylab_helpers import Gcf
-       >>> Gcf.destroy_all()
-    """
-    Gcf.destroy_all()
-    #for manager in Gcf.get_all_fig_managers():
-    #    manager.canvas.figure.close()
-    #plt.close("all")
-
 def expand_path(path):
-    """Expand a file path by replacing '~' with the user directory and making
+    r"""Expand a file path by replacing '~' with the user directory and making
     the path absolute.
 
     **Example:**
@@ -797,8 +743,7 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
     try:
         reader = csv.reader(open(fname), **kwargs)
     except IOError:
-        print('Unable to load "%s".  Check that it exists.' % fname)
-        return
+        raise IOError('Unable to load "%s".  Check that it exists.' % fname)
 
     # Read the header row and create the dictionary from it.
     for i in range(header_row):
@@ -823,8 +768,7 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
                 else:
                     data[key] = map(t, column)
             except ValueError:
-                print("Could not cast column %i into %i." % (i, t))
-                return
+                raise ValueError("Could not cast column %i into %i." % (i, t))
     else:
         for key, column in zip(keys, zip(*reader)):
             try:
@@ -1055,7 +999,7 @@ def _get_directory(message="Choose a directory for the images"):
     app.exit(0)
 
 def save(formats=['pdf', 'png'], fbase='1'):
-    """Save the current figures as images in a format or list of formats.
+    """Save the current figure as images in a format or list of formats.
 
     The directory and base filenames are taken from the *label* property of the
     figures.  A slash ("/") can be used as a path separator, even if the
@@ -1163,7 +1107,7 @@ def saveall(formats=['pdf', 'png']):
         formats = [formats,]
 
     # Find the figures.
-    figs = [manager.canvas.figure for manager in Gcf.get_all_fig_managers()]
+    figs = [manager.canvas.figure for manager in Gcf.figs.values()]
 
     # Save the figures, creating folders as necessary.
     chosen_directory = None
@@ -1379,7 +1323,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
     else:
         return ax, n_cols
 
-# TODO: Remove the "_" prefix once this is tested and ready.
+# TODO: Remove the "_" prefix and add it to the list once this is finished.
 def _shift_scale_c(cbar, v_min, v_max, eagerness=0.325):
     """"Apply an offset and a factor as necessary to the colorbar.
 
@@ -1391,14 +1335,14 @@ def _shift_scale_c(cbar, v_min, v_max, eagerness=0.325):
 
     - *v_max*: Maximum of the color-axis data
 
-    - *eagerness*: Parameter to adjust how little of an offset is required
+    - *eagerness*: Parameter to adjust how little of an offset is allowed
       before the label will be recentered
 
          - 0: Offset is never applied.
 
          - 1: Offset is always applied if it will help.
     """
-    # TODO: Provide an example.
+    # TODO: Add an example.
     # The concept here is based on:
     # http://efreedom.com/Question/1-3677368/Matplotlib-Format-Axis-Offset-Values-Whole-Numbers-Specific-Number
     # accessed 2010/11/10
@@ -1418,7 +1362,7 @@ def shift_scale_x(ax, eagerness=0.325):
 
     - *ax*: matplotlib.axes object
 
-    - *eagerness*: Parameter to adjust how little of an offset is required
+    - *eagerness*: Parameter to adjust how little of an offset is allowed
       before the label will be recentered
 
          - 0: Offset is never applied.
@@ -1476,7 +1420,7 @@ def shift_scale_x(ax, eagerness=0.325):
 
           Example of :meth:`shift_scale_x`
     """
-    # The concept here is based on:
+    # This concept is based on:
     # http://efreedom.com/Question/1-3677368/Matplotlib-Format-Axis-Offset-Values-Whole-Numbers-Specific-Number,
     # accessed 2010/11/10
     label = ax.get_xlabel()
@@ -1494,7 +1438,7 @@ def shift_scale_y(ax, eagerness=0.325):
 
     - *ax*: matplotlib.axes object
 
-    - *eagerness*: Parameter to adjust how little of an offset is required
+    - *eagerness*: Parameter to adjust how little of an offset is allowed
       before the label will be recentered
 
          - 0: Offset is never applied.
@@ -1555,7 +1499,7 @@ def shift_scale_y(ax, eagerness=0.325):
 
           Example of :meth:`shift_scale_y`
     """
-    # The concept here is based on:
+    # This concept is based on:
     # http://efreedom.com/Question/1-3677368/Matplotlib-Format-Axis-Offset-Values-Whole-Numbers-Specific-Number,
     # accessed 2010/11/10
     label = ax.get_ylabel()

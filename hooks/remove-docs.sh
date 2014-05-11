@@ -26,6 +26,10 @@ rm -f doc/ModelicaRes.pdf
 # HTML files in doc folder
 rm -f doc/*.html
 
+# Search files in doc folder
+rm -f doc/objects.inv
+rm -f doc/searchindex.js
+
 # --------------------------
 # Not necessary but helpful:
 # --------------------------

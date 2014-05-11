@@ -2,12 +2,7 @@
 """Functions and classes to set up Modelica_ simulations and load, analyze, and
 plot the results.
 
-**Functions:**
-
-- :meth:`load` - Load a Modelica_ simulation or linearization result and return
-  an instance of the appropriate class
-
-This module also provides easy access to the most important functions and
+This module provides convenient access to the most important functions and
 classes from its submodules.  These are:
 
 - To manage simulation experiments (:mod:`~modelicares.exps` module):
@@ -31,9 +26,12 @@ classes from its submodules.  These are:
 
 - Supporting classes and functions (:mod:`~modelicares.util` module):
   :meth:`~util.add_arrows`, :meth:`~util.add_hlines`, :meth:`~util.add_vlines`,
-  :meth:`~util.animate`, :class:`~util.ArrowLine`, :meth:`~util.closeall`,
-  :meth:`~util.figure`, :meth:`~util.load_csv`, :meth:`~util.save`,
-  :meth:`~util.saveall`, and :meth:`~util.setup_subplots`
+  :class:`~util.ArrowLine`, :meth:`~util.closeall`, :meth:`~util.figure`,
+  :meth:`~util.load_csv`, :meth:`~util.save`, :meth:`~util.saveall`, and
+  :meth:`~util.setup_subplots`
+
+There is also one function defined here (see below).
+
 
 .. _Modelica: http://www.modelica.org/
 """
@@ -47,8 +45,8 @@ __version__ = "0.11.x"
 #
 # These will be available directly from modelicares; others must be loaded from
 # their submodules.
-from modelicares.util import (add_arrows, add_hlines, add_vlines, animate,
-    ArrowLine, closeall, figure, load_csv, save, saveall, setup_subplots)
+from modelicares.util import (add_arrows, add_hlines, add_vlines, ArrowLine,
+    closeall, figure, load_csv, save, saveall, setup_subplots)
 from modelicares.exps import (Experiment, gen_experiments, ParamDict,
     read_params, run_models, write_params, write_script, doe)
 from modelicares.linres import LinRes
@@ -58,26 +56,40 @@ from modelicares.texunit import label_number, label_quantity, unit2tex
 
 
 def load(fname, constants_only=False):
-    """Load a Modelica_ simulation or linearization result.
+    """Load a single Modelica_ simulation or linearization result and return an
+    instance of the appropriate class (:class:`~simres.SimRes` or
+    :class:`~linres.LinRes`).
 
     **Arguments:**
+
+    - *fname*: Name of the results file, including the path
 
     - *constants_only*: *True* to load only the variables from the first data
       matrix, if the result is from a simulation
 
-    **Returns:** An instance of the appropriate class
-    (:class:`~modelicares.simres.SimRes` or :class:`~modelicares.linres.LinRes`)
-    or *None* if the file could not be loaded
+    **Returns:** An instance of the appropriate class (:class:`~simres.SimRes`
+    or :class:`~linres.LinRes`) or *None* if the file could not be loaded
+
+    **Examples:**
+
+    .. code-block:: python
+
+        >>> sim = load('examples/ChuaCircuit')
+        >>> sim # doctest: +ELLIPSIS
+        SimRes('.../examples/ChuaCircuit.mat')
+
+        >>> lin = load('examples/PID')
+        >>> lin # doctest: +ELLIPSIS
+        LinRes('.../examples/PID.mat')
     """
     try:
-        return SimRes(fname)
-    except IOError:
-        print('"%s" could not be open.  Check that it exists.' % fname)
-    else:
+        return SimRes(fname, constants_only)
+    except TypeError:
         try:
-           return LinRes(fname)
-        except:
-           return None
+            return LinRes(fname)
+        except TypeError:
+            raise TypeError('"%s" does not appear to be a valid simulation '
+                            'or linearization file.' % fname)
 
 
 if __name__ == '__main__':

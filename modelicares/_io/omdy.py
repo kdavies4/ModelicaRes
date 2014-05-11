@@ -1,38 +1,74 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Functions to load results from OpenModelica and Dymola
+
+- :meth:`loadsim` - TODO
+
+- :meth:`loadlin` - TODO
+
+TODO:
+each
+raises TypeError if the wrong results type (simulation vs. linearization)
+raises LookupError if the file isn't formatted as expected
+raises IOError if the file can't be accessed
+raises ValueError if wrong file version
+AssertionError if unrecognized data orientation
+
 """
 
+import scipy
+
 from collections import namedtuple
-from numpy import unique, concatenate, take
-from scipy.io import loadmat
 from control.matlab import ss
 
-from modelicares.util import chars_to_str
-
-# TODO: Add examples/docstrings.
-
-
-DataEntry = namedtuple('DataEntry', ['times', 'values', 'negated',
-                                     'description', 'unit', 'displayUnit'])
-"""Named tuple class to represent an entry in the data"""
-# All fields except *negated* are standard and are required by SimRes.
-# *negated* is specific to the OpenModelica/Dymola format and is only directly
-# referenced in the functions below.
+from modelicares.util import chars_to_str, applyfunction, applyindex
+from . import DataEntry as GenericDataEntry
+from . import _applyfunction, _applyindex
 
 
-def load(cls, fname, constants_only=False):
+# Named tuple to store the data for each variable
+class DataEntry(GenericDataEntry):
+    """Specialized named tuple that contains attributes and methods to 
+    represent a variable from a model simulated in OpenModelica or Dymola
+
+TODO doc
+    """
+
+    @applyfunction
+    @applyindex
+    def times(self)
+        """Return function *f* of the times of the variable at index or slice 
+        *i*.
+
+        If *i* is *None*, then all values are returned.  If *f* is *None*, then 
+        no function is applied (pass through or identity).
+        """
+        return self._samples.times
+
+    @applyfunction
+    @applyindex
+    def values(self)
+        """Return function *f* of the values of the variable at index or slice 
+        *i*.
+
+        If *i* is *None*, then all values are returned.  If *f* is *None*, then 
+        no function is applied (pass through or identity).
+        """
+        return -self._samples.values if self._samples.negated else self._samples.values
+
+
+# Named tuple to store the time and value information of each variable
+# This is used for the *_samples* field of DataEntry.
+Samples = namedtuple('Samples', ['times', 'values', 'negated'])
+
+
+def _load(fname, constants_only=False):
     """Load Modelica_ simulation results from a MATLAB\ :sup:`®` file in
     OpenModelica or Dymola\ :sup:`®` format.
 
     **Arguments:**
 
-    - *cls*: Instance of a :class:`~modelicares.simres.SimRes` or
-      :class:`~modelicares.simres.SimRes` class
-
-         The data and supporting methods will be attached to this instance.
-
-    - *fname*: Name of the results file (may include the path)
+    - *fname*: Name of the results file, including the path
 
          This may be from a simulation or linearization.  The file extension
          ('.mat') is optional.
@@ -40,111 +76,91 @@ def load(cls, fname, constants_only=False):
     - *constants_only*: *True* to load only the variables from the first data
       matrix, if the result is from a simulation
 
-    **Returns:** 'simulation' or 'linearization', depending on the type of
-    results.
+    **Returns:**
 
-    **Example:**
+    1. A dictionary of matrices
 
-    .. code-block:: python
-
-       >>> from modelicares._io.omdy import load
-
-       >>> class A(object):
-       ...     pass
-       >>> a = A()
-
-       >>> load(a, 'examples/ChuaCircuit.mat')
-       'asimulation'
-
-       >>> a._data # doctest: +ELLIPSIS
-       {'L.p.i': DataEntry(description='Current flowing into the pin', unit='A', displayUnit='', data_set=1, column=2, negated=False), ..., 'Ro.LossPower': DataEntry(description='Loss power leaving component via HeatPort', unit='W', displayUnit='', data_set=1, column=5, negated=False)}
-
-       >>> a._values(a._data['L.v']) # doctest: +ELLIPSIS
-       array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)
-
-       >>> a._times(a._data['L.v']) # doctest: +ELLIPSIS
-       array([    0.        , ...,  2500.        ], dtype=float32)
-
-       >>> a._unique_times(['L.v', 'C1.v']) # doctest: +ELLIPSIS
-       array([    0.        , ...,  2500.        ], dtype=float32)
+    2. A list of the strings on the lines of the 'Aclass' or 'class' matrix,
+       whichever is present
     """
 
-    # Load the file and check if it contains the expected variables.
-    if constants_only:
-        mat = loadmat(fname, chars_as_strings=False,
-                      variable_names=['Aclass', 'class', 'name', 'dataInfo',
-                                      'description', 'data_1', 'ABCD', 'nx',
-                                      'xuyName'])
-    else:
-        mat = loadmat(fname, chars_as_strings=False)
+    # Load the file.
+    try:
+        if constants_only:
+            mat = scipy.io.loadmat(fname, chars_as_strings=False,
+                                   variable_names=['Aclass', 'class', 'name',
+                                                   'dataInfo', 'description',
+                                                   'data_1', 'ABCD', 'nx',
+                                                   'xuyName'])
+        else:
+            mat = scipy.io.loadmat(fname, chars_as_strings=False)
+    except IOError:
+        raise IOError('"{fname}" could not be opened.'
+                      '  Check that it exists.'.format(fname=fname))
+
+    # Check if the file contains the expected variables.
     try:
         Aclass = mat['Aclass']
     except KeyError:
-        try:
-            Aclass = mat['class']
-        except KeyError:
-            raise KeyError('"%s" does not appear to be an OpenModelica or Dymola result file.  '
-                           '"Aclass" and "class" are both absent.' % fname)
+        raise TypeError('"{fname}" does not appear to be an OpenModelica or '
+                        'Dymola result file.  The "Aclass" variable is '
+                        'absent.'.format(fname=fname))
 
-    # Process the rest of the data depending on the file type.
-    file_type = chars_to_str(Aclass[0])
-    if file_type == 'Atrajectory':
-        loadsim(cls, mat, Aclass, constants_only)
-        return 'simulation'
-    elif file_type == 'AlinearSystem':
-        loadlin(cls, mat)
-        return 'linearization'
-    else:
-        raise TypeError('File "%s" does not appear to be a simulation '
-                        'or linearization result.' % fname)
+    return mat, map(chars_to_str, Aclass)
 
-def loadsim(cls, mat, Aclass, constants_only=False):
+
+def loadsim(fname, constants_only=False):
     """Load Modelica_ simulation results from a dictionary in OpenModelica or
     Dymola\ :sup:`®` format.
 
     **Arguments:**
 
-    - *cls*: Instance of a :class:`~modelicares.simres.SimRes` class
+    - *fname*: Name of the results file, including the path
 
-         TODO update: The results are stored within *cls* as *_data* and *_data*.  *_data* is
-         a dictionary where the keywords are the variable names.  The entries
-         are a tuple of (index to the data array, row or column of the data
-         array, a Boolean variable indicating if the values are negated,
-         description of the variable, unit, and display unit).  *_data* is a
-         list of NumPy_ arrays containing the sample times and values.
-
-         Format-dependent helper methods are added as well:
-
-         - :meth:`_values`: Return the values of a variable given its *_data*
-           entry
-
-         - :meth:`_times`: Return the times of a variable given its _data entry
-
-         - :meth`_unique_times`: Return a vector of unique sampling times among
-           a set of variables, given their names.
-
-    - *mat*: Dictionary of matrices
-
-    - *Aclass*: A copy of the `Aclass` or `class` matrix, whichever is present
+         This may be from a simulation or linearization.  The file extension
+         ('.mat') is optional.
 
     - *constants_only*: *True* to load only the variables from the first data
-      matrix
+      matrix, if the result is from a simulation
 
          The first data matrix usually contains all of the constants,
          parameters, and variables that don't vary.  If only that information is
          needed, it may save resources to set *constants_only* to *True*.
 
-    There are no return values.  TODO update: *_data*, *_data*, :meth:`_values`,
-    :meth:`_times`, :meth`_unique_times`, and  are monkey-patched to the
-    :class:`~modelicares.simres.SimRes` instance (see above).
+    **Returns:** A dictionary ... TODO -
 
+         TODO update: The results are stored within *cls* as *data* and *data*.  *data* is
+         a dictionary where the keywords are the variable names.  The entries
+         are a tuple of (index to the data array, row or column of the data
+         array, a Boolean variable indicating if the values are negated,
+         description of the variable, unit, and display unit).  *data* is a
+         list of NumPy_ arrays containing the sample times and values.
+
+         Format-dependent helper methods are added as well:
+
+         - :meth:`_values`: Return the values of a variable given its *data*
+           entry
+
+    **Example:**
+
+    .. code-block:: python
+
+       >>> from modelicares._io.omdy import loadsim
+
+       >>> s = loadsim('examples/ChuaCircuit.mat')
+
+       >>> s.data # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+       {'L.p.i': DataEntry(description='Current flowing into the pin', unit='A',
+                           displayUnit='', Samples(times=, values=, negated=_)}
+       >>> s.data['L.v'].unit
+       'V'
 
     .. _NumPy: http://numpy.scipy.org/
     """
     # This performs the task of mfiles/traj/tload.m from the Dymola
     # installation.
 
-    def _parse_description(description):
+    def parse(description):
         """Parse the variable description string into description, unit, and
         displayUnit.
         """
@@ -159,61 +175,106 @@ def loadsim(cls, mat, Aclass, constants_only=False):
             return description, '', ''
         return description, unit, displayUnit
 
-    # Check the version of the simulation results format.
-    version = chars_to_str(Aclass[1])
-    assert version == '1.1', ('Only mat files of version 1.1 are supported, '
+    # Load the file.
+    mat, Aclass = _load(fname, constants_only)
+
+    # Check the type of results.
+    if Aclass[0] <> 'Atrajectory':
+        if Aclass[0] == 'AlinearSystem':
+           raise TypeError('File "{fname}" appears to be a linearization '
+                           'result.  Try using LinRes instead.' % fname)
+        else:
+           raise TypeError('File "{fname}" does not appear to be a simulation '
+                           'or linearization result.' % fname)
+
+    # Check the version of the format.
+    try:
+        if Aclass[1] == '1.0':
+            version = 0
+        elif Aclass[1] == '1.1':
+            version = 1
+        else
+            raise LookupError("The version of the OpenModelica/Dymola result file "
+                              "is unknown.")
+    except IndexError:
+        raise LookupError("The version of the OpenModelica/Dymola result file "
+                          "is unknown.")
+    if version == '1.1':
+        v, ('OpenModelica/Dymola Only mat files of version 1.1 are supported, '
                               'but the version is %s.' % version)
 
     # Determine if the data is transposed.
     try:
-        transposed = chars_to_str(Aclass[3]) == 'binTrans'
+        transposed = Aclass[3] == 'binTrans'
     except IndexError:
         transposed = False
+    else:
+        assert transposed or Aclass[3] == 'binNormal', ('The orientation of the'
+            ' OpenModelica/Dymola results is not recognized.  The third line of'
+            ' the "Aclass" or "class" variable is "%s", but it should be'
+            ' "binNormal" or "binTrans".' % Aclass[3])
 
     # Process the name, description, parts of dataInfo, and data_i variables.
-    cls._data = {}
-    dataInfo = mat['dataInfo'].T if transposed else mat['dataInfo']
+    data = {}
+    try:
+        dataInfo = mat['dataInfo'].T if transposed else mat['dataInfo']
+    except KeyError:
+        raise LookupError('OpenModelica/Dymola simulation results must '
+                          'contain a "dataInfo" variable.')
     data_sets = dataInfo[:, 0]
     current_data_set = 1
     while True:
         try:
-            data = (mat['data_%i' % current_data_set].T  if transposed else
-                    mat['data_%i' % current_data_set])
-            data.flags.writeable = False
-            times = data[:, 0]
+            d = (mat['data_%i' % current_data_set].T  if transposed else
+                 mat['data_%i' % current_data_set])
+            times = d[:, 0]
             for i, data_set in enumerate(data_sets):
                 if data_set == current_data_set:
-                    name = chars_to_str(mat['name'][:, i] if transposed else mat['name'][i, :])
-                    sign_column = dataInfo[i, 1]
-                    cls._data[name] = DataEntry(times,
-                                                data[:, abs(sign_column)-1],
-                                                sign_column<0,
-                                                *_parse_description(mat['description'][:, i] if transposed else mat['description'][i, :]))
+                    try:
+                        name = chars_to_str(mat['name'][:, i]
+                                            if transposed else
+                                            mat['name'][i, :])
+                    except KeyError:
+                        raise LookupError('OpenModelica/Dymola simulation '
+                            'results must contain a "name" variable.')
+                    sign_col = dataInfo[i, 1]
+                    values = d[:, abs(sign_col)-1]
+                    negated = sign_col < 0
+                    try:
+                        data[name] = DataEntry(*parse(mat['description'][:, i]
+                                                      if transposed else
+                                                      mat['description'][i, :]),
+                                               Samples(times, values, negated))
+                    except KeyError:
+                        raise LookupError('OpenModelica/Dymola simulation '
+                            'results must contain a "description" variable.')
             current_data_set += 1
-        except:
-            break
-    # Note that numpy doesn't TODO transpose doesn't move or copy data (only the indexing scheme), and data in _data[].values and _data[].times is linked to (not copied from) the loaded data.
+        except KeyError:
+            break # There are no more "data_i" variables.
+        except IndexError:
+            raise LookupError("The variables in the OpenModelica/Dymola "
+                            "simulation result do not have the expected shape.")
 
     # Time is from the last data set.
-    cls._data['Time'] = DataEntry(times, times, False, 'Time', 's', '')
+    data['Time'] = DataEntry('Time', 's', '', Samples(times, times, False))
 
-    # Required helper function
-    # ------------------------
-    # Return the values of a variable given its _data entry.
-    cls._values = lambda entry: -entry.values if entry.negated else entry.values
+    return data
 
-def loadlin(cls, mat):
+
+def loadlin(fname):
     """Load Modelica_ linearization results from a dictionary in OpenModelica or
     Dymola\ :sup:`®` format.
 
     **Arguments:**
 
-    - *cls*: Instance of a :class:`~modelicares.linres.LinRes` class
+    - *fname*: Name of the results file, including the path
 
-         The state-space system is stored within *cls* as *sys*---an instance of
-         :class:`control.StateSpace`
+         This may be from a simulation or linearization.  The file extension
+         ('.mat') is optional.
 
-         It contains:
+    **Returns:**
+
+    - An instance of :class:`control.StateSpace`, which contains:
 
          - *A*, *B*, *C*, *D*: Matrices of the linear system
 
@@ -228,23 +289,40 @@ def loadlin(cls, mat):
 
          - *output_names*: List of names of the outputs (*y*)
 
-    - *mat*: Dictionary of matrices
+    **Example:**
 
-    - *Aclass*: A copy of the `Aclass` or `class` matrix, whichever is present
-
-    There are no return values.  *sys* is monkey-patched to the
-    :class:`~modelicares.linres.LinRes` instance (see above).
+    # TODO: add
     """
     # This performs same task as mfiles/traj/tloadlin.m from the Dymola
     # installation.
 
+    # Load the file.
+    mat, Aclass = _load(fname, constants_only)
+
+    # Check the type of results.
+    if Aclass[0] <> 'AlinearSystem':
+        if Aclass[0] == 'Atrajectory':
+           raise TypeError('File "{fname}" appears to be a simulation '
+                           'result.  Try using SimRes instead.' % fname)
+        else:
+           raise LookupError('File "{fname}" does not appear to be a simulation '
+                             'or linearization result.' % fname)
+
     # Determine the number of states, inputs, and outputs.
-    ABCD = mat['ABCD']
-    n_x = mat['nx'][0]
+    try:
+        ABCD = mat['ABCD']
+    except KeyError:
+        raise LookupError('OpenModelica/Dymola linearization results must contain'
+                          ' the variable "ABCD".')
     n_u = ABCD.shape[1] - n_x
     n_y = ABCD.shape[0] - n_x
 
     # Extract the system matrices.
+    try:
+        n_x = mat['nx'][0]
+    except KeyError:
+        raise LookupError('OpenModelica/Dymola linearization results must contain'
+                          ' the variable "n_x".')
     A = ABCD[:n_x, :n_x] if n_x > 0 else [[]]
     B = ABCD[:n_x, n_x:] if n_x > 0 and n_u > 0 else [[]]
     C = ABCD[n_x:, :n_x] if n_x > 0 and n_y > 0 else [[]]
@@ -252,7 +330,11 @@ def loadlin(cls, mat):
     cls.sys = ss(A, B, C, D)
 
     # Extract the variable names.
-    xuyName = mat['xuyName']
+    try:
+        xuyName = mat['xuyName']
+    except KeyError:
+        raise LookupError('OpenModelica/Dymola linearization results must contain'
+                          ' the variable "xuyName".')
     cls.sys.state_names = [chars_to_str(xuyName[i]) for i in range(n_x)]
     cls.sys.input_names = [chars_to_str(xuyName[i]) for i in range(n_x, n_x+n_u)]
     cls.sys.output_names = [chars_to_str(xuyName[i]) for i in range(n_x+n_u, n_x+n_u+n_y)]

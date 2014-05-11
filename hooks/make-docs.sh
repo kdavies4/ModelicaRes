@@ -84,9 +84,7 @@ git ModelicaRes.pdf # Just to be sure.
 
 # Spell check the HTML docs.
 echo Now running spell check on the HTML docs...
-for f in doc/*.html; do
-    aspell --extra-dicts=../.modelica.pws --personal=../.modelicares.pws -c $f
-done
+bash spellcheck.sh
 
 git commit -am "Updated documentation"
 )

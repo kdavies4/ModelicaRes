@@ -6,6 +6,13 @@ The releases are numbered according to the `Semantic Versioning specification
 
 v0.11.0_ (2014-*-**) -- Updates:
 
+   - Changed the way the filename is recorded and retrieved in
+     :class:`~modelicares.simres.SimRes` and
+     :class:`~modelicares.linres.LinRes`.
+   - The *action* argument of :meth:`~modelicares.simres.SimRes.__call__` has
+     been renamed to *method*.
+   - Removed :meth:`~modelicares.util.animate`.  matplotlib now has built-in
+     methods for this; see http://matplotlib.org/api/animation_api.html.
    - Improved the computational efficiency of :class:`~modelicares.simres.SimRes`.
    - Added :meth:`~modelicares.simres.SimRes.set_displayUnit`
      :meth:`~modelicares.simres.SimRes.set_description`
@@ -30,7 +37,7 @@ v0.11.0_ (2014-*-**) -- Updates:
      from :meth:`~modelicares.simres.SimRes.get_values`
      to :meth:`~modelicares.simres.SimRes.get_arrays`.
    - Removed :meth:`~modelicares.simres.SimRes.get_tuple`
-     and added :meth:`~modelicares.simres.SimRes.get_arrays` intead.
+     and added :meth:`~modelicares.simres.SimRes.get_arrays` instead.
    - Added pattern matching to :meth:`~modelicares.simres.SimRes.nametree`.
    - Merged :meth:`~modelicares.exps.modelica_array` and
      :meth:`~modelicares.exps.modelica_boolean` into a new function,

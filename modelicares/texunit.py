@@ -175,9 +175,8 @@ def label_quantity(number, unit='', format='%G', times='\,', roman=False):
                     'z', # zepto (10^-21)
                     'y'][8 - pow1000] # yocto (10^-24)
         except IndexError:
-            print("The factor 1e%i is beyond the range covered by the SI "
-                  "prefixes (1e-24 to 1e24)." % 3*pow1000)
-            raise
+            raise IndexError("The factor 1e%i is beyond the range covered by "
+                             "the SI prefixes (1e-24 to 1e24)." % 3*pow1000)
 
     # Apply engineering notation and SI prefixes.
     if 'E' in format:
@@ -275,8 +274,8 @@ def unit2tex(unit, times='\,', roman=False):
             try:
                 numerator, denominator = unit.split('/')
             except ValueError:
-                print("Check that the unit string %s has at most one division "
-                      "sign." % unit)
+                raise ValueError("Check that the unit string %s has at most "
+                                 "one division sign." % unit)
             unit = (_process_group(numerator, times) + times +
                     _process_group(denominator, times, is_numerator=False))
         else:

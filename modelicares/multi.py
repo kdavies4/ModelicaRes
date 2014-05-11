@@ -23,6 +23,7 @@ __credits__ = ["Kevin Bandy"]
 __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
+
 import os
 import numpy as np
 
@@ -30,10 +31,12 @@ from glob import glob
 from matplotlib.cbook import iterable
 from itertools import cycle
 
+from . import load
 from ._freqplot import bode_plot, nyquist_plot
 from .simres import SimRes
 from .linres import LinRes
 from .util import figure, add_hlines, add_vlines
+
 
 def multiload(locations='*'):
     """Load multiple Modelica_ simulation and/or linearization results.
@@ -88,41 +91,20 @@ def multiload(locations='*'):
                 fnames.append(location)
 
     # Load the files.
-    sims = []
-    lins = []
-    for fname in fnames:
-        try:
-            results = load(fname)
-            if isinstance(result, SimRes):
-                sims.append(result)
-            if isinstance(result, SimRes):
-                sims.append(result)
-
-        except:
-            pass
-
     results = map(load, fnames)
 
-    # Sort the results into appropriate variables.
-    sims = [result for result in results if isinstance(result, SimRes)]
-    lins = [result for result in results if isinstance(result, LinRes)]
-    return sims, lins
-
-    for fname in fnames:
-        try:
-            sims.append(SimRes(fname))
-        except:
-            try:
-                lins.append(LinRes(fname))
-            except:
-                print("Could not load simulation or linearization data from "
-                      "'%s'." % fname)
-            else:
-                print("Valid: " + lins[-1].__repr__())
+    # Sort the results into appropriate lists.
+    sims = []
+    lins = []
+    for result in results:
+        if isinstance(result, SimRes):
+            sims.append(result)
         else:
-            print("Valid: " + sims[-1].__repr__())
+            assert isinstance(result, LinRes), "Unknown instance in results list."
+            lins.append(result)
 
     return sims, lins
+
 
 def multiplot(sims, suffixes='', color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
               dashes=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)], **kwargs):
@@ -220,7 +202,7 @@ def multiplot(sims, suffixes='', color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
     # Process the suffixes input.
     if suffixes == '':
         suffixes = [sim.fbase for sim in sims]
-    elif suffixes == None:
+    elif suffixes is None:
         suffixes = ['']*len(sims)
 
     # Generate the plots.

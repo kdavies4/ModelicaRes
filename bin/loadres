@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""Load results from Modelica_ simulation(s) and/or linearzation(s) and provide
+"""Load results from Modelica_ simulation(s) and/or linearization(s) and provide
 a Python_ session to analyze the results.
 
 This script can be executed from the command line.  It accepts as arguments the
@@ -19,13 +19,14 @@ command:
 
 .. code-block:: sh
 
+TODO update:
    $ loadres ChuaCircuit PID
    Valid: SimRes('.../examples/ChuaCircuit.mat')
    Valid: LinRes('.../examples/PID.mat')
    A simulation result has been loaded into sim.
    A linearization result has been loaded into lin.
 
-If this doesn't work, then the *loadres* script probably hasn't been installed
+If this does not work, then the *loadres* script probably has not been installed
 to a location recognized by the operating system.  Instead, copy it to the
 *examples* directory and try again.  If necessary, call Python_ explicitly
 (``python loadres ChuaCircuit PID``).
@@ -50,8 +51,6 @@ __email__ = "kdavies4@gmail.com"
 __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
-default_path = os.path.expanduser("~/Documents/Modelica")
-
 
 import os
 import time
@@ -59,13 +58,15 @@ import time
 from sys import argv
 from PyQt4.QtGui import QApplication, QFileDialog, QMessageBox, QPushButton
 
-from modelicares import SimRes, LinRes, multiload
+from modelicares.multi import multiload
 
+
+default_path = os.path.expanduser("~/Documents/Modelica")
 
 def file_or_folder():
     """Choose to load from a file or folder.
     """
-    # TODO: Make the buttons appear in order: File, Folder, Cancel.
+    # TODO: Make the buttons appear in order: File, Folder, and Cancel.
     msgBox = QMessageBox()
     msgBox.setText("Do you want to open one file\nor all files from a folder?")
     msgBox.addButton(Folder, QMessageBox.AcceptRole)
@@ -115,6 +116,7 @@ if __name__ == '__main__':
     # Load the file(s).
     sims, lins = multiload(loc)
 
+    # Handle the simulation list.
     n_sims = len(sims)
     if n_sims == 1:
         sim = sims[0]
@@ -124,6 +126,7 @@ if __name__ == '__main__':
         print("Simulation results have been loaded into sims[0] through "
               "sims[%i]." % (n_sims-1))#, end="")
 
+    # Handle the linearization list.
     n_lins = len(lins)
     if n_lins == 1:
         lin = lins[0]
@@ -136,7 +139,8 @@ if __name__ == '__main__':
         print("No files were loaded.")
         delayed_exit()
 
-    del File, Folder, loc, default_path
+    # Delete some variables to reduce clutter in the Python session below.
+    del File, Folder, loc, default_path, n_sims, n_lins
 
     # Open the IPython or standard Python interpreter.
     #    http://writeonly.wordpress.com/2008/09/08/embedding-a-python-shell-in-a-python-script/,

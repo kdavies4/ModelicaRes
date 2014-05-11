@@ -1,7 +1,7 @@
 loadres script
 ==============
 
-Load results from Modelica_ simulation(s) and/or linearzation(s) and provide
+Load results from Modelica_ simulation(s) and/or linearization(s) and provide
 a Python_ session to analyze the results.
 
 This script can be executed from the command line.  It accepts as arguments the
@@ -27,7 +27,7 @@ command:
    A simulation result has been loaded into sim.
    A linearization result has been loaded into lin.
 
-If this doesn't work, then the *loadres* script probably hasn't been installed
+If this does not work, then the *loadres* script probably has not been installed
 to a location recognized by the operating system.  Instead, copy it to the
 *examples* directory and try again.  If necessary, call Python_ explicitly
 (``python loadres ChuaCircuit PID``).

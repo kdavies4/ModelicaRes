@@ -35,15 +35,17 @@ class LinRes(object):
 
     - :meth:`bode` - Create a Bode plot of the system's response
 
+    - :meth:`fbase` - Return the base filename from which the data was loaded,
+      without the directory or file extension
+
     - :meth:`nyquist` - Create a Nyquist plot of the system's response
 
     - :meth:`to_tf` - Return a transfer function given input and output names
 
     Attributes:
 
-    - *dir* - Directory from which the file was loaded
-
-    - *fbase* - Base filename, without the directory or extension
+    - *fname* - filename from which the data was loaded, with the directory and
+      file extension
 
     - *sys* - State-space system as an instance of :class:`control.StateSpace`
 
@@ -63,7 +65,7 @@ class LinRes(object):
          - *output_names*: List of names of the outputs (*y*)
     """
 
-    def __init__(self, fname='dslin.mat'):
+    def __init__(self, fname='dslin.mat', tool=None):
         """Upon initialization, load Modelica_ linearization results from a
         file.
 
@@ -86,10 +88,18 @@ class LinRes(object):
             '"%s" appears to be a simulation result.  ' \
             'Use modelicares.simres.SimRes instead.' % fname
 
-        # Save the base filename and the directory.
-        self.dir, self.fbase = os.path.split(fname)
-        self.dir = os.path.abspath(self.dir)
-        self.fbase = os.path.splitext(self.fbase)[0]
+        # Save the filename.
+        self.fname = fname
+
+# TODO: support tool argument, save it as an attribute and list in doc as argument and attribute.
+
+
+    def fbase(self):
+        """Return the base filename from which the data was loaded, without the
+        directory or file extension.
+        """
+        return os.path.splitext(os.path.split(self.fname)[1])[0]
+
 
     def __repr__(self):
         """Return a formal description of the :class:`LinRes` instance.
@@ -122,6 +132,36 @@ class LinRes(object):
         """
         return ('Modelica linearization results from "%s"' %
                 os.path.join(self.dir, self.fbase + '.mat'))
+
+    def __repr__(self):
+        """Return a formal description of the :class:`LinRes` instance.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import LinRes
+           >>> lin = LinRes('examples/PID.mat')
+           >>> lin # doctest: +ELLIPSIS
+           LinRes('...PID.mat')
+        """
+        return "{Class}('{fname}')".format(Class=self.__class__.__name__,
+                                           fname=self.fname)
+        # Note:  The class name is inquired so that this method will still be
+        # correct if the class is extended.
+
+
+    def __str__(self):
+        """Return an informal description of the :class:`LinRes` instance.
+
+        **Example:**
+
+           >>> from modelicares import LinRes
+           >>> lin = LinRes('examples/PID.mat')
+           >>> print(lin) # doctest: +ELLIPSIS
+           Modelica linearization results from "...PID.mat"
+        """
+        return 'Modelica linearization results from "{f}"'.format(f=self.fname)
 
     def _to_siso(self, i_u, i_y):
         """Return a SISO system given input and output indices.
