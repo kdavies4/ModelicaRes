@@ -28,10 +28,10 @@ from fnmatch import fnmatchcase
 from difflib import get_close_matches
 from pandas import DataFrame
 
-from . import util
-from .texunit import unit2tex, label_number
-from ._io import simloaders
-from ._gui import Browser
+from modelicares import util
+from modelicares.texunit import unit2tex, label_number
+from modelicares._io import simloaders
+from modelicares._gui import Browser
 
 
 class SimRes(object):
@@ -100,6 +100,8 @@ class SimRes(object):
     - *fname* - Filename from which the data was loaded, with full path and
       extension
 
+TODO *tool*
+
 
     .. testsetup::
        >>> import numpy as np
@@ -134,6 +136,7 @@ class SimRes(object):
 
         # Load the file and store the data.
         for loader in simloaders:
+            self.data = loader(fname, constants_only)
             try:
                 self.data = loader(fname, constants_only)
             except IOError:
@@ -147,167 +150,55 @@ class SimRes(object):
         self.fname = fname
 # TODO: support tool argument, save it as an attribute and list in doc as argument and attribute.
 
-    def __call__(name, method=get_arrays, *args, **kwargs):
-        """Upon a call to an instance of :class:`SimRes`, call a method on
-        variable(s) given their name(s).
 
-        **Arguments**:
-
-        - *name*: Variable name
-
-        - *method*: Method for retrieving information about the variable(s)
-
-             The default is :meth:`get_arrays`.  *method* may be a list or
-             tuple, in which case the return value is a list or tuple.
-
-        - \**args*, \*\**kwargs*: Additional arguments for *method*
-
-        **Examples:**
-
-        .. code-block:: python
-
-           >>> from modelicares.simres import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-
-           # Array of time and value vectors for a variable:
-           >>> sim('L.v') # doctest: +NORMALIZE_WHITESPACE
-           array([[  0.0000e+00,   0.0000e+00],
-                  [  5.0000e+00,   1.0923e-01],
-                  [  1.0000e+01,   2.1084e-01],
-                  ...,
-                  [  2.4950e+03,  -2.2577e-01],
-                  [  2.5000e+03,  -2.5353e-01],
-                  [  2.5000e+03,  -2.5353e-01]], dtype=float32)
-
-        Note that this is the same result as from :meth:`get_arrays` and
-        :meth:`__getitem__`.
-
-        .. code-block:: python
-
-           # Other attributes
-           >>> from modelicares.simres import Info
-           >>> print("The final value of %s is %.3f %s." %
-           ...       sim('L.i', (Info.description, Info.FV, Info.unit)))
-           The final value of Current flowing from pin p to pin n is 2.049 A.
+    def _acceptlists(f):
+        """Return a function that accepts an optionally nested list of variable
+        names, given a function that accepts a single variable name.
         """
-        assert isinstance(name, basestring), "name must be a string."
-        # It'd be possible to accept lists of variable names (in fact it'd work
-        # without this assert statement), but the call structure is complex
-        # enough already.
+        @wraps(f)
+        def wrapped(self, names, *args, **kwargs):
+            """Traverse lists recursively until the argument is a single
+            variable name, then pass it to the original function and return the
+            result upwards.
+            """
+            if isinstance(names, basestring):
+                return f(self, names, *args, **kwargs)
+            else:
+                return [wrapped(self, name, *args, **kwargs) for name in names]
 
-        try:
-            return method(self, name=name, *args, **kwargs)
-        except TypeError:
-            t = type(method)
-            return t(m(self, name=name, *args, **kwargs) for m in method)
+        return wrapped
 
 
-    def __contains__(self, name):
-        """Test if a variable is present in the simulation results.
-
-        **Arguments**:
-
-        - *name*: Name of variable
-
-        **Example**:
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-
-           >>> # 'L.v' is a valid variable name:
-           >>> 'L.v' in sim
-           True
-           >>> # but 'x' is not:
-           >>> 'x' not in sim
-           True
+    def _suggest(f):
+        """Wrap a look-up in the data dictionary to provide suggestions if there
+        is a key error.
         """
-        return name in self.data
+        @wraps(f)
+        def wrapped(self, name, *args, **kwargs):
+            """Catch a KeyError and raise a LookupError with suggestions."""
+            try:
+                return f(self, name, *args, **kwargs)
+            except KeyError:
+                msg = '%s is not a valid variable name.' % name
+                close_matches = get_close_matches(name, self.names())
+                if close_matches:
+                    msg += "\n       ".join(["\n\nDid you mean one of these?"]
+                                            + close_matches)
+                raise LookupError(msg)
+
+        return wrapped
 
 
-    @_suggest
-    @_fromname
-    def __getitem__(entry):
-        """Upon accessing a variable name within an instance of :class:`SimRes`,
-        return an array of times and values for the variable.
-
-        The first column is time and the second column contains the values.
-
-        **Arguments**:
-
-        - *name*: Variable name
-
-        **Examples:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-
-           >>> sim['L.v'] # doctest: +NORMALIZE_WHITESPACE
-           array([[  0.0000e+00,   0.0000e+00],
-                  [  5.0000e+00,   1.0923e-01],
-                  [  1.0000e+01,   2.1084e-01],
-                  ...,
-                  [  2.4950e+03,  -2.2577e-01],
-                  [  2.5000e+03,  -2.5353e-01],
-                  [  2.5000e+03,  -2.5353e-01]], dtype=float32)
-
-        Note that this is the same result as from :meth:`get_arrays` and
-        :meth:`__call__`.
+    def _fromname(f):
+        """Return a function that accepts a variable name, given a function that
+        accepts a data entry.
         """
-        return entry.get_array()
+        @wraps(f)
+        def wrapped(self, name, *args, **kwargs):
+            """Look up the data entry and pass it to the original function."""
+            return f(self.data[name], *args, **kwargs)
 
-
-    def __len__(self):
-        """Return the number of variables in the simulation
-
-        This includes the time variable.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-
-           >>> print("There are %i variables in the %s simulation." %
-           ...       (len(sim), sim.fbase()))
-           There are 62 variables in the ChuaCircuit simulation.
-        """
-        return len(self.data)
-
-
-    def __repr__(self):
-        """Return a formal description of the :class:`SimRes` instance.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim # doctest: +ELLIPSIS
-           SimRes('...ChuaCircuit.mat')
-        """
-        return "{Class}('{fname}')".format(Class=self.__class__.__name__,
-                                           fname=self.fname)
-        # Note:  The class name is inquired so that this method will still be
-        # correct if the class is extended.
-
-
-    def __str__(self):
-        """Return an informal description of the :class:`SimRes` instance.
-
-        **Example:**
-
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> print(sim) # doctest: +ELLIPSIS
-           Modelica simulation results from "...ChuaCircuit.mat"
-        """
-        return 'Modelica simulation results from "{f}"'.format(f=self.fname)
+        return wrapped
 
 
     # TODO: Remove the "_" prefix and add it to the list once this is finished.
@@ -520,8 +411,7 @@ class SimRes(object):
                   [  2.5000e+03,  -2.5353e-01],
                   [  2.5000e+03,  -2.5353e-01]], dtype=float32)
 
-        Note that this is the same result as from :meth:`__call__` and
-        :meth:`__getitem__`.
+        Note that this is the same result as from :meth:`__call__`.
         """
         return entry.get_array(*args, **kwargs)
 
@@ -955,7 +845,7 @@ class SimRes(object):
         return entry.values_wi_times(*args, **kwargs)
 
 
-    def names(self, pattern=None, re=False):
+    def names(self, pattern=None, re=False, constants_only=False):
         r"""Return a list of variable names that match a pattern.
 
         By default, all names are returned.
@@ -991,10 +881,13 @@ class SimRes(object):
             '^x$' to match only the variables that begin with "x" and 'x$' to
             match only the variables that end with "x".
 
-            Note that '.' is a subclass separator in Modelica but a wildcard in
+            Note that '.' is a subclass separator in Modelica_ but a wildcard in
             regular expressions.  Escape the subclass separator as '\\.'.
 
         - *re*: *True* to use regular expressions (*False* to use shell style)
+
+        - *constants_only*: *True* to include only the variables that do not
+          change over time
 
         **Example:**
 
@@ -1005,15 +898,33 @@ class SimRes(object):
            >>> sim.names('^[^.]*.v$', re=True)
            ['G.v', 'L.v', 'C2.v', 'Nr.v', 'Ro.v', 'C1.v']
         """
+        # Get a list of all the variables or just the constants.
+        if constants_only:
+            names = [item[0] for item in self.data.items() if item[1].is_constant()]
+        else:
+            names = list(self.data)
+
+        # Search the list.
         if pattern is None or (pattern in ['.*', '.+', '.', '.?', ''] if re
                                else pattern == '*'):
-            return list(self.data) # Shortcut
+            return names # Shortcut
         else:
             if re:
                 matcher = re_compile(pattern).search
             else:
                 matcher = lambda name: fnmatchcase(name, pattern)
-            return filter(matcher, self.data.keys())
+            return filter(matcher, names)
+
+
+    def n_constants(self, pattern=None, re=False):
+        """Return the number of variables that do not change over time.
+
+        There are no arguments.  Note that this number may be greater than the
+        number of declared parameters and constants in the Modelica_ code, since
+        a variable may be fixed in value even though it is not declared as a
+        constant or parameter.
+        """
+        return sum([variable.is_constant() for variable in self.data.values()])
 
 
     def nametree(self, pattern=None, re=False):
@@ -1477,8 +1388,8 @@ class SimRes(object):
 
         - *aliases*: Dictionary of aliases for the variable names
 
-             The keys are the "official" variable names from the simulation and 
-             the entries are the names as they will be included in the column 
+             The keys are the "official" variable names from the simulation and
+             the entries are the names as they will be included in the column
              headings.  Any variables not in this list will not be aliased.
 
         **Examples:**
@@ -1502,8 +1413,8 @@ class SimRes(object):
         .. code-block:: python
 
            >>> sim = SimRes('examples/ThreeTanks')
-           >>> aliases = {'tank1.level': "Tank 1 level", 
-                          'tank2.level': "Tank 2 level", 
+           >>> aliases = {'tank1.level': "Tank 1 level",
+                          'tank2.level': "Tank 2 level",
                           'tank3.level': "Tank 3 level"}
            >>> sim.to_pandas(aliases.keys(), aliases) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
 
@@ -1529,66 +1440,205 @@ class SimRes(object):
         values = []
         labels = []
         for name in names:
-            values.append(self.data[name].values() 
+            values.append(self.data[name].values()
                           if np.array_equal(self.data[name].times, times) else
                           self.get_values_at_times(name, times))
             try:
                 labels.append(label(aliases[name]))
             except KeyError:
-                labels.append(label(name))            
-                   
+                labels.append(label(name))
+
         # Create the pandas data frame.
         return DataFrame(values).set_index('Time / s')
 
 
-    def _acceptlists(f):
-        """Return a function that accepts an optionally nested list of variable
-        names, given a function that accepts a single variable name.
+    def __call__(name, method=get_arrays, *args, **kwargs):
+        """Upon a call to an instance of :class:`SimRes`, call a method on
+        variable(s) given their name(s).
+
+        **Arguments**:
+
+        - *name*: Variable name
+
+        - *method*: Method for retrieving information about the variable(s)
+
+             The default is :meth:`get_arrays`.  *method* may be a list or
+             tuple, in which case the return value is a list or tuple.
+
+        - \**args*, \*\**kwargs*: Additional arguments for *method*
+
+        **Examples:**
+
+        .. code-block:: python
+
+           >>> from modelicares.simres import SimRes
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+
+           # Array of time and value vectors for a variable:
+           >>> sim('L.v') # doctest: +NORMALIZE_WHITESPACE
+           array([[  0.0000e+00,   0.0000e+00],
+                  [  5.0000e+00,   1.0923e-01],
+                  [  1.0000e+01,   2.1084e-01],
+                  ...,
+                  [  2.4950e+03,  -2.2577e-01],
+                  [  2.5000e+03,  -2.5353e-01],
+                  [  2.5000e+03,  -2.5353e-01]], dtype=float32)
+
+        Note that this is the same result as from :meth:`get_arrays`.
+
+        .. code-block:: python
+
+           # Other attributes
+           >>> from modelicares.simres import Info
+           >>> print("The final value of %s is %.3f %s." %
+           ...       sim('L.i', (Info.description, Info.FV, Info.unit)))
+           The final value of Current flowing from pin p to pin n is 2.049 A.
         """
-        @wraps(f)
-        def wrapped(self, names, *args, **kwargs):
-            """Traverse lists recursively until the argument is a single
-            variable name, then pass it to the original function and return the
-            result upwards.
-            """
-            if isinstance(names, basestring):
-                return f(self, names, *args, **kwargs)
-            else:
-                return [wrapped(self, name, *args, **kwargs) for name in names]
+        assert isinstance(name, basestring), "name must be a string."
+        # It'd be possible to accept lists of variable names (in fact it'd work
+        # without this assert statement), but the call structure is complex
+        # enough already.
 
-        return wrapped
+        try:
+            return method(self, name=name, *args, **kwargs)
+        except TypeError:
+            t = type(method)
+            return t(m(self, name=name, *args, **kwargs) for m in method)
 
 
-    def _suggest(f):
-        """Wrap a look-up in the data dictionary to provide suggestions if there
-        is a key error.
+    def __contains__(self, name):
+        """Test if a variable is present in the simulation results.
+
+        **Arguments**:
+
+        - *name*: Name of variable
+
+        **Example**:
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+
+           >>> # 'L.v' is a valid variable name:
+           >>> 'L.v' in sim
+           True
+           >>> # but 'x' is not:
+           >>> 'x' not in sim
+           True
         """
-        @wraps(f)
-        def wrapped(self, name, *args, **kwargs):
-            """Catch a KeyError and raise a LookupError with suggestions."""
-            try:
-                return f(self, name, *args, **kwargs)
-            except KeyError:
-                msg = '%s is not a valid variable name.' % name
-                close_matches = get_close_matches(name, self.names())
-                if close_matches:
-                    msg += "\n       ".join(["\n\nDid you mean one of these?"]
-                                            + close_matches)
-                raise LookupError(msg)
-
-        return wrapped
+        return name in self.data
 
 
-    def _fromname(f):
-        """Return a function that accepts a variable name, given a function that
-        accepts a data entry.
+    @_suggest
+    @_fromname
+    def __getitem__(entry):
+        """Upon accessing a variable name within an instance of :class:`SimRes`,
+        return its data entry.
+
+        This provides access to non-vectorized versions of all of the *get_*
+        methods of :class:`SimRes`, as attributes:
+
+        - *description* - The Modelica_ variable's description string
+
+        - *unit* - The Modelica_ variable's *unit* attribute
+
+        - *displayUnit* - The Modelica_ variable's *displayUnit* attribute
+
+        - :meth:`times` - Sample times of the variable
+
+        or methods:
+
+        - :meth:`array` - Return an array of times and values for the variable
+
+        - :meth:`array_wi_times` - Return an array of times and values for the
+          variable within a time range
+
+        - :meth:`IV` - Return the initial value of the variable
+
+        - :meth:`FV` - Return the final value of the variable
+
+        - :meth:`max` - Return the maximum value of the variable
+
+        - :meth:`mean` - Return the time-averaged value of the variable
+
+        - :meth:`min` - Return the minimum value of the variable
+
+        - :meth:`values` - Values of the variable
+
+        - :meth:`values_at_times` - Values of the variable at given times
+
+        - :meth:`values_wi_times` - Values of the variable within a time range
+
+        also:
+
+        - :meth:`is_constant` - *True*, if the variable does not change over
+          time
+
+        **Examples:**
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+
+           >>> sim['L.v'].unit
+           'V'
+
+           >>> sim['L.v'].values_wi_times(10, 25) # doctest: +NORMALIZE_WHITESPACE
+
         """
-        @wraps(f)
-        def wrapped(self, name, *args, **kwargs):
-            """Look up the data entry and pass it to the original function."""
-            return f(self.data[name], *args, **kwargs)
+        return entry
 
-        return wrapped
+
+    def __len__(self):
+        """Return the number of variables in the simulation
+
+        This includes the time variable.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+
+           >>> print("There are %i variables in the %s simulation." %
+           ...       (len(sim), sim.fbase()))
+           There are 62 variables in the ChuaCircuit simulation.
+        """
+        return len(self.data)
+
+
+    def __repr__(self):
+        """Return a formal description of the :class:`SimRes` instance.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim # doctest: +ELLIPSIS
+           SimRes('...ChuaCircuit.mat')
+        """
+        return "{Class}('{fname}')".format(Class=self.__class__.__name__,
+                                           fname=self.fname)
+        # Note:  The class name is inquired so that this method will still be
+        # correct if the class is extended.
+
+
+    def __str__(self):
+        """Return an informal description of the :class:`SimRes` instance.
+
+        **Example:**
+
+           >>> from modelicares import SimRes
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> print(sim) # doctest: +ELLIPSIS
+           Modelica simulation results from "...ChuaCircuit.mat"
+        """
+        return 'Modelica simulation results from "{f}"'.format(f=self.fname)
 
 
 class Info:

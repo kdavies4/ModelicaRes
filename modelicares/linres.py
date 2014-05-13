@@ -20,11 +20,9 @@ from scipy.signal import ss2tf
 from matplotlib.cbook import iterable
 from control.matlab import ss
 
-from ._freqplot import bode_plot, nyquist_plot
-from .util import figure, add_hlines, add_vlines, chars_to_str
-
-# File readers
-from ._io.omdy import load as omdyload # OpenModelica/Dymola
+from modelicares._freqplot import bode_plot, nyquist_plot
+from modelicares.util import figure, add_hlines, add_vlines, chars_to_str
+from modelicares._io import linloaders
 
 
 class LinRes(object):
@@ -83,10 +81,20 @@ class LinRes(object):
            >>> lin = LinRes('examples/PID')
         """
 
+        from modelicares._io.dymola import linloader
+        self.sys = linloader(fname)
         # Try to load as OpenModelica/Dymola.
-        assert omdyload(self, fname) == 'linearization', \
-            '"%s" appears to be a simulation result.  ' \
-            'Use modelicares.simres.SimRes instead.' % fname
+        # Load the file and store the data.
+        #for loader in linloaders:
+        #    self.sys = loader(fname)
+            #try:
+            #    self.sys = loader(fname)
+            #except IOError:
+            #    raise
+            #except:
+            #    continue
+            #else:
+            #    break
 
         # Save the filename.
         self.fname = fname

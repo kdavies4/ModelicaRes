@@ -1,8 +1,8 @@
 #!/bin/bash
 # Spellcheck the HTML docs.
 #
-# If there are misspellings in the HTML docs, be sure to fix them in the
-# source--not just in the HTML files.
+# If there are misspellings in the HTML docs, fix them in the source--not just
+# in the HTML files.
 #
 # This requires aspell (http://aspell.net/).
 
@@ -16,7 +16,7 @@ root=`git rev-parse --show-toplevel`
 wordfile=$root/$wordfile
 extrafile=$root/$extrafile
 
-# Remove unused words from the word file.
+# Remove unused words from the custom word file.
 if $reduce; then
    cp $wordfile $wordfile.bak
    head --lines=1 $wordfile.bak > $wordfile

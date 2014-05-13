@@ -31,11 +31,11 @@ from glob import glob
 from matplotlib.cbook import iterable
 from itertools import cycle
 
-from . import load
-from ._freqplot import bode_plot, nyquist_plot
-from .simres import SimRes
-from .linres import LinRes
-from .util import figure, add_hlines, add_vlines
+from modelicares import load
+from modelicares._freqplot import bode_plot, nyquist_plot
+from modelicares.simres import SimRes
+from modelicares.linres import LinRes
+from modelicares.util import figure, add_hlines, add_vlines
 
 
 def multiload(locations='*'):
@@ -56,25 +56,27 @@ def multiload(locations='*'):
 
     Either may be an empty list.
 
-    **Examples:**
+    **Example:**
+
+    We can use this function in conjuction with methods from
+    :class:`~modelicares.simres.Info` to conveniently retrieve information from
+    multiple simulations.
 
     .. code-block:: python
-
        >>> from modelicares import multiload
+       >>> from modelicares.simres import Info
 
-       # By file:
-       >>> multiload(['examples/ChuaCircuit.mat', 'examples/PID/*/*.mat']) # doctest: +ELLIPSIS
-       Valid: SimRes('.../examples/ChuaCircuit.mat')
-       Valid: LinRes('.../examples/PID/1/dslin.mat')
-       Valid: LinRes('.../examples/PID/2/dslin.mat')
-       ([SimRes('.../examples/ChuaCircuit.mat')], [LinRes('.../examples/PID/1/dslin.mat'), LinRes('.../examples/PID/2/dslin.mat')])
+       # Get the mean values of the first capacitor's voltage from two runs
+       # of or the two
+       >>> sims, __ = multiload('examples/ChuaCircuit/*/*.mat') # doctest: +ELLIPSIS
+       >>> mean_C1_voltage = lambda sim: Info.mean(sim, 'C1.v')
+       >>> map(mean_C1_voltage, sims)
+       [0.76859528, 0.76859528]
 
-       # By directory:
-       >>> multiload('examples') # doctest: +ELLIPSIS
-       Valid: SimRes('...ChuaCircuit.mat')
-       Valid: LinRes('...PID.mat')...
-       Valid: SimRes('...ThreeTanks.mat')
-       ([SimRes('...ChuaCircuit.mat'), SimRes('...ThreeTanks.mat')], [LinRes('...PID.mat')])
+       # The values are different because the inductance was set differently:
+       >>> inductance = lambda sim: Info.IV(sim, 'L.L')
+       >>> map(inductance, sims)
+       [10, 18]
     """
 
     # Generate a list of files.

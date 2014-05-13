@@ -19,12 +19,6 @@
 - :meth:`add_vlines` - Add vertical lines to a set of axes with optional
   labels
 
-- :meth:`applyfunction` - Decorator to apply a function to the output of a 
-  function
-
-- :meth:`applyindex` - Decorator to apply an index or slice to the output of a 
-  function
-
 - :meth:`chars_to_str` - Convert a string array to a string and remove trailing
   whitespace
 
@@ -289,6 +283,7 @@ def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
         ax.text(xpos, positions[i], label, backgroundcolor='w',
                 horizontalalignment='center', verticalalignment='center')
 
+
 def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
     """Add vertical lines to a set of axes with optional labels.
 
@@ -362,33 +357,6 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
     for i, label in enumerate(labels):
         ax.text(positions[i], ypos, label, backgroundcolor='w',
                 horizontalalignment='center', verticalalignment='center')
-
-
-def applyfunction(f, g):
-    """Return a function that applies a function *g* to its output, given a 
-    function that doesn't (*f*).
-
-    If *g* is *None*, then no function is applied (pass through or 
-    identity).
-    """
-    @wraps(f)
-    def wrapped(*args, **kwargs):
-        return f(*args, **kwargs) if g is None else g(f(*args, **kwargs))
-
-    return wrapped
-
-
-def applyindex(f, i):
-    """Return a function that returns values at index or slice *i*, given a 
-    function that returns all values (*f*).
-
-    If *i* is *None*, then all values are returned (pass through).
-    """
-    @wraps(f)
-    def wrapped(*args, **kwargs):
-        return f(*args, **kwargs) if i is None else f(*args, **kwargs)[i]
-
-    return wrapped
 
 
 def color(ax, c, *args, **kwargs):

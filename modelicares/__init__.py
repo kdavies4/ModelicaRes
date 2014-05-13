@@ -41,18 +41,9 @@ __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
 __version__ = "0.11.x"
 
-# Essential functions and classes
-#
-# These will be available directly from modelicares; others must be loaded from
-# their submodules.
-from modelicares.util import (add_arrows, add_hlines, add_vlines, ArrowLine,
-    closeall, figure, load_csv, save, saveall, setup_subplots)
-from modelicares.exps import (Experiment, gen_experiments, ParamDict,
-    read_params, run_models, write_params, write_script, doe)
-from modelicares.linres import LinRes
-from modelicares.multi import multiload, multiplot, multibode, multinyquist
+
 from modelicares.simres import SimRes
-from modelicares.texunit import label_number, label_quantity, unit2tex
+from modelicares.linres import LinRes
 
 
 def load(fname, constants_only=False):
@@ -90,6 +81,17 @@ def load(fname, constants_only=False):
         except TypeError:
             raise TypeError('"%s" does not appear to be a valid simulation '
                             'or linearization file.' % fname)
+
+# Essential functions and classes
+#
+# These (and SimRes and LinRes above) will be available directly from
+# modelicares; others must be loaded from their submodules.
+from modelicares.util import (add_arrows, add_hlines, add_vlines, ArrowLine,
+    closeall, figure, load_csv, save, saveall, setup_subplots)
+from modelicares.exps import (Experiment, gen_experiments, ParamDict,
+    read_params, run_models, write_params, write_script, doe)
+from modelicares.multi import multiload, multiplot, multibode, multinyquist
+from modelicares.texunit import label_number, label_quantity, unit2tex
 
 
 if __name__ == '__main__':

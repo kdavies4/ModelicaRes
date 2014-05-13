@@ -6,6 +6,11 @@ The releases are numbered according to the `Semantic Versioning specification
 
 v0.11.0_ (2014-*-**) -- Updates:
 
+added n_constants
+added constants_only to names()
+
+   - Now supporting format version 1.0 Dymola/OpenModelica files (previously
+     only 1.1).
    - Changed the way the filename is recorded and retrieved in
      :class:`~modelicares.simres.SimRes` and
      :class:`~modelicares.linres.LinRes`.
