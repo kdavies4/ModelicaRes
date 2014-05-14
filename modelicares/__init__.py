@@ -21,7 +21,7 @@ classes from its submodules.  These are:
   :class:`~linres.LinRes`
 
 - To label numbers and quantities (:mod:`~modelicares.texunit` module):
-  :meth:`~texunit.label_number`, :meth:`~texunit.label_quantity`, and
+  :meth:`~texunit.number_str`, :meth:`~texunit.quantity_str`, and
   :meth:`~texunit.unit2tex`
 
 - Supporting classes and functions (:mod:`~modelicares.util` module):
@@ -91,7 +91,7 @@ from modelicares.util import (add_arrows, add_hlines, add_vlines, ArrowLine,
 from modelicares.exps import (Experiment, gen_experiments, ParamDict,
     read_params, run_models, write_params, write_script, doe)
 from modelicares.multi import multiload, multiplot, multibode, multinyquist
-from modelicares.texunit import label_number, label_quantity, unit2tex
+from modelicares.texunit import number_str, quantity_str, unit2tex
 
 
 if __name__ == '__main__':

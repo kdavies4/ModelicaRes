@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Classes to load, analyze, and plot results from Modelica_ simulations
+"""This package contains :class:`SimRes`, a class to load, analyze, and plot
+results a Modelica_ simulation
 
-- :class:`SimRes` - Class to load and analyze results from a Modelica_-based
-  simulation
 
-- :class:`Info` - Aliases for the "get" methods of :class:`SimRes`
-
+.. testsetup::
+   >>> import numpy as np
+   >>> np.set_printoptions(precision=4)
 
 .. _Modelica: http://www.modelica.org/
 """
@@ -29,20 +29,122 @@ from difflib import get_close_matches
 from pandas import DataFrame
 
 from modelicares import util
-from modelicares.texunit import unit2tex, label_number
-from modelicares._io import simloaders
+from modelicares.texunit import unit2tex, number_str
+from modelicares._io import simloaders, Variable
 from modelicares._gui import Browser
+
+# File loading functions, in the order they should be tried
+from modelicares._io.dymola import loadsim as dymola
+loaders = [('dymola', dymola)]
+
+
+class _Variables():
+    """Class that stores and operates on a possibly nested list of variables
+    """
+    def __init__(self, entries):
+        self.entries = entries
+
+    def _fromself(f):
+        """Return a function that operates on an instance of this class,
+        including all of its possibly nested entries,
+        given a function that operates on a single entry.
+        """
+        @wraps(f)
+        def wrapped(self, *args, **kwargs):
+            """Traverse lists recursively until the argument is a single
+            variable, then pass it to the original function and return the
+            result upwards.
+            """
+            if isinstance(self.entries, Variable):
+                return f(self.entries, *args, **kwargs)
+            else:
+                return [wrapped(_Variables(entry), *args, **kwargs)
+                        for entry in self.entries]
+
+        return wrapped
+
+    # Copied from __init__.py (TODO: Is there a way to reference it directly?)
+    def select_times(f):
+        """Return a function that uses time-based indexing to return values,
+        given a function that returns all values (*f*).
+
+        If *t* is *None*, then all values are returned (pass through).
+        """
+        @wraps(f)
+        def wrapped(self, t=None, *args, **kwargs):
+            if t is None:
+                # Return all values.
+                return f(self, *args, **kwargs)
+            elif isinstance(t, tuple):
+                # Apply a slice with optional start time, stop time, and number
+                # of samples to skip.
+                return f(self, *args, **kwargs)[self._slice(t)]
+            else:
+                # Interpolate at single time or list of times.
+                function_at_ = interp1d(self.times(), f(self, *args, **kwargs))
+                try:
+                    # Assume t is a list of times.
+                    return map(function_at_, t)
+                except TypeError:
+                    # t is a single time.
+                    return float(function_at_(t))
+
+        return wrapped
+
+    @_fromself
+    def __getattr__(entry, name):
+        """Look up an attribute of the variables (e.g., description, unit,
+        displayUnit)
+        """
+        return entry.__getattribute__(name)
+
+    @_fromself
+    def arrays(entry, *args, **kwargs):
+        return entry.array(*args, **kwargs)
+
+    @_fromself
+    def FV(entry, *args, **kwargs):
+        return entry.FV(*args, **kwargs)
+
+    @_fromself
+    def IV(entry, *args, **kwargs):
+        return entry.IV(*args, **kwargs)
+
+    @_fromself
+    def times(entry, *args, **kwargs):
+        return entry.times(*args, **kwargs)
+
+    @_fromself
+    def max(entry, *args, **kwargs):
+        return entry.max(*args, **kwargs)
+
+    @_fromself
+    def mean(entry, *args, **kwargs):
+        return entry.mean(*args, **kwargs)
+
+    @_fromself
+    def min(entry, *args, **kwargs):
+        return entry.min(*args, **kwargs)
+
+    @_fromself
+    def RMS(entry, *args, **kwargs):
+        return entry.RMS(*args, **kwargs)
+
+    @_fromself
+    def values(entry, *args, **kwargs):
+        return entry.values(*args, **kwargs)
+
 
 
 class SimRes(object):
-    """Class to load and analyze results from a Modelica_-based simulation
+    """Class to load and analyze results from a Modelica_ simulation
 
     Methods:
 
     - :meth:`browse` - Launch a variable browser
 
-    - :meth:`fbase` - Return the base filename from which the data was loaded,
-      without the directory or file extension
+    - :meth:`fbase` - Return the base filename from which the variables were
+      loaded, without the directory or file extension
 
     - :meth:`get_arrays` - Return array(s) of times and values for variable(s)
 
@@ -90,22 +192,18 @@ class SimRes(object):
     - :meth:`set_displayUnit` - Set the the Modelica_ *description* attribute of
       a variable
 
-    - :meth:`to_pandas` - Return a `pandas DataFrame`_ with data from selected
-      variables
+    - :meth:`to_pandas` - Return a `pandas DataFrame`_ with selected variables
 
     - :meth:`sankey` - Create a figure with Sankey diagram(s)
 
     Attributes:
 
-    - *fname* - Filename from which the data was loaded, with full path and
-      extension
+    - *fname* - Filename from which the variables were loaded, with full path
+      and extension
 
-TODO *tool*
+    - *tool* - String indicating the algorithm that was successful at loading
+      the results file (named after the corresponding simulation tool)
 
-
-    .. testsetup::
-       >>> import numpy as np
-       >>> np.set_printoptions(precision=4)
 
     .. _pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
@@ -128,27 +226,44 @@ TODO *tool*
              information is needed, it may save resources to set
              *constants_only* to *True*.
 
+        - *tool*: String indicating the simulation tool that created the file
+          and thus the algorithm to load it
+
+             By default, all of the algorithms are tried.
+
         **Example:**
 
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
         """
 
-        # Load the file and store the data.
-        for loader in simloaders:
-            self.data = loader(fname, constants_only)
+        # Load the file.
+        if tool is None:
+            # Load the file and store the variables.
+            for (tool, load) in loaders[:-1]:
+                try:
+                    self._variables = load(fname, constants_only)
+                except IOError:
+                    raise
+                except Exception as exception:
+                    print("The %s loader gave the following error message:\n%s"
+                          % (tool, exception.args[0]))
+                    continue
+                else:
+                    break
+            (tool, load) = loaders[-1]
+        else:
+            loaderdict = dict(loaders)
             try:
-                self.data = loader(fname, constants_only)
-            except IOError:
-                raise
+                load = loaderdict[tool.lower()]
             except:
-                continue
-            else:
-                break
+                raise LookupError('"%s" is not one of the available tools ("%s").'
+                                  % (tool, '", "'.join(loaders.keys())))
+        self._variables = load(fname, constants_only)
 
-        # Save the filename.
+        # Remember the tool and filename.
+        self.tool = tool
         self.fname = fname
-# TODO: support tool argument, save it as an attribute and list in doc as argument and attribute.
 
 
     def _acceptlists(f):
@@ -169,34 +284,21 @@ TODO *tool*
         return wrapped
 
 
-    def _suggest(f):
-        """Wrap a look-up in the data dictionary to provide suggestions if there
-        is a key error.
-        """
-        @wraps(f)
-        def wrapped(self, name, *args, **kwargs):
-            """Catch a KeyError and raise a LookupError with suggestions."""
-            try:
-                return f(self, name, *args, **kwargs)
-            except KeyError:
-                msg = '%s is not a valid variable name.' % name
-                close_matches = get_close_matches(name, self.names())
-                if close_matches:
-                    msg += "\n       ".join(["\n\nDid you mean one of these?"]
-                                            + close_matches)
-                raise LookupError(msg)
-
-        return wrapped
-
-
     def _fromname(f):
-        """Return a function that accepts a variable name, given a function that
-        accepts a data entry.
+        """Return a function that accepts the name of variable, given a function
+        that accepts the variable itself.
         """
         @wraps(f)
         def wrapped(self, name, *args, **kwargs):
-            """Look up the data entry and pass it to the original function."""
-            return f(self.data[name], *args, **kwargs)
+            """Look up the variable and pass it to the original function."""
+            try:
+                return f(self._variables[name], *args, **kwargs)
+            except TypeError:
+                if isinstance(name, list):
+                    raise TypeError("To access a list of variables, use the "
+                               "call method (parentheses instead of brackets).")
+                else:
+                    raise
 
         return wrapped
 
@@ -215,12 +317,12 @@ TODO *tool*
 
         **Arguments:**
 
-        - *names*: List of names of the data to be plotted
+        - *names*: List of names of the variables to be plotted
 
              The names should be fully qualified (i.e., relative to the root of
              the simulation results).
 
-        - *times*: List of times at which the data should be sampled
+        - *times*: List of times at which the variables should be sampled
 
              If multiple times are given, then subfigures will be generated.
 
@@ -233,7 +335,7 @@ TODO *tool*
         - *title*: Title for the figure
 
              If *title* is *None* (default), then the title will be the base
-             filename of the data.  Use '' for no title.
+             filename of the source.  Use '' for no title.
 
         - *subtitles*: List of subtitles (i.e., titles for each subplot)
 
@@ -365,16 +467,15 @@ TODO *tool*
 
 
     def fbase(self):
-        """Return the base filename from which the data was loaded, without the
-        directory or file extension.
+        """Return the base filename from which the variables were loaded,
+        without the directory or file extension.
         """
         return os.path.splitext(os.path.split(self.fname)[1])[0]
 
 
     @_acceptlists
-    @_suggest
     @_fromname
-    def get_arrays(entry, *args, **kwargs):
+    def get_arrays(variable, *args, **kwargs):
         """Return array(s) of times and values for variable(s).
 
         In each array, the first column is time and the second column contains
@@ -413,13 +514,12 @@ TODO *tool*
 
         Note that this is the same result as from :meth:`__call__`.
         """
-        return entry.get_array(*args, **kwargs)
+        return variable.get_array(*args, **kwargs)
 
 
     @_acceptlists
-    @_suggest
     @_fromname
-    def get_arrays_wi_times(entry, *args, **kwargs):
+    def get_arrays_wi_times(variable, *args, **kwargs):
         """Return arrays(s) of times and values of variable(s) within a time
         range.
 
@@ -452,13 +552,12 @@ TODO *tool*
                   [  5.    ,   0.1092],
                   [ 10.    ,   0.2108]], dtype=float32)
         """
-        return entry.array_wi_times(*args, **kwargs)
+        return variable.array_wi_times(*args, **kwargs)
 
 
     @_acceptlists
-    @_suggest
     @_fromname
-    def get_description(entry):
+    def get_description(variable):
         """Return the description(s) of variable(s).
 
         **Arguments:**
@@ -479,13 +578,12 @@ TODO *tool*
            >>> sim.get_description('L.v')
            'Voltage drop between the two pins (= p.v - n.v)'
         """
-        return entry.description
+        return variable.description
 
 
     @_acceptlists
-    @_suggest
     @_fromname
-    def get_displayUnit(entry):
+    def get_displayUnit(variable):
         """Return the Modelica_ *displayUnit* attribute(s) of variable(s).
 
         **Arguments:**
@@ -506,13 +604,12 @@ TODO *tool*
            >>> sim.get_displayUnit('G.T_heatPort')
            'degC'
         """
-        return entry.displayUnit
+        return variable.displayUnit
 
 
     @_acceptlists
-    @_suggest
     @_fromname
-    def get_FV(entry, *args, **kwargs):
+    def get_FV(variable, *args, **kwargs):
         """Return the final value(s) of variable(s).
 
         **Arguments:**
@@ -536,13 +633,12 @@ TODO *tool*
            >>> sim.get_FV(['Time', 'L.v'])
            [2500.0, -0.25352862]
         """
-        return entry.FV(*args, **kwargs)
+        return variable.FV(*args, **kwargs)
 
 
     @_acceptlists
-    @_suggest
     @_fromname
-    def get_IV(entry, *args, **kwargs):
+    def get_IV(variable, *args, **kwargs):
         """Return the initial value(s) of variable(s).
 
         **Arguments:**
@@ -565,13 +661,12 @@ TODO *tool*
            >>> sim.get_IV('L.v')
            0.0
         """
-        return entry.IV(*args, **kwargs)
+        return variable.IV(*args, **kwargs)
 
 
     @_acceptlists
-    @_suggest
     @_fromname
-    def get_max(entry, *args, **kwargs):
+    def get_max(variable, *args, **kwargs):
         """Return the maximum value(s) of variable(s).
 
         **Arguments:**
@@ -596,14 +691,13 @@ TODO *tool*
            >>> sim.get_max('L.v')
            0.77344114
         """
-        return entry.max(*args, **kwargs)
+        return variable.max(*args, **kwargs)
 
 
     @_acceptlists
-    @_suggest
     @_fromname
-    def get_mean(entry, *args, **kwargs):
-        """Return the time-averaged value(s) of variable(s).
+    def get_mean(variable, *args, **kwargs):
+        """Return the time-averaged arithmetic mean value(s) of variable(s).
 
         **Arguments:**
 
@@ -627,13 +721,12 @@ TODO *tool*
            >>> sim.get_mean('L.v')
            0.014733823
         """
-        return entry.mean(*args, **kwargs)
+        return variable.mean(*args, **kwargs)
 
 
     @_acceptlists
-    @_suggest
     @_fromname
-    def get_min(entry, *args, **kwargs):
+    def get_min(variable, *args, **kwargs):
         """Return the minimum value(s) of variable(s).
 
         **Arguments:**
@@ -658,20 +751,19 @@ TODO *tool*
            >>> sim.get_min('L.v')
            -0.9450165
         """
-        return entry.min(*args, **kwargs)
+        return variable.min(*args, **kwargs)
 
 
     @_acceptlists
-    @_suggest
     @_fromname
-    def get_times(entry, *args, **kwargs):
+    def get_times(variable, *args, **kwargs):
         """Return vector(s) of the sample times of variable(s).
 
         **Arguments:**
 
         - *name*: Variable name or (possibly nested) list of variable names
 
-        Passed to :meth:`DataEntry.times` via \**args* and \*\**kwargs*:
+        Passed to :meth:`Variable.times` via \**args* and \*\**kwargs*:
 
         - *i*: Index (-1 for last, *None* for all), list of indices, or slice of
           the values(s) to return
@@ -694,13 +786,12 @@ TODO *tool*
            >>> sim.get_times('L.v') # doctest: +ELLIPSIS
            array([.TODO add numbers back here and elsewhere..], dtype=float32)
         """
-        return entry.times(*args, **kwargs)
+        return variable.times(*args, **kwargs)
 
 
     @_acceptlists
-    @_suggest
     @_fromname
-    def get_unit(entry):
+    def get_unit(variable):
         """Return the *unit* attribute(s) of variable(s).
 
         **Arguments:**
@@ -721,13 +812,12 @@ TODO *tool*
            >>> sim.get_unit('L.v')
            'V'
         """
-        return entry.unit
+        return variable.unit
 
 
     @_acceptlists
-    @_suggest
     @_fromname
-    def get_values(entry, *args, **kwargs):
+    def get_values(variable, *args, **kwargs):
         """Return vector(s) of the values of variable(s).
 
         **Arguments:**
@@ -773,13 +863,12 @@ TODO *tool*
         The other *get_*\* methods also give this message when a variable cannot
         be found.
         """
-        return entry.values(*args, **kwargs)
+        return variable.values(*args, **kwargs)
 
 
     @_acceptlists
-    @_suggest
     @_fromname
-    def get_values_at_times(entry, *args, **kwargs):
+    def get_values_at_times(variable, *args, **kwargs):
         """Return vector(s) of the values of variable(s) at given times.
 
         **Arguments:**
@@ -809,13 +898,12 @@ TODO *tool*
            >>> sim.get_values_at_times('L.v', [0, 2000]) # doctest: +ELLIPSIS
            array([...])
         """
-        return entry.values_at_times(*args, **kwargs)
+        return variable.values_at_times(*args, **kwargs)
 
 
     @_acceptlists
-    @_suggest
     @_fromname
-    def get_values_wi_times(entry, *args, **kwargs):
+    def get_values_wi_times(variable, *args, **kwargs):
         """Return vector(s) of the values of variable(s) within a time range.
 
         **Arguments:**
@@ -842,7 +930,7 @@ TODO *tool*
            >>> sim.get_values_wi_times('L.v', t1=0, t2=15) # doctest: +NORMALIZE_WHITESPACE
            array([ 0. , 0.1092, 0.2108, 0.3046], dtype=float32)
         """
-        return entry.values_wi_times(*args, **kwargs)
+        return variable.values_wi_times(*args, **kwargs)
 
 
     def names(self, pattern=None, re=False, constants_only=False):
@@ -900,9 +988,9 @@ TODO *tool*
         """
         # Get a list of all the variables or just the constants.
         if constants_only:
-            names = [item[0] for item in self.data.items() if item[1].is_constant()]
+            names = [item[0] for item in self._variables.items() if item[1].is_constant()]
         else:
-            names = list(self.data)
+            names = list(self._variables)
 
         # Search the list.
         if pattern is None or (pattern in ['.*', '.+', '.', '.?', ''] if re
@@ -924,7 +1012,7 @@ TODO *tool*
         a variable may be fixed in value even though it is not declared as a
         constant or parameter.
         """
-        return sum([variable.is_constant() for variable in self.data.values()])
+        return sum([variable.is_constant() for variable in self._variables.values()])
 
 
     def nametree(self, pattern=None, re=False):
@@ -968,7 +1056,7 @@ TODO *tool*
              xname='Time', xlabel=None,
              title=None, label="xy", incl_prefix=False, suffix=None,
              use_paren=True, **kwargs):
-        """Plot data as points and/or curves in 2D Cartesian coordinates.
+        """Plot variables as points and/or curves in 2D Cartesian coordinates.
 
         **Arguments:**
 
@@ -1000,7 +1088,7 @@ TODO *tool*
           to *ynames1*, *ylabel1*, *legends1*, *leg1_kwargs*, and *ax1* but
           for the secondary y axis
 
-        - *xname*: Name of the x-axis data
+        - *xname*: Name of the x-axis variable
 
         - *xlabel*: Label for the x axis
 
@@ -1099,14 +1187,14 @@ TODO *tool*
                 if len(set(units)) == 1:
                     # The  units are the same, so show the 1st one on the axis.
                     if ylabel != "":
-                        ylabel = label_number(ylabel, units[0])
+                        ylabel = number_str(ylabel, units[0])
                 else:
                     # Show the units in the legend.
                     if legends:
-                        legends = [label_number(entry, unit) for entry, unit in
+                        legends = [number_str(entry, unit) for entry, unit in
                                    zip(legends, units)]
                     else:
-                        legends = [label_number(entry, unit) for entry, unit in
+                        legends = [number_str(entry, unit) for entry, unit in
                                    zip(ynames, units)]
 
             return ylabel, legends
@@ -1131,19 +1219,20 @@ TODO *tool*
             # With Dymola 7.4, the description of the time variable will be
             # "Time in", which isn't good.
         if xlabel != "":
-            xlabel = label_number(xlabel, self.get_unit(xname))
+            xlabel = number_str(xlabel, self.get_unit(xname))
 
         # Generate the y-axis labels and sets of legend entries.
         ylabel1, legends1 = ystrings(ynames1, ylabel1, legends1)
         ylabel2, legends2 = ystrings(ynames2, ylabel2, legends2)
 
-        # Read the data.
+# TODO: timeit: get_values vs call; if call is as fast, remove get_*
+        # Retrieve the data.
         if xname == 'Time':
             y_1 = self.get_values(ynames1)
             y_2 = self.get_values(ynames2)
         else:
-            x = self.data[xname].values()
-            times = self.data[xname].times
+            x = self._variables[xname].values()
+            times = self._variables[xname].times()
             y_1 = self.get_values_at_times(ynames1, times)
             y_2 = self.get_values_at_times(ynames2, times)
 
@@ -1199,7 +1288,7 @@ TODO *tool*
 
         - *names*: List of names of the flow variables
 
-        - *times*: List of times at which the data should be sampled
+        - *times*: List of times at which the variables should be sampled
 
              If multiple times are given, then subfigures will be generated,
              each with a Sankey diagram.
@@ -1282,11 +1371,11 @@ TODO *tool*
         """
         from matplotlib.sankey import Sankey
 
-        # Get the data.
+        # Retrieve the data.
         n_plots = len(times)
         Qdots = self.get_values_at_times(names, times)
-        start_time = self.data['Time'].times[0]
-        stop_time = self.data['Time'].times[-1]
+        start_time = self._variables['Time'].IV()
+        stop_time = self._variables['Time'].FV()
 
         # Create a title if necessary.
         if title is None:
@@ -1343,7 +1432,7 @@ TODO *tool*
            >>> sim.get_displayUnit('L.v')
            'mV'
         """
-        self.data[name] = self.data[name]._replace(displayUnit=displayUnit)
+        self._variables[name] = self._variables[name]._replace(displayUnit=displayUnit)
 
 
     def set_description(self, name, description):
@@ -1368,11 +1457,13 @@ TODO *tool*
            >>> sim.get_description('L.v')
            'Voltage difference'
         """
-        self.data[name] = self.data[name]._replace(description=description)
+        self._variables[name] = self._variables[name]._replace(description=description)
 
 
     def to_pandas(self, names=None, aliases={}):
-        """Return a `pandas DataFrame`_ with data from selected variables.
+        """Return a `pandas DataFrame`_ with values from selected variables.
+
+        The index is time.  The column headings indicate the units.
 
         The data frame has methods for further manipulation and exporting (e.g.,
         :meth:`~pandas.DataFrame.to_clipboard`,
@@ -1389,8 +1480,9 @@ TODO *tool*
         - *aliases*: Dictionary of aliases for the variable names
 
              The keys are the "official" variable names from the simulation and
-             the entries are the names as they will be included in the column
-             headings.  Any variables not in this list will not be aliased.
+             the values are the names as they will be included in the column
+             headings.  Any variables not in this list will not be aliased.  Any
+             unmatched alias will not be used.
 
         **Examples:**
 
@@ -1420,36 +1512,38 @@ TODO *tool*
 
         """
         # Simple function to label a variable with its unit:
-        label = lambda name: name + ' / ' + self.data[name].unit
+        label = lambda name, unit: name + ' / ' + unit
 
         # Create the list of variable names.
         if names is None:
             names = self.names()
         else:
-            names = list(set(util.flatten_list(names)).add('Time'))
+            names = set(util.flatten_list(names))
+            names.add('Time')
 
-        # Determine the values.
-        times = self.data['Time'].values()
-        values = [self.data[name].values() # Save computation.
-                  if np.array_equal(self.data[name].times, times) else
-                  self.get_values_at_times(name, times) # Resample.
-                  for name in names]
-        # TODO: time this to see if the first branch is worth it.
-
-        # Create a dictionary of values and labels (column headings).
-        values = []
-        labels = []
+        # Create a dictionary of names and values.
+        times = self['Time'].values()
+        data = {}
         for name in names:
-            values.append(self.data[name].values()
-                          if np.array_equal(self.data[name].times, times) else
-                          self.get_values_at_times(name, times))
+
+            # Get the values.
+            if np.array_equal(self[name].times(), times):
+                values = self[name].values() # Save computation.
+            else:
+                values = self[name].values(t=times) # Resample.
+
+            unit = self[name].unit
+
+            # Apply an alias if available.
             try:
-                labels.append(label(aliases[name]))
+                name = aliases[name]
             except KeyError:
-                labels.append(label(name))
+                pass
+
+            data.update({label(name, unit): values})
 
         # Create the pandas data frame.
-        return DataFrame(values).set_index('Time / s')
+        return DataFrame(data).set_index('Time / s')
 
 
     def __call__(name, method=get_arrays, *args, **kwargs):
@@ -1506,6 +1600,20 @@ TODO *tool*
             return t(m(self, name=name, *args, **kwargs) for m in method)
 
 
+    def __call__(self, names):
+        """Return an instance of a class that can be used to access information from a group of variables at once."""
+        def entries(names):
+            """Create a (possibly nested) list of data entries given a
+            (possibly nested) list of variable names.
+            """
+            if isinstance(names, basestring):
+                return self._variables[names]
+            else:
+                return [entries(name) for name in names] # Recursion
+
+        return _Variables(entries(names))
+
+
     def __contains__(self, name):
         """Test if a variable is present in the simulation results.
 
@@ -1527,14 +1635,12 @@ TODO *tool*
            >>> 'x' not in sim
            True
         """
-        return name in self.data
+        return name in self._variables
 
 
-    @_suggest
     @_fromname
-    def __getitem__(entry):
-        """Upon accessing a variable name within an instance of :class:`SimRes`,
-        return its data entry.
+    def __getitem__(variable):
+        """Access a variable from its name.
 
         This provides access to non-vectorized versions of all of the *get_*
         methods of :class:`SimRes`, as attributes:
@@ -1588,7 +1694,7 @@ TODO *tool*
            >>> sim['L.v'].values_wi_times(10, 25) # doctest: +NORMALIZE_WHITESPACE
 
         """
-        return entry
+        return variable
 
 
     def __len__(self):
@@ -1607,7 +1713,7 @@ TODO *tool*
            ...       (len(sim), sim.fbase()))
            There are 62 variables in the ChuaCircuit simulation.
         """
-        return len(self.data)
+        return len(self._variables)
 
 
     def __repr__(self):
@@ -1639,50 +1745,6 @@ TODO *tool*
            Modelica simulation results from "...ChuaCircuit.mat"
         """
         return 'Modelica simulation results from "{f}"'.format(f=self.fname)
-
-
-class Info:
-    """Unbound aliases for the "get" methods in :class:`SimRes`
-
-    **Example:**
-
-    .. code-block:: python
-
-       >>> from modelicares.simres import SimRes, Info
-       >>> FV = Info.FV
-
-       >>> sim = SimRes('examples/ChuaCircuit.mat')
-       >>> FV(sim, 'L.v')
-       -0.25352862
-    """
-    arrays = SimRes.get_arrays
-    """Alias for :meth:`SimRes.get_arrays`"""
-    arrays_wi_times = SimRes.get_arrays_wi_times
-    """Alias for :meth:`SimRes.get_arrays_wi_times`"""
-    description = SimRes.get_description
-    """Alias for :meth:`SimRes.get_description`"""
-    displayUnit = SimRes.get_displayUnit
-    """Alias for :meth:`SimRes.get_displayUnit`"""
-    FV = SimRes.get_FV
-    """Alias for :meth:`SimRes.get_FV`"""
-    IV = SimRes.get_IV
-    """Alias for :meth:`SimRes.get_IV`"""
-    max = SimRes.get_max
-    """Alias for :meth:`SimRes.get_max`"""
-    mean = SimRes.get_mean
-    """Alias for :meth:`SimRes.get_mean`"""
-    min = SimRes.get_min
-    """Alias for :meth:`SimRes.get_min`"""
-    times = SimRes.get_times
-    """Alias for :meth:`SimRes.get_times`"""
-    unit = SimRes.get_unit
-    """Alias for :meth:`SimRes.get_unit`"""
-    values = SimRes.get_values
-    """Alias for :meth:`SimRes.get_values`"""
-    values_at_times = SimRes.get_values_at_times
-    """Alias for :meth:`SimRes.get_values_at_times`"""
-    values_wi_times = SimRes.get_values_wi_times
-    """Alias for :meth:`SimRes.get_values_wi_times`"""
 
 
 if __name__ == '__main__':

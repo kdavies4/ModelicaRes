@@ -1,11 +1,10 @@
 #!/usr/bin/python
 """Functions to format numbers to support LaTeX_
 
-- :meth:`label_number` - Generate text to label a number as a quantity
-  expressed in a unit
+- :meth:`number_str` - Return a string to indicate a quantity in a unit
 
-- :meth:`label_quantity` - Generate text to write a quantity as a number times
-  a unit
+- :meth:`quantity_str` - Return a string to represent a quantity as a number
+  times a unit
 
 - :meth:`unit2tex` - Convert a Modelica_ unit string to LaTeX_
 
@@ -19,6 +18,8 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 
 
 import re
+
+from modelicares.util import si_prefix
 
 
 # Special replacements for unit strings in tex
@@ -35,8 +36,9 @@ rpls = [(re.compile(rpl[0]), rpl[1])
          ('mu', r'\mu'),
          ('epsilon', r'\epsilon')]]
 
-def label_number(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
-    r"""Generate text to label a number as a quantity expressed in a unit.
+
+def number_str(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
+    r"""Return a string to indicate a quantity in a unit
 
     The unit is formatted with LaTeX_ as needed.
 
@@ -66,7 +68,7 @@ def label_number(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
          If the unit is not a simple scaling factor, then "in" is used instead.
          For example,
 
-            >>> label_number("Gain", "dB")
+            >>> number_str("Gain", "dB")
             'Gain in $dB$'
 
     - *roman*: *True*, if the units should be typeset in Roman text (rather
@@ -74,12 +76,12 @@ def label_number(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
 
     **Examples:**
 
-       >>> label_number("Mobility", "m2/(V.s)", roman=True)
+       >>> number_str("Mobility", "m2/(V.s)", roman=True)
        'Mobility$\\,/\\,\\mathrm{m^{2}\\,V^{-1}\\,s^{-1}}$'
 
        in LaTeX_: Mobility :math:`\,/\,\mathrm{m^{2}\,V^{-1}\,s^{-1}}`
 
-       >>> label_number("Mole fraction", "1")
+       >>> number_str("Mole fraction", "1")
        'Mole fraction'
 
     .. _Modelica: http://www.modelica.org/
@@ -91,7 +93,7 @@ def label_number(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
     else:
         return quantity
 
-def label_quantity(number, unit='', format='%G', times='\,', roman=False):
+def quantity_str(number, unit='', format='%G', times='\,', roman=False):
     r"""Generate text to write a quantity as a number times a unit.
 
     If an exponent is present, then either a LaTeX-formatted exponential or a
@@ -128,55 +130,29 @@ def label_quantity(number, unit='', format='%G', times='\,', roman=False):
 
     **Examples:**
 
-       >>> label_quantity(1.2345e-3, 'm', format='%.3e', roman=True)
+       >>> quantity_str(1.2345e-3, 'm', format='%.3e', roman=True)
        '1.234$\\,\\mathrm{mm}$'
 
        in LaTeX_: :math:`1.234\mathrm{\,mm}`
 
-       >>> label_quantity(1.2345e-3, 'm', format='%.3E', roman=True)
+       >>> quantity_str(1.2345e-3, 'm', format='%.3E', roman=True)
        '1.234$\\times10^{-3}$$\\,\\mathrm{m}$'
 
        in LaTeX_: :math:`1.234\times10^{-3}\,\mathrm{m}`
 
-       >>> label_quantity(1.2345e6)
+       >>> quantity_str(1.2345e6)
        '1.2345$\\times10^{6}$'
 
        in LaTeX_: :math:`1.2345\times10^{6}`
 
-       >>> label_quantity(1e3, '\Omega', format='%.1e', roman=True)
+       >>> quantity_str(1e3, '\Omega', format='%.1e', roman=True)
        '1.0$\\,\\mathrm{k\\Omega}$'
 
        in LaTeX_: :math:`1.0\,\mathrm{k\Omega}`
 
+
     .. _Python: http://www.python.org/
     """
-    def _si_prefix(pow1000):
-        """Return the SI prefix for a power of 1000.
-        """
-        # Prefixes according to Table 5 of BIPM 2006
-        # (http://www.bipm.org/en/si/si_brochure/; excluding hecto, deca, deci,
-        # and centi).
-        try:
-            return ['Y', # yotta (10^24)
-                    'Z', # zetta (10^21)
-                    'E', # exa (10^18)
-                    'P', # peta (10^15)
-                    'T', # tera (10^12)
-                    'G', # giga (10^9)
-                    'M', # mega (10^6)
-                    'k', # kilo (10^3)
-                    '', # (10^0)
-                    'm', # milli (10^-3)
-                    r'{\mu}', # micro (10^-6)
-                    'n', # nano (10^-9)
-                    'p', # pico (10^-12)
-                    'f', # femto (10^-15)
-                    'a', # atto (10^-18)
-                    'z', # zepto (10^-21)
-                    'y'][8 - pow1000] # yocto (10^-24)
-        except IndexError:
-            raise IndexError("The factor 1e%i is beyond the range covered by "
-                             "the SI prefixes (1e-24 to 1e24)." % 3*pow1000)
 
     # Apply engineering notation and SI prefixes.
     if 'E' in format:
@@ -202,7 +178,7 @@ def label_quantity(number, unit='', format='%G', times='\,', roman=False):
                 pow1000 = -(-e/3)
             pow1000 = int(pow1000) # TODO:  Why is this necessary in Python 3?
             if -8 <= pow1000 <= 8:
-                unit = _si_prefix(pow1000) + unit
+                unit = si_prefix(pow1000) + unit
                 numstr, exponent = (format % (number/1000**pow1000)).split('e')
         if not use_SI or exponent != '+00': # Use LaTeX formatting.
             exponent = (exponent[0] + exponent[1:].lstrip('0')).lstrip('+')

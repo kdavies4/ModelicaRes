@@ -1342,12 +1342,12 @@ def shift_scale_x(ax, eagerness=0.325):
     .. code-block:: python
 
        >>> import numpy as np
-       >>> from texunit import label_number
+       >>> from texunit import number_str
        >>> from modelicares import *
 
        >>> # Generate some random data.
        >>> x = np.linspace(55478, 55486, 100) # Small range and large offset
-       >>> xlabel = label_number('Time', 's')
+       >>> xlabel = number_str('Time', 's')
        >>> y = np.cumsum(np.random.random(100) - 0.5)
 
        >>> # Plot the data.
@@ -1418,7 +1418,7 @@ def shift_scale_y(ax, eagerness=0.325):
     .. code-block:: python
 
        >>> import numpy as np
-       >>> from texunit import label_number
+       >>> from texunit import number_str
        >>> from modelicares import *
 
        >>> # Generate some random data.
@@ -1427,7 +1427,7 @@ def shift_scale_y(ax, eagerness=0.325):
        >>> y -= y.min()
        >>> y *= 1e-3
        >>> y += 1e3 # Small magnitude and large offset
-       >>> ylabel = label_number('Velocity', 'mm/s')
+       >>> ylabel = number_str('Velocity', 'mm/s')
 
        >>> # Plot the data.
        >>> ax = setup_subplots(2, 2, label='examples/shift_scale_y')[0]
@@ -1476,6 +1476,35 @@ def shift_scale_y(ax, eagerness=0.325):
                                                 eagerness)
     ax.set_yticklabels(["%.1f" % x for x in (ticks - offset)/1000**pow1000])
     ax.set_ylabel(label)
+
+
+def si_prefix(pow1000):
+    """Return the SI prefix for a power of 1000.
+    """
+    # Prefixes according to Table 5 of BIPM 2006
+    # (http://www.bipm.org/en/si/si_brochure/; excluding hecto, deca, deci,
+    # and centi).
+    try:
+        return ['Y', # yotta (10^24)
+                'Z', # zetta (10^21)
+                'E', # exa (10^18)
+                'P', # peta (10^15)
+                'T', # tera (10^12)
+                'G', # giga (10^9)
+                'M', # mega (10^6)
+                'k', # kilo (10^3)
+                '', # (10^0)
+                'm', # milli (10^-3)
+                r'{\mu}', # micro (10^-6)
+                'n', # nano (10^-9)
+                'p', # pico (10^-12)
+                'f', # femto (10^-15)
+                'a', # atto (10^-18)
+                'z', # zepto (10^-21)
+                'y'][8 - pow1000] # yocto (10^-24)
+    except IndexError:
+        raise IndexError("The factor 1e%i is beyond the range covered by "
+                         "the SI prefixes (1e-24 to 1e24)." % 3*pow1000)
 
 
 # From http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html,

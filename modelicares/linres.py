@@ -24,6 +24,10 @@ from modelicares._freqplot import bode_plot, nyquist_plot
 from modelicares.util import figure, add_hlines, add_vlines, chars_to_str
 from modelicares._io import linloaders
 
+# File loading functions, in the order they should be tried
+from modelicares._io.dymola import loadlin as dymola
+loaders = [('dymola', dymola)]
+
 
 class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze
@@ -81,22 +85,33 @@ class LinRes(object):
            >>> lin = LinRes('examples/PID')
         """
 
-        from modelicares._io.dymola import linloader
-        self.sys = linloader(fname)
-        # Try to load as OpenModelica/Dymola.
-        # Load the file and store the data.
-        #for loader in linloaders:
-        #    self.sys = loader(fname)
-            #try:
-            #    self.sys = loader(fname)
-            #except IOError:
-            #    raise
-            #except:
-            #    continue
-            #else:
-            #    break
+        # Load the file.
+        if tool is None:
+            # Load the file and store the data.
+            for (tool, load) in loaders[:-1]:
+                try:
+                    self.sys = load(fname)
+                except IOError:
+                    raise
+                except Exception as exception:
+                    print("The %s loader gave the following error message:\n%s"
+                          % (tool, exception.args[0]))
+                    print("Trying the next loader...")
+                    continue
+                else:
+                    break
+            (tool, load) = loaders[-1]
+        else:
+            loaderdict = dict(loaders)
+            try:
+                load = loaderdict[tool.lower()]
+            except:
+                raise LookupError('"%s" is not one of the available tools ("%s").'
+                                  % (tool, '", "'.join(loaders.keys())))
+        self.sys = load(fname)
 
-        # Save the filename.
+        # Remember the tool and filename.
+        self.tool = tool
         self.fname = fname
 
 # TODO: support tool argument, save it as an attribute and list in doc as argument and attribute.
@@ -171,22 +186,22 @@ class LinRes(object):
         """
         return 'Modelica linearization results from "{f}"'.format(f=self.fname)
 
-    def _to_siso(self, i_u, i_y):
+    def _to_siso(self, iu, iy):
         """Return a SISO system given input and output indices.
         """
-        return ss(self.sys.A,         self.sys.B[:, i_u],
-                  self.sys.C[i_y, :], self.sys.D[i_y, i_u])
+        return ss(self.sys.A,         self.sys.B[:, iu],
+                  self.sys.C[iy, :], self.sys.D[iy, iu])
 
-    def to_tf(self, i_u=None, i_y=None):
+    def to_tf(self, iu=None, iy=None):
         """Return a transfer function given input and output names.
 
         **Arguments:**
 
-        - *i_u*: Index or name of the input
+        - *iu*: Index or name of the input
 
              This must be specified unless the system has only one input.
 
-        - *i_y*: Index or name of the output
+        - *iy*: Index or name of the output
 
              This must be specified unless the system has only one output.
 
@@ -200,35 +215,35 @@ class LinRes(object):
            (array([[  11.,  102.,  200.]]), array([   1.,  100.,    0.]))
         """
         # Get the input index.
-        if i_u is None:
+        if iu is None:
             if len(self.sys.input_names) == 1:
-                i_u = 0
+                iu = 0
             else:
-                raise IndexError("i_u must be specified since this is a MI system.")
-        elif isinstance(i_u, basestring):
+                raise IndexError("iu must be specified since this is a MI system.")
+        else:
             try:
-                i_u = self.sys.input_names.index(i_u)
+                iu = self.sys.input_names.index(iu)
             except ValueError:
-                raise(ValueError('The input "%s" is invalid.' % i_u))
+                raise(ValueError('The input "%s" is invalid.' % iu))
 
         # Get the output index.
-        if i_y is None:
+        if iy is None:
             if len(self.sys.output_names) == 1:
-                i_y = 0
+                iy = 0
             else:
-                raise IndexError("i_y must be specified since this is a MO system.")
-        elif isinstance(i_y, basestring):
+                raise IndexError("iy must be specified since this is a MO system.")
+        else:
             try:
-                i_y = self.sys.output_names.index(i_y)
+                iy = self.sys.output_names.index(iy)
             except ValueError:
-                raise(ValueError('The output "%s" is invalid.' % i_y))
+                raise(ValueError('The output "%s" is invalid.' % iy))
 
         # Return the TF.
-        return ss2tf(self.sys.A,         self.sys.B,
-                     self.sys.C[i_y, :], self.sys.D[i_y, :], input=i_u)
+        return ss2tf(self.sys.A,        self.sys.B,
+                     self.sys.C[iy, :], self.sys.D[iy, :], input=iu)
 
     def bode(self, axes=None, pairs=None, label='bode',
-             title=None, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
+             title=None, colors=['b','g','r','c','m','y','k'],
              styles=[(None,None), (3,3), (1,1), (3,2,1,2)], **kwargs):
         """Create a Bode plot of the system's response.
 
@@ -319,17 +334,14 @@ class LinRes(object):
 
         # Create a title if necessary.
         if title is None:
-            title = "Bode Plot of %s" % self.fbase
+            title = "Bode Plot of %s" % self.fbase()
 
         # Set up the color(s) and line style(s).
         if not iterable(colors):
             # Use the single color for all plots.
             colors = (colors,)
-        if not iterable(styles):
-            # Use the single line style for all plots.
-            styles = [styles]
-        elif type(styles[0]) is int:
-            # One dashes tuple has been provided; use its value for all plots.
+        if not iterable(styles) or isinstance(styles[0], int):
+            # Use the single line or dashes style for all plots.
             styles = [styles]
         n_colors = len(colors)
         n_styles = len(styles)
@@ -337,15 +349,21 @@ class LinRes(object):
         # If input/output pair(s) aren't specified, generate a list of all
         # pairs.
         if not pairs:
-            pairs = [(i_u, i_y) for i_u in range(self.sys.inputs)
-                     for i_y in range(self.sys.outputs)]
+            pairs = [(iu, iy) for iu in range(self.sys.inputs)
+                     for iy in range(self.sys.outputs)]
 
         # Create the plots.
-        for i, (i_u, i_y) in enumerate(pairs):
-            bode_plot(self._to_siso(i_u, i_y),
-                      label='$Y_{%i}/U_{%i}$' % (i_y, i_u),
-                      Hz=True, color=colors[np.mod(i, n_colors)], axes=axes,
-                      style=styles[np.mod(i, n_styles)], **kwargs)
+        for i, (iu, iy) in enumerate(pairs):
+            style = styles[np.mod(i, n_styles)]
+            if isinstance(style, basestring):
+                kwargs['linestyle'] = style
+                kwargs.pop('dashes', None)
+            else:
+                kwargs['dashes'] = style
+                kwargs.pop('linestyle', None)
+            bode_plot(self._to_siso(iu, iy), axes=axes,
+                      label='$Y_{%i}/U_{%i}$' % (iy, iu),
+                      Hz=True, color=colors[np.mod(i, n_colors)], **kwargs)
             # Note: ._freqplot.bode() is currently only implemented for
             # SISO systems.
             # 5/23/11: Since ._freqplot.bode() already uses subplots for
@@ -447,7 +465,7 @@ class LinRes(object):
 
         # Create a title if necessary.
         if title is None:
-            title = "Nyquist Plot of %s" % self.fbase
+            title = "Nyquist Plot of %s" % self.fbase()
 
         # Set up the color(s).
         if not iterable(colors):
@@ -458,22 +476,20 @@ class LinRes(object):
         # If input/output pair(s) aren't specified, generate a list of all
         # pairs.
         if not pairs:
-            pairs = [(i_u, i_y) for i_u in range(self.sys.inputs)
-                     for i_y in range(self.sys.outputs)]
+            pairs = [(iu, iy) for iu in range(self.sys.inputs)
+                     for iy in range(self.sys.outputs)]
 
         # Create the plots.
-        for i, (i_u, i_y) in enumerate(pairs):
-            nyquist_plot(self._to_siso(i_u, i_y),
-                         label=r'$Y_{%i}/U_{%i}$' % (i_y, i_u), mark=False,
-                         color=colors[np.mod(i, n_colors)], ax=ax, **kwargs)
-            # Note: ._freqplot.nyquist() is currently only implemented
-            # for SISO systems.
+        for i, (iu, iy) in enumerate(pairs):
+            nyquist_plot(self._to_siso(iu, iy), ax=ax,
+                         label=r'$Y_{%i}/U_{%i}$' % (iy, iu),
+                         color=colors[np.mod(i, n_colors)], **kwargs)
+            # Note: ._freqplot.nyquist() is currently only implemented for SISO
+            # systems.
 
         # Decorate and finish.
         if len(pairs) > 1:
             ax.legend()
-        add_hlines(ax, color='k', linestyle='--', linewidth=0.5)
-        add_vlines(ax, color='k', linestyle='--', linewidth=0.5)
         ax.set_title(title)
         if xlabel: # Without this check, xlabel=None will give a label of "None".
             ax.set_xlabel(xlabel)
