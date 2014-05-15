@@ -25,13 +25,15 @@ from scipy.io import loadmat
 from scipy.interpolate import interp1d
 from control.matlab import ss
 
-from modelicares.util import chars_to_str#, apply_function, select_times
-from modelicares._io import VarDict
-from modelicares._io import Variable as GenericVariable
+from modelicares.util import chars_to_str
+from modelicares.simres import _VarDict
+from modelicares.simres import Variable as GenericVariable
+
 
 # Named tuple to store the time and value information of each variable
 # This is used for the *samples* field of Variable below.
 Samples = namedtuple('Samples', ['times', 'values', 'negated'])
+
 
 # Named tuple to store the data for each variable
 class Variable(GenericVariable):
@@ -41,29 +43,40 @@ class Variable(GenericVariable):
 TODO doc
     """
 
+    # Copied from simres.py (TODO: Is there a way to reference it directly?)
     def apply_function(g):
-        """Return a function that applies a function *f* to its output, given a
+        """Return a function that applies a function to its output, given a
         function that doesn't (*g*).
 
-        If *f* is *None*, then no function is applied (pass through or
-        identity).
+        I.e., a decorator to apply a function to the return value
         """
         @wraps(g)
         def wrapped(self, f=None, *args, **kwargs):
+            """Function that applies a function *f* to its output
+
+            If *f* is *None* (default), no function is applied (i.e., pass
+            through or identity).
+            """
             return (g(self, *args, **kwargs) if f is None else
-                  f(g(self, *args, **kwargs)))
+                    f(g(self, *args, **kwargs)))
 
         return wrapped
 
-    # Copied from __init__.py (TODO: Is there a way to reference it directly?)
+    # TODO: try this and the decorator above as external functions (in util)
+    # Copied from simres.py (TODO: Is there a way to reference it directly?)
     def select_times(f):
         """Return a function that uses time-based indexing to return values,
         given a function that returns all values (*f*).
 
-        If *t* is *None*, then all values are returned (pass through).
+        I.e., a decorator to use time-based indexing to select values
         """
         @wraps(f)
         def wrapped(self, t=None, *args, **kwargs):
+            """Function that uses time-based indexing to return values
+
+            If *t* is *None* (default), then all values are returned (i.e., pass
+            through or identity).
+            """
             if t is None:
                 # Return all values.
                 return f(self, *args, **kwargs)
@@ -83,41 +96,84 @@ TODO doc
 
         return wrapped
 
-    @select_times
-    @apply_function
+    #TODO: @index_first  # We want the times (t) to be the first argument,
+    @apply_function # but for efficiency, it's best to
+    @select_times   # select the values first.
     def values(self):
-        """Return function *f* of the values of the variable at index or slice
-        *i*.
+        """Return function *f* of the values of the variable.
 
-        If *i* is *None*, then all values are returned.  If *f* is *None*, then
-        no function is applied (pass through or identity).
+        **Arguments:**
+
+        - *t*: Time index
+
+             - Default or *None*: All samples are included.
+
+             - *float*: Interpolate to a single time.
+
+             - *list*: Interpolate to a list of times.
+
+             - *tuple*: Extract samples from a range of times.  The structure is
+               signature to the arguments of Python's slice_ function, except
+               that the start and stop values can be floating point numbers.
+               The samples within and up to the limits are included.
+               Interpolation is not used.
+
+                  - (*stop*,): All samples up to *stop* are included.
+
+                       Be sure to include the comma to distinguish this from a
+                       singleton.
+
+                  - (*start*, *stop*): All samples between *start* and *stop*
+                    are included.
+
+                  - (*start*, *stop*, *skip*): Every *skip*th sample is included
+                    between *start* and *stop*.
+
+        - *f*: Function that operates on the vector of values (default or *None*
+          is identity)
         """
-        return -self.samples.values if self.samples.negated else self.samples.values
+        return (-self.samples.values if self.samples.negated else
+                self.samples.values)
 
-    @select_times
-    def array(self, ft=None, fv=None):
-        """Return an array with function *ft* of the times of the variable as
-        the first column and function *fv* of the values of the variable as the
-        second column.
-
-        The times and values are taken at index or slice *i*.  If *i* is *None*,
-        then all times and values are returned.
-        """
-        return np.array([self.times(ft), self.values(fv)]).T
-
-    @select_times
-    @apply_function
+    #TODO: @index_first  # We want the times (t) to be the first argument,
+    @apply_function # but for efficiency, it's best to
+    @select_times   # select the values first.
     def times(self):
-        """Return function *f* of the times of the variable at index or slice
-        *i*.
+        """Return function *f* of the recorded times of the variable.
 
-        If *i* is *None*, then all values are returned.  If *f* is *None*, then
-        no function is applied (pass through or identity).
+        **Arguments:**
+
+        - *t*: Time index
+
+             This may have any of the forms list in :meth:`values`, but the
+             useful ones are:
+
+             - Default or *None*: All times are included.
+
+             - *tuple*: Extract recorded times from a range of times.  The
+               structure is signature to the arguments of Python's slice_
+               function, except that the start and stop values can be floating
+               point numbers.  The times within and up to the limits are
+               included.  Interpolation is not used.
+
+                  - (*stop*,): All times up to *stop* are included.
+
+                       Be sure to include the comma to distinguish this from a
+                       singleton.
+
+                  - (*start*, *stop*): All recorded times between *start* and
+                    *stop* are included.
+
+                  - (*start*, *stop*, *skip*): Every *skip*th recorded time is
+                    included between *start* and *stop*.
+
+        - *f*: Function that operates on the vector of recorded times (default
+          or *None* is identity)
         """
         return self.samples.times
 
 
-def _load(fname, constants_only=False):
+def load(fname, constants_only=False):
     """Load Modelica_ simulation results from a MATLAB\ :sup:`®` file in
     Dymola\ :sup:`®` or OpenModelica format.
 
@@ -231,7 +287,7 @@ def loadsim(fname, constants_only=False):
         return description, unit, displayUnit
 
     # Load the file.
-    mat, Aclass = _load(fname, constants_only)
+    mat, Aclass = load(fname, constants_only)
 
     # Check the type of results.
     if Aclass[0] == 'AlinearSystem':
@@ -264,7 +320,7 @@ def loadsim(fname, constants_only=False):
     # time and value data remains linked to the same memory locations where it
     # is loaded.  The negated variable is carried through so that copies are not
     # necessary.
-    variables = VarDict()
+    variables = _VarDict()
     if version == '1.0':
         d = mat['data'].T if transposed else mat['data']
         times = d[:, 0]
@@ -339,7 +395,7 @@ def loadlin(fname):
     # installation.
 
     # Load the file.
-    mat, Aclass = _load(fname)
+    mat, Aclass = load(fname)
 
     # Check the type of results.
     if Aclass[0] == 'Atrajectory':

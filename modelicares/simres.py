@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """This package contains :class:`SimRes`, a class to load, analyze, and plot
-results a Modelica_ simulation
+results from a Modelica_ simulation.
 
 
 .. testsetup::
@@ -20,58 +20,60 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import numpy as np
 
+from collections import namedtuple
 from functools import wraps
+from difflib import get_close_matches
 from re import compile as re_compile
+from scipy.integrate import trapz as integral
+from scipy.interpolate import interp1d
 from matplotlib.pyplot import figlegend
 from matplotlib import rcParams
 from fnmatch import fnmatchcase
-from difflib import get_close_matches
 from pandas import DataFrame
 
 from modelicares import util
 from modelicares.texunit import unit2tex, number_str
-from modelicares._io import simloaders, Variable
+#from modelicares._io import simloaders
 from modelicares._gui import Browser
 
-# File loading functions, in the order they should be tried
-from modelicares._io.dymola import loadsim as dymola
-loaders = [('dymola', dymola)]
 
-
-class _Variables():
-    """Class that stores and operates on a possibly nested list of variables
+class Variable(namedtuple('Variable', ['samples', 'description', 'unit',
+                                       'displayUnit'])):
+    """Specialized named tuple that contains attributes and methods to
+    represent a variable in a simulation
     """
-    def __init__(self, entries):
-        self.entries = entries
 
-    def _fromself(f):
-        """Return a function that operates on an instance of this class,
-        including all of its possibly nested entries,
-        given a function that operates on a single entry.
+    def _apply_function(g):
+        """Return a function that applies a function to its output, given a
+        function that doesn't (*g*).
+
+        I.e., a decorator to apply a function to the return value
         """
-        @wraps(f)
-        def wrapped(self, *args, **kwargs):
-            """Traverse lists recursively until the argument is a single
-            variable, then pass it to the original function and return the
-            result upwards.
+        @wraps(g)
+        def wrapped(self, f=None, *args, **kwargs):
+            """Function that applies a function *f* to its output
+
+            If *f* is *None* (default), no function is applied (i.e., pass
+            through or identity).
             """
-            if isinstance(self.entries, Variable):
-                return f(self.entries, *args, **kwargs)
-            else:
-                return [wrapped(_Variables(entry), *args, **kwargs)
-                        for entry in self.entries]
+            return (g(self, *args, **kwargs) if f is None else
+                    f(g(self, *args, **kwargs)))
 
         return wrapped
 
-    # Copied from __init__.py (TODO: Is there a way to reference it directly?)
-    def select_times(f):
+    def _select_times(f):
         """Return a function that uses time-based indexing to return values,
         given a function that returns all values (*f*).
 
-        If *t* is *None*, then all values are returned (pass through).
+        I.e., a decorator to use time-based indexing to select values
         """
         @wraps(f)
         def wrapped(self, t=None, *args, **kwargs):
+            """Function that uses time-based indexing to return values
+
+            If *t* is *None* (default), then all values are returned (i.e., pass
+            through or identity).
+            """
             if t is None:
                 # Return all values.
                 return f(self, *args, **kwargs)
@@ -91,120 +93,580 @@ class _Variables():
 
         return wrapped
 
-    @_fromself
-    def __getattr__(entry, name):
-        """Look up an attribute of the variables (e.g., description, unit,
-        displayUnit)
+    def array(self, t=None, ft=None, fv=None):
+        """Return an array with function *ft* of the times of the variable as
+        the first column and function *fv* of the values of the variable as the
+        second column.
+
+        The times and values are taken at index or slice *i*.  If *i* is *None*,
+        then all times and values are returned.
+
+        **Arguments:**
+
+        - *t*: Time index
+
+             - Default or *None*: All samples are included.
+
+             - *float*: Interpolate to a single time.
+
+             - *list*: Interpolate to a list of times.
+
+             - *tuple*: Extract samples from a range of times.  The structure is
+               signature to the arguments of Python's slice_ function, except
+               that the start and stop values can be floating point numbers.
+               The samples within and up to the limits are included.
+               Interpolation is not used.
+
+                  - (*stop*,): All samples up to *stop* are included.
+
+                       Be sure to include the comma to distinguish this from a
+                       singleton.
+
+                  - (*start*, *stop*): All samples between *start* and *stop*
+                    are included.
+
+                  - (*start*, *stop*, *skip*): Every *skip*th sample is included
+                    between *start* and *stop*.
+
+        - *ft*: Function that operates on the vector of times (default or
+          *None* is identity)
+
+        - *fv*: Function that operates on the vector of values (default or
+          *None* is identity)
+
+
+        _slice: https://docs.python.org/2/library/functions.html#slice
         """
-        return entry.__getattribute__(name)
+        return np.array([self.times(t=t, f=ft), self.values(t=t, f=fv)]).T
 
-    @_fromself
-    def arrays(entry, *args, **kwargs):
-        return entry.array(*args, **kwargs)
+    @_apply_function
+    def FV(self):
+        """Return function *f* of the final value of the variable.
+        """
+        return self.values()[-1]
 
-    @_fromself
-    def FV(entry, *args, **kwargs):
-        return entry.FV(*args, **kwargs)
+    def is_constant(self):
+        """Return *True* if the variable does not change over time.
+        """
+        return not np.any((np.diff(self.values()) <> 0))
 
-    @_fromself
-    def IV(entry, *args, **kwargs):
-        return entry.IV(*args, **kwargs)
+    @_apply_function
+    def IV(self):
+        """Return function *f* of the initial value of the variable.
+        """
+        return self.values()[0]
 
-    @_fromself
-    def times(entry, *args, **kwargs):
-        return entry.times(*args, **kwargs)
+    def max(self, f=None):
+        """Return the maximum value of function *f* of the variable.
+        """
+        return np.max(self.values(f=f))
 
-    @_fromself
-    def max(entry, *args, **kwargs):
-        return entry.max(*args, **kwargs)
+    def mean(self, f=None):
+        """Return the time-averaged mean value of function *f* of the variable.
+        """
+        t = self.times()
+        return integral(self.values(f=f), t)/(t[-1] - t[0])
 
-    @_fromself
-    def mean(entry, *args, **kwargs):
-        return entry.mean(*args, **kwargs)
+    def mean_rectified(self, f=None):
+        """Return the time-averaged rectified mean value of function *f* of the
+        variable.
+        """
+        t = self.times()
+        return integral(np.abs(self.values(f=f)), t)/(t[-1] - t[0])
 
-    @_fromself
-    def min(entry, *args, **kwargs):
-        return entry.min(*args, **kwargs)
+    def min(self, f=None):
+        """Return the minimum value of function *f* of the variable.
+        """
+        return np.min(self.values(f=f))
 
-    @_fromself
-    def RMS(entry, *args, **kwargs):
-        return entry.RMS(*args, **kwargs)
+    def plot(self, ylabel=None, legend=[],
+             leg1_kwargs={'loc': 'best'}, ax1=None,
+             title=None, label="trend", incl_prefix=False, suffix=None,
+             use_paren=True, **kwargs):
+        """Plot the variable over time.
 
-    @_fromself
-    def values(entry, *args, **kwargs):
-        return entry.values(*args, **kwargs)
+TODO: update doc
+        **Arguments:**
+
+        - *ylabel*: Label for the primary axis
+
+             If *ylabel* is *None* (default), then the common description will
+             be used.  Use '' for no label.
+
+        - *legend*: List of legend entries for variables assigned to the
+          primary y axis
+
+             If *legends1* is an empty list ([]), ynames1 will be used.  If
+             *legends1* is *None* and all of the variables on the primary axis
+             have the same unit, then no legend will be shown.
+
+        - *leg_kwargs*: Dictionary of keyword arguments for the legend
+
+        - *ax*: Axes to plot into
+
+             If *ax* is not provided, then axes will be created in a new figure.
+
+        - *title*: Title for the figure
+
+             If *title* is *None* (default), then the title will be the base
+             filename.  Use '' for no title.
+
+        - *label*: Label for the figure (ignored if *ax* is provided)
+
+             This will be used as a base filename if the figure is saved.
+
+        - *incl_prefix*: If *True*, prefix the legend strings with the base
+          filename of the class.
+
+        - *suffix*: String that will be added at the end of the legend entries
+
+        - *use_paren*: Add parentheses around the suffix
+
+        - \*\**kwargs*: Propagated to :meth:`util.plot` (and thus to
+          :meth:`matplotlib.pyplot.plot`)
+
+             If both y axes are used (primary and secondary), then the *dashes*
+             argument is ignored.  The curves on the primary axis will be solid
+             and the curves on the secondary axis will be dotted.
+
+        **Returns:**
+
+        1. *ax1*: Primary y axes
+
+        2. *ax2*: Secondary y axes
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes, save
+
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim.plot(ynames1='L.i', ylabel1="Current",
+           ...          ynames2='L.der(i)', ylabel2="Derivative of current",
+           ...          title="Chua Circuit", label='examples/ChuaCircuit') # doctest: +ELLIPSIS
+           (<matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>)
+
+           >>> save()
+           Saved examples/ChuaCircuit.pdf
+           Saved examples/ChuaCircuit.png
+
+        .. testsetup::
+           >>> import matplotlib.pyplot as plt
+           >>> plt.show()
+           >>> plt.close()
+
+        .. only:: html
+
+           .. image:: ../examples/ChuaCircuit.png
+              :scale: 70 %
+              :alt: plot of Chua circuit
+
+        .. only:: latex
+
+           .. figure:: ../examples/ChuaCircuit.pdf
+              :scale: 70 %
+
+              Plot of Chua circuit
+        """
+
+        def ystrings(ynames, ylabel, legends):
+            """Generate a y-axis label and set of legend entries.
+            """
+            if ynames:
+                if ylabel is None: # Try to create a suitable axis label.
+                    descriptions = self(ynames).description
+                    # If the descriptions are the same, label the y axis with
+                    # the 1st one.
+                    ylabel = descriptions[0]
+                    if len(set(descriptions)) != 1:
+                        print("The y-axis variable descriptions are different. "
+                              " The first has been used as the axis label. "
+                              " Please check it and provide ylabel1 or ylabel2"
+                              " if necessary.")
+                if legends == []:
+                    legends = ynames
+                if incl_prefix:
+                    legends = [self.fbase() + ': ' + leg for leg in legends]
+                if suffix:
+                    legends = ([leg + ' (%s)' % suffix for leg in legends]
+                               if use_paren else
+                               [leg + suffix for leg in legends])
+                units = self(ynames).unit
+                if len(set(units)) == 1:
+                    # The  units are the same, so show the 1st one on the axis.
+                    if ylabel != "":
+                        ylabel = number_str(ylabel, units[0])
+                else:
+                    # Show the units in the legend.
+                    if legends:
+                        legends = [number_str(entry, unit) for entry, unit in
+                                   zip(legends, units)]
+                    else:
+                        legends = [number_str(entry, unit) for entry, unit in
+                                   zip(ynames, units)]
+
+            return ylabel, legends
+
+        # Process the inputs.
+        ynames1 = util.flatten_list(ynames1)
+        ynames2 = util.flatten_list(ynames2)
+        assert ynames1 or ynames2, "No signals were provided."
+        if title is None:
+            title = self.fbase()
+
+        # Create primary and secondary axes if necessary.
+        if not ax1:
+            fig = util.figure(label)
+            ax1 = fig.add_subplot(111)
+        if ynames2 and not ax2:
+            ax2 = ax1.twinx()
+
+        # Generate the x-axis label.
+        if xlabel is None:
+            xlabel = 'Time' if xname == 'Time' else self[xname].description
+            # With Dymola 7.4, the description of the time variable will be
+            # "Time in", which isn't good.
+        if xlabel != "":
+            xlabel = number_str(xlabel, self[xname].unit)
+
+        # Generate the y-axis labels and sets of legend entries.
+        ylabel1, legends1 = ystrings(ynames1, ylabel1, legends1)
+        ylabel2, legends2 = ystrings(ynames2, ylabel2, legends2)
+
+        # Retrieve the data.
+        if xname == 'Time':
+            y_1 = self(ynames1).values()
+            y_2 = self(ynames2).values()
+        else:
+            x = self[xname].values()
+            times = self[xname].times()
+            y_1 = self(ynames1).values(times)
+            y_2 = self(ynames2).values(times)
+
+        # Plot the data.
+        if ynames1:
+            if ynames2:
+                # Use solid lines for primary axis and dotted lines for
+                # secondary.
+                kwargs['dashes'] = [(None, None)]
+                util.plot(y_1, self(ynames1).times() if xname == 'Time'
+                          else x, ax1, label=legends1, **kwargs)
+                kwargs['dashes'] = [(3, 3)]
+                util.plot(y_2, self(ynames2).times() if xname == 'Time'
+                          else x, ax2, label=legends2, **kwargs)
+            else:
+                util.plot(y_1, self(ynames1).times() if xname == 'Time'
+                          else x, ax1, label=legends1, **kwargs)
+        elif ynames2:
+            util.plot(y_2, self(ynames2).times() if xname == 'Time'
+                      else x, ax2, label=legends2, **kwargs)
+
+        # Decorate the figure.
+        ax1.set_title(title)
+        ax1.set_xlabel(xlabel)
+        if ylabel:
+            ax.set_ylabel(ylabel)
+        if legends1:
+            if legends2:
+                # Put the primary legend in the upper left and secondary in
+                # upper right.
+                leg1_kwargs['loc'] = 2
+                leg2_kwargs['loc'] = 1
+                ax1.legend(**leg1_kwargs)
+                ax2.legend(**leg2_kwargs)
+            else:
+                ax1.legend(**leg1_kwargs)
+        elif legends2:
+            ax2.legend(**leg2_kwargs)
+
+        return ax1, ax2
+
+    def RMS(self, f=None):
+        """Return the time-averaged root mean square value of function *f* of
+        the variable.
+        """
+        t = self.times()
+        return np.sqrt(integral(self.values(f=f)**2, t)/(t[-1] - t[0]))
+
+    def RMS_AC(self, f=None):
+        """Return the time-averaged AC-coupled root mean square value of
+        function *f* of the variable.
+        """
+        t = self.times()
+        mean = self.mean(f=f)
+        return mean + np.sqrt(integral((self.values(f=f) - mean)**2, t)/(t[-1] - t[0]))
+
+    def times(self):
+        """Return function *f* of the recorded times of the variable.
+
+        **Arguments:**
+
+        - *t*: Time index
+
+             This may have any of the forms list in :meth:`values`, but the
+             useful ones are:
+
+             - Default or *None*: All times are included.
+
+             - *tuple*: Extract recorded times from a range of times.  The
+               structure is signature to the arguments of Python's slice_
+               function, except that the start and stop values can be floating
+               point numbers.  The times within and up to the limits are
+               included.  Interpolation is not used.
+
+                  - (*stop*,): All times up to *stop* are included.
+
+                       Be sure to include the comma to distinguish this from a
+                       singleton.
+
+                  - (*start*, *stop*): All recorded times between *start* and
+                    *stop* are included.
+
+                  - (*start*, *stop*, *skip*): Every *skip*th recorded time is
+                    included between *start* and *stop*.
+
+        - *f*: Function that operates on the vector of recorded times (default
+          or *None* is identity)
+        """
+        raise NotImplementedError("This method must be redefined for specific "
+                                  "file formats.")
+
+    def values(self):
+        """Return function *f* of the values of the variable.
+
+        **Arguments:**
+
+        - *t*: Time index
+
+             - Default or *None*: All samples are included.
+
+             - *float*: Interpolate to a single time.
+
+             - *list*: Interpolate to a list of times.
+
+             - *tuple*: Extract samples from a range of times.  The structure is
+               signature to the arguments of Python's slice_ function, except
+               that the start and stop values can be floating point numbers.
+               The samples within and up to the limits are included.
+               Interpolation is not used.
+
+                  - (*stop*,): All samples up to *stop* are included.
+
+                       Be sure to include the comma to distinguish this from a
+                       singleton.
+
+                  - (*start*, *stop*): All samples between *start* and *stop*
+                    are included.
+
+                  - (*start*, *stop*, *skip*): Every *skip*th sample is included
+                    between *start* and *stop*.
+
+        - *f*: Function that operates on the vector of values (default or *None*
+          is identity)
+        """
+        raise NotImplementedError("This method must be redefined for specific "
+                                  "file formats.")
+
+    def _slice(self, t):
+        """Return a slice that indexes the variable, given a slice-like tuple
+        of times.
+
+        **Call signature:**
+
+          - (*stop*,): All samples up to *stop* are included.
+
+               Be sure to include the comma to distinguish this from a
+               singleton.
+
+          - (*start*, *stop*): All samples between *start* and *stop*
+            are included.
+
+          - (*start*, *stop*, *skip*): Every *skip*th sample is included
+            between *start* and *stop*.
+
+        """
+        # Retrieve the start time, stop time, and the number of samples to skip.
+        try:
+            (t1, t2, skip) = t
+        except ValueError:
+            skip = None
+            try:
+                (t1, t2) = t
+            except ValueError:
+                t1 = None
+                (t2,) = t
+        assert t1 is None or t2 is None or t1 <= t2, (
+            "The lower time limit must be less than or equal to the upper time "
+            "limit.")
+
+        # Determine the corresponding indices and return them in a tuple.
+        times = self.times()
+        i1 = None if t1 is None else util.get_indices(times, t1)[1]
+        i2 = None if t2 is None else util.get_indices(times, t2)[0] + 1
+        return slice(i1, i2, skip)
 
 
+class _VarDict(dict):
+    """Class for a dictionary of variables (instances of the Variable class
+    above)
+    """
+    def __getitem__(self, key):
+       """Include suggestions in the error message if a variable is missing.
+       """
+       try:
+           return dict.__getitem__(self, key)
+       except KeyError:
+            msg = '%s is not a valid variable name.' % key
+            close_matches = get_close_matches(key, self.keys())
+            if close_matches:
+                msg += "\n       ".join(["\n\nDid you mean one of these?"]
+                                        + close_matches)
+            raise LookupError(msg)
+
+
+class _VarList(list):
+    """Class for a list of (possibly nested) variables (instances of the
+    Variable class above)
+    """
+
+    def _method(f):
+        """Return a method that operates on all of the variables in the
+        list of variables, given a function that operates on a single variable.
+        """
+        @wraps(f)
+        def wrapped(self, *args, **kwargs):
+            """Traverse the list recursively until the argument is a single
+            variable, then pass it to the function and return the result
+            upwards.
+            """
+            return [f(variable, *args, **kwargs)
+                    if isinstance(variable, Variable) else
+                    wrapped(variable, *args, **kwargs)
+                    for variable in self]
+
+        return wrapped
+
+    @_method
+    def __getattr__(variable, attr):
+        """Look up an attribute of the variables (e.g., description, unit,
+        displayUnit).
+        """
+        return variable.__getattribute__(attr)
+
+    # The methods below are straightforward calls to the methods of the
+    # Variable class (above).
+
+    @_method
+    def arrays(variable, *args, **kwargs):
+        return variable.array(*args, **kwargs)
+
+    @_method
+    def FV(variable, *args, **kwargs):
+        return variable.FV(*args, **kwargs)
+
+    @_method
+    def IV(variable, *args, **kwargs):
+        return variable.IV(*args, **kwargs)
+
+    @_method
+    def max(variable, *args, **kwargs):
+        return variable.max(*args, **kwargs)
+
+    @_method
+    def mean(variable, *args, **kwargs):
+        return variable.mean(*args, **kwargs)
+
+    @_method
+    def mean_rectified(variable, *args, **kwargs):
+        return variable.mean_rectified(*args, **kwargs)
+
+    @_method
+    def min(variable, *args, **kwargs):
+        return variable.min(*args, **kwargs)
+
+    @_method
+    def plot(variable, *args, **kwargs):
+        return variable.plot(*args, **kwargs)
+
+    @_method
+    def RMS(variable, *args, **kwargs):
+        return variable.RMS(*args, **kwargs)
+
+    @_method
+    def RMS_AC(variable, *args, **kwargs):
+        return variable.RMS_AC(*args, **kwargs)
+
+    @_method
+    def times(variable, *args, **kwargs):
+        return variable.times(*args, **kwargs)
+
+    @_method
+    def values(variable, *args, **kwargs):
+        return variable.values(*args, **kwargs)
+
+
+# List of file-loading functions for SimRes
+# This must be below the definition of Variable and _VarDict because those
+# classes are required by the loading functions.
+from modelicares._io.dymola import loadsim as dymola_sim
+simloaders = [('dymola', dymola_sim)] # SimRes tries these in order.
 
 class SimRes(object):
     """Class to load and analyze results from a Modelica_ simulation
 
     Methods:
 
-    - :meth:`browse` - Launch a variable browser
+    - :meth:`browse` - Launch a variable browser.
 
-    - :meth:`fbase` - Return the base filename from which the variables were
-      loaded, without the directory or file extension
+    - :meth:`fbase` - Return the base filename from which the results were
+      loaded, without the directory or file extension.
 
-    - :meth:`get_arrays` - Return array(s) of times and values for variable(s)
+    - :meth:`names` - Return a list of variable names that match a pattern.
 
-    - :meth:`get_arrays_wi_times` - Return array(s) of times and values for
-      variable(s) within a time range
+    - :meth:`nametree` - Return a tree of all variable names based on the
+      Modelica_ model hierarchy.
 
-    - :meth:`get_description` - Return the description(s) of variable(s)
-
-    - :meth:`get_displayUnit` - Return the Modelica_ *displayUnit* attribute(s)
-      of variable(s)
-
-    - :meth:`get_IV` - Return the initial value(s) of variable(s)
-
-    - :meth:`get_FV` - Return the final value(s) of variable(s)
-
-    - :meth:`get_max` - Return the maximum value(s) of variable(s)
-
-    - :meth:`get_mean` - Return the time-averaged value(s) of variable(s)
-
-    - :meth:`get_min` - Return the minimum value(s) of variable(s)
-
-    - :meth:`get_times` - Return vector(s) of the sample times of variable(s)
-
-    - :meth:`get_unit` - Return the *unit* attribute(s) of variable(s)
-
-    - :meth:`get_values` - Return vector(s) of the values of variable(s)
-
-    - :meth:`get_values_at_times` - Return vector(s) of the values of
-      variable(s) at given times
-
-    - :meth:`get_values_wi_times` - Return vector(s) of the values of
-      variable(s) within a time range
-
-    - :meth:`names` - Return a list of variable names that match a pattern
-
-    - :meth:`nametree` - Return a tree of all variable names with respect to
-      the path names
+    - :meth:`n_constants` - Return the number of variables that do not change
+      over time.
 
     - :meth:`plot` - Plot data as points and/or curves in 2D Cartesian
-      coordinates
+      coordinates.
 
-    - :meth:`set_displayUnit` - Set the the Modelica_ *displayUnit* attribute of
-      a variable
+    - :meth:`sankey` - Create a figure with Sankey diagram(s).
 
-    - :meth:`set_displayUnit` - Set the the Modelica_ *description* attribute of
-      a variable
+    - :meth:`to_pandas` - Return a `pandas DataFrame`_ with selected variables.
 
-    - :meth:`to_pandas` - Return a `pandas DataFrame`_ with selected variables
+    Methods invoked using built-in Python_ operators and syntax:
 
-    - :meth:`sankey` - Create a figure with Sankey diagram(s)
+    - :meth:`__call__` - Access a list of variables by their names (invoked as
+      `sim(<list of variable names>)`).
+
+         The return value has methods and attributes to retrieve information
+         about all the variables in the list at once (values, units, etc.).
+
+    - :meth:`__contains__` - Return *True* if a variable is present in the
+      simulation results (invoked as `<variable name> in sim`).
+
+    - :meth:`__getitem__` - Access a variable by name (invoked as
+      `sim[<variable name>]`).
+
+         The return value has methods and attributes to retrieve information
+         about the variable (values, unit, etc.).
+
+    - :meth:`__len__` - Return the number of variables in the simulation
+      (invoked as `len(sim)`).
 
     Attributes:
 
     - *fname* - Filename from which the variables were loaded, with full path
       and extension
 
-    - *tool* - String indicating the algorithm that was successful at loading
-      the results file (named after the corresponding simulation tool)
+    - *tool* - String indicating the function used to load the results (named
+      after the corresponding simulation tool)
 
 
+    .. _Python: http://www.python.org
     .. _pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
 
@@ -240,7 +702,7 @@ class SimRes(object):
         # Load the file.
         if tool is None:
             # Load the file and store the variables.
-            for (tool, load) in loaders[:-1]:
+            for (tool, load) in simloaders[:-1]:
                 try:
                     self._variables = load(fname, constants_only)
                 except IOError:
@@ -251,14 +713,14 @@ class SimRes(object):
                     continue
                 else:
                     break
-            (tool, load) = loaders[-1]
+            (tool, load) = simloaders[-1]
         else:
-            loaderdict = dict(loaders)
+            loaderdict = dict(simloaders)
             try:
                 load = loaderdict[tool.lower()]
             except:
                 raise LookupError('"%s" is not one of the available tools ("%s").'
-                                  % (tool, '", "'.join(loaders.keys())))
+                                  % (tool, '", "'.join(simloaders.keys())))
         self._variables = load(fname, constants_only)
 
         # Remember the tool and filename.
@@ -403,7 +865,7 @@ class SimRes(object):
 
         # Create the bar plots.
         for axis, time in zip(ax, times):
-            axis.bar(ind-width/2., self.get_values_at_times(names, time),
+            axis.bar(ind-width/2., self(names).values(time),
                      width, **kwargs)
             a = axis.axis()
             axis.axis([0, ind[-1]+1, a[2], a[3]])
@@ -471,466 +933,6 @@ class SimRes(object):
         without the directory or file extension.
         """
         return os.path.splitext(os.path.split(self.fname)[1])[0]
-
-
-    @_acceptlists
-    @_fromname
-    def get_arrays(variable, *args, **kwargs):
-        """Return array(s) of times and values for variable(s).
-
-        In each array, the first column is time and the second column contains
-        the values.
-
-        **Arguments:**
-
-        - *names*: String or (possibly nested) list of strings of variable names
-
-        - *i*: Index (-1 for last, *None* for all), list of indices, or slice of
-          the values(s) to return
-
-             By default, all values are returned.
-
-        - *f*: Function that operates on each array (default is identity)
-
-        If *names* is a string, then the output will be an array.  If *names* is
-        a (optionally nested) list of strings, then the output will be a
-        (nested) list of arrays.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_arrays('L.v') # doctest: +NORMALIZE_WHITESPACE
-           array([[  0.0000e+00,   0.0000e+00],
-                  [  5.0000e+00,   1.0923e-01],
-                  [  1.0000e+01,   2.1084e-01],
-                  ...,
-                  [  2.4950e+03,  -2.2577e-01],
-                  [  2.5000e+03,  -2.5353e-01],
-                  [  2.5000e+03,  -2.5353e-01]], dtype=float32)
-
-        Note that this is the same result as from :meth:`__call__`.
-        """
-        return variable.get_array(*args, **kwargs)
-
-
-    @_acceptlists
-    @_fromname
-    def get_arrays_wi_times(variable, *args, **kwargs):
-        """Return arrays(s) of times and values of variable(s) within a time
-        range.
-
-        In each array, the first column is time and the second column contains
-        the values.
-
-        **Arguments:**
-
-        - *names*: String or (possibly nested) list of strings of variable names
-
-        - *t1*: Lower time bound
-
-        - *t2*: Upper time bound
-
-        - *f*: Function that operates on each vector (default is identity)
-
-        If *names* is a string, then the output will be an array.  If *names* is
-        a (optionally nested) list of strings, then the output will be a
-        (nested) list of arrays.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_arrays_wi_times('L.v', t1=0, t2=10)
-           array([[  0.    ,   0.    ],
-                  [  5.    ,   0.1092],
-                  [ 10.    ,   0.2108]], dtype=float32)
-        """
-        return variable.array_wi_times(*args, **kwargs)
-
-
-    @_acceptlists
-    @_fromname
-    def get_description(variable):
-        """Return the description(s) of variable(s).
-
-        **Arguments:**
-
-        - *name*: Variable name or (possibly nested) list of variable names
-
-        If *name* is a string, then the output will be a single description.
-        If *name* is a (optionally nested) list of strings, then the output
-        will be a (nested) list of descriptions.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_description('L.v')
-           'Voltage drop between the two pins (= p.v - n.v)'
-        """
-        return variable.description
-
-
-    @_acceptlists
-    @_fromname
-    def get_displayUnit(variable):
-        """Return the Modelica_ *displayUnit* attribute(s) of variable(s).
-
-        **Arguments:**
-
-        - *name*: Variable name or (possibly nested) list of variable names
-
-        If *name* is a string, then the output will be a single display unit.
-        If *name* is a (optionally nested) list of strings, then the output
-        will be a (nested) list of display units.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_displayUnit('G.T_heatPort')
-           'degC'
-        """
-        return variable.displayUnit
-
-
-    @_acceptlists
-    @_fromname
-    def get_FV(variable, *args, **kwargs):
-        """Return the final value(s) of variable(s).
-
-        **Arguments:**
-
-        - *names*: String or (possibly nested) list of strings of variable
-          names
-
-        - *f*: Function to be applied to each value (default is identity)
-
-        If *names* is a string, then the output will be a single value.  If
-        *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of values.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_FV(['Time', 'L.v'])
-           [2500.0, -0.25352862]
-        """
-        return variable.FV(*args, **kwargs)
-
-
-    @_acceptlists
-    @_fromname
-    def get_IV(variable, *args, **kwargs):
-        """Return the initial value(s) of variable(s).
-
-        **Arguments:**
-
-        - *names*: String or (possibly nested) list of strings of variable names
-
-        - *f*: Function to be applied to each value (default is identity)
-
-        If *names* is a string, then the output will be a single value.  If
-        *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of values.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_IV('L.v')
-           0.0
-        """
-        return variable.IV(*args, **kwargs)
-
-
-    @_acceptlists
-    @_fromname
-    def get_max(variable, *args, **kwargs):
-        """Return the maximum value(s) of variable(s).
-
-        **Arguments:**
-
-        - *names*: String or (possibly nested) list of strings of variable
-          names
-
-        - *f*: Function to be applied before taking the maximum (default is
-          identity)
-
-        If *names* is a string, then the output will be a single value.  If
-        *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of values.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_max('L.v')
-           0.77344114
-        """
-        return variable.max(*args, **kwargs)
-
-
-    @_acceptlists
-    @_fromname
-    def get_mean(variable, *args, **kwargs):
-        """Return the time-averaged arithmetic mean value(s) of variable(s).
-
-        **Arguments:**
-
-        - *names*: String or (possibly nested) list of strings of variable
-          names
-
-        - *f*: Function to be applied before taking the mean (default is
-          identity)
-
-        If *names* is a string, then the output will be a single value.  If
-        *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of values.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_mean('L.v')
-           0.014733823
-        """
-        return variable.mean(*args, **kwargs)
-
-
-    @_acceptlists
-    @_fromname
-    def get_min(variable, *args, **kwargs):
-        """Return the minimum value(s) of variable(s).
-
-        **Arguments:**
-
-        - *names*: String or (possibly nested) list of strings of variable
-          names
-
-        - *f*: Function to be applied before taking the minimum (default is
-          identity)
-
-        If *names* is a string, then the output will be a single value.  If
-        *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of values.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_min('L.v')
-           -0.9450165
-        """
-        return variable.min(*args, **kwargs)
-
-
-    @_acceptlists
-    @_fromname
-    def get_times(variable, *args, **kwargs):
-        """Return vector(s) of the sample times of variable(s).
-
-        **Arguments:**
-
-        - *name*: Variable name or (possibly nested) list of variable names
-
-        Passed to :meth:`Variable.times` via \**args* and \*\**kwargs*:
-
-        - *i*: Index (-1 for last, *None* for all), list of indices, or slice of
-          the values(s) to return
-
-             By default, all values are returned.
-
-        - *f*: Function that operates on each vector (default is identity)
-
-        If *name* is a string, then the output will be a vector of times.  If
-        *name* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of vectors.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_times('L.v') # doctest: +ELLIPSIS
-           array([.TODO add numbers back here and elsewhere..], dtype=float32)
-        """
-        return variable.times(*args, **kwargs)
-
-
-    @_acceptlists
-    @_fromname
-    def get_unit(variable):
-        """Return the *unit* attribute(s) of variable(s).
-
-        **Arguments:**
-
-        - *name*: Variable name or (possibly nested) list of variable names
-
-        If *name* is a string, then the output will be a single unit.  If
-        *name* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of units.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_unit('L.v')
-           'V'
-        """
-        return variable.unit
-
-
-    @_acceptlists
-    @_fromname
-    def get_values(variable, *args, **kwargs):
-        """Return vector(s) of the values of variable(s).
-
-        **Arguments:**
-
-        - *names*: String or (possibly nested) list of strings of variable names
-
-        - *i*: Index (-1 for last, *None* for all), list of indices, or slice of
-          the values(s) to return
-
-             By default, all values are returned.
-
-        - *f*: Function that operates on each vector (default is identity)
-
-        If *names* is a string, then the output will be a vector of values.  If
-        *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of vectors.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_values('L.v') # doctest: +ELLIPSIS
-           array([...], dtype=float32)
-
-        If the variable cannot be found, then possible matches are listed:
-
-        .. code-block:: python
-
-           >>> sim.get_values(['L.vv']) # doctest: +SKIP
-           ['L.vv'] is not a valid variable name.
-           <BLANKLINE>
-           Did you mean one of these?
-                  L.v
-                  L.p.v
-                  L.n.v
-           Traceback (most recent call last):
-            ...
-           KeyError: 'L.vv'
-
-        The other *get_*\* methods also give this message when a variable cannot
-        be found.
-        """
-        return variable.values(*args, **kwargs)
-
-
-    @_acceptlists
-    @_fromname
-    def get_values_at_times(variable, *args, **kwargs):
-        """Return vector(s) of the values of variable(s) at given times.
-
-        **Arguments:**
-
-        - *names*: String or (possibly nested) list of strings of variable names
-
-        - *times*: Scalar, numeric list, or a numeric array of the times from
-          which to pull samples
-
-        - *f*: Function that operates on each vector (default is identity)
-
-        If *names* is a string, then the output will be a vector of values.  If
-        *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of vectors.
-
-        If *times* is not provided, all of the samples will be returned.  If
-        necessary, the values will be interpolated over time.  The function *f*
-        is applied before interpolation.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_values_at_times('L.v', [0, 2000]) # doctest: +ELLIPSIS
-           array([...])
-        """
-        return variable.values_at_times(*args, **kwargs)
-
-
-    @_acceptlists
-    @_fromname
-    def get_values_wi_times(variable, *args, **kwargs):
-        """Return vector(s) of the values of variable(s) within a time range.
-
-        **Arguments:**
-
-        - *names*: String or (possibly nested) list of strings of variable names
-
-        - *t1*: Lower time bound
-
-        - *t2*: Upper time bound
-
-        - *f*: Function that operates on each vector (default is identity)
-
-        If *names* is a string, then the output will be a vector of values.  If
-        *names* is a (optionally nested) list of strings, then the output will
-        be a (nested) list of vectors.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_values_wi_times('L.v', t1=0, t2=15) # doctest: +NORMALIZE_WHITESPACE
-           array([ 0. , 0.1092, 0.2108, 0.3046], dtype=float32)
-        """
-        return variable.values_wi_times(*args, **kwargs)
 
 
     def names(self, pattern=None, re=False, constants_only=False):
@@ -1016,11 +1018,13 @@ class SimRes(object):
 
 
     def nametree(self, pattern=None, re=False):
-        """Return a tree of all variable names with respect to the path names.
+        """Return a tree of all variable names based on the Modelica_ model
+        hierarchy.
 
-        The tree represents the structure of the Modelica_ model.  It is
-        returned as a nested dictionary.  The keys are the path elements and
-        the values are sub-dictionaries or variable names.
+        The tree is returned as a nested dictionary.  The keys are the Modelica_
+        class instances (including the index if there are arrays) and the values
+        are are subclasses.  The value at the end of each branch is the full
+        variable name.
 
         All names are included by default, but the names can be filtered using
         *pattern* and *re*.  See :mod:`names` for a description of those
@@ -1166,7 +1170,7 @@ class SimRes(object):
             """
             if ynames:
                 if ylabel is None: # Try to create a suitable axis label.
-                    descriptions = self.get_description(ynames)
+                    descriptions = self(ynames).description
                     # If the descriptions are the same, label the y axis with
                     # the 1st one.
                     ylabel = descriptions[0]
@@ -1183,7 +1187,7 @@ class SimRes(object):
                     legends = ([leg + ' (%s)' % suffix for leg in legends]
                                if use_paren else
                                [leg + suffix for leg in legends])
-                units = self.get_unit(ynames)
+                units = self(ynames).unit
                 if len(set(units)) == 1:
                     # The  units are the same, so show the 1st one on the axis.
                     if ylabel != "":
@@ -1215,26 +1219,25 @@ class SimRes(object):
 
         # Generate the x-axis label.
         if xlabel is None:
-            xlabel = 'Time' if xname == 'Time' else self.get_description(xname)
+            xlabel = 'Time' if xname == 'Time' else self[xname].description
             # With Dymola 7.4, the description of the time variable will be
             # "Time in", which isn't good.
         if xlabel != "":
-            xlabel = number_str(xlabel, self.get_unit(xname))
+            xlabel = number_str(xlabel, self[xname].unit)
 
         # Generate the y-axis labels and sets of legend entries.
         ylabel1, legends1 = ystrings(ynames1, ylabel1, legends1)
         ylabel2, legends2 = ystrings(ynames2, ylabel2, legends2)
 
-# TODO: timeit: get_values vs call; if call is as fast, remove get_*
         # Retrieve the data.
         if xname == 'Time':
-            y_1 = self.get_values(ynames1)
-            y_2 = self.get_values(ynames2)
+            y_1 = self(ynames1).values()
+            y_2 = self(ynames2).values()
         else:
             x = self._variables[xname].values()
-            times = self._variables[xname].times()
-            y_1 = self.get_values_at_times(ynames1, times)
-            y_2 = self.get_values_at_times(ynames2, times)
+            times = self[xname].times()
+            y_1 = self(ynames1).values(times)
+            y_2 = self(ynames2).values(times)
 
         # Plot the data.
         if ynames1:
@@ -1242,16 +1245,16 @@ class SimRes(object):
                 # Use solid lines for primary axis and dotted lines for
                 # secondary.
                 kwargs['dashes'] = [(None, None)]
-                util.plot(y_1, self.get_times(ynames1) if xname == 'Time'
+                util.plot(y_1, self(ynames1).times() if xname == 'Time'
                           else x, ax1, label=legends1, **kwargs)
                 kwargs['dashes'] = [(3, 3)]
-                util.plot(y_2, self.get_times(ynames2) if xname == 'Time'
+                util.plot(y_2, self(ynames2).times() if xname == 'Time'
                           else x, ax2, label=legends2, **kwargs)
             else:
-                util.plot(y_1, self.get_times(ynames1) if xname == 'Time'
+                util.plot(y_1, self(ynames1).times() if xname == 'Time'
                           else x, ax1, label=legends1, **kwargs)
         elif ynames2:
-            util.plot(y_2, self.get_times(ynames2) if xname == 'Time'
+            util.plot(y_2, self(ynames2).times() if xname == 'Time'
                       else x, ax2, label=legends2, **kwargs)
 
         # Decorate the figure.
@@ -1373,23 +1376,23 @@ class SimRes(object):
 
         # Retrieve the data.
         n_plots = len(times)
-        Qdots = self.get_values_at_times(names, times)
-        start_time = self._variables['Time'].IV()
-        stop_time = self._variables['Time'].FV()
+        Qdots = self(names).values(times)
+        start_time = self['Time'].IV()
+        stop_time = self['Time'].FV()
 
         # Create a title if necessary.
         if title is None:
             title = "Sankey Diagram of " + self.fbase()
 
         # Determine the units of the data.
-        flow_unit = self.get_unit(names)
+        flow_unit = self(names).unit
         assert len(set(flow_unit)) == 1, (
             "The variables have inconsistent units.")
         flow_unit = flow_unit[0]
 
         # Set up the subplots.
         if not subtitles:
-            unit = unit2tex(self.get_unit('Time'))
+            unit = unit2tex(self('Time').unit)
             subtitles = ["t = %s %s" % (time, unit) for time in times]
             for i, time in enumerate(times):
                 if time == start_time:
@@ -1410,54 +1413,6 @@ class SimRes(object):
             sankeys.append(Sankey(ax, flows=[Qdot[i] for Qdot in Qdots],
                            unit=flow_unit, **kwargs).finish())
         return sankeys
-
-
-    def set_displayUnit(self, name, displayUnit):
-        """Set the the Modelica_ *displayUnit* attribute of a variable.
-
-        **Arguments:**
-
-        - *name*: Name of the variable
-
-        - *displayUnit*: String representing the display unit to be assigned
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.set_displayUnit('L.v', 'mV')
-           >>> sim.get_displayUnit('L.v')
-           'mV'
-        """
-        self._variables[name] = self._variables[name]._replace(displayUnit=displayUnit)
-
-
-    def set_description(self, name, description):
-        """Set the the Modelica_ *description* attribute of a variable.
-
-        **Arguments:**
-
-        - *name*: Name of the variable
-
-        - *description*: Description to be assigned
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.get_description('L.v')
-           'Voltage drop between the two pins (= p.v - n.v)'
-           >>> sim.set_description('L.v', 'Voltage difference')
-           >>> sim.get_description('L.v')
-           'Voltage difference'
-        """
-        self._variables[name] = self._variables[name]._replace(description=description)
 
 
     def to_pandas(self, names=None, aliases={}):
@@ -1546,76 +1501,46 @@ class SimRes(object):
         return DataFrame(data).set_index('Time / s')
 
 
-    def __call__(name, method=get_arrays, *args, **kwargs):
-        """Upon a call to an instance of :class:`SimRes`, call a method on
-        variable(s) given their name(s).
+    def __call__(self, names):
+        """Access a list of variables by their names.
+
+        See :meth:`__getitem__` for the attributes and methods that can be
+        accessed via the return value.
 
         **Arguments**:
 
-        - *name*: Variable name
+        - *names*: List of variable names
 
-        - *method*: Method for retrieving information about the variable(s)
+             The list can be nested, and the results will retain the hierarchy.
+             If *names* is a single variable name, then the result is the same
+             as from :meth:`__getitem__`.
 
-             The default is :meth:`get_arrays`.  *method* may be a list or
-             tuple, in which case the return value is a list or tuple.
-
-        - \**args*, \*\**kwargs*: Additional arguments for *method*
-
-        **Examples:**
+        **Example**:
 
         .. code-block:: python
 
-           >>> from modelicares.simres import SimRes
+           >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-
-           # Array of time and value vectors for a variable:
-           >>> sim('L.v') # doctest: +NORMALIZE_WHITESPACE
-           array([[  0.0000e+00,   0.0000e+00],
-                  [  5.0000e+00,   1.0923e-01],
-                  [  1.0000e+01,   2.1084e-01],
-                  ...,
-                  [  2.4950e+03,  -2.2577e-01],
-                  [  2.5000e+03,  -2.5353e-01],
-                  [  2.5000e+03,  -2.5353e-01]], dtype=float32)
-
-        Note that this is the same result as from :meth:`get_arrays`.
-
-        .. code-block:: python
-
-           # Other attributes
-           >>> from modelicares.simres import Info
-           >>> print("The final value of %s is %.3f %s." %
-           ...       sim('L.i', (Info.description, Info.FV, Info.unit)))
-           The final value of Current flowing from pin p to pin n is 2.049 A.
+           >>> sim(['L.v', 'L.i']).unit
+           ['V', 'A']
         """
-        assert isinstance(name, basestring), "name must be a string."
-        # It'd be possible to accept lists of variable names (in fact it'd work
-        # without this assert statement), but the call structure is complex
-        # enough already.
-
-        try:
-            return method(self, name=name, *args, **kwargs)
-        except TypeError:
-            t = type(method)
-            return t(m(self, name=name, *args, **kwargs) for m in method)
-
-
-    def __call__(self, names):
-        """Return an instance of a class that can be used to access information from a group of variables at once."""
         def entries(names):
-            """Create a (possibly nested) list of data entries given a
-            (possibly nested) list of variable names.
+            """Create a (possibly nested) list of data entries given a (possibly
+            nested) list of variable names.
             """
             if isinstance(names, basestring):
                 return self._variables[names]
             else:
                 return [entries(name) for name in names] # Recursion
 
-        return _Variables(entries(names))
+        if isinstance(names, basestring):
+            return self._variables[names]
+        else:
+            return _VarList(entries(names))
 
 
     def __contains__(self, name):
-        """Test if a variable is present in the simulation results.
+        """Return *True* if a variable is present in the simulation results.
 
         **Arguments**:
 
@@ -1640,10 +1565,10 @@ class SimRes(object):
 
     @_fromname
     def __getitem__(variable):
-        """Access a variable from its name.
+        """Access a variable by name.
 
-        This provides access to non-vectorized versions of all of the *get_*
-        methods of :class:`SimRes`, as attributes:
+        The return value can be used to retrieve information about the variable.
+        It has the following attributes:
 
         - *description* - The Modelica_ variable's description string
 
@@ -1651,35 +1576,40 @@ class SimRes(object):
 
         - *displayUnit* - The Modelica_ variable's *displayUnit* attribute
 
-        - :meth:`times` - Sample times of the variable
+        and methods:
 
-        or methods:
+        - :meth:`Variable.array` - Return an array of times and values for the
+          variable.
 
-        - :meth:`array` - Return an array of times and values for the variable
+        - :meth:`Variable.FV` - Return the final value of the variable.
 
-        - :meth:`array_wi_times` - Return an array of times and values for the
-          variable within a time range
+        - :meth:`Variable.is_constant` - Return *True* if the variable does not
+          change over time.
 
-        - :meth:`IV` - Return the initial value of the variable
+        - :meth:`Variable.IV` - Return the final value of the variable.
 
-        - :meth:`FV` - Return the final value of the variable
+        - :meth:`Variable.max` - Return the maximum value of the variable.
 
-        - :meth:`max` - Return the maximum value of the variable
+        - :meth:`Variable.mean` - Return the time-averaged value of the
+          variable.
 
-        - :meth:`mean` - Return the time-averaged value of the variable
+        - :meth:`Variable.mean_rectified` - Return the time-averaged absolute
+          value of the variable.
 
-        - :meth:`min` - Return the minimum value of the variable
+        - :meth:`Variable.min` - Return the minimum value of the variable.
 
-        - :meth:`values` - Values of the variable
+        - :meth:`Variable.plot` - Plot the variable over time, with options to
+          overlay the maximum, mean, minimum, root mean square, etc.
 
-        - :meth:`values_at_times` - Values of the variable at given times
+        - :meth:`Variable.RMS` - Return the time-averaged root mean square value
+          of the variable.
 
-        - :meth:`values_wi_times` - Values of the variable within a time range
+        - :meth:`Variable.RMS_AC` - Return the time-averaged AC-coupled root
+          mean square value of the variable.
 
-        also:
+        - :meth:`Variable.times` - Return sample times of the variable.
 
-        - :meth:`is_constant` - *True*, if the variable does not change over
-          time
+        - :meth:`Variable.values` - Return values of the variable.
 
         **Examples:**
 
@@ -1691,14 +1621,14 @@ class SimRes(object):
            >>> sim['L.v'].unit
            'V'
 
-           >>> sim['L.v'].values_wi_times(10, 25) # doctest: +NORMALIZE_WHITESPACE
+           >>> sim['L.v'].values(t=(10,25)) # doctest: +NORMALIZE_WHITESPACE
 
         """
         return variable
 
 
     def __len__(self):
-        """Return the number of variables in the simulation
+        """Return the number of variables in the simulation.
 
         This includes the time variable.
 

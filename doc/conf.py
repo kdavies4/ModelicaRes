@@ -21,7 +21,7 @@ import sys, os
 
 def skip(app, what, name, obj, skip, options):
     if (name == "__call__" or name == "__contains__" or name == "__getitem__"
-        or name == "__len__" or name == "__repr__" or name == "__str__"):
+        or name == "__len__"):
         return False
     return skip
 
