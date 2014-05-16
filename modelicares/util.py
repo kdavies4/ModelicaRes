@@ -80,6 +80,7 @@ import matplotlib.pyplot as plt
 from glob import glob
 from collections import MutableMapping, namedtuple
 from itertools import cycle
+from functools import wraps
 from decimal import Decimal
 from math import floor
 from matplotlib import rcParams
@@ -91,13 +92,6 @@ from PyQt4.QtGui import QApplication, QFileDialog
 
 # Function to close all open figures
 closeall = Gcf.destroy_all
-
-def chars_to_str(str_arr, codec='latin-1'):
-    """Convert a string array to a string.
-
-    Remove trailing whitespace and null characters.  Encode using *codec*.
-    """
-    return ''.join(str_arr).rstrip().rstrip('\x00').encode(codec)
 
 def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
                lstar=0.05, label='',
@@ -358,6 +352,30 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
         ax.text(positions[i], ypos, label, backgroundcolor='w',
                 horizontalalignment='center', verticalalignment='center')
 
+def apply_function(g):
+    """Return a function that applies a function to its output, given a
+    function that doesn't (*g*).
+
+    I.e., a decorator to apply a function to the return value
+    """
+    @wraps(g)
+    def wrapped(cls, f=None, *args, **kwargs):
+        """Function that applies a function *f* to its output
+
+        If *f* is *None* (default), no function is applied (i.e., pass
+        through or identity).
+        """
+        return (g(cls, *args, **kwargs) if f is None else
+                f(g(cls, *args, **kwargs)))
+
+    return wrapped
+
+def chars_to_str(str_arr, codec='latin-1'):
+    """Convert a string array to a string.
+
+    Remove trailing whitespace and null characters.  Encode using *codec*.
+    """
+    return ''.join(str_arr).rstrip().rstrip('\x00').encode(codec)
 
 def color(ax, c, *args, **kwargs):
     """Plot 2D scalar data on a color axis in 2D Cartesian coordinates.
@@ -429,6 +447,34 @@ def expand_path(path):
     return os.path.abspath(os.path.expanduser(path))
 
 
+def figure(label='', *args, **kwargs):
+    """Create a figure and set its label.
+
+    **Arguments:**
+
+    - *label*: String to apply to the figure's *label* property
+
+    - *\*args*, *\*\*kwargs*: Additional arguments for
+      :meth:`matplotlib.pyplot.figure`
+
+    **Example:**
+
+    .. code-block:: python
+
+       >>> fig = figure("velocity_vs_time") # doctest: +ELLIPSIS
+       >>> plt.getp(fig, 'label')
+       'velocity_vs_time'
+
+    .. Note::  The *label* property is used as the base filename in the
+       :meth:`saveall` method.
+    """
+    fig = plt.figure(*args, **kwargs)
+    plt.setp(fig, 'label', label)
+    # Note:  As of matplotlib 1.2, matplotlib.pyplot.figure(label=label) isn't
+    # supported directly.
+    return fig
+
+
 def flatten_dict(d, parent_key='', separator='.'):
     """Flatten a nested dictionary.
 
@@ -495,34 +541,6 @@ def flatten_list(l, ltypes=(list, tuple)):
                 break
         i += 1
     return ltype(l)
-
-
-def figure(label='', *args, **kwargs):
-    """Create a figure and set its label.
-
-    **Arguments:**
-
-    - *label*: String to apply to the figure's *label* property
-
-    - *\*args*, *\*\*kwargs*: Additional arguments for
-      :meth:`matplotlib.pyplot.figure`
-
-    **Example:**
-
-    .. code-block:: python
-
-       >>> fig = figure("velocity_vs_time") # doctest: +ELLIPSIS
-       >>> plt.getp(fig, 'label')
-       'velocity_vs_time'
-
-    .. Note::  The *label* property is used as the base filename in the
-       :meth:`saveall` method.
-    """
-    fig = plt.figure(*args, **kwargs)
-    plt.setp(fig, 'label', label)
-    # Note:  As of matplotlib 1.2, matplotlib.pyplot.figure(label=label) isn't
-    # supported directly.
-    return fig
 
 
 def _gen_offset_factor(label, tick_lo, tick_up, eagerness=0.325):

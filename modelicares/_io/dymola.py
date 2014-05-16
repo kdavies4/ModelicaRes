@@ -18,15 +18,14 @@ AssertionError if unrecognized data orientation
 """
 
 import numpy as np
-
-from collections import namedtuple
 from functools import wraps
+from collections import namedtuple
 from scipy.io import loadmat
 from scipy.interpolate import interp1d
 from control.matlab import ss
 
-from modelicares.util import chars_to_str
-from modelicares.simres import _VarDict
+from modelicares.util import chars_to_str, apply_function
+from modelicares.simres import _VarDict, _select_times, _swap
 from modelicares.simres import Variable as GenericVariable
 
 
@@ -43,62 +42,9 @@ class Variable(GenericVariable):
 TODO doc
     """
 
-    # Copied from simres.py (TODO: Is there a way to reference it directly?)
-    def apply_function(g):
-        """Return a function that applies a function to its output, given a
-        function that doesn't (*g*).
-
-        I.e., a decorator to apply a function to the return value
-        """
-        @wraps(g)
-        def wrapped(self, f=None, *args, **kwargs):
-            """Function that applies a function *f* to its output
-
-            If *f* is *None* (default), no function is applied (i.e., pass
-            through or identity).
-            """
-            return (g(self, *args, **kwargs) if f is None else
-                    f(g(self, *args, **kwargs)))
-
-        return wrapped
-
-    # TODO: try this and the decorator above as external functions (in util)
-    # Copied from simres.py (TODO: Is there a way to reference it directly?)
-    def select_times(f):
-        """Return a function that uses time-based indexing to return values,
-        given a function that returns all values (*f*).
-
-        I.e., a decorator to use time-based indexing to select values
-        """
-        @wraps(f)
-        def wrapped(self, t=None, *args, **kwargs):
-            """Function that uses time-based indexing to return values
-
-            If *t* is *None* (default), then all values are returned (i.e., pass
-            through or identity).
-            """
-            if t is None:
-                # Return all values.
-                return f(self, *args, **kwargs)
-            elif isinstance(t, tuple):
-                # Apply a slice with optional start time, stop time, and number
-                # of samples to skip.
-                return f(self, *args, **kwargs)[self._slice(t)]
-            else:
-                # Interpolate at single time or list of times.
-                function_at_ = interp1d(self.times(), f(self, *args, **kwargs))
-                try:
-                    # Assume t is a list of times.
-                    return map(function_at_, t)
-                except TypeError:
-                    # t is a single time.
-                    return float(function_at_(t))
-
-        return wrapped
-
-    #TODO: @index_first  # We want the times (t) to be the first argument,
+    @_swap          # We want the times (t) to be the first argument,
     @apply_function # but for efficiency, it's best to
-    @select_times   # select the values first.
+    @_select_times  # select the values first.
     def values(self):
         """Return function *f* of the values of the variable.
 
@@ -106,38 +52,16 @@ TODO doc
 
         - *t*: Time index
 
-             - Default or *None*: All samples are included.
-
-             - *float*: Interpolate to a single time.
-
-             - *list*: Interpolate to a list of times.
-
-             - *tuple*: Extract samples from a range of times.  The structure is
-               signature to the arguments of Python's slice_ function, except
-               that the start and stop values can be floating point numbers.
-               The samples within and up to the limits are included.
-               Interpolation is not used.
-
-                  - (*stop*,): All samples up to *stop* are included.
-
-                       Be sure to include the comma to distinguish this from a
-                       singleton.
-
-                  - (*start*, *stop*): All samples between *start* and *stop*
-                    are included.
-
-                  - (*start*, *stop*, *skip*): Every *skip*th sample is included
-                    between *start* and *stop*.
-
         - *f*: Function that operates on the vector of values (default or *None*
           is identity)
         """
+        # See the complete doc in modelicares.simres.Variable.values().
         return (-self.samples.values if self.samples.negated else
                 self.samples.values)
 
-    #TODO: @index_first  # We want the times (t) to be the first argument,
+    @_swap          # We want the times (t) to be the first argument,
     @apply_function # but for efficiency, it's best to
-    @select_times   # select the values first.
+    @_select_times  # select the values first.
     def times(self):
         """Return function *f* of the recorded times of the variable.
 
@@ -145,31 +69,10 @@ TODO doc
 
         - *t*: Time index
 
-             This may have any of the forms list in :meth:`values`, but the
-             useful ones are:
-
-             - Default or *None*: All times are included.
-
-             - *tuple*: Extract recorded times from a range of times.  The
-               structure is signature to the arguments of Python's slice_
-               function, except that the start and stop values can be floating
-               point numbers.  The times within and up to the limits are
-               included.  Interpolation is not used.
-
-                  - (*stop*,): All times up to *stop* are included.
-
-                       Be sure to include the comma to distinguish this from a
-                       singleton.
-
-                  - (*start*, *stop*): All recorded times between *start* and
-                    *stop* are included.
-
-                  - (*start*, *stop*, *skip*): Every *skip*th recorded time is
-                    included between *start* and *stop*.
-
         - *f*: Function that operates on the vector of recorded times (default
           or *None* is identity)
         """
+        # See the complete doc in modelicares.simres.Variable.time().
         return self.samples.times
 
 

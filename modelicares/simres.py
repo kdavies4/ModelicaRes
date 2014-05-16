@@ -32,9 +32,59 @@ from fnmatch import fnmatchcase
 from pandas import DataFrame
 
 from modelicares import util
+from modelicares.util import apply_function
 from modelicares.texunit import unit2tex, number_str
 #from modelicares._io import simloaders
 from modelicares._gui import Browser
+
+
+def _swap(g):
+    """Decorator that swaps the first two arguments of a method and gives them
+    each a default of *None*.
+
+    This is useful because for computational efficiency it's best to apply the
+    time selection (_select_times decorator below) before the applying the
+    function (apply_function decorator), but we want time to be the first
+    argument and the function to be the second.
+    """
+    @wraps(g)
+    def wrapped(cls, t=None, f=None, *args, **kwargs):
+        """Look up the variable and pass it to the original function."""
+        return g(cls, f, t, *args, **kwargs)
+
+    return wrapped
+
+def _select_times(f):
+    """Return a method that uses time-based indexing to return values,
+    given a method that returns all values (*f*).
+
+    I.e., a decorator to use time-based indexing to select values
+    """
+    @wraps(f)
+    def wrapped(cls, t=None, *args, **kwargs):
+        """Function that uses time-based indexing to return values
+
+        If *t* is *None* (default), then all values are returned (i.e., pass
+        through or identity).
+        """
+        if t is None:
+            # Return all values.
+            return f(cls, *args, **kwargs)
+        elif isinstance(t, tuple):
+            # Apply a slice with optional start time, stop time, and number
+            # of samples to skip.
+            return f(cls, *args, **kwargs)[cls._slice(t)]
+        else:
+            # Interpolate at single time or list of times.
+            function_at_ = interp1d(cls.times(), f(cls, *args, **kwargs))
+            try:
+                # Assume t is a list of times.
+                return map(function_at_, t)
+            except TypeError:
+                # t is a single time.
+                return float(function_at_(t))
+
+    return wrapped
 
 
 class Variable(namedtuple('Variable', ['samples', 'description', 'unit',
@@ -42,56 +92,6 @@ class Variable(namedtuple('Variable', ['samples', 'description', 'unit',
     """Specialized named tuple that contains attributes and methods to
     represent a variable in a simulation
     """
-
-    def _apply_function(g):
-        """Return a function that applies a function to its output, given a
-        function that doesn't (*g*).
-
-        I.e., a decorator to apply a function to the return value
-        """
-        @wraps(g)
-        def wrapped(self, f=None, *args, **kwargs):
-            """Function that applies a function *f* to its output
-
-            If *f* is *None* (default), no function is applied (i.e., pass
-            through or identity).
-            """
-            return (g(self, *args, **kwargs) if f is None else
-                    f(g(self, *args, **kwargs)))
-
-        return wrapped
-
-    def _select_times(f):
-        """Return a function that uses time-based indexing to return values,
-        given a function that returns all values (*f*).
-
-        I.e., a decorator to use time-based indexing to select values
-        """
-        @wraps(f)
-        def wrapped(self, t=None, *args, **kwargs):
-            """Function that uses time-based indexing to return values
-
-            If *t* is *None* (default), then all values are returned (i.e., pass
-            through or identity).
-            """
-            if t is None:
-                # Return all values.
-                return f(self, *args, **kwargs)
-            elif isinstance(t, tuple):
-                # Apply a slice with optional start time, stop time, and number
-                # of samples to skip.
-                return f(self, *args, **kwargs)[self._slice(t)]
-            else:
-                # Interpolate at single time or list of times.
-                function_at_ = interp1d(self.times(), f(self, *args, **kwargs))
-                try:
-                    # Assume t is a list of times.
-                    return map(function_at_, t)
-                except TypeError:
-                    # t is a single time.
-                    return float(function_at_(t))
-
-        return wrapped
 
     def array(self, t=None, ft=None, fv=None):
         """Return an array with function *ft* of the times of the variable as
@@ -139,7 +139,7 @@ class Variable(namedtuple('Variable', ['samples', 'description', 'unit',
         """
         return np.array([self.times(t=t, f=ft), self.values(t=t, f=fv)]).T
 
-    @_apply_function
+    @apply_function
     def FV(self):
         """Return function *f* of the final value of the variable.
         """
@@ -148,9 +148,9 @@ class Variable(namedtuple('Variable', ['samples', 'description', 'unit',
     def is_constant(self):
         """Return *True* if the variable does not change over time.
         """
-        return not np.any((np.diff(self.values()) <> 0))
+        return not np.any(np.diff(self.values() != 0))
 
-    @_apply_function
+    @apply_function
     def IV(self):
         """Return function *f* of the initial value of the variable.
         """
@@ -178,209 +178,6 @@ class Variable(namedtuple('Variable', ['samples', 'description', 'unit',
         """Return the minimum value of function *f* of the variable.
         """
         return np.min(self.values(f=f))
-
-    def plot(self, ylabel=None, legend=[],
-             leg1_kwargs={'loc': 'best'}, ax1=None,
-             title=None, label="trend", incl_prefix=False, suffix=None,
-             use_paren=True, **kwargs):
-        """Plot the variable over time.
-
-TODO: update doc
-        **Arguments:**
-
-        - *ylabel*: Label for the primary axis
-
-             If *ylabel* is *None* (default), then the common description will
-             be used.  Use '' for no label.
-
-        - *legend*: List of legend entries for variables assigned to the
-          primary y axis
-
-             If *legends1* is an empty list ([]), ynames1 will be used.  If
-             *legends1* is *None* and all of the variables on the primary axis
-             have the same unit, then no legend will be shown.
-
-        - *leg_kwargs*: Dictionary of keyword arguments for the legend
-
-        - *ax*: Axes to plot into
-
-             If *ax* is not provided, then axes will be created in a new figure.
-
-        - *title*: Title for the figure
-
-             If *title* is *None* (default), then the title will be the base
-             filename.  Use '' for no title.
-
-        - *label*: Label for the figure (ignored if *ax* is provided)
-
-             This will be used as a base filename if the figure is saved.
-
-        - *incl_prefix*: If *True*, prefix the legend strings with the base
-          filename of the class.
-
-        - *suffix*: String that will be added at the end of the legend entries
-
-        - *use_paren*: Add parentheses around the suffix
-
-        - \*\**kwargs*: Propagated to :meth:`util.plot` (and thus to
-          :meth:`matplotlib.pyplot.plot`)
-
-             If both y axes are used (primary and secondary), then the *dashes*
-             argument is ignored.  The curves on the primary axis will be solid
-             and the curves on the secondary axis will be dotted.
-
-        **Returns:**
-
-        1. *ax1*: Primary y axes
-
-        2. *ax2*: Secondary y axes
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import SimRes, save
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.plot(ynames1='L.i', ylabel1="Current",
-           ...          ynames2='L.der(i)', ylabel2="Derivative of current",
-           ...          title="Chua Circuit", label='examples/ChuaCircuit') # doctest: +ELLIPSIS
-           (<matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>)
-
-           >>> save()
-           Saved examples/ChuaCircuit.pdf
-           Saved examples/ChuaCircuit.png
-
-        .. testsetup::
-           >>> import matplotlib.pyplot as plt
-           >>> plt.show()
-           >>> plt.close()
-
-        .. only:: html
-
-           .. image:: ../examples/ChuaCircuit.png
-              :scale: 70 %
-              :alt: plot of Chua circuit
-
-        .. only:: latex
-
-           .. figure:: ../examples/ChuaCircuit.pdf
-              :scale: 70 %
-
-              Plot of Chua circuit
-        """
-
-        def ystrings(ynames, ylabel, legends):
-            """Generate a y-axis label and set of legend entries.
-            """
-            if ynames:
-                if ylabel is None: # Try to create a suitable axis label.
-                    descriptions = self(ynames).description
-                    # If the descriptions are the same, label the y axis with
-                    # the 1st one.
-                    ylabel = descriptions[0]
-                    if len(set(descriptions)) != 1:
-                        print("The y-axis variable descriptions are different. "
-                              " The first has been used as the axis label. "
-                              " Please check it and provide ylabel1 or ylabel2"
-                              " if necessary.")
-                if legends == []:
-                    legends = ynames
-                if incl_prefix:
-                    legends = [self.fbase() + ': ' + leg for leg in legends]
-                if suffix:
-                    legends = ([leg + ' (%s)' % suffix for leg in legends]
-                               if use_paren else
-                               [leg + suffix for leg in legends])
-                units = self(ynames).unit
-                if len(set(units)) == 1:
-                    # The  units are the same, so show the 1st one on the axis.
-                    if ylabel != "":
-                        ylabel = number_str(ylabel, units[0])
-                else:
-                    # Show the units in the legend.
-                    if legends:
-                        legends = [number_str(entry, unit) for entry, unit in
-                                   zip(legends, units)]
-                    else:
-                        legends = [number_str(entry, unit) for entry, unit in
-                                   zip(ynames, units)]
-
-            return ylabel, legends
-
-        # Process the inputs.
-        ynames1 = util.flatten_list(ynames1)
-        ynames2 = util.flatten_list(ynames2)
-        assert ynames1 or ynames2, "No signals were provided."
-        if title is None:
-            title = self.fbase()
-
-        # Create primary and secondary axes if necessary.
-        if not ax1:
-            fig = util.figure(label)
-            ax1 = fig.add_subplot(111)
-        if ynames2 and not ax2:
-            ax2 = ax1.twinx()
-
-        # Generate the x-axis label.
-        if xlabel is None:
-            xlabel = 'Time' if xname == 'Time' else self[xname].description
-            # With Dymola 7.4, the description of the time variable will be
-            # "Time in", which isn't good.
-        if xlabel != "":
-            xlabel = number_str(xlabel, self[xname].unit)
-
-        # Generate the y-axis labels and sets of legend entries.
-        ylabel1, legends1 = ystrings(ynames1, ylabel1, legends1)
-        ylabel2, legends2 = ystrings(ynames2, ylabel2, legends2)
-
-        # Retrieve the data.
-        if xname == 'Time':
-            y_1 = self(ynames1).values()
-            y_2 = self(ynames2).values()
-        else:
-            x = self[xname].values()
-            times = self[xname].times()
-            y_1 = self(ynames1).values(times)
-            y_2 = self(ynames2).values(times)
-
-        # Plot the data.
-        if ynames1:
-            if ynames2:
-                # Use solid lines for primary axis and dotted lines for
-                # secondary.
-                kwargs['dashes'] = [(None, None)]
-                util.plot(y_1, self(ynames1).times() if xname == 'Time'
-                          else x, ax1, label=legends1, **kwargs)
-                kwargs['dashes'] = [(3, 3)]
-                util.plot(y_2, self(ynames2).times() if xname == 'Time'
-                          else x, ax2, label=legends2, **kwargs)
-            else:
-                util.plot(y_1, self(ynames1).times() if xname == 'Time'
-                          else x, ax1, label=legends1, **kwargs)
-        elif ynames2:
-            util.plot(y_2, self(ynames2).times() if xname == 'Time'
-                      else x, ax2, label=legends2, **kwargs)
-
-        # Decorate the figure.
-        ax1.set_title(title)
-        ax1.set_xlabel(xlabel)
-        if ylabel:
-            ax.set_ylabel(ylabel)
-        if legends1:
-            if legends2:
-                # Put the primary legend in the upper left and secondary in
-                # upper right.
-                leg1_kwargs['loc'] = 2
-                leg2_kwargs['loc'] = 1
-                ax1.legend(**leg1_kwargs)
-                ax2.legend(**leg2_kwargs)
-            else:
-                ax1.legend(**leg1_kwargs)
-        elif legends2:
-            ax2.legend(**leg2_kwargs)
-
-        return ax1, ax2
 
     def RMS(self, f=None):
         """Return the time-averaged root mean square value of function *f* of
@@ -524,7 +321,6 @@ class _VarDict(dict):
                                         + close_matches)
             raise LookupError(msg)
 
-
 class _VarList(list):
     """Class for a list of (possibly nested) variables (instances of the
     Variable class above)
@@ -535,7 +331,7 @@ class _VarList(list):
         list of variables, given a function that operates on a single variable.
         """
         @wraps(f)
-        def wrapped(self, *args, **kwargs):
+        def wrapped(cls, *args, **kwargs):
             """Traverse the list recursively until the argument is a single
             variable, then pass it to the function and return the result
             upwards.
@@ -543,7 +339,7 @@ class _VarList(list):
             return [f(variable, *args, **kwargs)
                     if isinstance(variable, Variable) else
                     wrapped(variable, *args, **kwargs)
-                    for variable in self]
+                    for variable in cls]
 
         return wrapped
 
@@ -990,7 +786,8 @@ class SimRes(object):
         """
         # Get a list of all the variables or just the constants.
         if constants_only:
-            names = [item[0] for item in self._variables.items() if item[1].is_constant()]
+            names = [item[0] for item in self._variables.items()
+                     if item[1].is_constant()]
         else:
             names = list(self._variables)
 
@@ -1014,7 +811,8 @@ class SimRes(object):
         a variable may be fixed in value even though it is not declared as a
         constant or parameter.
         """
-        return sum([variable.is_constant() for variable in self._variables.values()])
+        return sum([variable.is_constant()
+                    for variable in self._variables.values()])
 
 
     def nametree(self, pattern=None, re=False):
@@ -1053,14 +851,16 @@ class SimRes(object):
         return root
 
 
-    def plot(self, ynames1=[], ylabel1=None, legends1=[],
+    def plot(self, ynames1=[], ylabel1=None, f1={}, legends1=[],
              leg1_kwargs={'loc': 'best'}, ax1=None,
-             ynames2=[], ylabel2=None, legends2=[],
+             ynames2=[], ylabel2=None, f2={}, legends2=[],
              leg2_kwargs={'loc': 'best'}, ax2=None,
              xname='Time', xlabel=None,
              title=None, label="xy", incl_prefix=False, suffix=None,
              use_paren=True, **kwargs):
         """Plot variables as points and/or curves in 2D Cartesian coordinates.
+
+        The x axis may be time or any other variable (i.e., scatterplot).
 
         **Arguments:**
 
@@ -1074,12 +874,20 @@ class SimRes(object):
              same Modelica_ description string, then the common description
              will be used.  Use '' for no label.
 
+        - *f1*: Dictionary of labels and functions for additional traces to be
+          plotted on the primary y axis
+
+             The functions take as an input a list of the vectors of values of
+             the variables in *ynames1*, sampled at the values of the 'Time'
+             variable.
+
         - *legends1*: List of legend entries for variables assigned to the
           primary y axis
 
-             If *legends1* is an empty list ([]), ynames1 will be used.  If
-             *legends1* is *None* and all of the variables on the primary axis
-             have the same unit, then no legend will be shown.
+             If *legends1* is an empty list ([]), ynames1 will be used along
+             with the keys from the *f1* dictionary.  If *legends1* is *None*
+             and all of the variables on the primary axis have the same unit,
+             then no legend will be shown.
 
         - *leg1_kwargs*: Dictionary of keyword arguments for the primary legend
 
@@ -1088,9 +896,9 @@ class SimRes(object):
              If *ax1* is not provided, then axes will be created in a new
              figure.
 
-        - *ynames2*, *ylabel2*, *legends2*, *leg2_kwargs*, and *ax2*: Similar
-          to *ynames1*, *ylabel1*, *legends1*, *leg1_kwargs*, and *ax1* but
-          for the secondary y axis
+        - *ynames2*, *ylabel2*, *f2*, *legends2*, *leg2_kwargs*, and *ax2*:
+          Similar to *ynames1*, *ylabel1*, *f1*, *legends1*, *leg1_kwargs*, and
+          *ax1* but for the secondary y axis
 
         - *xname*: Name of the x-axis variable
 
@@ -1165,7 +973,7 @@ class SimRes(object):
         # Note:  ynames1 is the first argument (besides self) so that plot()
         # can be called with simply a variable name.
 
-        def ystrings(ynames, ylabel, legends):
+        def ystrings(ynames, ylabel, legends, f):
             """Generate a y-axis label and set of legend entries.
             """
             if ynames:
@@ -1180,7 +988,7 @@ class SimRes(object):
                               " Please check it and provide ylabel1 or ylabel2"
                               " if necessary.")
                 if legends == []:
-                    legends = ynames
+                    legends = ynames + list(f)
                 if incl_prefix:
                     legends = [self.fbase() + ': ' + leg for leg in legends]
                 if suffix:
@@ -1195,11 +1003,11 @@ class SimRes(object):
                 else:
                     # Show the units in the legend.
                     if legends:
-                        legends = [number_str(entry, unit) for entry, unit in
-                                   zip(legends, units)]
+                        for i, unit in enumerate(units):
+                            legends[i] = number_str(legends[i], unit)
                     else:
                         legends = [number_str(entry, unit) for entry, unit in
-                                   zip(ynames, units)]
+                                   zip(ynames, units)] + list(f)
 
             return ylabel, legends
 
@@ -1226,36 +1034,49 @@ class SimRes(object):
             xlabel = number_str(xlabel, self[xname].unit)
 
         # Generate the y-axis labels and sets of legend entries.
-        ylabel1, legends1 = ystrings(ynames1, ylabel1, legends1)
-        ylabel2, legends2 = ystrings(ynames2, ylabel2, legends2)
+        ylabel1, legends1 = ystrings(ynames1, ylabel1, legends1, f1)
+        ylabel2, legends2 = ystrings(ynames2, ylabel2, legends2, f2)
 
         # Retrieve the data.
+        all_times = self['Time'].values()
+        yvars1 = self(ynames1)
+        yvars2 = self(ynames2)
         if xname == 'Time':
-            y_1 = self(ynames1).values()
-            y_2 = self(ynames2).values()
+            y1 = yvars1.values()
+            if f1:
+                y1_all = yvars1.values(all_times)
+                y1 += [f(y1_all) for f in f1.values()]
+            y2 = yvars2.values()
+            if f2:
+                y2_all = yvars2.values(all_times)
+                y2 += [f(y2_all) for f in f2.values()]
         else:
-            x = self._variables[xname].values()
+            x = self[xname].values()
             times = self[xname].times()
-            y_1 = self(ynames1).values(times)
-            y_2 = self(ynames2).values(times)
+            y1 = yvars1.values(times)
+            y1 += [f(y1) for f in f1.values()]
+            y2 = yvars2.values(times)
+            y2 += [f(y2) for f in f2.values()]
 
         # Plot the data.
+        if ynames2:
+            y2times = (yvars2.times() + [all_times]*len(f2)
+                       if xname == 'Time' else x)
         if ynames1:
+            y1times = (yvars1.times() + [all_times]*len(f1)
+                       if xname == 'Time' else x)
             if ynames2:
                 # Use solid lines for primary axis and dotted lines for
                 # secondary.
                 kwargs['dashes'] = [(None, None)]
-                util.plot(y_1, self(ynames1).times() if xname == 'Time'
-                          else x, ax1, label=legends1, **kwargs)
+                util.plot(y1, y1times, ax1, label=legends1, **kwargs)
                 kwargs['dashes'] = [(3, 3)]
-                util.plot(y_2, self(ynames2).times() if xname == 'Time'
-                          else x, ax2, label=legends2, **kwargs)
+                util.plot(y2, y2times, ax2, label=legends2, **kwargs)
             else:
-                util.plot(y_1, self(ynames1).times() if xname == 'Time'
-                          else x, ax1, label=legends1, **kwargs)
+
+                util.plot(y1, y1times, ax1, label=legends1, **kwargs)
         elif ynames2:
-            util.plot(y_2, self(ynames2).times() if xname == 'Time'
-                      else x, ax2, label=legends2, **kwargs)
+            util.plot(y2, y2times, ax2, label=legends2, **kwargs)
 
         # Decorate the figure.
         ax1.set_title(title)
@@ -1328,7 +1149,7 @@ class SimRes(object):
         - *hspace*: The amount of height reserved for white space between
           subplots
 
-        - \*\**kwargs*: Additional arguments for  :class:`matplotlib.sankey.Sankey`
+        - \*\**kwargs*: Additional arguments for :class:`matplotlib.sankey.Sankey`
 
         **Returns:**
 
