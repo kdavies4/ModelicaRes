@@ -34,7 +34,7 @@ echo
 cat < pre-tag-notes.md
 echo
 echo "Here's a list of the TODO items:"
-bash ../TODO-list.sh
+bash ../TODO.sh
 echo
 read -r -p 'Do you want to continue by building the documentation (y/n)? ' choice
 if [[ "$choice" != "Y" && "$choice" != "y" ]]; then
@@ -58,7 +58,6 @@ bash examples/shrink.sh
 # Update the local docs.
 python make.py clean
 python make.py html
-python make.py latex
 
 # Copy the built docs to the root of the doc folder.
 # HTML
@@ -116,7 +115,7 @@ files="doc/_static/*
        doc/_templates/*
        doc/_images/*
        doc/make.py
-       doc/base.rst
+       doc/util.rst
        doc/exps.doe.rst
        doc/exps.rst
        doc/linres.rst

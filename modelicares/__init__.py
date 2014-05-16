@@ -10,15 +10,11 @@ classes from its submodules.  These are:
   :class:`~exps.ParamDict`, :meth:`~exps.read_params`, :meth:`~exps.run_models`,
   :meth:`~exps.write_params`, and :meth:`~exps.write_script`
 
-- To handle multiple files at once (:mod:`~modelicares.multi` module):
-  :meth:`~multi.multiload`, :meth:`~multi.multiplot`, :meth:`~multi.multibode`,
-  and :meth:`~multi.multinyquist`
-
 - For simulation results (:mod:`~modelicares.simres` module):
-  :class:`~simres.SimRes`
+  :class:`~simres.SimRes`, :class:`~simres.SimResList`
 
 - For linearization results (:mod:`~modelicares.linres` module):
-  :class:`~linres.LinRes`
+  :class:`~linres.LinRes`, :class:`~linres.LinResList`
 
 - To label numbers and quantities (:mod:`~modelicares.texunit` module):
   :meth:`~texunit.number_str`, :meth:`~texunit.quantity_str`, and
@@ -39,79 +35,94 @@ __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
 __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
-__version__ = "0.11.x"
+__version__ = "0.11.0"
 
-
-from modelicares.simres import SimRes
-from modelicares.linres import LinRes
-
-
-def load(fname, constants_only=False):
-    """Load a single Modelica_ simulation or linearization result and return an
-    instance of the appropriate class (:class:`~simres.SimRes` or
-    :class:`~linres.LinRes`).
-
-    **Arguments:**
-
-    - *fname*: Name of the results file, including the path
-
-    - *constants_only*: *True* to load only the variables from the first data
-      matrix, if the result is from a simulation
-
-    **Returns:** An instance of the appropriate class (:class:`~simres.SimRes`
-    or :class:`~linres.LinRes`) or *None* if the file could not be loaded
-
-    **Examples:**
-
-    .. code-block:: python
-
-        >>> sim = load('examples/ChuaCircuit')
-        >>> sim # doctest: +ELLIPSIS
-        SimRes('.../examples/ChuaCircuit.mat')
-
-        >>> lin = load('examples/PID')
-        >>> lin # doctest: +ELLIPSIS
-        LinRes('.../examples/PID.mat')
-    """
-    try:
-        return SimRes(fname, constants_only)
-    except TypeError:
-        try:
-            return LinRes(fname)
-        except TypeError:
-            raise TypeError('"%s" does not appear to be a valid simulation '
-                            'or linearization file.' % fname)
 
 # Essential functions and classes
 #
-# These (and SimRes and LinRes above) will be available directly from
-# modelicares; others must be loaded from their submodules.
+# These will be available directly from modelicares; others must be loaded from
+# their submodules.
+from modelicares.simres import SimRes, SimResList
+from modelicares.linres import LinRes, LinResList
 from modelicares.util import (add_arrows, add_hlines, add_vlines, ArrowLine,
     closeall, figure, load_csv, save, saveall, setup_subplots)
 from modelicares.exps import (Experiment, gen_experiments, ParamDict,
     read_params, run_models, write_params, write_script, doe)
-from modelicares.multi import multiload, multiplot, multibode, multinyquist
 from modelicares.texunit import number_str, quantity_str, unit2tex
 
 
+def load(locations='*'):
+    """Load multiple Modelica_ simulation and/or linearization results.
+
+    This function will load as many of the matching filenames as possible.  No
+    errors will be given for files that cannot be loaded.
+
+    **Arguments:**
+
+    - *locations*: Filename, directory, or list of these from which to load the
+      files
+
+         Wildcards ('*') are accepted.
+
+    **Returns:**
+
+    1. List of simulations (:class:`simres.SimRes` instances)
+
+    2. List of linearizations (:class:`linres.LinRes` instances)
+
+    Either may be an empty list.
+
+    **Example:**
+
+    We can use this function in conjuction with methods from
+    :class:`~modelicares.simres.Info` to conveniently retrieve information from
+    multiple simulations.
+
+    .. code-block:: python
+
+       >>> from modelicares import multiload
+       >>> from modelicares.simres import Info
+
+       # Get the mean values of the first capacitor's voltage from two runs
+       # of or the two
+       >>> sims, __ = multiload('examples/ChuaCircuit/*/*.mat') # doctest: +ELLIPSIS
+       >>> mean_C1_voltage = lambda sim: Info.mean(sim, 'C1.v')
+       >>> map(mean_C1_voltage, sims)
+       [0.76859528, 0.76859528]
+
+       # The values are different because the inductance was set differently:
+       >>> inductance = lambda sim: Info.IV(sim, 'L.L')
+       >>> map(inductance, sims)
+       [10, 18]
+    """
+
+    # Generate a list of files.
+    fnames = []
+    if isinstance(locations, basestring):
+        locations = [locations]
+    for location in locations:
+        if os.path.isdir(location):
+            fnames += glob(os.path.join(location, '*.mat'))
+        else:
+            if '*' in location or '?' in location or '[' in location:
+                fnames += glob(location)
+            else:
+                fnames.append(location)
+
+    # Load the files and append each result onto the appropriate list.
+    sims = []
+    lins = []
+    for fname in fnames:
+        try:
+            sims.append(SimRes(fname))
+        except (IOError, TypeError):
+            continue
+        except:
+            lins.append(LinRes(fname))
+
+    return sims, lins
+
 if __name__ == '__main__':
-    """Test the contents of this module."""
+    """Test the contents of this file."""
     import doctest
-    from modelicares import *
-    from modelicares import _gui, _freqplot, _io
-
-
-# TODO: clean up, enable tests.txt
-
-    doctest.testmod(_io.ompy)
-    exit()
-    doctest.testmod(exps)
-    doctest.testmod(_freqplot)
-    doctest.testmod(_gui)
-    doctest.testmod(linres)
-    doctest.testmod(multi)
-    doctest.testmod(simres)
-    doctest.testmod(texunit)
-    doctest.testmod(util)
-
-    #doctest.testfile('tests.txt')
+    doctest.testmod()

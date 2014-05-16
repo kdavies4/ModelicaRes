@@ -1,30 +1,27 @@
-include matplotlibrc
-include *.txt
-include doc/*.rst
 include MANIFEST.in
 include bin/loadres
+include matplotlibrc
+include *.txt
+include TODO.sh
 
-# Examples
-include examples/*.md
-include examples/*.csv
+# Files needed to build the documentation
+include doc/*.rst
+include doc/*.md
+include doc/*.py
+include doc/_static/*
+include doc/_templates/*
+include doc/sphinxext/*
+
+# Files needed to run the examples
+include examples/*.ipynb
 include examples/*.mat
 include examples/*.py
-include examples/*.txt
+include examples/dsin.txt
+include examples/load-csv*
+include examples/*.md
 include examples/ChuaCircuit/*.md
 include examples/ChuaCircuit/*.py
+include examples/ChuaCircuit/*/*.mat
 include examples/PID/*.md
 include examples/PID/*.py
-
-# Documentation (built version)
-include doc/_images/*
-include doc/_images/math/*
-include doc/_static/*
-include doc/*.html
-include doc/*.rst
-include doc/*.pdf
-include doc/objects.inv
-include doc/searchindex.js
-
-# Development scripts
-#exclude 00-*
-exclude examples/00-*
+include examples/PID/*/*.mat

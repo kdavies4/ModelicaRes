@@ -28,8 +28,9 @@ class PreviewPanel(wx.Panel):
         wx.Panel.__init__(self, parent, id)
         txtpanel = wx.Panel(self, -1)
 
-        self.display = wx.StaticText(txtpanel, -1, 'Click on a variable to '
-            'list its attributes and plot its values.', (10,10),
+        self.display = wx.StaticText(txtpanel, -1, "Click on a variable to "
+            "list its attributes and plot its values.\n"
+            "You can also drag variable name into a text document.", (10,10),
             style=wx.ALIGN_LEFT)
         self.figure = Figure(figsize=(2, 2))
         self.figure.subplots_adjust(left=0.17, right=0.95, bottom=0.15,
@@ -48,15 +49,15 @@ class PreviewPanel(wx.Panel):
         """Show the variable's attributes and a small plot."""
         self.axes.clear()
         if name:
-            text = 'Name: "%s"' % name
-            text += '\n' + 'Description: "%s"' % sim.get_description(name)
-            text += '\n' + 'unit: "%s"' % sim.get_unit(name)
-            text += '\n' + 'displayUnit: "%s"' % sim.get_displayUnit(name)
+            text = 'Name: %s' % name
+            text += '\n' + 'Description: %s' % sim[name].description
+            text += '\n' + 'unit: %s' % sim[name].unit
+            text += '\n' + 'displayUnit: %s' % sim[name].displayUnit
             self.display.SetLabel(text)
             self.axes.clear()
-            self.axes.plot(sim.get_times(name), sim.get_values(name))
+            self.axes.plot(sim[name].times(), sim[name].values())
             self.axes.set_ylabel(name + " / $%s$" %
-                                 unit2tex(sim.get_unit(name)))
+                                 unit2tex(sim[name].unit))
             self.axes.set_xlabel("Time / s")
         else:
             self.display.SetLabel("")
@@ -108,7 +109,7 @@ class Browser(wx.Frame):
         self.tree = wx.TreeCtrl(panelL, 1, wx.DefaultPosition, (-1, -1),
                                 wx.TR_HIDE_ROOT|wx.TR_HAS_BUTTONS)
         root = sim.nametree()
-        _build_tree(root, self.tree.AddRoot(sim.fbase))
+        _build_tree(root, self.tree.AddRoot(sim.fbase()))
 
         # Bind events and finish.
         self.tree.Bind(wx.EVT_TREE_BEGIN_DRAG, self.OnDragInit)

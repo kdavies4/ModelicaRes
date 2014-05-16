@@ -30,7 +30,7 @@ packages = []
 # List or generator of simulations to run
 experiments = gen_experiments(
                     models=['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
-                    params={'L.L': [None, 10]}, # None uses default
+                    params={'L.L': [10, 26]}, # Can use none for default
                     args=dict(stopTime=[2500]))
 
 # Formats in which to save the figures (e.g., ['pdf', 'eps', 'svg', 'png'])
@@ -58,8 +58,8 @@ else:
 
 for i, model in enumerate(models):
     sim = SimRes(os.path.join(results_dir, str(i + 1), 'dsres.mat'))
-    sim.plot(title="Chua Circuit with L = %.0f %s" % (sim.get_IV('L.L'),
-                                                      sim.get_unit('L.L')),
+    sim.plot(title="Chua Circuit with L = %.0f %s" % (sim['L.L'].IV(),
+                                                      sim['L.L'].unit),
              ynames1=['L.i'], ylabel1='Current',
              ynames2=['L.der(i)'], ylabel2='Derivative of current',
              label=os.path.join(str(i + 1), model))

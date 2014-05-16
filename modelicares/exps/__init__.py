@@ -848,7 +848,6 @@ class ParamDict(dict):
 
 
 if __name__ == '__main__':
-    """Test the contents of this module."""
+    """Test the contents of this file."""
     import doctest
     doctest.testmod()
-    doctest.testmod(doe)

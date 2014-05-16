@@ -4,6 +4,8 @@
 
 This module contains one class: :class:`LinRes`.
 
+TODO add LinResList
+
 .. _Modelica: http://www.modelica.org/
 .. _python-control: http://sourceforge.net/apps/mediawiki/python-control
 """
@@ -16,17 +18,19 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import numpy as np
 
-from scipy.signal import ss2tf
-from matplotlib.cbook import iterable
 from control.matlab import ss
+from functools import wraps
+from matplotlib.cbook import iterable
+from scipy.signal import ss2tf
 
+from modelicares import util
 from modelicares._freqplot import bode_plot, nyquist_plot
-from modelicares.util import figure, add_hlines, add_vlines, chars_to_str
-from modelicares._io import linloaders
+from modelicares._res import ResList
 
-# File loading functions, in the order they should be tried
+# File loading functions
 from modelicares._io.dymola import loadlin as dymola
-loaders = [('dymola', dymola)]
+loaders = [('dymola', dymola)] # LinRes tries these in order.
+# All of the keys should be in lowercase.
 
 
 class LinRes(object):
@@ -48,6 +52,9 @@ class LinRes(object):
 
     - *fname* - filename from which the data was loaded, with the directory and
       file extension
+
+    - *tool* - String indicating the function used to load the results (named
+      after the corresponding linearization tool)
 
     - *sys* - State-space system as an instance of :class:`control.StateSpace`
 
@@ -73,11 +80,10 @@ class LinRes(object):
 
         **Arguments:**
 
-        - *fname*: Name of the file (may include the path)
+        - *fname*: Name of the file (including the directory if necessary)
 
-             The file extension ('.mat') is optional.  The file must contain
-             four matrices:  *Aclass* (specifies the class name, which must be
-             "AlinearSystem"), *nx*, *xuyName*, and *ABCD*.
+             The file must contain four matrices:  *Aclass* (specifies the class
+             name, which must be "AlinearSystem"), *nx*, *xuyName*, and *ABCD*.
 
         **Example:**
 
@@ -107,14 +113,12 @@ class LinRes(object):
                 load = loaderdict[tool.lower()]
             except:
                 raise LookupError('"%s" is not one of the available tools ("%s").'
-                                  % (tool, '", "'.join(loaders.keys())))
+                                  % (tool, '", "'.join(list(loaderdict))))
         self.sys = load(fname)
 
         # Remember the tool and filename.
         self.tool = tool
-        self.fname = fname
-
-# TODO: support tool argument, save it as an attribute and list in doc as argument and attribute.
+        self.fname = os.path.abspath(fname)
 
 
     def fbase(self):
@@ -184,7 +188,7 @@ class LinRes(object):
            >>> print(lin) # doctest: +ELLIPSIS
            Modelica linearization results from "...PID.mat"
         """
-        return 'Modelica linearization results from "{f}"'.format(f=self.fname)
+        return "Modelica linearization results from {f}".format(f=self.fname)
 
     def _to_siso(self, iu, iy):
         """Return a SISO system given input and output indices.
@@ -288,7 +292,7 @@ class LinRes(object):
              .. Seealso::
                 http://matplotlib.sourceforge.net/api/collections_api.html
 
-        - *\*\*kwargs*: Additional arguments for :meth:`control.freqplot.bode`
+        - \*\**kwargs*: Additional arguments for :meth:`control.freqplot.bode`
 
         **Returns:**
 
@@ -329,7 +333,7 @@ class LinRes(object):
         """
         # Create axes if necessary.
         if axes is None or (None, None):
-            fig = figure(label)
+            fig = util.figure(label)
             axes = (fig.add_subplot(211), fig.add_subplot(212))
 
         # Create a title if necessary.
@@ -379,7 +383,7 @@ class LinRes(object):
         return axes
 
     def nyquist(self, ax=None, pairs=None, label="nyquist", title=None,
-                xlabel="Real Axis", ylabel="Imaginary Axis",
+                xlabel="Real axis", ylabel="Imaginary axis",
                 colors=['b','g','r','c','m','y','k'], **kwargs):
         """Create a Nyquist plot of the system's response.
 
@@ -417,7 +421,7 @@ class LinRes(object):
 
              .. Seealso:: http://matplotlib.sourceforge.net/api/colors_api.html
 
-        - *\*\*kwargs*: Additional arguments for
+        - \*\**kwargs*: Additional arguments for
           :meth:`control.freqplot.nyquist`
 
         **Returns:**
@@ -460,7 +464,7 @@ class LinRes(object):
         """
         # Create axes if necessary.
         if not ax:
-            fig = figure(label)
+            fig = util.figure(label)
             ax = fig.add_subplot(111, aspect='equal')
 
         # Create a title if necessary.
@@ -484,8 +488,8 @@ class LinRes(object):
             nyquist_plot(self._to_siso(iu, iy), ax=ax,
                          label=r'$Y_{%i}/U_{%i}$' % (iy, iu),
                          color=colors[np.mod(i, n_colors)], **kwargs)
-            # Note: ._freqplot.nyquist() is currently only implemented for SISO
-            # systems.
+            # Note: modelicares._freqplot.nyquist() is currently only
+            # implemented for SISO systems.
 
         # Decorate and finish.
         if len(pairs) > 1:
@@ -496,6 +500,396 @@ class LinRes(object):
         if ylabel: # Same purpose
             ax.set_ylabel(ylabel)
         return ax
+
+
+def _cast_LinResList(f):
+    """Return a method that casts its output as a :class:`LinResList`, given one
+    that doesn't (*f*).
+    """
+    @wraps(f)
+    def wrapped(self, *args, **kwargs):
+        """Function that casts its output as a :class:`LinResList`
+        """
+        return LinResList(f(self, *args, **kwargs))
+
+    return wrapped
+
+
+def _get_lins(fnames):
+    """Return a list of :class:`LinRes` instances from a list of filenames.
+
+    No errors are given unless no files could be loaded.
+    """
+    lins = []
+    for fname in fnames:
+        try:
+            lins.append(LinRes(fname))
+        except:
+            continue
+    assert len(lins) > 0, "No linearizations were loaded."
+    return lins
+
+class LinResList(ResList):
+    """TODO"""
+
+    def __init__(self, *args):
+        """TODO"""
+
+        if not args:
+            list.__init__(self, [])
+        elif len(args) == 1 and isinstance(args[0], list):
+            # The argument is a list of LinRes instances.
+            for lin in args[0]:
+                assert isinstance(lin, LinRes), ("All entries in the list must "
+                                                 "be LinRes instances.")
+            list.__init__(self, args[0])
+        else:
+            # The arguments are filenames or directories.
+
+            # Get a unique list of matching filenames.
+            fnames = set()
+            for arg in args:
+                assert isinstance(arg, basestring), ("The linearization list "
+                    "can only be initialized by providing a list of LinRes "
+                    "instances or a series of arguments, each of which is a "
+                    "filename or directory.")
+                if os.path.isdir(arg):
+                    fnames = fnames.union(set(glob(os.path.join(arg, '*.mat'))))
+                elif '*' in arg or '?' in arg or '[' in arg:
+                    fnames = fnames.union(set(glob(arg)))
+                else:
+                    fnames.add(arg)
+
+            # Load linearizations from the filenames.
+            list.__init__(self, _get_lins(fnames))
+
+    def append(self, item):
+        """TODO"""
+
+        if isinstance(item, LinRes):
+            list.append(self, item)
+        else:
+            assert isinstance(item, basestring), ("The linearization list can "
+                "only be appended by providing a LinRes instance, filename, or "
+                "directory.")
+
+            # Get the matching filenames.
+            if os.path.isdir(item):
+                fnames = glob(os.path.join(item, '*.mat'))
+            elif '*' in item or '?' in item or '[' in item:
+                fnames = glob(item)
+            else:
+                fnames = [item]
+
+            # Load linearizations from the filenames.
+            self.extend(_get_lins(fnames))
+
+    def __str__(self):
+        """TODO doc, example
+        """
+        if len(self) == 0:
+            return "Empty list of linearization results"
+        elif len(self) == 1:
+            return ("List of linearization results (LinRes instance) from\n"
+                    + self[0].fname)
+        else:
+            basedir = self.basedir()
+            start = len(basedir) + 1
+            short_fnames = [fname[start:] for fname in self.fnames()]
+            string = ("List of linearization results (LinRes instances) from "
+                      "the following files")
+            string += "\nin the %s directory:\n   "  % basedir if basedir else ":\n   "
+            string += "\n   ".join(short_fnames)
+            return string
+
+    def _get_labels(self, labels):
+        """TODO"""
+        if labels == '':
+            start = len(self.basedir())
+            labels = [lin.fname[start:].lstrip(os.sep) for lin in self]
+        elif labels == None:
+            labels = ['']*len(self)
+
+        return labels
+
+    def bode(self, axes=None, pair=(0, 0), label='bode', title="Bode plot",
+             labels='', colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
+             styles=[(None,None), (3,3), (1,1), (3,2,1,2)], leg_kwargs={},
+             **kwargs):
+        """Plot the linearizations onto a single Bode diagram.
+
+        This method calls :meth:`linres.LinRes.bode` from the included instances
+        of :class:`linres.LinRes`.
+
+        **Arguments:**
+
+        - *axes*: Tuple (pair) of axes for the magnitude and phase plots
+
+             If *axes* is not provided, then axes will be created in a new figure.
+
+        - *pair*: Tuple of (input index, output index) for the transfer function
+          to be chosen from each system (applied to all)
+
+             This is ignored if the system is SISO.
+
+        - *label*: Label for the figure (ignored if axes is provided)
+
+             This will be used as the base filename if the figure is saved.
+
+        - *title*: Title for the figure
+
+        - *labels*: Label or list of labels for the legends
+
+             If *labels* is *None*, then no label will be used.  If it is an
+             empty string (''), then the base filenames will be used.
+
+        - *colors*: Color or list of colors that will be used sequentially
+
+             Each may be a character, grayscale, or rgb value.
+
+             .. Seealso:: http://matplotlib.sourceforge.net/api/colors_api.html
+
+        - *styles*: Line/dash style or list of line/dash styles that will be
+          used sequentially
+
+             Each style is a string representing a linestyle (e.g., "--") or a
+             tuple of on/off lengths representing dashes.  Use "" for no line
+             and "-" for a solid line.
+
+             .. Seealso::
+                http://matplotlib.sourceforge.net/api/collections_api.html
+
+        - *leg_kwargs*: Dictionary of keyword arguments for
+          :meth:`matplotlib.pyplot.legend`
+
+             If *leg_kwargs* is *None*, then no legend will be shown.
+
+        - \*\**kwargs*: Additional arguments for :meth:`control.freqplot.bode`
+
+        **Returns:**
+
+        1. *axes*: Tuple (pair) of axes for the magnitude and phase plots
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> import os
+
+           >>> from glob import glob
+           >>> from modelicares import LinRes, multibode, save, read_params
+           >>> from numpy import pi, logspace
+
+           >>> lins = LinRes('examples/PID/*/*.mat')
+           >>> labels = ["Ti=%g" % read_params('Ti', os.path.join(lin.dir, 'dsin.txt'))
+           ...           for lin in lins]
+           >>> multibode(title="Bode Plot of Modelica.Blocks.Continuous.PID",
+           ...           label='examples/PIDs-bode', omega=2*pi*logspace(-2, 3),
+           ...           labels=labels, leg_kwargs=dict(loc='lower right')) # doctest: +ELLIPSIS
+           (<matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>)
+
+           >>> save()
+           Saved examples/PIDs-bode.pdf
+           Saved examples/PIDs-bode.png
+
+        .. testsetup::
+           >>> import matplotlib.pyplot as plt
+           >>> plt.show()
+           >>> plt.close()
+
+        .. only:: html
+
+           .. image:: ../examples/PIDs-bode.png
+              :scale: 70 %
+              :alt: Bode plot of PID with varying parameters
+
+        .. only:: latex
+
+           .. figure:: ../examples/PIDs-bode.pdf
+              :scale: 70 %
+
+              Bode plot of PID with varying parameters
+        """
+        # Create axes if necessary.
+        if not axes:
+            fig = util.figure(label)
+            axes = (fig.add_subplot(211), fig.add_subplot(212))
+
+        # Process the labels input.
+        labels = self._get_labels(labels)
+
+        # Set up the color(s) and line style(s).
+        if not iterable(colors):
+            # Use the single color for all plots.
+            colors = (colors,)
+        if not iterable(styles):
+            # Use the single line style for all plots.
+            styles = [styles]
+        elif type(styles[0]) is int:
+            # One dashes tuple has been provided; use its value for all plots.
+            styles = [styles]
+        n_colors = len(colors)
+        n_styles = len(styles)
+
+        # Create the plots.
+        style = styles[np.mod(i, n_styles)]
+        if isinstance(style, basestring):
+            kwargs['linestyle'] = style
+            kwargs.pop('dashes', None)
+        else:
+            kwargs['dashes'] = style
+            kwargs.pop('linestyle', None)
+        for i, (lin, label) in enumerate(zip(self, labels)):
+            if lin.sys.inputs > 1 or lin.sys.outputs > 1:
+                sys = self._to_siso(pair[0], pair[1])
+            else:
+                sys = lin.sys
+            bode_plot(sys, Hz=True, label=label,
+                      color=colors[np.mod(i, n_colors)], axes=axes,
+                      **kwargs)
+
+        # Decorate and finish.
+        axes[0].set_title(title)
+        if leg_kwargs is not None:
+            loc = leg_kwargs.pop('loc', 'best')
+            axes[0].legend(loc=loc, **leg_kwargs)
+            axes[1].legend(loc=loc, **leg_kwargs)
+        return axes
+
+    def nyquist(self, ax=None, pair=(0, 0), label='nyquist',
+                title="Nyquist plot",  xlabel="Real axis",
+                ylabel="Imaginary axis", labels='',
+                colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
+                leg_kwargs={}, **kwargs):
+        """Plot the linearizations onto a single Nyquist diagram.
+
+        This method calls :meth:`linres.LinRes.nyquist` from the included
+        instances of :class:`linres.LinRes`.
+
+        **Arguments:**
+
+        - *ax*: Axes onto which the Nyquist diagrams should be plotted
+
+             If *ax* is not provided, then axes will be created in a new figure.
+
+        - *pair*: Tuple of (input index, output index) for the transfer function
+          to be chosen from each system (applied to all)
+
+             This is ignored if the system is SISO.
+
+        - *label*: Label for the figure (ignored if axes is provided)
+
+             This will be used as the base filename if the figure is saved.
+
+        - *title*: Title for the figure
+
+            - *xlabel*: x-axis label
+
+            - *ylabel*: y-axis label
+
+        - *labels*: Label or list of labels for the legends
+
+             If *labels* is *None*, then no label will be used.  If it is an
+             empty string (''), then the base filenames will be used.
+
+        - *colors*: Color or list of colors that will be used sequentially
+
+             Each may be a character, grayscale, or rgb value.
+
+             .. Seealso:: http://matplotlib.sourceforge.net/api/colors_api.html
+
+        - *leg_kwargs*: Dictionary of keyword arguments for
+          :meth:`matplotlib.pyplot.legend`
+
+             If *leg_kwargs* is *None*, then no legend will be shown.
+
+        - \*\**kwargs*: Additional arguments for :meth:`control.freqplot.nyquist`
+
+             If *textFreq* is not specified, then only the frequency points of the
+             first system will have text labels.
+
+        **Returns:**
+
+            1. *ax*: Axes of the Nyquist plot
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> import os
+
+           >>> from glob import glob
+           >>> from modelicares import LinRes, multinyquist, save, read_params
+           >>> from numpy import pi, logspace
+
+           >>> lins = LinRes('examples/PID/*/*.mat')
+           >>> labels = ["Td=%g" % read_params('Td', os.path.join(lin.dir, 'dsin.txt'))
+           ...           for lin in lins]
+           >>> multinyquist(title="Nyquist Plot of Modelica.Blocks.Continuous.PID",
+           ...              label='examples/PIDs-nyquist', textFreq=True,
+           ...              omega=2*pi*logspace(-1, 3, 81), labelFreq=20,
+           ...              labels=labels) # doctest: +ELLIPSIS
+           <matplotlib.axes...AxesSubplot object at 0x...>
+
+           >>> save()
+           Saved examples/PIDs-nyquist.pdf
+           Saved examples/PIDs-nyquist.png
+
+        .. testsetup::
+           >>> import matplotlib.pyplot as plt
+           >>> plt.show()
+           >>> plt.close()
+
+        .. only:: html
+
+           .. image:: ../examples/PIDs-nyquist.png
+              :scale: 70 %
+              :alt: Nyquist plot of PID with varying parameters
+
+        .. only:: latex
+
+           .. figure:: ../examples/PIDs-nyquist.pdf
+              :scale: 70 %
+
+              Nyquist plot of PID with varying parameters
+        """
+        # Create axes if necessary.
+        if not ax:
+            fig = util.figure(label)
+            ax = fig.add_subplot(111, aspect='equal')
+
+        # Process the labels input.
+        labels = self._get_labels(labels)
+
+        # Set up the color(s).
+        if not iterable(colors):
+            # Use the single color for all plots.
+            colors = (colors,)
+        n_colors = len(colors)
+
+        # Create the plots.
+        textFreq = kwargs.pop('textFreq', None)
+        for i, (lin, label) in enumerate(zip(self, labels)):
+            if lin.sys.inputs > 1 or lin.sys.outputs > 1:
+                sys = self._to_siso(pair[0], pair[1])
+            else:
+                sys = lin.sys
+            nyquist_plot(sys, mark=False, label=label, ax=ax,
+                         textFreq=i==0 if textFreq is None else textFreq,
+                         color=colors[np.mod(i, n_colors)], **kwargs)
+
+        # Decorate and finish.
+        ax.set_title(title)
+        if xlabel: # Without this check, xlabel=None will give a label of "None".
+            ax.set_xlabel(xlabel)
+        if ylabel: # Same purpose
+            ax.set_ylabel(ylabel)
+        if leg_kwargs is not None:
+            loc = leg_kwargs.pop('loc', 'best')
+            ax.legend(loc=loc, **leg_kwargs)
+        return ax
+
+
 
 if __name__ == '__main__':
     """Test the contents of this file."""

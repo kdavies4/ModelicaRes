@@ -1,0 +1,66 @@
+.. testsetup::
+   >>> decimals = 8
+   >>> import numpy as np
+   >>> np.set_printoptions(precision=decimals)
+   >>> builtin_round = round
+   >>> # Don't use np.round; it's stupid.
+   >>> def round(value):
+   ...     try:
+   ...         return [round(v) for v in value]
+   ...     except TypeError:
+   ...         return builtin_round(value, decimals)
+
+>>> from modelicares import SimRes
+>>> sim = SimRes('examples/ChuaCircuit.mat')
+
+>>> sim['L.v'].array(t=(0, 10)) # doctest: +NORMALIZE_WHITESPACE
+array([[  0.        ,   0.        ],
+       [  5.        ,   0.10923497],
+       [ 10.        ,   0.21083504]], dtype=float32)
+
+>>> sim['L.v'].description
+'Voltage drop between the two pins (= p.v - n.v)'
+
+>>> sim['G.T_heatPort'].displayUnit
+'degC'
+
+>>> round(sim['Ro.R'].value())
+
+>>> sim['L.v'].value()
+
+>>> round(sim(['C1.v', 'L.v']).FV())
+[2.42098355, -0.25352862]
+
+>>> round(sim['C1.v'].IV())
+4.0
+
+>>> round(sim['L.v'].mean())
+0.01473382
+
+>>> round(sim['L.v'].max())
+0.77344114
+
+>>> round(sim['L.v'].min())
+-0.9450165
+
+>>> sim['L.v'].times(t=(0, 20))
+array([  0.,   5.,  10.,  15.,  20.], dtype=float32)
+
+>>> sim['L.v'].unit
+'V'
+
+>>> sim['L.v'].values(t=(0, 20)) # doctest: +NORMALIZE_WHITESPACE
+array([ 0.        ,  0.10923497,  0.21083504,  0.30462351,  0.39040083], dtype=float32)
+
+>>> sim['L.vv'].values() # doctest: +ELLIPSIS
+Traceback (most recent call last):
+...
+LookupError: L.vv is not a valid variable name.
+<BLANKLINE>
+Did you mean one of these?
+       L.v
+       L.p.v
+       L.n.v
+
+>>> round(sim['L.v'].values(t=[0, 2000]))
+[0.0, 0.15459341]

@@ -110,8 +110,10 @@ def bode_plot(sys, omega=None, dB=False, Hz=False, deg=True, label=None,
 
     .. code-block:: python
 
+       >>> from control.matlab import ss
+
        >>> sys = ss("1. -2; 3. -4", "5.; 7", "6. 8", "9.")
-       >>> mag, phase, omega = bode(sys)
+       >>> mag, phase, omega, axes = bode_plot(sys)
     """
 
     if omega is None:
@@ -205,8 +207,10 @@ def nyquist_plot(sys, omega=None, label=None, mark=False, show_axes=True,
 
     .. code-block:: python
 
+       >>> from control.matlab import ss
+
        >>> sys = ss("1. -2; 3. -4", "5.; 7", "6. 8", "9.")
-       >>> nyquist_plot(sys)
+       >>> x, y, omega, ax = nyquist_plot(sys)
     """
     if sys.inputs > 1 or sys.outputs > 1:
         raise NotImplementedError(
@@ -215,7 +219,7 @@ def nyquist_plot(sys, omega=None, label=None, mark=False, show_axes=True,
 
     if omega is None:
         omega = default_frequency_range(sys)
-        #! TODO: Do something smarter for discrete.
+        # TODO: Do something smarter for discrete.
     elif isinstance(omega, list) or isinstance(omega, tuple):
         # Interpolate between wmin and wmax.
         try:
@@ -236,7 +240,8 @@ def nyquist_plot(sys, omega=None, label=None, mark=False, show_axes=True,
 
     # Create axes if necessary.
     if ax is None:
-        ax = plt.axes()
+        fig = plt.figure()
+        ax = fig.add_subplot(111, aspect='equal')
 
     # Plot the primary curve and mirror image.
     kwargs.pop('linestyle', None) # Ignore this.

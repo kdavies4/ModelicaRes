@@ -15,8 +15,8 @@ before_install:
   - sudo apt-get -q install python-numpy python-scipy python-matplotlib ipython python-pandas libwxgtk2.8-0 python-wxtools python-easygui python-qt4
   - sudo pip install control
 
-install: 
+install:
   - python setup.py build && sudo python setup.py install
 
-script: 
-  - bash 00-test.sh
+script:
+  - bash tests/test.sh

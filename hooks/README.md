@@ -14,7 +14,9 @@ Copy *pre-commit* and *post-checkout* to *.git/hooks/*.
 
 Add to *.git/config*:
 [alias]
+	clean-examples = !bash `git rev-parse --show-toplevel`/hooks/clean-examples.sh
+	clean-docs = !bash `git rev-parse --show-toplevel`/hooks/clean-docs.sh
 	diff-matplotlibrc = !bash `git rev-parse --show-toplevel`/hooks/diff-matplotlibrc.sh
 	make-docs = !bash `git rev-parse --show-toplevel`/hooks/make-docs.sh
 	release = !bash `git rev-parse --show-toplevel`/hooks/release.sh
-	remove-docs = !bash `git rev-parse --show-toplevel`/hooks/remove-docs.sh
+	spellcheck = !bash `git rev-parse --show-toplevel`/hooks/spellcheck.sh

@@ -7,69 +7,74 @@
 
 - :class:`ArrowLine` - A matplotlib subclass to draw an arrowhead on a line
 
-
 **Functions:**
 
 - :meth:`add_arrows` - Overlay arrows with annotations on top of a pre-plotted
-  line
+  line.
 
 - :meth:`add_hlines` - Add horizontal lines to a set of axes with optional
-  labels
+  labels.
 
 - :meth:`add_vlines` - Add vertical lines to a set of axes with optional
-  labels
+  labels.
 
 - :meth:`chars_to_str` - Convert a string array to a string and remove trailing
-  whitespace
+  whitespace.
 
 - :meth:`color` - Plot 2D scalar data on a color axis in 2D Cartesian
-  coordinates
+  coordinates.
 
 - :meth:`closeall` - Close all open figures (shortcut to the
-  :meth:`destroy_all` from :class:`matplotlib._pylab_helpers.Gcf`)
+  :meth:`destroy_all` from :class:`matplotlib._pylab_helpers.Gcf`).
 
 - :meth:`expand_path` - Expand a file path by replacing '~' with the user
-  directory and makes the path absolute
+  directory and makes the path absolute.
 
-- :meth:`flatten_dict` - Flatten a nested dictionary
+- :meth:`flatten_dict` - Flatten a nested dictionary.
 
-- :meth:`flatten_list` - Flatten a nested list
+- :meth:`flatten_list` - Flatten a nested list.
 
-- :meth:`figure` - Create a figure and set its label
+- :meth:`figure` - Create a figure and set its label.
 
 - :meth:`get_indices` - Return the pair of indices that bound a target value in
-  a monotonically increasing vector
+  a monotonically increasing vector.
 
 - :meth:`get_pow10` - Return the exponent of 10 for which the significand
-  of a number is within the range [1, 10)
+  of a number is within the range [1, 10).
 
 - :meth:`get_pow1000` - Return the exponent of 1000 for which the
-  significand of a number is within the range [1, 1000)
+  significand of a number is within the range [1, 1000).
 
-- :meth:`load_csv` - Load a CSV file into a dictionary
+- :meth:`load_csv` - Load a CSV file into a dictionary.
+
+- :meth:`match` - Reduce a list of strings to those that match a pattern.
 
 - :meth:`plot` - Plot 1D scalar data as points and/or line segments in 2D
-  Cartesian coordinates
+  Cartesian coordinates.
 
-- :meth:`quiver` - Plot 2D vector data as arrows in 2D Cartesian coordinates
+- :meth:`quiver` - Plot 2D vector data as arrows in 2D Cartesian coordinates.
 
 - :meth:`save` - Save the current figures as images in a format or list of
-  formats
+  formats.
 
 - :meth:`saveall` - Save all open figures as images in a format or list of
-  formats
+  formats.
 
-- :meth:`setup_subplots` - Create an array of subplots and return their axes
+- :meth:`setup_subplots` - Create an array of subplots and return their axes.
 
 - :meth:`shift_scale_x` - Apply an offset and a factor as necessary to the x
-  axis
+  axis.
 
 - :meth:`shift_scale_y` - Apply an offset and a factor as necessary to the y
-  axis
+  axis.
+
+- :meth:`si_prefix` - Return the SI prefix for a power of 1000.
+
+- :meth:`tree` - Return a tree of strings as a nested dictionary.
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
-__credits__ = ["Jason Grout", "Jason Heeris"]
+__credits__ = ["Jason Grout", "Jason Heeris", "Joerg Raedler"]
 __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
@@ -77,17 +82,18 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-from glob import glob
-from collections import MutableMapping, namedtuple
-from itertools import cycle
-from functools import wraps
+from collections import MutableMapping
 from decimal import Decimal
+from fnmatch import fnmatchcase
+from glob import glob
+from itertools import cycle
 from math import floor
 from matplotlib import rcParams
-from matplotlib.lines import Line2D
-from matplotlib.cbook import iterable
 from matplotlib._pylab_helpers import Gcf
+from matplotlib.cbook import iterable
+from matplotlib.lines import Line2D
 from PyQt4.QtGui import QApplication, QFileDialog
+from re import compile as re_compile
 
 
 # Function to close all open figures
@@ -214,7 +220,7 @@ def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
 
     - *labels*: List of labels for the lines
 
-    - *\*\*kwargs*: Line properties (propagated to
+    - \*\**kwargs*: Line properties (propagated to
       :meth:`matplotlib.pyplot.axhline`)
 
          E.g., ``color='k', linestyle='--', linewidth=0.5``
@@ -289,7 +295,7 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
 
     - *labels*: List of labels for the lines
 
-    - *\*\*kwargs*: Line properties (propagated to
+    - \*\**kwargs*: Line properties (propagated to
       :meth:`matplotlib.pyplot.axvline`)
 
          E.g., ``color='k', linestyle='--', linewidth=0.5``
@@ -352,24 +358,6 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
         ax.text(positions[i], ypos, label, backgroundcolor='w',
                 horizontalalignment='center', verticalalignment='center')
 
-def apply_function(g):
-    """Return a function that applies a function to its output, given a
-    function that doesn't (*g*).
-
-    I.e., a decorator to apply a function to the return value
-    """
-    @wraps(g)
-    def wrapped(cls, f=None, *args, **kwargs):
-        """Function that applies a function *f* to its output
-
-        If *f* is *None* (default), no function is applied (i.e., pass
-        through or identity).
-        """
-        return (g(cls, *args, **kwargs) if f is None else
-                f(g(cls, *args, **kwargs)))
-
-    return wrapped
-
 def chars_to_str(str_arr, codec='latin-1'):
     """Convert a string array to a string.
 
@@ -388,7 +376,7 @@ def color(ax, c, *args, **kwargs):
 
     - *c*: color- or c-axis data (2D array)
 
-    - *\*args*, *\*\*kwargs*: Additional arguments for
+    - \**args*, \*\**kwargs*: Additional arguments for
       :meth:`matplotlib.pyplot.imshow`
 
     **Example:**
@@ -429,6 +417,7 @@ def color(ax, c, *args, **kwargs):
     """
     return ax.imshow(c, *args, **kwargs)
 
+
 def expand_path(path):
     r"""Expand a file path by replacing '~' with the user directory and making
     the path absolute.
@@ -454,7 +443,7 @@ def figure(label='', *args, **kwargs):
 
     - *label*: String to apply to the figure's *label* property
 
-    - *\*args*, *\*\*kwargs*: Additional arguments for
+    - \**args*, \*\**kwargs*: Additional arguments for
       :meth:`matplotlib.pyplot.figure`
 
     **Example:**
@@ -715,7 +704,7 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
          made to cast each column into :class:`int`, :class:`float`, and
          :class:`str` (in that order).
 
-    - *\*\*kwargs*: Additional arguments for :meth:`csv.reader`
+    - \*\**kwargs*: Additional arguments for :meth:`csv.reader`
 
     **Example:**
 
@@ -766,6 +755,64 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
                     data[key] = map(str, column)
 
     return data
+
+
+def match(strings, pattern, re):
+    r"""Reduce a list of strings to those that match a pattern.
+
+    By default, all of the strings are returned.
+
+    **Arguments:**
+
+    - *pattern*: Case-sensitive string used for matching
+
+      - If *re* is *False* (next argument), then the pattern follows the
+        Unix shell style:
+
+        ============   ============================
+        Character(s)   Role
+        ============   ============================
+        \*             Matches everything
+        ?              Matches any single character
+        [seq]          Matches any character in seq
+        [!seq]         Matches any char not in seq
+        ============   ============================
+
+        Wildcard characters ('\*') are not automatically added at the
+        beginning or the end of the pattern.  For example, 'x\*' matches
+        variables that begin with "x", whereas '\*x\*' matches all variables
+        that contain "x".
+
+      - If *re* is *True*, regular expressions are used a la `Python's re
+        module <http://docs.python.org/2/library/re.html>`_.  See also
+        http://docs.python.org/2/howto/regex.html#regex-howto.
+
+        Since :mod:`re.search` is used to produce the matches, it is as if
+        wildcards ('.*') are automatically added at the beginning and the
+        end.  For example, 'x' matches all variables that contain "x".  Use
+        '^x$' to match only the variables that begin with "x" and 'x$' to
+        match only the variables that end with "x".
+
+        Note that '.' is a subclass separator in Modelica_ but a wildcard in
+        regular expressions.  Escape the subclass separator as '\\.'.
+
+    - *re*: *True* to use regular expressions (*False* to use shell style)
+
+    **Example:**
+
+       >>> from modelicares.util import match
+       >>> match(["apple", "orange", "banana"], '*e')
+       ["apple", "orange"]
+    """
+    if pattern is None or (pattern in ['.*', '.+', '.', '.?', ''] if re
+                           else pattern == '*'):
+        return strings # Shortcut
+    else:
+        if re:
+            matcher = re_compile(pattern).search
+        else:
+            matcher = lambda name: fnmatchcase(name, pattern)
+        return filter(matcher, strings)
 
 
 def plot(y, x=None, ax=None, label=None,
@@ -823,7 +870,7 @@ def plot(y, x=None, ax=None, label=None,
 
          .. Seealso:: http://matplotlib.sourceforge.net/api/collections_api.html
 
-    - *\*\*kwargs*: Additional arguments for :meth:`matplotlib.pyplot.plot`
+    - \*\**kwargs*: Additional arguments for :meth:`matplotlib.pyplot.plot`
 
     **Returns:** List of :class:`matplotlib.lines.Line2D` objects
 
@@ -926,7 +973,7 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
 
     - *pivot*: "tail" | "middle" | "tip" (see :meth:`matplotlib.pyplot.quiver`)
 
-    - *\*\*kwargs*: Additional arguments for :meth:`matplotlib.pyplot.quiver`
+    - \*\**kwargs*: Additional arguments for :meth:`matplotlib.pyplot.quiver`
 
     **Example:**
 
@@ -1525,6 +1572,41 @@ def si_prefix(pow1000):
                          "the SI prefixes (1e-24 to 1e24)." % 3*pow1000)
 
 
+def tree(strings, delimiter='.'):
+    """Return a tree of strings as a nested dictionary.
+
+    The levels of hierarchy in each string are marked with *delimiter*.
+    The keys in the dictionary are the sub-branch names.  The value at the
+    end of each branch is the full string.
+
+    **Arguments:**
+
+    - *strings*: List of strings
+
+    - *delimiter*: String that marks a level of hierarchy
+
+    **Example:**
+
+       >>> from modelicares.util import tree
+       >>> tree(['alpha.beta.gamma', 'delta.epsilon', 'delta.zeta'])
+       {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
+    """
+    # This method has been copied and modified from DyMat version 0.5
+    # (Joerg Raedler,
+    # http://www.j-raedler.de/2011/09/dymat-reading-modelica-results-with-python/,
+    # BSD License).
+    root = {}
+    for string in strings:
+        branch = root
+        elements = string.split(delimiter)
+        for element in elements[:-1]:
+            if not element in branch:
+                branch[element] = {}
+            branch = branch[element]
+        branch[elements[-1]] = string
+    return root
+
+
 # From http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html,
 # accessed 2010/11/2012
 class ArrowLine(Line2D):
@@ -1560,7 +1642,7 @@ class ArrowLine(Line2D):
 
         - *arrowheadlength* (=\ *arrowsize*): Length of arrow head
 
-        - *\*args*, *\*\*kwargs*: Additional arguments for
+        - \**args*, \*\**kwargs*: Additional arguments for
           :class:`matplotlib.lines.Line2D`
 
         **Example:**

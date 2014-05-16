@@ -24,8 +24,7 @@ and matrix functions from [NumPy].
 Please see the tutorial, which is available as an
 [IPython notebook](examples/tutorial.ipynb) or online as a
 [static page](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb).
-For the full documentation and many more examples, see the [main website] or the
-[doc](doc) folder.
+For the full documentation and many more examples, see the [main website].
 
 ### Installation
 

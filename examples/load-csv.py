@@ -9,9 +9,6 @@ import os
 from modelicares import load_csv
 
 if __name__=='__main__':
-    # Procedure for embedding the interpreter from:
-    #    http://writeonly.wordpress.com/2008/09/08/embedding-a-python-shell-in-a-python-script/,
-    #    accessed 2010/11/2
 
     fname = "load-csv.csv"
     data = load_csv(fname, header_row=2)
@@ -20,13 +17,22 @@ if __name__=='__main__':
     print(data.keys())
     print("Use the Python prompt to explore the data.")
 
-    # Open the IPython or standard Python interpreter.
+    # Embed an IPython or standard Python interpreter.
+    #    Based on
+    #    http://writeonly.wordpress.com/2008/09/08/embedding-a-python-shell-in-a-python-script/,
+    #    accessed 2010/11/2
     try:
-        from IPython.Shell import IPShellEmbed
-        IPShellEmbed(argv=['-noconfirm_exit'])()
-        # Note: The -pylab option cannot be embedded (see
-        # http://article.gmane.org/gmane.comp.python.ipython.user/1190/match=pylab)
+        # IPython
+        from IPython import embed
+        embed()
     except ImportError:
-        import code
-        # Calling this with globals ensures that we can see the environment.
-        code.InteractiveConsole(globals()).interact()
+        try:
+            # IPython via old API style
+            from IPython.Shell import IPShellEmbed
+            IPShellEmbed(argv=['-noconfirm_exit'])()
+            # Note: The -pylab option can't be embedded (see
+            # http://article.gmane.org/gmane.comp.python.ipython.user/1190/match=pylab).
+        except ImportError:
+            # Standard Python
+            from code import InteractiveConsole
+            InteractiveConsole(globals()).interact()

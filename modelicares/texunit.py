@@ -173,10 +173,9 @@ def quantity_str(number, unit='', format='%G', times='\,', roman=False):
         if use_SI:
             e = int(exponent)
             if e >= 0:
-                pow1000 = e/3
+                pow1000 = int(e/3) # The int casting is necessary in Python3.
             else:
-                pow1000 = -(-e/3)
-            pow1000 = int(pow1000) # TODO:  Why is this necessary in Python 3?
+                pow1000 = -int(-e/3)
             if -8 <= pow1000 <= 8:
                 unit = si_prefix(pow1000) + unit
                 numstr, exponent = (format % (number/1000**pow1000)).split('e')

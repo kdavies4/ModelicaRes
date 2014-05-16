@@ -8,7 +8,10 @@ build/
 
 # Generated files
 dist/
-/examples/*/*/*
+examples/*/*/*
+examples/*.pdf
+examples/*.png
+examples/ChuaCircuit-voltages.csv
 doc/_images/math/*
 MANIFEST
 ModelicaRes.egg-info

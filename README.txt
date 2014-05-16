@@ -24,8 +24,7 @@ Please see the tutorial, which is available as an `IPython notebook
 <https://github.com/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_
 or online as a `static page
 <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_.
-For the full documentation and many more examples, see the `main website`_ or
-the *doc* folder of the package.
+For the full documentation and many more examples, see the `main website`_.
 
 Installation
 ~~~~~~~~~~~~

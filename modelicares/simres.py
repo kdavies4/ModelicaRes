@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """This package contains :class:`SimRes`, a class to load, analyze, and plot
-results from a Modelica_ simulation.
+results from a Modelica_ simulation. TODO add SimResList, Variable (although not for external use, only there for documentation)
 
 
 .. testsetup::
@@ -12,7 +12,6 @@ results from a Modelica_ simulation.
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
-__credits__ = ["Joerg Raedler"]
 __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
@@ -20,41 +19,26 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import numpy as np
 
+from abc import abstractmethod
 from collections import namedtuple
-from functools import wraps
 from difflib import get_close_matches
-from re import compile as re_compile
+from functools import wraps
+from glob import glob
+from itertools import cycle
+from matplotlib import rcParams
+from matplotlib.cbook import iterable
+from matplotlib.pyplot import figlegend
+from pandas import DataFrame
 from scipy.integrate import trapz as integral
 from scipy.interpolate import interp1d
-from matplotlib.pyplot import figlegend
-from matplotlib import rcParams
-from fnmatch import fnmatchcase
-from pandas import DataFrame
 
 from modelicares import util
-from modelicares.util import apply_function
-from modelicares.texunit import unit2tex, number_str
-#from modelicares._io import simloaders
 from modelicares._gui import Browser
+from modelicares._res import ResList
+from modelicares.texunit import unit2tex, number_str
 
 
-def _swap(g):
-    """Decorator that swaps the first two arguments of a method and gives them
-    each a default of *None*.
-
-    This is useful because for computational efficiency it's best to apply the
-    time selection (_select_times decorator below) before the applying the
-    function (apply_function decorator), but we want time to be the first
-    argument and the function to be the second.
-    """
-    @wraps(g)
-    def wrapped(cls, t=None, f=None, *args, **kwargs):
-        """Look up the variable and pass it to the original function."""
-        return g(cls, f, t, *args, **kwargs)
-
-    return wrapped
-
-def _select_times(f):
+def _select(f):
     """Return a method that uses time-based indexing to return values,
     given a method that returns all values (*f*).
 
@@ -77,20 +61,56 @@ def _select_times(f):
         else:
             # Interpolate at single time or list of times.
             function_at_ = interp1d(cls.times(), f(cls, *args, **kwargs))
+            # For some reason, this wraps single values as arrays, so need to
+            # cast back to float.
             try:
                 # Assume t is a list of times.
-                return map(function_at_, t)
+                return [float(function_at_(time)) for time in t]
             except TypeError:
                 # t is a single time.
                 return float(function_at_(t))
 
     return wrapped
 
+def _apply_function(g):
+    """Return a method that applies a function to its output, given a
+    method that doesn't (*g*).
 
-class Variable(namedtuple('Variable', ['samples', 'description', 'unit',
-                                       'displayUnit'])):
-    """Specialized named tuple that contains attributes and methods to
-    represent a variable in a simulation
+    I.e., a decorator to apply a function to the return value
+    """
+    @wraps(g)
+    def wrapped(self, f=None, *args, **kwargs):
+        """Function that applies a function *f* to its output
+
+        If *f* is *None* (default), no function is applied (i.e., pass
+        through or identity).
+        """
+        return (g(self, *args, **kwargs) if f is None else
+                f(g(self, *args, **kwargs)))
+
+    return wrapped
+
+def _swap(g):
+    """Decorator that swaps the first two arguments of a method and gives them
+    each a default of *None*.
+
+    This is useful because for computational efficiency it's best to apply the
+    time selection (_select decorator below) before the applying the fuction
+    (_apply_function decorator), but we want time to be the first
+    argument and the function to be the second.
+    """
+    @wraps(g)
+    def wrapped(self, t=None, f=None):
+        """Look up the variable and pass it to the original function."""
+        return g(self, f, t)
+
+    return wrapped
+
+
+class Variable(namedtuple('VariableBase', ['samples', 'description', 'unit',
+                                           'displayUnit'])):
+    """Specialized namedtuple to represent a variable in a simulation, with
+    methods to retrieve and perform calculations on its values
     """
 
     def array(self, t=None, ft=None, fv=None):
@@ -120,7 +140,7 @@ class Variable(namedtuple('Variable', ['samples', 'description', 'unit',
                   - (*stop*,): All samples up to *stop* are included.
 
                        Be sure to include the comma to distinguish this from a
-                       singleton.
+                       float.
 
                   - (*start*, *stop*): All samples between *start* and *stop*
                     are included.
@@ -135,26 +155,25 @@ class Variable(namedtuple('Variable', ['samples', 'description', 'unit',
           *None* is identity)
 
 
-        _slice: https://docs.python.org/2/library/functions.html#slice
+        .. _slice: https://docs.python.org/2/library/functions.html#slice
         """
         return np.array([self.times(t=t, f=ft), self.values(t=t, f=fv)]).T
 
-    @apply_function
-    def FV(self):
+    def FV(self, f=None):
         """Return function *f* of the final value of the variable.
         """
-        return self.values()[-1]
+        return self.values()[-1] if f is None else f(self.values()[-1])
 
     def is_constant(self):
         """Return *True* if the variable does not change over time.
         """
-        return not np.any(np.diff(self.values() != 0))
+        values = self.values()
+        return np.array_equal(values[:-1], values[1:])
 
-    @apply_function
-    def IV(self):
+    def IV(self, f=None):
         """Return function *f* of the initial value of the variable.
         """
-        return self.values()[0]
+        return self.values()[0] if f is None else f(self.values()[0])
 
     def max(self, f=None):
         """Return the maximum value of function *f* of the variable.
@@ -194,7 +213,8 @@ class Variable(namedtuple('Variable', ['samples', 'description', 'unit',
         mean = self.mean(f=f)
         return mean + np.sqrt(integral((self.values(f=f) - mean)**2, t)/(t[-1] - t[0]))
 
-    def times(self):
+    @abstractmethod
+    def times(self, t=None, f=None):
         """Return function *f* of the recorded times of the variable.
 
         **Arguments:**
@@ -226,10 +246,27 @@ class Variable(namedtuple('Variable', ['samples', 'description', 'unit',
         - *f*: Function that operates on the vector of recorded times (default
           or *None* is identity)
         """
-        raise NotImplementedError("This method must be redefined for specific "
-                                  "file formats.")
+        pass
 
-    def values(self):
+    def value(self, f=None):
+        """Return function *f* of the value of the constant variable.
+
+        This method raises a **ValueError** if the variable is time-varying.
+
+        **Arguments:**
+
+        - *f*: Function that operates on the value (default or *None* is
+          identity)
+        """
+        values = self.values()
+        if np.array_equal(values[:-1], values[1:]):
+            return values[0] if f is None else f(values[0])
+        else:
+            raise ValueError("The variable is not a constant.  Use values() "
+                             "instead of value().")
+
+    @abstractmethod
+    def values(self, t=None, f=None):
         """Return function *f* of the values of the variable.
 
         **Arguments:**
@@ -262,26 +299,23 @@ class Variable(namedtuple('Variable', ['samples', 'description', 'unit',
         - *f*: Function that operates on the vector of values (default or *None*
           is identity)
         """
-        raise NotImplementedError("This method must be redefined for specific "
-                                  "file formats.")
+        pass
 
     def _slice(self, t):
-        """Return a slice that indexes the variable, given a slice-like tuple
-        of times.
+        """Return a slice that indexes the variable.
 
-        **Call signature:**
+        Argument *t* is a tuple with one of the following forms:
 
           - (*stop*,): All samples up to *stop* are included.
 
                Be sure to include the comma to distinguish this from a
                singleton.
 
-          - (*start*, *stop*): All samples between *start* and *stop*
-            are included.
+          - (*start*, *stop*): All samples between *start* and *stop* are
+            included.
 
-          - (*start*, *stop*, *skip*): Every *skip*th sample is included
-            between *start* and *stop*.
-
+          - (*start*, *stop*, *skip*): Every *skip*th sample between *start* and
+            *stop* is included.
         """
         # Retrieve the start time, stop time, and the number of samples to skip.
         try:
@@ -305,8 +339,8 @@ class Variable(namedtuple('Variable', ['samples', 'description', 'unit',
 
 
 class _VarDict(dict):
-    """Class for a dictionary of variables (instances of the Variable class
-    above)
+    """Specialized dictionary for simulation variables (instances of
+    :class:`Variable`)
     """
     def __getitem__(self, key):
        """Include suggestions in the error message if a variable is missing.
@@ -322,13 +356,16 @@ class _VarDict(dict):
             raise LookupError(msg)
 
 class _VarList(list):
-    """Class for a list of (possibly nested) variables (instances of the
-    Variable class above)
+    """Specialized list of simulation variables (instances of
+    :class:`Variable`), with attributes to access information from all of the
+    variables at once
+
+    The list may be nested.
     """
 
     def _method(f):
-        """Return a method that operates on all of the variables in the
-        list of variables, given a function that operates on a single variable.
+        """Return a method that operates on all of the variables in the list of
+        variables, given a function that operates on a single variable.
         """
         @wraps(f)
         def wrapped(cls, *args, **kwargs):
@@ -345,7 +382,7 @@ class _VarList(list):
 
     @_method
     def __getattr__(variable, attr):
-        """Look up an attribute of the variables (e.g., description, unit,
+        """Look up a field in each of the variables (e.g., description, unit, or
         displayUnit).
         """
         return variable.__getattribute__(attr)
@@ -355,58 +392,137 @@ class _VarList(list):
 
     @_method
     def arrays(variable, *args, **kwargs):
+        """Return a list containing an array of times and values for each
+        variable.
+
+        Arguments \**args* and \*\**kwargs* are passed directly to
+        :meth:`Variable.array`, so this method has the same call signature.
+        """
         return variable.array(*args, **kwargs)
 
     @_method
     def FV(variable, *args, **kwargs):
+        """Return a list containing the final of each variable.
+
+        Arguments \**args* and \*\**kwargs* are passed directly to
+        :meth:`Variable.FV`, so this method has the same call signature.
+        """
         return variable.FV(*args, **kwargs)
 
     @_method
+    def is_constant(variable):
+        """Return a list containing *True* or *False* depending on whether each
+        variable is constant or not.
+
+        There are no arguments.
+        """
+        return variable.is_constant()
+
+    @_method
     def IV(variable, *args, **kwargs):
+        """Return a list containing the initial value of each variable.
+
+        Arguments \**args* and \*\**kwargs* are passed directly to
+        :meth:`Variable.IV`, so this method has the same call signature.
+        """
         return variable.IV(*args, **kwargs)
 
     @_method
     def max(variable, *args, **kwargs):
+        """Return a list containing the maximum value of each variable.
+
+        Arguments \**args* and \*\**kwargs* are passed directly to
+        :meth:`Variable.max`, so this method has the same call signature.
+        """
         return variable.max(*args, **kwargs)
 
     @_method
     def mean(variable, *args, **kwargs):
+        """Return a list containing the time-averaged mean value of each
+        variable.
+
+        Arguments \**args* and \*\**kwargs* are passed directly to
+        :meth:`Variable.mean`, so this method has the same call signature.
+        """
         return variable.mean(*args, **kwargs)
 
     @_method
     def mean_rectified(variable, *args, **kwargs):
+        """Return a list containing the time-averaged rectified mean of each
+        variable.
+
+        Arguments \**args* and \*\**kwargs* are passed directly to
+        :meth:`Variable.mean_rectified`, so this method has the same call
+        signature.
+        """
         return variable.mean_rectified(*args, **kwargs)
 
     @_method
     def min(variable, *args, **kwargs):
+        """Return a list containing the minimum value of each variable.
+
+        Arguments \**args* and \*\**kwargs* are passed directly to
+        :meth:`Variable.min`, so this method has the same call signature.
+        """
         return variable.min(*args, **kwargs)
 
     @_method
-    def plot(variable, *args, **kwargs):
-        return variable.plot(*args, **kwargs)
-
-    @_method
     def RMS(variable, *args, **kwargs):
+        """Return a list containing the time-averaged root mean square of each
+        variable.
+
+        Arguments \**args* and \*\**kwargs* are passed directly to
+        :meth:`Variable.RMS`, so this method has the same call signature.
+        """
         return variable.RMS(*args, **kwargs)
 
     @_method
     def RMS_AC(variable, *args, **kwargs):
+        """Return a list containing the time-averaged AC-coupled root mean
+        square of each variable.
+
+        Arguments \**args* and \*\**kwargs* are passed directly to
+        :meth:`Variable.RMS_AC`, so this method has the same call signature.
+        """
         return variable.RMS_AC(*args, **kwargs)
 
     @_method
     def times(variable, *args, **kwargs):
+        """Return a list containing the sampling times of each variable.
+
+        Arguments \**args* and \*\**kwargs* are passed directly to
+        :meth:`Variable.times`, so this method has the same call signature.
+        """
         return variable.times(*args, **kwargs)
 
     @_method
+    def value(variable, *args, **kwargs):
+        """Return a list containing the value of each constant variable.
+
+        This method raises a **ValueError** if any of the variables are
+        time-varying.
+
+        Arguments \**args* and \*\**kwargs* are passed directly to
+        :meth:`Variable.value`, so this method has the same call signature.
+        """
+        return variable.value(*args, **kwargs)
+
+    @_method
     def values(variable, *args, **kwargs):
+        """Return a list containing the values of each variable.
+
+        Arguments \**args* and \*\**kwargs* are passed directly to
+        :meth:`Variable.values`, so this method has the same call signature.
+        """
         return variable.values(*args, **kwargs)
 
 
 # List of file-loading functions for SimRes
+from modelicares._io.dymola import loadsim as dymola
+simloaders = [('dymola', dymola)] # SimRes tries these in order.
+# All of the keys should be in lowercase.
 # This must be below the definition of Variable and _VarDict because those
 # classes are required by the loading functions.
-from modelicares._io.dymola import loadsim as dymola_sim
-simloaders = [('dymola', dymola_sim)] # SimRes tries these in order.
 
 class SimRes(object):
     """Class to load and analyze results from a Modelica_ simulation
@@ -418,9 +534,10 @@ class SimRes(object):
     - :meth:`fbase` - Return the base filename from which the results were
       loaded, without the directory or file extension.
 
-    - :meth:`names` - Return a list of variable names that match a pattern.
+    - :meth:`names` - Return a list of variable names, optionally filtered by
+      pattern matching.
 
-    - :meth:`nametree` - Return a tree of all variable names based on the
+    - :meth:`nametree` - Return a tree of variable names that reflects the
       Modelica_ model hierarchy.
 
     - :meth:`n_constants` - Return the number of variables that do not change
@@ -438,8 +555,8 @@ class SimRes(object):
     - :meth:`__call__` - Access a list of variables by their names (invoked as
       `sim(<list of variable names>)`).
 
-         The return value has methods and attributes to retrieve information
-         about all the variables in the list at once (values, units, etc.).
+         The return value has attributes to retrieve information about all of
+         the variables in the list at once (values, units, etc.).
 
     - :meth:`__contains__` - Return *True* if a variable is present in the
       simulation results (invoked as `<variable name> in sim`).
@@ -447,16 +564,16 @@ class SimRes(object):
     - :meth:`__getitem__` - Access a variable by name (invoked as
       `sim[<variable name>]`).
 
-         The return value has methods and attributes to retrieve information
-         about the variable (values, unit, etc.).
+         The return value has attributes to retrieve information about the
+         variable (values, unit, etc.).
 
     - :meth:`__len__` - Return the number of variables in the simulation
       (invoked as `len(sim)`).
 
-    Attributes:
+    Other attributes:
 
-    - *fname* - Filename from which the variables were loaded, with full path
-      and extension
+    - *fname* - Filename from which the variables were loaded, with absolute
+      path
 
     - *tool* - String indicating the function used to load the results (named
       after the corresponding simulation tool)
@@ -472,9 +589,7 @@ class SimRes(object):
 
         **Arguments:**
 
-        - *fname*: Name of the file (may include the path)
-
-             The file extension (e.g., '.mat') is optional.
+        - *fname*: Name of the file (including the directory if necessary)
 
         - *constants_only*: *True* to load only the variables from the first
           data table
@@ -485,9 +600,10 @@ class SimRes(object):
              *constants_only* to *True*.
 
         - *tool*: String indicating the simulation tool that created the file
-          and thus the algorithm to load it
+          and thus the function to be used to load it
 
-             By default, all of the algorithms are tried.
+             By default, the available functions are tried in order until one
+             works (or none do).
 
         **Example:**
 
@@ -516,12 +632,12 @@ class SimRes(object):
                 load = loaderdict[tool.lower()]
             except:
                 raise LookupError('"%s" is not one of the available tools ("%s").'
-                                  % (tool, '", "'.join(simloaders.keys())))
+                                  % (tool, '", "'.join(list(loaderdict))))
         self._variables = load(fname, constants_only)
 
         # Remember the tool and filename.
         self.tool = tool
-        self.fname = fname
+        self.fname = os.path.abspath(fname)
 
 
     def _acceptlists(f):
@@ -561,7 +677,7 @@ class SimRes(object):
         return wrapped
 
 
-    # TODO: Remove the "_" prefix and add it to the list once this is finished.
+    # TODO: Remove the "_" prefix and add this to the list once it's finished.
     def _bar(self, names, times=[0], width=0.6, n_rows=1,
              title=None, subtitles=[], label="bar",
              xlabel=None, xticklabels=None, ylabel=None,
@@ -786,24 +902,15 @@ class SimRes(object):
         """
         # Get a list of all the variables or just the constants.
         if constants_only:
-            names = [item[0] for item in self._variables.items()
-                     if item[1].is_constant()]
+            names = [name for (name, variable) in self._variables.items()
+                     if variable.is_constant()]
         else:
             names = list(self._variables)
 
-        # Search the list.
-        if pattern is None or (pattern in ['.*', '.+', '.', '.?', ''] if re
-                               else pattern == '*'):
-            return names # Shortcut
-        else:
-            if re:
-                matcher = re_compile(pattern).search
-            else:
-                matcher = lambda name: fnmatchcase(name, pattern)
-            return filter(matcher, names)
+        return util.match(names, pattern, re)
 
 
-    def n_constants(self, pattern=None, re=False):
+    def n_constants(self):
         """Return the number of variables that do not change over time.
 
         There are no arguments.  Note that this number may be greater than the
@@ -815,8 +922,8 @@ class SimRes(object):
                     for variable in self._variables.values()])
 
 
-    def nametree(self, pattern=None, re=False):
-        """Return a tree of all variable names based on the Modelica_ model
+    def nametree(self, pattern=None, re=False, constants_only=False):
+        """Return a tree of variable names based on the Modelica_ model
         hierarchy.
 
         The tree is returned as a nested dictionary.  The keys are the Modelica_
@@ -825,8 +932,8 @@ class SimRes(object):
         variable name.
 
         All names are included by default, but the names can be filtered using
-        *pattern* and *re*.  See :mod:`names` for a description of those
-        arguments.
+        *pattern*, *re*, and *constants_only*.  See :mod:`names` for a
+        description of those arguments.
 
         **Example:**
 
@@ -835,20 +942,7 @@ class SimRes(object):
            >>> sim.nametree('L*v') # doctest: +ELLIPSIS
            {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
         """
-        # This method has been copied and modified from DyMat version 0.5
-        # (Joerg Raedler,
-        # http://www.j-raedler.de/2011/09/dymat-reading-modelica-results-with-python/,
-        # BSD License).
-        root = {}
-        for name in self.names(pattern, re):
-            branch = root
-            elements = name.split('.')
-            for element in elements[:-1]:
-                if not element in branch:
-                    branch[element] = {}
-                branch = branch[element]
-            branch[elements[-1]] = name
-        return root
+        return util.tree(self.names(pattern, re, constants_only))
 
 
     def plot(self, ynames1=[], ylabel1=None, f1={}, legends1=[],
@@ -860,7 +954,7 @@ class SimRes(object):
              use_paren=True, **kwargs):
         """Plot variables as points and/or curves in 2D Cartesian coordinates.
 
-        The x axis may be time or any other variable (i.e., scatterplot).
+        The abscissa may be time or any other variable (i.e., scatterplot).
 
         **Arguments:**
 
@@ -945,7 +1039,7 @@ class SimRes(object):
            >>> sim = SimRes('examples/ChuaCircuit.mat')
            >>> sim.plot(ynames1='L.i', ylabel1="Current",
            ...          ynames2='L.der(i)', ylabel2="Derivative of current",
-           ...          title="Chua Circuit", label='examples/ChuaCircuit') # doctest: +ELLIPSIS
+           ...          title="Chua circuit", label='examples/ChuaCircuit') # doctest: +ELLIPSIS
            (<matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>)
 
            >>> save()
@@ -1203,7 +1297,7 @@ class SimRes(object):
 
         # Create a title if necessary.
         if title is None:
-            title = "Sankey Diagram of " + self.fbase()
+            title = "Sankey diagram of " + self.fbase()
 
         # Determine the units of the data.
         flow_unit = self(names).unit
@@ -1282,10 +1376,18 @@ class SimRes(object):
 
            >>> sim = SimRes('examples/ThreeTanks')
            >>> aliases = {'tank1.level': "Tank 1 level",
-                          'tank2.level': "Tank 2 level",
-                          'tank3.level': "Tank 3 level"}
+           ...            'tank2.level': "Tank 2 level",
+           ...            'tank3.level': "Tank 3 level"}
            >>> sim.to_pandas(aliases.keys(), aliases) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-
+                      Tank 1 level / m  Tank 2 level / m  Tank 3 level / m
+           Time / s
+           0.000000           8.000000          3.000000          3.000000
+           0.400000           7.974962          2.990460          3.034578
+           0.800000           7.950003          2.981036          3.068961
+           1.200000           7.925121          2.971729          3.103150
+           1.600000           7.900317          2.962539          3.137144
+           ...
+           [502 rows x 3 columns]
         """
         # Simple function to label a variable with its unit:
         label = lambda name, unit: name + ' / ' + unit
@@ -1325,8 +1427,11 @@ class SimRes(object):
     def __call__(self, names):
         """Access a list of variables by their names.
 
-        See :meth:`__getitem__` for the attributes and methods that can be
-        accessed via the return value.
+        See :meth:`__getitem__` for the attributes that can be accessed via the
+        return value.  The result of the corresponding attribute in this class
+        is a list of the results of the attribute of each variable.  The
+        attributes in this class accept the same call signature.
+        :meth:`arrays` in this class correponds to :meth:`Variable.array`.
 
         **Arguments**:
 
@@ -1389,15 +1494,7 @@ class SimRes(object):
         """Access a variable by name.
 
         The return value can be used to retrieve information about the variable.
-        It has the following attributes:
-
-        - *description* - The Modelica_ variable's description string
-
-        - *unit* - The Modelica_ variable's *unit* attribute
-
-        - *displayUnit* - The Modelica_ variable's *displayUnit* attribute
-
-        and methods:
+        It has the following methods:
 
         - :meth:`Variable.array` - Return an array of times and values for the
           variable.
@@ -1428,9 +1525,20 @@ class SimRes(object):
         - :meth:`Variable.RMS_AC` - Return the time-averaged AC-coupled root
           mean square value of the variable.
 
-        - :meth:`Variable.times` - Return sample times of the variable.
+        - :meth:`Variable.times` - Return the sample times of the variable.
 
-        - :meth:`Variable.values` - Return values of the variable.
+        - :meth:`Variable.value` - Return the value of the variable if it is
+          a constant (otherwise, error).
+
+        - :meth:`Variable.values` - Return the values of the variable.
+
+        and other attributes:
+
+        - *description* - The Modelica_ variable's description string
+
+        - *unit* - The Modelica_ variable's *unit* attribute
+
+        - *displayUnit* - The Modelica_ variable's *displayUnit* attribute
 
         **Examples:**
 
@@ -1443,7 +1551,7 @@ class SimRes(object):
            'V'
 
            >>> sim['L.v'].values(t=(10,25)) # doctest: +NORMALIZE_WHITESPACE
-
+           array([ 0.2108,  0.3046,  0.3904,  0.468 ], dtype=float32)
         """
         return variable
 
@@ -1495,7 +1603,354 @@ class SimRes(object):
            >>> print(sim) # doctest: +ELLIPSIS
            Modelica simulation results from "...ChuaCircuit.mat"
         """
-        return 'Modelica simulation results from "{f}"'.format(f=self.fname)
+        return "Modelica simulation results from {f}".format(f=self.fname)
+
+
+def _get_sims(fnames):
+    """Return a list of :class:`SimRes` instances from a list of filenames.
+
+    No errors are given unless no files could be loaded.
+    """
+    sims = []
+    for fname in fnames:
+        try:
+            sims.append(SimRes(fname))
+        except:
+            continue
+    assert len(sims) > 0, "No simulations were loaded."
+    return sims
+
+
+class SimResList(ResList):
+    """TODO
+note that len returns the number of simulations, not the number of variables in a simulation like for SimRes
+
+    See :meth:`__getitem__` for the attributes that can be accessed via the
+    return value.  The result of the corresponding attribute in this class
+    is a list of the results of the attribute of each variable.  The
+    attributes in this class accept the same call signature.
+    :meth:`arrays` in this class correponds to :meth:`Variable.array`.
+
+can use:
+pop
+del
+append
+indexing
+__delslice__
+equality test
+setitem
+setslice
+extend
+count (not useful though)
+index
+insert
+remove
+sort (sorts by filename)
+
+__add__
+__getslice__
+__radd__
+__mul__
+__rmul__
+__iadd__
+__imul__
+
+no support for comparison (>, >=, <=, or <)
+
+    """
+    # TODO: Add browse method to plot any common variable across all simulations.
+
+    def __init__(self, *args):
+        """Initialize as a list of :class:`SimRes` instances, loading files as
+        necessary.
+
+        Initialization signatures:
+
+        - :class:`SimResList`(): Returns an empty simulation list
+
+        - :class:`SimResList`(*sims*), where sims is a list of :class:`SimRes`
+          instances:  Casts the list into a :class:`SimResList`
+
+        - :class:`SimResList`(*filespec*), where *filespec* is a filename or
+          directory, possibly with wildcards a la `glob
+          <https://docs.python.org/2/library/glob.html>`_():  Returns a
+          :class:`SimResList` of :class:`SimRes` instances loaded from the
+          matching or contained files
+
+             The filename or directory must include the absolute path or be
+             resolved to the current directory.
+
+             An error is only raised if no files can be loaded.
+
+        - :class:`SimResList`(*filespec1*, *filespec2, ...): Loads all files
+          matching or contained by *filespec1*, *filespec2*, etc. as above.
+
+        **Example:**
+
+           >>> from modelicares import SimResList
+           >>> sims = SimResList('examples/ChuaCircuit/*/*.mat')
+        """
+        if not args:
+            list.__init__(self, [])
+        elif len(args) == 1 and isinstance(args[0], list):
+            # The argument is a list of SimRes instances.
+            for sim in args[0]:
+                assert isinstance(sim, SimRes), ("All entries in the list must "
+                                                 "be SimRes instances.")
+            list.__init__(self, args[0])
+        else:
+            print args
+            # The arguments are filenames or directories.
+
+            # Get a unique list of matching filenames.
+            fnames = set()
+            for arg in args:
+                assert isinstance(arg, basestring), ("The simulation list can "
+                    "only be initialized by providing a list of SimRes "
+                    "instances or a series of arguments, each of which is a "
+                    "filename or directory.")
+                if os.path.isdir(arg):
+                    fnames = fnames.union(set(glob(os.path.join(arg, '*.mat'))))
+                elif '*' in arg or '?' in arg or '[' in arg:
+                    fnames = fnames.union(set(glob(arg)))
+                else:
+                    fnames.add(arg)
+
+            # Load simulations from the filenames.
+            list.__init__(self, _get_sims(fnames))
+
+    def append(self, item):
+        """Add simulations to the end of the list.
+
+        **Arguments:**
+
+        - *item*: :class:`SimRes` instance or a file specification
+
+             The file specification may be a filename or directory, possibly
+             with wildcards a la `glob
+             <https://docs.python.org/2/library/glob.html>`_(), where simulation
+             results can be loaded by :class:`SimRes`.  The filename or
+             directory must include the absolute path or be resolved to the
+             current directory.  An error is only raised if no files can be
+             loaded.
+
+         Unlike the `append
+         <https://docs.python.org/2/tutorial/datastructures.html>`_ method of a
+         standard Python_ list, this method may add more than one item.  If
+         *item* is a directory or a wildcarded filename, it can match multiple
+         valid files.
+
+        TODO example
+        """
+        if isinstance(item, SimRes):
+            list.append(self, item)
+        else:
+            assert isinstance(item, basestring), ("The simulation list can ony "
+                "be appended by providing a SimRes instance, filename, or "
+                "directory.")
+
+            # Get the matching filenames.
+            if os.path.isdir(item):
+                fnames = glob(os.path.join(item, '*.mat'))
+            elif '*' in item or '?' in item or '[' in item:
+                fnames = glob(item)
+            else:
+                fnames = [item]
+
+            # Load simulations from the filenames.
+            self.extend(_get_sims(fnames))
+
+    def names(self, pattern=None, re=False, constants_only=False):
+        """TODO doc, example
+        """
+        sets = [set(sim.names(constants_only=constants_only)) for sim in self]
+        return util.match(list(set.intersection(*sets)), pattern, re)
+
+    def nametree(self, pattern=None, re=False, constants_only=False):
+        """Return a tree of the common variable names of the simulations based
+        on the Modelica_ model hierarchy.
+
+        The tree is returned as a nested dictionary.  The keys are the Modelica_
+        class instances (including the index if there are arrays) and the values
+        are are subclasses.  The value at the end of each branch is the full
+        variable name.
+
+        All names are included by default, but the names can be filtered using
+        *pattern*, *re*, and *constants_only*.  See :mod:`names` for a
+        description of those arguments.
+
+        **Example:**
+
+           >>> from modelicares import SimResList
+           >>> sims = SimResList('examples/ChuaCircuit/*/*.mat')
+           >>> sims.nametree('L*v') # doctest: +ELLIPSIS
+           {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
+        """
+        return util.tree(self.names(pattern, re, constants_only))
+
+    def unique_IVs(self, constants_only=False):
+        """TODO doc, example
+        """
+        unique_IVs = {}
+        for name in self.names(constants_only=constants_only):
+            IVs = self[name].IV()
+            if len(set(IVs)) > 1:
+                unique_IVs[name] = IVs
+        return unique_IVs
+
+    def unique_names(self):
+        """TODO doc, example
+
+        # return dictionary of names that aren't in all of the simulations
+        # keys are names
+        # values are Booleans indicating if each simulation has the variable.
+
+        """
+        sets = [set(sim.names(constants_only=constants_only)) for sim in self]
+        all_names = set.union(*sets)
+        unique_names = all_names - set(self.names())
+        return {name: [name in sim for sim in self] for name in unique_names}
+
+    def __contains__(self, item):
+        """TODO doc, note overloaded, example
+        """
+        if isinstance(item, basestring):
+            return all(item in sim for sim in self)
+        else:
+            return list.__contains__(self, item)
+
+    def __getitem__(self, item):
+        """TODO doc, example
+        can index by number (returns simulation)
+        or variable
+        """
+        if isinstance(item, basestring):
+            return _VarList([sim[item] for sim in self])
+        else:
+            return list.__getitem__(self, item)
+
+    def __str__(self):
+        """TODO doc, example
+        """
+        if len(self) == 0:
+            return "Empty list of simulation results"
+        elif len(self) == 1:
+            return ("List of simulation results (SimRes instance) from\n"
+                    + self[0].fname)
+        else:
+            basedir = self.basedir()
+            start = len(basedir) + 1
+            short_fnames = [fname[start:] for fname in self.fnames()]
+            string = ("List of simulation results (SimRes instances) from the "
+                      "following files")
+            string += "\nin the %s directory:\n   " % basedir if basedir else ":\n   "
+            string += "\n   ".join(short_fnames)
+            return string
+
+    def plot(self, *args, **kwargs):
+        """Plot data from the simulations in 2D Cartesian coordinates.
+
+        This method calls :meth:`simres.SimRes.plot` from the included instances
+        of :class:`simres.SimRes`.
+
+        A new figure is created if necessary.
+
+        **Arguments:**
+
+        - *suffixes*: Suffix or list of suffixes for the legends (see
+          :meth:`simres.SimRes.plot`)
+
+             If *suffixes* is *None*, then no suffix will be used.  If it is an
+             empty string (''), then the base filenames will be used.
+
+        - *color*: Single entry, list, or :class:`itertools.cycle` of colors that
+          will be used sequentially
+
+             Each entry may be a character, grayscale, or rgb value.
+
+             .. Seealso:: http://matplotlib.sourceforge.net/api/colors_api.html
+
+        - *dashes*: Single entry, list, or :class:`itertools.cycle` of dash styles
+          that will be used sequentially
+
+             Each style is a tuple of on/off lengths representing dashes.  Use
+             (0, 1) for no line and (None ,None) for a solid line.
+
+             .. Seealso:: http://matplotlib.sourceforge.net/api/collections_api.html
+
+        - \**args*, \*\**kwargs*: Propagated to :meth:`simres.SimRes.plot` (and
+          thus to :meth:`util.plot` and finally :meth:`matplotlib.pyplot.plot`)
+
+        **Returns:**
+
+        1. *ax1*: Primary y axes
+
+        2. *ax2*: Secondary y axes
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from glob import glob
+           >>> from modelicares import SimRes, multiplot, save
+
+           >>> sims = SimResList('examples/ChuaCircuit/*/*.mat')
+           >>> sims.plot(title="Chua circuit", label='examples/ChuaCircuits',
+           ...           suffixes=['L.L = %.0f H' % sim.get_IV('L.L')
+           ...                     for sim in sims], # Read legend parameters.
+           ...           ynames1='L.i', ylabel1="Current") # doctest: +ELLIPSIS
+           (<matplotlib.axes...AxesSubplot object at 0x...>, None)
+
+           >>> save()
+           Saved examples/ChuaCircuits.png
+
+        .. testsetup::
+           >>> import matplotlib.pyplot as plt
+           >>> plt.show()
+           >>> plt.close()
+
+       .. image:: ../examples/ChuaCircuits.png
+          :scale: 70 %
+          :alt: plot of Chua circuit with varying inductance
+        """
+        # Get the local arguments.
+        suffixes = kwargs.pop('suffixes', '')
+        color = kwargs.pop('color', ['b', 'g', 'r', 'c', 'm', 'y', 'k'])
+        dashes = kwargs.pop('dashes', [(None, None), (3, 3), (1, 1), (3, 2, 1, 2)])
+
+        # Set up the color(s) and dash style(s).
+        cyc = type(cycle([]))
+        if not isinstance(color, cyc):
+            if not iterable(color):
+                color = [color]
+            color = cycle(color)
+        kwargs['color'] = color
+        if not isinstance(dashes, cyc):
+            if not iterable(dashes[0]):
+                dashes = [dashes]
+            dashes = cycle(dashes)
+        kwargs['dashes'] = dashes
+
+        # Process the suffixes input.
+        if suffixes == '':
+            start = len(self.basedir())
+            suffixes = [sim.fname[start:].lstrip(os.sep) for sim in self]
+        elif suffixes is None:
+            suffixes = ['']*len(self)
+
+        # Generate the plots.
+        ax1, ax2 = self[0].plot(*args, suffix=suffixes[0], **kwargs)
+        kwargs.update({'ax1': ax1, 'ax2': ax2})
+        for sim, suffix in zip(self[1:], suffixes[1:]):
+            sim.plot(*args, suffix=suffix, **kwargs)
+        return ax1, ax2
+
+
+    def __call__(self, *args):
+        """TODO doc
+        """
+        raise TypeError("TODO suggestion to use __getitem__")
+
 
 
 if __name__ == '__main__':

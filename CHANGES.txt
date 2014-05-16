@@ -4,7 +4,10 @@ Change log
 The releases are numbered according to the `Semantic Versioning specification
 <http://semver.org>`_.
 
-v0.11.0_ (2014-*-**) -- Updates:
+v{version}_ ({date}) -- Updates:
+
+
+added :class:`SimResList`, :class:`LinResList` (based on previous :mod:`modelicares.multi`)
 
 added functions to plot()
 
