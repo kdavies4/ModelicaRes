@@ -301,36 +301,10 @@ class LinRes(object):
 
         **Example:**
 
-        .. code-block:: python
-
-           >>> from modelicares import LinRes, save
-           >>> from numpy import pi, logspace
-
-           >>> lin = LinRes('examples/PID.mat')
-           >>> lin.bode(label='examples/PID-bode', omega=2*pi*logspace(-2, 3),
-           ...          title="Bode Plot of Modelica.Blocks.Continuous.PID") # doctest: +ELLIPSIS
-           (<matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>)
-           >>> save()
-           Saved examples/PID-bode.pdf
-           Saved examples/PID-bode.png
-
-        .. testsetup::
-           >>> import matplotlib.pyplot as plt
-           >>> plt.show()
-           >>> plt.close()
-
-        .. only:: html
-
-           .. image:: ../examples/PID-bode.png
-              :scale: 70 %
-              :alt: example for LinRes.bode()
-
-        .. only:: latex
-
-           .. figure:: ../examples/PID-bode.pdf
-              :scale: 80 %
-
-              Results of example for :meth:`LinRes.bode`.
+        .. plot:: ../examples/PID-bode.py
+           :include-source:
+           :scale: 70 %
+           :alt: Bode plot of PID
         """
         # Create axes if necessary.
         if axes is None or (None, None):
@@ -430,38 +404,12 @@ class LinRes(object):
         1. *ax*: Axes of the Nyquist plot
 
         **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import LinRes, save
-           >>> from numpy import pi, logspace
-
-           >>> lin = LinRes('examples/PID.mat')
-           >>> lin.nyquist(label='examples/PID-nyquist',
-           ...             omega=2*pi*logspace(0, 3, 61), labelFreq=20,
-           ...             title="Nyquist Plot of Modelica.Blocks.Continuous.PID") # doctest: +ELLIPSIS
-           <matplotlib.axes...AxesSubplot object at 0x...>
-           >>> save()
-           Saved examples/PID-nyquist.pdf
-           Saved examples/PID-nyquist.png
-
-        .. testsetup::
-           >>> import matplotlib.pyplot as plt
-           >>> plt.show()
-           >>> plt.close()
-
-        .. only:: html
-
-           .. image:: ../examples/PID-nyquist.png
-              :scale: 70 %
-              :alt: example for LinRes.nyquist()
-
-        .. only:: latex
-
-           .. figure:: ../examples/PID-nyquist.pdf
-              :scale: 70 %
-
-              Results of example for :meth:`LinRes.nyquist`.
+        
+        .. plot:: ../examples/PID-nyquist.py
+           :include-source:
+           :scale: 70 %
+           :alt: Nyquist plot of PID
+           
         """
         # Create axes if necessary.
         if not ax:
@@ -673,43 +621,10 @@ class LinResList(ResList):
 
         **Example:**
 
-        .. code-block:: python
-
-           >>> import os
-
-           >>> from glob import glob
-           >>> from modelicares import LinRes, multibode, save, read_params
-           >>> from numpy import pi, logspace
-
-           >>> lins = LinRes('examples/PID/*/*.mat')
-           >>> labels = ["Ti=%g" % read_params('Ti', os.path.join(lin.dir, 'dsin.txt'))
-           ...           for lin in lins]
-           >>> multibode(title="Bode Plot of Modelica.Blocks.Continuous.PID",
-           ...           label='examples/PIDs-bode', omega=2*pi*logspace(-2, 3),
-           ...           labels=labels, leg_kwargs=dict(loc='lower right')) # doctest: +ELLIPSIS
-           (<matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>)
-
-           >>> save()
-           Saved examples/PIDs-bode.pdf
-           Saved examples/PIDs-bode.png
-
-        .. testsetup::
-           >>> import matplotlib.pyplot as plt
-           >>> plt.show()
-           >>> plt.close()
-
-        .. only:: html
-
-           .. image:: ../examples/PIDs-bode.png
-              :scale: 70 %
-              :alt: Bode plot of PID with varying parameters
-
-        .. only:: latex
-
-           .. figure:: ../examples/PIDs-bode.pdf
-              :scale: 70 %
-
-              Bode plot of PID with varying parameters
+        .. plot:: ../examples/PIDs-bode.py
+           :include-source:
+           :scale: 70 %
+           :alt: Bode plot of PID with varying parameters
         """
         # Create axes if necessary.
         if not axes:
@@ -815,44 +730,10 @@ class LinResList(ResList):
 
         **Example:**
 
-        .. code-block:: python
-
-           >>> import os
-
-           >>> from glob import glob
-           >>> from modelicares import LinRes, multinyquist, save, read_params
-           >>> from numpy import pi, logspace
-
-           >>> lins = LinRes('examples/PID/*/*.mat')
-           >>> labels = ["Td=%g" % read_params('Td', os.path.join(lin.dir, 'dsin.txt'))
-           ...           for lin in lins]
-           >>> multinyquist(title="Nyquist Plot of Modelica.Blocks.Continuous.PID",
-           ...              label='examples/PIDs-nyquist', textFreq=True,
-           ...              omega=2*pi*logspace(-1, 3, 81), labelFreq=20,
-           ...              labels=labels) # doctest: +ELLIPSIS
-           <matplotlib.axes...AxesSubplot object at 0x...>
-
-           >>> save()
-           Saved examples/PIDs-nyquist.pdf
-           Saved examples/PIDs-nyquist.png
-
-        .. testsetup::
-           >>> import matplotlib.pyplot as plt
-           >>> plt.show()
-           >>> plt.close()
-
-        .. only:: html
-
-           .. image:: ../examples/PIDs-nyquist.png
-              :scale: 70 %
-              :alt: Nyquist plot of PID with varying parameters
-
-        .. only:: latex
-
-           .. figure:: ../examples/PIDs-nyquist.pdf
-              :scale: 70 %
-
-              Nyquist plot of PID with varying parameters
+        .. plot:: ../examples/PIDs-nyquist.py
+           :include-source:
+           :scale: 70 %
+           :alt: Nyquist plot of PID with varying parameters
         """
         # Create axes if necessary.
         if not ax:

@@ -21,7 +21,7 @@
 #     it is always True
 # 11. Both plotting functions now only accept a single system (sys instead of
 #     syslist).
-# 12. Using modelicares.texunit.number_str to label the axes
+# 12. Using modelicares.texunit.number_label to label the axes
 # 13. Removed color as argument to nyquist_plot(); deferring to *args and
 #     **kwargs
 
@@ -66,7 +66,7 @@ import matplotlib.pyplot as plt
 from control.ctrlutil import unwrap
 from control.freqplot import default_frequency_range
 from modelicares.util import get_pow1000, si_prefix, add_hlines, add_vlines
-from modelicares.texunit import number_str
+from modelicares.texunit import number_label
 
 
 def bode_plot(sys, omega=None, dB=False, Hz=False, deg=True, label=None,
@@ -157,7 +157,7 @@ def bode_plot(sys, omega=None, dB=False, Hz=False, deg=True, label=None,
     # Add a grid and labels.
     axes[1].grid(True)
     axes[1].grid(True, which='minor')
-    axes[1].set_xlabel(number_str("Frequency" , "Hz" if Hz else "rad/s"))
+    axes[1].set_xlabel(number_label("Frequency" , "Hz" if Hz else "rad/s"))
     axes[1].set_ylabel("Phase / deg" if deg else "Phase / rad")
 
     return mag, phase, omega, axes

@@ -17,7 +17,7 @@ classes from its submodules.  These are:
   :class:`~linres.LinRes`, :class:`~linres.LinResList`
 
 - To label numbers and quantities (:mod:`~modelicares.texunit` module):
-  :meth:`~texunit.number_str`, :meth:`~texunit.quantity_str`, and
+  :meth:`~texunit.number_label`, :meth:`~texunit.quantity_str`, and
   :meth:`~texunit.unit2tex`
 
 - Supporting classes and functions (:mod:`~modelicares.util` module):
@@ -26,7 +26,8 @@ classes from its submodules.  These are:
   :meth:`~util.load_csv`, :meth:`~util.save`, :meth:`~util.saveall`, and
   :meth:`~util.setup_subplots`
 
-There is also one function defined here (see below).
+A function is also provided to load multiple simulation and linearization
+results at once (see below).
 
 
 .. _Modelica: http://www.modelica.org/
@@ -45,41 +46,40 @@ __version__ = "0.11.0"
 from modelicares.simres import SimRes, SimResList
 from modelicares.linres import LinRes, LinResList
 from modelicares.util import (add_arrows, add_hlines, add_vlines, ArrowLine,
-    closeall, figure, load_csv, save, saveall, setup_subplots)
-from modelicares.exps import (Experiment, gen_experiments, ParamDict,
-    read_params, run_models, write_params, write_script, doe)
-from modelicares.texunit import number_str, quantity_str, unit2tex
+                              closeall, figure, load_csv, save, saveall,
+                              setup_subplots)
+from modelicares.exps import (doe, Experiment, gen_experiments, ParamDict,
+                              read_params, run_models, write_params,
+                              write_script)
+from modelicares.texunit import number_label, quantity_str, unit2tex
 
 
-def load(locations='*'):
+def load(*args):
     """Load multiple Modelica_ simulation and/or linearization results.
 
-    This function will load as many of the matching filenames as possible.  No
-    errors will be given for files that cannot be loaded.
+    This function can be called with any number of arguments, each of which is
+    a filename or directory with results to load.  The filenames or directory
+    names may contain wildcards.  Each path must be absolute or resolved to the
+    current directory.
 
-    **Arguments:**
-
-    - *locations*: Filename, directory, or list of these from which to load the
-      files
-
-         Wildcards ('*') are accepted.
+    As many of the matching filenames will be loaded as possible.  Errors will
+    only be given for I/O issues or for exact filenames that cannot be loaded.
+    If a file is specified via a wildcard or a directory (with or without
+    wildcards) and it cannot be loaded, it will simply be skipped.
 
     **Returns:**
 
-    1. List of simulations (:class:`simres.SimRes` instances)
+    1. :class:`simres.SimResList` of simulations
 
-    2. List of linearizations (:class:`linres.LinRes` instances)
+    2. :class:linres.LinResList` of linearizations
 
     Either may be an empty list.
 
     **Example:**
 
-    We can use this function in conjuction with methods from
-    :class:`~modelicares.simres.Info` to conveniently retrieve information from
-    multiple simulations.
-
     .. code-block:: python
 
+    TODO: update
        >>> from modelicares import multiload
        >>> from modelicares.simres import Info
 
@@ -96,31 +96,52 @@ def load(locations='*'):
        [10, 18]
     """
 
-    # Generate a list of files.
-    fnames = []
-    if isinstance(locations, basestring):
-        locations = [locations]
-    for location in locations:
-        if os.path.isdir(location):
-            fnames += glob(os.path.join(location, '*.mat'))
+    import os
+    from glob import glob
+
+    def add(isexact, fnames):
+        """Add filenames (*fnames*) as keys in a dictionary if they are truly
+        filenames (not directories).  The value indicates if the filename was
+        specified exactly (without wildcards or via directory).
+        """
+        for fname in fnames:
+            if os.path.isfile(fname):
+                isexact[fname] = isexact.get(fname, False)
+        return isexact
+
+    # Get a unique list of matching filenames.
+    isexact = {} # Keys are filenames; values indicate if the filename is exact.
+    for arg in args:
+        if os.path.isdir(arg):
+            isexact = add(isexact, glob(os.path.join(arg, '*.mat')))
+        elif '*' in arg or '?' in arg or '[' in arg:
+            isexact = add(isexact, glob(arg))
         else:
-            if '*' in location or '?' in location or '[' in location:
-                fnames += glob(location)
-            else:
-                fnames.append(location)
+            isexact[arg] = True
 
     # Load the files and append each result onto the appropriate list.
-    sims = []
-    lins = []
-    for fname in fnames:
+    sims = SimResList()
+    lins = LinResList()
+    for (fname, must_load) in isexact.items():
         try:
             sims.append(SimRes(fname))
-        except (IOError, TypeError):
-            continue
+        except IOError:
+            raise IOError('"%s" could not be accessed.' % fname)
         except:
-            lins.append(LinRes(fname))
+            try:
+                lins.append(LinRes(fname))
+            except IOError:
+                raise IOError('"%s" could not be accessed.' % fname)
+            except:
+                if must_load:
+                    raise TypeError('"%s" could not be loaded as a simulation '
+                          'or linearization result.  For more information, try '
+                          'loading it with SimRes or LinRes directly.' % fname)
+                else:
+                    continue
 
     return sims, lins
+
 
 if __name__ == '__main__':
     """Test the contents of this file."""

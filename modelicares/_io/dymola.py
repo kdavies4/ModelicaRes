@@ -42,7 +42,6 @@ from collections import namedtuple
 from scipy.io import loadmat
 from control.matlab import ss
 
-from modelicares.util import chars_to_str
 from modelicares.simres import _VarDict, _select, _apply_function, _swap
 from modelicares.simres import Variable as GenericVariable
 
@@ -137,6 +136,15 @@ class Variable(GenericVariable):
         # The docstring has been copied from modelicares.simres.Variable.values.
         # Keep it updated there.
         return self.samples.times
+
+
+def chars_to_str(str_arr):
+    """Convert a string array to a string.
+
+    Remove trailing whitespace and null characters.  Convert from latin-1 to
+    utf-8 encoding, since SciPy assumes latin-1 and Dymola uses utf-8.
+    """
+    return ''.join(str_arr).rstrip().rstrip('\x00').encode('latin-1').decode('utf-8')
 
 
 def read(fname, constants_only=False):
@@ -284,14 +292,15 @@ def loadsim(fname, constants_only=False):
             try:
                 d = (mat['data_%i' % current_data_set].T  if transposed else
                      mat['data_%i' % current_data_set])
-                times = d[:, 0]
-                for i, (data_set, name) in enumerate(zip(data_sets, names)):
-                    if data_set == current_data_set:
-                        sign_col = dataInfo[1, i]
-                        variables[name] = Variable(Samples(times,
-                                                           d[:, abs(sign_col)-1],
-                                                           sign_col < 0),
-                                                   *parse(description[:, i]))
+                if d.shape[1] > 1:
+                    times = d[:, 0]
+                    for i, (data_set, name) in enumerate(zip(data_sets, names)):
+                        if data_set == current_data_set:
+                            sign_col = dataInfo[1, i]
+                            variables[name] = Variable(Samples(times,
+                                                               d[:, abs(sign_col)-1],
+                                                               sign_col < 0),
+                                                       *parse(description[:, i]))
                 current_data_set += 1
             except KeyError:
                 break # There are no more "data_i" variables.

@@ -19,15 +19,13 @@ import modelicares
 doctest.testfile('tests/tests.txt')
 
 # Doctests from the modules
-doctest.testmod(modelicares._freqplot)
-doctest.testmod(modelicares._gui)
+#TODO enable doctest.testmod(modelicares._freqplot)
+#TODO enable doctest.testmod(modelicares._gui)
 doctest.testmod(modelicares._io)
 doctest.testmod(modelicares._io.dymola)
 doctest.testmod(modelicares.exps)
 doctest.testmod(modelicares.exps.doe)
-doctest.testmod(modelicares._freqplot)
 doctest.testmod(modelicares.linres)
-#doctest.testmod(modelicares.multi)
 doctest.testmod(modelicares.simres)
 doctest.testmod(modelicares.texunit)
-doctest.testmod(modelicares.util)
+#TODO enable doctest.testmod(modelicares.util)

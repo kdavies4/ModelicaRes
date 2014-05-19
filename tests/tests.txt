@@ -25,9 +25,13 @@ array([[  0.        ,   0.        ],
 'degC'
 
 >>> round(sim['Ro.R'].value())
+0.0125
 
->>> sim['L.v'].value()
-
+>>> sim['L.v'].value() # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+Traceback (most recent call last):
+...
+ValueError: The variable is not a constant.  Use values() instead of value().
+    
 >>> round(sim(['C1.v', 'L.v']).FV())
 [2.42098355, -0.25352862]
 

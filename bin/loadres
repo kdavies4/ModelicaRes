@@ -56,23 +56,23 @@ import os
 import time
 
 from sys import argv
-from PyQt4.QtGui import QApplication, QFileDialog, QMessageBox, QPushButton
+from PySide.QtGui import QApplication, QFileDialog, QMessageBox, QPushButton
 
-from modelicares.multi import multiload
+from modelicares import load
 
 
 default_path = os.path.expanduser("~/Documents/Modelica")
 
-def file_or_folder():
-    """Launch a GUI to choose to load from a file or folder.
+def files_or_folder():
+    """Launch a GUI to choose to load from files or a folder.
     """
-    # TODO: Make the buttons appear in order: File, Folder, and Cancel.
+    # TODO: Make the buttons appear in order: Files, Folder, and Cancel.
     msgBox = QMessageBox()
-    msgBox.setText("Do you want to open one file\nor all files from a folder?")
+    msgBox.setText("Do you want to open selected files\nor all files from a folder?")
     msgBox.addButton(Folder, QMessageBox.AcceptRole)
-    msgBox.addButton(File, QMessageBox.AcceptRole)
+    msgBox.addButton(Files, QMessageBox.AcceptRole)
     msgBox.addButton(QMessageBox.Cancel)
-    msgBox.setDefaultButton(File)
+    msgBox.setDefaultButton(Files)
     msgBox.exec_()
     return msgBox.clickedButton()
 
@@ -89,23 +89,26 @@ if __name__ == '__main__':
     # Determine the file location(s).
     if len(argv) == 1:
         app = QApplication([])
-        File = QPushButton("File")
+        Files = QPushButton("Files")
         Folder = QPushButton("Folder")
-        choice = file_or_folder()
-        if choice == File:
-            getFile = QFileDialog().getOpenFileName
-            loc = str(getFile(None, "Choose a Modelica results file",
-                              default_path, "*.mat"))
+        choice = files_or_folder()
+        if choice == Files:
+            getFiles = QFileDialog.getOpenFileNames
+            loc = getFiles(None, "Choose Modelica results files.",
+                           default_path, "*.mat")
+# TODO handle if multiple files.
         elif choice == Folder:
-            getDir = QFileDialog().getExistingDirectory
-            loc = str(getDir(None, "Choose a folder with Modelica results",
-                             default_path))
+            getDir = QFileDialog.getExistingDirectory
+            loc, __ = getDir(None, "Choose a folder with Modelica results.",
+                             default_path)
+            loc = list(loc)
         else:
             app.exit()
             delayed_exit()
         app.exit()
         if not loc:
             delayed_exit()
+        del Files, Folder
     #elif argv[1] == '--test':
     #    import shelldoctest
     #    shelldoctest.testmod()
@@ -114,35 +117,32 @@ if __name__ == '__main__':
         loc = argv[1:]
 
     # Load the file(s).
-    sims, lins = multiload(loc)
+    sims, lins = load(*loc)
 
     # Handle the simulation list.
-    n_sims = len(sims)
-    if n_sims == 1:
+    nsims = len(sims)
+    if nsims == 1:
         sim = sims[0]
         del sims
-        print("A simulation result has been loaded into sim.")
-    elif n_sims > 1:
-        print("Simulation results have been loaded into sims[0] through "
-              "sims[%i]." % (n_sims-1)))
+        print("\nA simulation result has been loaded into sim (a SimRes instance).")
+    elif nsims > 1:
+        print("\n%i simulation results have been loaded into sims (a SimResList)." % nsims)
 
     # Handle the linearization list.
-    n_lins = len(lins)
-    if n_lins == 1:
+    nlins = len(lins)
+    if nlins == 1:
         lin = lins[0]
         del lins
-        print("A linearization result has been loaded into lin.")
-    elif n_lins > 1:
-        print("Linearization results have been loaded into lins[0] through "
-              "lins[%i]." % (n_lins-1)))
-    elif n_sims == 0:
-        print("No files were loaded.")
+        print("A linearization result has been loaded into lin (a LinRes instance).\n")
+    elif nlins > 1:
+        print("%i linearization results have been loaded into lins (a LinResList).\n" % nlins)
+    elif nlins == 0:
+        print("No files were loaded.\n")
         delayed_exit()
 
     # Delete some variables to reduce clutter in the Python session below.
-    del (time, sys, QApplication, QFileDialog, QMessageBox, QPushButton, File,
-         Folder, loc, default_path, n_sims, n_lins, delayed_exit,
-         file_or_folder)
+    del (time, argv, QFileDialog, QMessageBox, QPushButton, loc,
+         default_path, nsims, nlins, delayed_exit, files_or_folder)
 
     # Embed an IPython or standard Python interpreter.
     #    Based on
@@ -150,7 +150,7 @@ if __name__ == '__main__':
     #    accessed 2010/11/2
     from pylab import *
     from modelicares import *
-    from modelicares.util import embed
+
     try:
         # IPython
         from IPython import embed

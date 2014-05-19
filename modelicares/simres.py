@@ -34,7 +34,7 @@ from scipy.interpolate import interp1d
 
 from modelicares import util
 from modelicares._res import ResList
-from modelicares.texunit import unit2tex, number_str
+from modelicares.texunit import unit2tex, number_label
 
 
 def _select(f):
@@ -802,9 +802,10 @@ class SimRes(object):
 
         **Example:**
 
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.browse()
+        TODO: re-enable
+           >>> #from modelicares import SimRes
+           >>> #sim = SimRes('examples/ChuaCircuit.mat')
+           >>> #sim.browse()
 
         .. only:: html
 
@@ -1038,37 +1039,10 @@ class SimRes(object):
 
         **Example:**
 
-        .. code-block:: python
-
-           >>> from modelicares import SimRes, save
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.plot(ynames1='L.i', ylabel1="Current",
-           ...          ynames2='L.der(i)', ylabel2="Derivative of current",
-           ...          title="Chua circuit", label='examples/ChuaCircuit') # doctest: +ELLIPSIS
-           (<matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>)
-
-           >>> save()
-           Saved examples/ChuaCircuit.pdf
-           Saved examples/ChuaCircuit.png
-
-        .. testsetup::
-           >>> import matplotlib.pyplot as plt
-           >>> plt.show()
-           >>> plt.close()
-
-        .. only:: html
-
-           .. image:: ../examples/ChuaCircuit.png
-              :scale: 70 %
-              :alt: plot of Chua circuit
-
-        .. only:: latex
-
-           .. figure:: ../examples/ChuaCircuit.pdf
-              :scale: 70 %
-
-              Plot of Chua circuit
+        .. plot:: ../examples/ChuaCircuit.py
+           :include-source:
+           :scale: 70 %
+           :alt: plot of Chua circuit
         """
         # Note:  ynames1 is the first argument (besides self) so that plot()
         # can be called with simply a variable name.
@@ -1099,14 +1073,14 @@ class SimRes(object):
                 if len(set(units)) == 1:
                     # The  units are the same, so show the 1st one on the axis.
                     if ylabel != "":
-                        ylabel = number_str(ylabel, units[0])
+                        ylabel = number_label(ylabel, units[0])
                 else:
                     # Show the units in the legend.
                     if legends:
                         for i, unit in enumerate(units):
-                            legends[i] = number_str(legends[i], unit)
+                            legends[i] = number_label(legends[i], unit)
                     else:
-                        legends = [number_str(entry, unit) for entry, unit in
+                        legends = [number_label(entry, unit) for entry, unit in
                                    zip(ynames, units)] + list(f)
 
             return ylabel, legends
@@ -1131,7 +1105,7 @@ class SimRes(object):
             # With Dymola 7.4, the description of the time variable will be
             # "Time in", which isn't good.
         if xlabel != "":
-            xlabel = number_str(xlabel, self[xname].unit)
+            xlabel = number_label(xlabel, self[xname].unit)
 
         # Generate the y-axis labels and sets of legend entries.
         ylabel1, legends1 = ystrings(ynames1, ylabel1, legends1, f1)
@@ -1257,41 +1231,10 @@ class SimRes(object):
 
         **Example:**
 
-        .. code-block:: python
-
-           >>> from modelicares import SimRes, save
-
-           >>> sim = SimRes('examples/ThreeTanks')
-           >>> sankeys = sim.sankey(label='examples/ThreeTanks',
-           ...     title="Sankey Diagrams of Modelica.Fluid.Examples.Tanks.ThreeTanks",
-           ...     times=[0, 50, 100, 150], n_rows=2, format='%.1f ',
-           ...     names=['tank1.ports[1].m_flow', 'tank2.ports[1].m_flow',
-           ...            'tank3.ports[1].m_flow'],
-           ...     labels=['Tank 1', 'Tank 2', 'Tank 3'],
-           ...     orientations=[-1, 0, 1],
-           ...     scale=0.1, margin=6, offset=1.5,
-           ...     pathlengths=2, trunklength=10)
-           >>> save()
-           Saved examples/ThreeTanks.pdf
-           Saved examples/ThreeTanks.png
-
-        .. testsetup::
-           >>> import matplotlib.pyplot as plt
-           >>> plt.show()
-           >>> plt.close()
-
-        .. only:: html
-
-           .. image:: ../examples/ThreeTanks.png
-              :scale: 70 %
-              :alt: Sankey digarams of three-tank model
-
-        .. only:: latex
-
-           .. figure:: ../examples/ThreeTanks.pdf
-              :scale: 70 %
-
-              Sankey digarams of three-tank model
+        .. plot:: ../examples/ThreeTanks.py
+           :include-source:
+           :scale: 70 %
+           :alt: Sankey diagram of three tanks
         """
         from matplotlib.sankey import Sankey
 

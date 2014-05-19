@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """Functions to format numbers to support LaTeX_
 
-- :meth:`number_str` - Return a string to indicate a quantity in a unit
+- :meth:`number_label` - Return a string to indicate a quantity in a unit
 
 - :meth:`quantity_str` - Return a string to represent a quantity as a number
   times a unit
@@ -37,8 +37,8 @@ rpls = [(re.compile(rpl[0]), rpl[1])
          ('epsilon', r'\epsilon')]]
 
 
-def number_str(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
-    r"""Return a string to indicate a quantity in a unit
+def number_label(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
+    r"""Return a string to label a number, specifically a quantity in a unit
 
     The unit is formatted with LaTeX_ as needed.
 
@@ -68,7 +68,7 @@ def number_str(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
          If the unit is not a simple scaling factor, then "in" is used instead.
          For example,
 
-            >>> number_str("Gain", "dB")
+            >>> number_label("Gain", "dB")
             'Gain in $dB$'
 
     - *roman*: *True*, if the units should be typeset in Roman text (rather
@@ -76,12 +76,12 @@ def number_str(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
 
     **Examples:**
 
-       >>> number_str("Mobility", "m2/(V.s)", roman=True)
+       >>> number_label("Mobility", "m2/(V.s)", roman=True)
        'Mobility$\\,/\\,\\mathrm{m^{2}\\,V^{-1}\\,s^{-1}}$'
 
        in LaTeX_: Mobility :math:`\,/\,\mathrm{m^{2}\,V^{-1}\,s^{-1}}`
 
-       >>> number_str("Mole fraction", "1")
+       >>> number_label("Mole fraction", "1")
        'Mole fraction'
 
     .. _Modelica: http://www.modelica.org/

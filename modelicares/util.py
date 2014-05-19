@@ -18,9 +18,6 @@
 - :meth:`add_vlines` - Add vertical lines to a set of axes with optional
   labels.
 
-- :meth:`chars_to_str` - Convert a string array to a string and remove trailing
-  whitespace.
-
 - :meth:`color` - Plot 2D scalar data on a color axis in 2D Cartesian
   coordinates.
 
@@ -92,8 +89,8 @@ from matplotlib import rcParams
 from matplotlib._pylab_helpers import Gcf
 from matplotlib.cbook import iterable
 from matplotlib.lines import Line2D
-from PyQt4.QtGui import QApplication, QFileDialog
 from re import compile as re_compile
+from PySide.QtGui import QFileDialog
 
 
 # Function to close all open figures
@@ -126,41 +123,23 @@ def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
 
     **Example:**
 
-    .. code-block:: python
+    .. plot::
+       :scale: 70 %
+       :alt: example of add_arrows()
 
-       >>> import numpy as np
-       >>> import matplotlib.pyplot as plt
-       >>> from modelicares import *
+       import numpy as np
+       import matplotlib.pyplot as plt
+       from modelicares import *
 
-       >>> # Create a plot.
-       >>> figure('examples/add_arrows') # doctest: +ELLIPSIS
-       <matplotlib.figure.Figure object at 0x...>
-       >>> x = np.arange(100)
-       >>> p = plt.plot(x, np.sin(x/4.0))
+       # Create a plot.
+       figure('examples/add_arrows')
+       x = np.arange(100)
+       p = plt.plot(x, np.sin(x/4.0))
 
-       >>> # Add arrows and annotations.
-       >>> add_arrows(p[0], x_locs=x.take(np.arange(20,100,20)),
-       ...            label="Incr. time", xstar_offset=-0.15)
-       >>> save()
-       Saved examples/add_arrows.pdf
-       Saved examples/add_arrows.png
-
-    .. testsetup::
-       >>> plt.show()
-       >>> plt.close()
-
-    .. only:: html
-
-       .. image:: ../examples/add_arrows.png
-          :scale: 70 %
-          :alt: example of add_arrows()
-
-    .. only:: latex
-
-       .. figure:: ../examples/add_arrows.pdf
-          :scale: 70 %
-
-          Example of :meth:`add_arrows`
+       # Add arrows and annotations.
+       add_arrows(p[0], x_locs=x.take(np.arange(20,100,20)),
+                  label="Incr. time", xstar_offset=-0.15)
+       plt.show()
     """
     from math import atan, cos, sin
 
@@ -357,13 +336,6 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
     for i, label in enumerate(labels):
         ax.text(positions[i], ypos, label, backgroundcolor='w',
                 horizontalalignment='center', verticalalignment='center')
-
-def chars_to_str(str_arr, codec='latin-1'):
-    """Convert a string array to a string.
-
-    Remove trailing whitespace and null characters.  Encode using *codec*.
-    """
-    return ''.join(str_arr).rstrip().rstrip('\x00').encode(codec)
 
 def color(ax, c, *args, **kwargs):
     """Plot 2D scalar data on a color axis in 2D Cartesian coordinates.
@@ -1023,33 +995,34 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
     plt.axis([l-pad*dx, r+pad*dx, b-pad*dy, t+pad*dy])
     return p
 
-def _get_directory(message="Choose a directory for the images"):
-    """Return a directory chosen by the user.
-    """
-    app = QApplication([])
-    getDir = QFileDialog().getExistingDirectory
-    chosen_directory = str(getDir(None, message))
-    app.exit(0)
 
-def save(formats=['pdf', 'png'], fbase='1'):
-    """Save the current figure as images in a format or list of formats.
+def save(formats=['pdf', 'png'], fname=None, fig=None):
+    """Save a figure in an image format or list of formats.
 
-    The directory and base filenames are taken from the *label* property of the
-    figures.  A slash ("/") can be used as a path separator, even if the
-    operating system is Windows.  Folders are created as needed.  If the *label*
-    property is empty, then a directory dialog is opened to chose a directory.
+    The base filename (with directory if necessary but without extension) is
+    determined in this order of priority:
+
+    1. *fname* argument if it is not *None*
+    2. the *label* property of the figure, if it is not empty
+    3. the response from a file dialog
+
+    A forward slash ("/") can be used as a path separator, even if the operating
+    system is Windows.  Folders are created as needed.
 
     **Arguments:**
 
     - *formats*: Format or list of formats in which the figure should be saved
 
-    - *fbase*: Default directory and base filename
+    - *fname*: Filename (see above)
 
-         This is used if the *label* attribute of the figure is empty ('').
+    - *fig*: `matplotlib <http://matplotlib.org/api/figure_api.html>`_ figure
+      or list of figures to be saved
+
+           If *fig* is *None* (default), then the current figure will be saved.
 
     .. Note::  In general, :meth:`save` should be called before
-       :meth:`matplotlib.pyplot.show` so that the figure(s) are still present
-       in memory.
+       :meth:`matplotlib.pyplot.show` so that the figure(s) are still present in
+       memory.
 
     **Example:**
 
@@ -1073,37 +1046,39 @@ def save(formats=['pdf', 'png'], fbase='1'):
     .. Note::  The :meth:`figure` method can be used to directly create a
        figure with a label.
     """
-    # If formats is a singleton, turn it into a list.
-    if not type(formats) is list:
-        formats = [formats,]
+    # Get the figures.
+    if fig is None:
+        fig = plt.gcf()
 
-    # Find the figure.
-    fig = plt.gcf()
-
-    # Save the figures, creating folders as necessary.
-    (directory, fbase_fig) = os.path.split(plt.getp(fig, 'label'))
-    if not fbase_fig:
-        if not directory:
-            directory = _get_directory()
-            if not directory:
+    # Get the filename.
+    if not fname:
+        fname = fig.get_label()
+        if not fname:
+            fname, __ = QFileDialog.getSaveFileName(None,
+                                                    "Choose a base filename.")
+            if not fname:
+                print("Cancelled.")
                 return
-    else:
-        fbase = fbase_fig
-    if directory and not os.path.isdir(directory):
-        os.mkdir(directory)
-    for format in formats:
-        fname = os.path.join(directory, fbase + '.' + format)
-        fig.savefig(fname, format=format)
-        print("Saved " + fname)
+
+    # Create folders if necessary.
+    directory = os.path.dirname(fname)
+    if directory and not os.path.exists(directory):
+        os.makedirs(directory)
+
+    # Save in the desired formats.
+    for fmt in list(formats):
+        full_name = fname + '.' + fmt
+        fig.savefig(full_name)
+        print("Saved " + full_name)
+
 
 def saveall(formats=['pdf', 'png']):
     """Save all open figures as images in a format or list of formats.
 
-    The directory and base filenames are taken from the *label* property of the
-    figures.  A slash ("/") can be used as a path separator, even if the
-    operating system is Windows.  Folders are created as needed.  If the *label*
-    property is empty, then a directory dialog is opened to chose a directory.
-    In that case, the figures are saved as a sequence of numbers.
+    The directory and base filenames (without extension) are taken from the
+    *label* property of the present figures.  If a figure has an empty *label*,
+    then a file dialog is opened to choose the filename.  Note that the
+    :meth:`figure` method can be used to directly create a figure with a label.
 
     **Arguments:**
 
@@ -1131,37 +1106,15 @@ def saveall(formats=['pdf', 'png']):
     .. testsetup::
        >>> plt.show()
        >>> plt.close()
-
-    .. Note::  The :meth:`figure` method can be used to directly create a
-       figure with a label.
     """
-    # If formats is a singleton, turn it into a list.
-    if not type(formats) is list:
-        formats = [formats,]
 
-    # Find the figures.
+    # Get the figures.
     figs = [manager.canvas.figure for manager in Gcf.figs.values()]
 
-    # Save the figures, creating folders as necessary.
-    chosen_directory = None
-    i = 0
+    # Save the figures.
     for fig in figs:
-        (directory, fbase) = os.path.split(plt.getp(fig, 'label'))
-        if not fbase:
-            fbase = str(i)
-            i += 1
-            if not directory:
-                if not chosen_directory:
-                    chosen_directory = _get_directory()
-                    if not chosen_directory:
-                        return
-                directory = chosen_directory
-        if directory and not os.path.isdir(directory):
-            os.mkdir(directory)
-        for format in formats:
-            fname = os.path.join(directory, fbase + '.' + format)
-            fig.savefig(fname, format=format)
-            print("Saved " + fname)
+        save(formats, fig=fig)
+
 
 def setup_subplots(n_plots, n_rows, title="", subtitles=None,
                    label="multiplot",
@@ -1407,12 +1360,12 @@ def shift_scale_x(ax, eagerness=0.325):
     .. code-block:: python
 
        >>> import numpy as np
-       >>> from texunit import number_str
+       >>> from texunit import number_label
        >>> from modelicares import *
 
        >>> # Generate some random data.
        >>> x = np.linspace(55478, 55486, 100) # Small range and large offset
-       >>> xlabel = number_str('Time', 's')
+       >>> xlabel = number_label('Time', 's')
        >>> y = np.cumsum(np.random.random(100) - 0.5)
 
        >>> # Plot the data.
@@ -1483,7 +1436,7 @@ def shift_scale_y(ax, eagerness=0.325):
     .. code-block:: python
 
        >>> import numpy as np
-       >>> from texunit import number_str
+       >>> from texunit import number_label
        >>> from modelicares import *
 
        >>> # Generate some random data.
@@ -1492,7 +1445,7 @@ def shift_scale_y(ax, eagerness=0.325):
        >>> y -= y.min()
        >>> y *= 1e-3
        >>> y += 1e3 # Small magnitude and large offset
-       >>> ylabel = number_str('Velocity', 'mm/s')
+       >>> ylabel = number_label('Velocity', 'mm/s')
 
        >>> # Plot the data.
        >>> ax = setup_subplots(2, 2, label='examples/shift_scale_y')[0]
@@ -1658,7 +1611,7 @@ class ArrowLine(Line2D):
            >>> line = ArrowLine(t, s, color='b', ls='-', lw=2, arrow='>',
            ...                  arrowsize=20)
            >>> ax.add_line(line) # doctest: +ELLIPSIS
-           <modelicares.util.ArrowLine object at 0x...>
+           <....ArrowLine object at 0x...>
            >>> ax.set_xlim(-3, 3)
            (-3, 3)
            >>> ax.set_ylim(-3, 3)

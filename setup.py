@@ -41,7 +41,7 @@ setup(name='ModelicaRes',
       install_requires=['numpy', 'scipy>=0.10.0', 'matplotlib>=1.3.1', 'pandas',
                         'control'],
       requires=['numpy', 'scipy (>=0.10.0)', 'matplotlib (>=1.3.1)', 'pandas',
-                'PyQt4', 'control'],
+                'PySide', 'control'],
       platforms='any',
       )
       # This package may run with scipy as early as 0.7.0.  However, the control
