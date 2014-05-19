@@ -54,6 +54,8 @@ Some of the required packages may not install automatically.
 - [PyQt] can be downloaded from
   http://www.riverbankcomputing.co.uk/software/pyqt/download.
 - [wxPython] can be downloaded from http://www.wxpython.org/download.php.
+  However, it is only required for the
+  [variable browser](http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.browse).
 
 The [matplotlibrc](matplotlibrc) file has some recommended revisions to
 [matplotlib]'s defaults.  To use it, copy it to the working directory or

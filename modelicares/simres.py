@@ -33,7 +33,6 @@ from scipy.integrate import trapz as integral
 from scipy.interpolate import interp1d
 
 from modelicares import util
-from modelicares._gui import Browser
 from modelicares._res import ResList
 from modelicares.texunit import unit2tex, number_str
 
@@ -819,7 +818,14 @@ class SimRes(object):
               :scale: 80 %
               :alt: variable browser
         """
-        import wx
+        try:
+            import wx
+        except ImportError:
+            raise ImportError("wx (aka wxPython) must be installed to used the "
+                              "variable browser.  It is available at "
+                              "http://www.wxpython.org/")
+
+        from modelicares._gui import Browser
 
         def do_work():
             """Launch the broswer."""
@@ -1699,7 +1705,6 @@ no support for comparison (>, >=, <=, or <)
                                                  "be SimRes instances.")
             list.__init__(self, args[0])
         else:
-            print args
             # The arguments are filenames or directories.
 
             # Get a unique list of matching filenames.

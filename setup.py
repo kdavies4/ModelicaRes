@@ -39,9 +39,9 @@ setup(name='ModelicaRes',
                 'Dymola', 'matplotlib', 'pandas'],
       provides=['modelicares'],
       install_requires=['numpy', 'scipy>=0.10.0', 'matplotlib>=1.3.1', 'pandas',
-                        'wxPython', 'control'],
+                        'control'],
       requires=['numpy', 'scipy (>=0.10.0)', 'matplotlib (>=1.3.1)', 'pandas',
-                'PyQt4', 'wxPython', 'control'],
+                'PyQt4', 'control'],
       platforms='any',
       )
       # This package may run with scipy as early as 0.7.0.  However, the control

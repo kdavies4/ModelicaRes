@@ -20,6 +20,7 @@ import numpy as np
 
 from control.matlab import ss
 from functools import wraps
+from glob import glob
 from matplotlib.cbook import iterable
 from scipy.signal import ss2tf
 
@@ -732,14 +733,14 @@ class LinResList(ResList):
         n_styles = len(styles)
 
         # Create the plots.
-        style = styles[np.mod(i, n_styles)]
-        if isinstance(style, basestring):
-            kwargs['linestyle'] = style
-            kwargs.pop('dashes', None)
-        else:
-            kwargs['dashes'] = style
-            kwargs.pop('linestyle', None)
         for i, (lin, label) in enumerate(zip(self, labels)):
+            style = styles[np.mod(i, n_styles)]
+            if isinstance(style, basestring):
+                kwargs['linestyle'] = style
+                kwargs.pop('dashes', None)
+            else:
+                kwargs['dashes'] = style
+                kwargs.pop('linestyle', None)
             if lin.sys.inputs > 1 or lin.sys.outputs > 1:
                 sys = self._to_siso(pair[0], pair[1])
             else:

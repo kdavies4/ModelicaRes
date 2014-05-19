@@ -53,9 +53,11 @@ Some of the required packages may not install automatically.
 
   - The SciPy_ stack, including matplotlib_ and pandas_, can be installed
     according to the instructions at http://www.scipy.org/install.html.
-  - PyQt4_  can be downloaded from
+  - PyQt4_ can be downloaded from
     http://www.riverbankcomputing.co.uk/software/pyqt/download.
   - wxPython_ can be downloaded from http://www.wxpython.org/download.php.
+    However, it is only required for the `variable browser
+    <http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.browse>`_.
 
 The *matplotlibrc* file in the base folder has some recommended revisions to
 matplotlib_'s defaults.  To use it, copy it to the working directory or

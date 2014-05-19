@@ -63,13 +63,12 @@ and matrix functions from NumPy_.
   functions.  Others must be accessed through their submodules.  The
   :mod:`modelicares.simres` submodule has classes to load, analyze, and plot
   simulation results.  The :mod:`modelicares.linres` submodule has a class to
-  load, analyze, and plot results from linearizing a model.  The
-  :mod:`modelicares.multi` submodule has functions to load and plot results from
-  multiple data files at once. The :mod:`modelicares.exps` submodule has tools
-  to set up and manage simulation experiments.  The :mod:`modelicares.texunit`
-  submodule has functions to translate Modelica_ *unit* and *displayUnit*
-  strings into LaTeX_-formatted strings.  The last submodule,
-  :mod:`modelicares.util`, has general supporting functions.
+  load, analyze, and plot results from linearizing model(s).  The
+  :mod:`modelicares.exps` submodule has tools to set up and manage simulation
+  experiments.  The :mod:`modelicares.texunit` submodule has functions to
+  translate Modelica_ *unit* and *displayUnit* strings into LaTeX_-formatted
+  strings.  The last submodule, :mod:`modelicares.util`, has general supporting
+  functions and classes.
 
   For a list of changes, please see the `change log <Changelog.html>`_.
 
@@ -96,9 +95,11 @@ and matrix functions from NumPy_.
 
   - The SciPy_ stack, including matplotlib_ and pandas_, can be installed
     according to the instructions at http://www.scipy.org/install.html.
-  - PyQt4_  can be downloaded from
+  - PyQt4_ can be downloaded from
     http://www.riverbankcomputing.co.uk/software/pyqt/download.
   - wxPython_ can be downloaded from http://www.wxpython.org/download.php.
+    However, it is only required for the `variable browser
+    <simres.html#modelicares.simres.SimRes.browse>`_.
 
   The `matplotlibrc file
   <https://github.com/kdavies4/ModelicaRes/blob/release/matplotlibrc>`_ has some
