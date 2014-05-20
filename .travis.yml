@@ -12,7 +12,7 @@ virtualenv:
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq libatlas-dev libatlas-base-dev liblapack-dev gfortran
-  - sudo apt-get -q install python-numpy python-scipy python-matplotlib ipython python-pandas libwxgtk2.8-0 python-wxtools python-easygui python-pyside
+  - sudo apt-get -q install python-numpy python-scipy python-matplotlib ipython python-pandas libwxgtk2.8-0 python-wxtools python-pyside python-qt4
   - sudo pip install control
 
 install:
