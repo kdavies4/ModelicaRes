@@ -1,17 +1,6 @@
 #!/usr/bin/python
 # Top-level test to run all tests on ModelicaRes.
 
-# TODO: Add test for bin/loadres.  If not, place warning here.
-
-# Run the doc tests and recreate the example images.
-#(
-#    cd bin
-#    ln -s ../examples examples
-#    python loadres --test
-#    rm examples
-#)
-#python modelicares/__init__.py
-
 import doctest
 import modelicares
 
@@ -29,3 +18,5 @@ doctest.testmod(modelicares.linres)
 doctest.testmod(modelicares.simres)
 doctest.testmod(modelicares.texunit)
 #TODO enable doctest.testmod(modelicares.util)
+
+print("The bin/loadres script must be tested manually.")

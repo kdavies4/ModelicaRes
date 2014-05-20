@@ -62,10 +62,8 @@ def load(*args):
     names may contain wildcards.  Each path must be absolute or resolved to the
     current directory.
 
-    As many of the matching filenames will be loaded as possible.  Errors will
-    only be given for I/O issues or for exact filenames that cannot be loaded.
-    If a file is specified via a wildcard or a directory (with or without
-    wildcards) and it cannot be loaded, it will simply be skipped.
+    As many of the matching filenames will be loaded as possible.  No errors
+    will be given for files that cannot be loaded.
 
     **Returns:**
 
@@ -99,46 +97,29 @@ def load(*args):
     import os
     from glob import glob
 
-    def add(isexact, fnames):
-        """Add filenames (*fnames*) as keys in a dictionary if they are truly
-        filenames (not directories).  The value indicates if the filename was
-        specified exactly (without wildcards or via directory).
-        """
-        for fname in fnames:
-            if os.path.isfile(fname):
-                isexact[fname] = isexact.get(fname, False)
-        return isexact
-
     # Get a unique list of matching filenames.
-    isexact = {} # Keys are filenames; values indicate if the filename is exact.
+    fnames = set()
     for arg in args:
         if os.path.isdir(arg):
-            isexact = add(isexact, glob(os.path.join(arg, '*.mat')))
+            fnames = fnames.union(set(glob(os.path.join(arg, '*.mat'))))
         elif '*' in arg or '?' in arg or '[' in arg:
-            isexact = add(isexact, glob(arg))
+            fnames = fnames.union(set(glob(arg)))
         else:
-            isexact[arg] = True
+            fnames.add(arg)
 
     # Load the files and append each result onto the appropriate list.
     sims = SimResList()
     lins = LinResList()
-    for (fname, must_load) in isexact.items():
+    for fname in fnames:
         try:
             sims.append(SimRes(fname))
         except IOError:
-            raise IOError('"%s" could not be accessed.' % fname)
+            continue
         except:
             try:
                 lins.append(LinRes(fname))
-            except IOError:
-                raise IOError('"%s" could not be accessed.' % fname)
             except:
-                if must_load:
-                    raise TypeError('"%s" could not be loaded as a simulation '
-                          'or linearization result.  For more information, try '
-                          'loading it with SimRes or LinRes directly.' % fname)
-                else:
-                    continue
+                continue
 
     return sims, lins
 

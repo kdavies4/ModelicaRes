@@ -1,5 +1,5 @@
 #!/bin/bash
-# List the TODO tags in the Python files.
+# List the TODO tags in various project files.
 
 locations="*.py modelicares/*.py modelicares/*/*.py bin/* CHANGES.txt"
 
