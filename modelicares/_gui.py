@@ -12,6 +12,7 @@ import wx
 from matplotlib import rcParams
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 from matplotlib.figure import Figure
+from six import string_types
 
 from modelicares.texunit import unit2tex
 
@@ -88,7 +89,7 @@ class Browser(wx.Frame):
             """
             for key in branches.keys():
                 data = wx.TreeItemData()
-                if isinstance(branches[key], basestring):
+                if isinstance(branches[key], string_types):
                     data.SetData(branches[key])
                     subbranch = self.tree.AppendItem(branch, key, data=data)
                 else:

@@ -23,6 +23,7 @@ from functools import wraps
 from glob import glob
 from matplotlib.cbook import iterable
 from scipy.signal import ss2tf
+from six import string_types
 
 from modelicares import util
 from modelicares._freqplot import bode_plot, nyquist_plot
@@ -334,7 +335,7 @@ class LinRes(object):
         # Create the plots.
         for i, (iu, iy) in enumerate(pairs):
             style = styles[np.mod(i, n_styles)]
-            if isinstance(style, basestring):
+            if isinstance(style, string_types):
                 kwargs['linestyle'] = style
                 kwargs.pop('dashes', None)
             else:
@@ -404,12 +405,12 @@ class LinRes(object):
         1. *ax*: Axes of the Nyquist plot
 
         **Example:**
-        
+
         .. plot:: ../examples/PID-nyquist.py
            :include-source:
            :scale: 70 %
            :alt: Nyquist plot of PID
-           
+
         """
         # Create axes if necessary.
         if not ax:
@@ -498,7 +499,7 @@ class LinResList(ResList):
             # Get a unique list of matching filenames.
             fnames = set()
             for arg in args:
-                assert isinstance(arg, basestring), ("The linearization list "
+                assert isinstance(arg, string_types), ("The linearization list "
                     "can only be initialized by providing a list of LinRes "
                     "instances or a series of arguments, each of which is a "
                     "filename or directory.")
@@ -518,7 +519,7 @@ class LinResList(ResList):
         if isinstance(item, LinRes):
             list.append(self, item)
         else:
-            assert isinstance(item, basestring), ("The linearization list can "
+            assert isinstance(item, string_types), ("The linearization list can "
                 "only be appended by providing a LinRes instance, filename, or "
                 "directory.")
 
@@ -650,7 +651,7 @@ class LinResList(ResList):
         # Create the plots.
         for i, (lin, label) in enumerate(zip(self, labels)):
             style = styles[np.mod(i, n_styles)]
-            if isinstance(style, basestring):
+            if isinstance(style, string_types):
                 kwargs['linestyle'] = style
                 kwargs.pop('dashes', None)
             else:

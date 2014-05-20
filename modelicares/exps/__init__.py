@@ -68,13 +68,15 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import re
 import numpy as np
-import modelicares.util as util
-import doe
 
 from itertools import count
 from collections import namedtuple
 from datetime import date
+from six import string_types
 from types import GeneratorType
+
+import modelicares.util as util
+from . import doe
 
 
 Experiment = namedtuple('Experiment', ['model', 'params', 'args'])
@@ -358,7 +360,7 @@ def read_params(names, fname='dsin.txt'):
                 "Parameter %s does not exist or is not formatted as expected "
                 "in %s." % (name, fname))
 
-    if isinstance(names, basestring):
+    if isinstance(names, string_types):
         return _read_param(names)
     else:
         return [_read_param(name) for name in names]
@@ -491,7 +493,7 @@ def write_params(params, fname='dsin.txt'):
             params[key] = 1 if value else 0
         assert not isinstance(value, np.ndarray), ("Arrays must be split "
             "into scalars for the simulation initialization file.")
-        assert not isinstance(value, basestring), ("Strings cannot be "
+        assert not isinstance(value, string_types), ("Strings cannot be "
             "used as values in the simulation initialization file.")
 
     # Aliases for some regular subexpressions

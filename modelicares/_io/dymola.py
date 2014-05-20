@@ -188,7 +188,7 @@ def read(fname, constants_only=False):
                         'result file.  The "Aclass" variable is '
                         'missing.'.format(f=fname))
 
-    return mat, map(chars_to_str, Aclass)
+    return mat, [chars_to_str(line) for line in Aclass]
 
 
 def loadsim(fname, constants_only=False):
@@ -272,8 +272,8 @@ def loadsim(fname, constants_only=False):
     if version == '1.0':
         d = mat['data'].T if transposed else mat['data']
         times = d[:, 0]
-        names = map(chars_to_str, (mat['names'].T if transposed else
-                                   mat['names']).astype('|S10'))
+        names = [chars_to_str(line)
+                 for line in (mat['names'].T if transposed else mat['names'])]
         variables = {name: Variable(Samples(times, d[:, i], False), '', '', '')
                      for i, name in enumerate(names)}
         variables = _VarDict(variables)
@@ -283,8 +283,8 @@ def loadsim(fname, constants_only=False):
                                   'supported.'.format(v=version))
         dataInfo = mat['dataInfo'] if transposed else mat['dataInfo'].T
         description = mat['description'] if transposed else mat['description'].T
-        names = map(chars_to_str, (mat['name'].T if transposed else
-                                   mat['name']).astype('|S10'))
+        names = [chars_to_str(line)
+                 for line in (mat['name'].T if transposed else mat['name'])]
         data_sets = dataInfo[0, :]
         current_data_set = 1
         variables = _VarDict()

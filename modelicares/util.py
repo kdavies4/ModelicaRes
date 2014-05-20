@@ -90,6 +90,7 @@ from matplotlib._pylab_helpers import Gcf
 from matplotlib.cbook import iterable
 from matplotlib.lines import Line2D
 from re import compile as re_compile
+from six import string_types
 from PySide.QtGui import QFileDialog
 
 
@@ -694,8 +695,8 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
 
     # Read the header row and create the dictionary from it.
     for i in range(header_row):
-        reader.next()
-    keys = reader.next()
+        next(reader)
+    keys = next(reader)
     data = dict.fromkeys(keys)
     #print("The keys are: ")
     #print(keys)
@@ -703,12 +704,12 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
     # Read the data.
     if first_data_row:
         for row in range(first_data_row - header_row - 1):
-            reader.next()
+            next(reader)
     if types:
         for i, (key, column, t) in enumerate(zip(keys, zip(*reader), types)):
             # zip(*reader) groups the data by columns.
             try:
-                if isinstance(t, basestring):
+                if isinstance(t, string_types):
                     data[key] = column
                 elif isinstance(t, (float, int)):
                     data[key] = np.array(map(t, column))
@@ -908,20 +909,20 @@ def plot(y, x=None, ax=None, label=None,
     if x is None:
         # There is no x data; plot y vs its indices.
         plots = [ax.plot(yi, label=None if label is None else label[i],
-                         color=color.next(), marker=marker.next(),
-                         dashes=dashes.next(), **kwargs)
+                         color=next(color), marker=next(marker),
+                         dashes=next(dashes), **kwargs)
                  for i, yi in enumerate(y)]
     elif not iterable(x[0]):
         # There is only one x series; use it repeatedly.
         plots = [ax.plot(x, yi, label=None if label is None else label[i],
-                         color=color.next(), marker=marker.next(),
-                         dashes=dashes.next(), **kwargs)
+                         color=next(color), marker=next(marker),
+                         dashes=next(dashes), **kwargs)
                  for i, yi in enumerate(y)]
     else:
         # There is a x series for each y series.
         plots = [ax.plot(xi, yi, label=None if label is None else label[i],
-                         color=color.next(), marker=marker.next(),
-                         dashes=dashes.next(), **kwargs)
+                         color=next(color), marker=next(marker),
+                         dashes=next(dashes), **kwargs)
                  for i, (xi, yi) in enumerate(zip(x, y))]
 
     return plots

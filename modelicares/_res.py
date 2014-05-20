@@ -47,10 +47,18 @@ class ResList(list):
         """TODO add doc from list"""
         return list.__add__(self, *args, **kwargs)
 
-    @cast_sametype
-    def __getslice__(self, *args, **kwargs):
+    def __getitem__(self, i):
         """TODO add doc from list"""
-        return list.__getslice__(self, *args, **kwargs)
+        if isinstance(i, slice):
+            return type(self)(list.__getitem__(self, i))
+        else:
+            return list.__getitem__(self, i)
+
+    # TODO is this needed in Python2.7?
+    #@cast_sametype
+    #def __getslice__(self, *args, **kwargs):
+    #    """TODO add doc from list"""
+    #    return list.__getslice__(self, *args, **kwargs)
 
     @cast_sametype
     def __mul__(self, *args, **kwargs):
@@ -104,6 +112,8 @@ class ResList(list):
         return self
 
     # Remove support for some list methods that are no longer applicable.
+    def sort(self, other):
+        raise AttributeError("'%s' object has no attribute 'sort'" % self.__class__.name)
     def __ge__(self, other):
         raise AttributeError("'%s' object has no attribute '__ge__'" % self.__class__.name)
     def __gt__(self, other):

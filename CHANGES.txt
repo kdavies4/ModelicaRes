@@ -6,6 +6,8 @@ The releases are numbered according to the `Semantic Versioning specification
 
 v{version}_ ({date}) -- Updates:
 
+now supports Python3
+
 made wx optional (only required for variable browser)
 
 TODO: finish

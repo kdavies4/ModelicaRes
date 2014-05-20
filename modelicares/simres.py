@@ -31,6 +31,7 @@ from matplotlib.pyplot import figlegend
 from pandas import DataFrame
 from scipy.integrate import trapz as integral
 from scipy.interpolate import interp1d
+from six import string_types
 
 from modelicares import util
 from modelicares._res import ResList
@@ -649,7 +650,7 @@ class SimRes(object):
             variable name, then pass it to the original function and return the
             result upwards.
             """
-            if isinstance(names, basestring):
+            if isinstance(names, string_types):
                 return f(self, names, *args, **kwargs)
             else:
                 return [wrapped(self, name, *args, **kwargs) for name in names]
@@ -914,7 +915,7 @@ class SimRes(object):
         else:
             names = list(self._variables)
 
-        return util.match(names, pattern, re)
+        return list(util.match(names, pattern, re))
 
 
     def n_constants(self):
@@ -1403,12 +1404,12 @@ class SimRes(object):
             """Create a (possibly nested) list of data entries given a (possibly
             nested) list of variable names.
             """
-            if isinstance(names, basestring):
+            if isinstance(names, string_types):
                 return self._variables[names]
             else:
                 return [entries(name) for name in names] # Recursion
 
-        if isinstance(names, basestring):
+        if isinstance(names, string_types):
             return self._variables[names]
         else:
             return _VarList(entries(names))
@@ -1641,22 +1642,12 @@ no support for comparison (>, >=, <=, or <)
         """
         if not args:
             list.__init__(self, [])
-        elif len(args) == 1 and isinstance(args[0], list):
-            # The argument is a list of SimRes instances.
-            for sim in args[0]:
-                assert isinstance(sim, SimRes), ("All entries in the list must "
-                                                 "be SimRes instances.")
-            list.__init__(self, args[0])
-        else:
+        elif isinstance(args[0], string_types):
             # The arguments are filenames or directories.
 
             # Get a unique list of matching filenames.
             fnames = set()
             for arg in args:
-                assert isinstance(arg, basestring), ("The simulation list can "
-                    "only be initialized by providing a list of SimRes "
-                    "instances or a series of arguments, each of which is a "
-                    "filename or directory.")
                 if os.path.isdir(arg):
                     fnames = fnames.union(set(glob(os.path.join(arg, '*.mat'))))
                 elif '*' in arg or '?' in arg or '[' in arg:
@@ -1666,6 +1657,15 @@ no support for comparison (>, >=, <=, or <)
 
             # Load simulations from the filenames.
             list.__init__(self, _get_sims(fnames))
+
+        elif len(args) == 1:
+            # The argument is a list or iterable of SimRes instances.
+            sims = list(args[0])
+            for sim in sims:
+                assert isinstance(sim, SimRes), ("All entries in the list must "
+                                                 "be SimRes instances.")
+            list.__init__(self, sims)
+
 
     def append(self, item):
         """Add simulations to the end of the list.
@@ -1693,7 +1693,7 @@ no support for comparison (>, >=, <=, or <)
         if isinstance(item, SimRes):
             list.append(self, item)
         else:
-            assert isinstance(item, basestring), ("The simulation list can ony "
+            assert isinstance(item, string_types), ("The simulation list can ony "
                 "be appended by providing a SimRes instance, filename, or "
                 "directory.")
 
@@ -1712,7 +1712,7 @@ no support for comparison (>, >=, <=, or <)
         """TODO doc, example
         """
         sets = [set(sim.names(constants_only=constants_only)) for sim in self]
-        return util.match(list(set.intersection(*sets)), pattern, re)
+        return list(util.match(list(set.intersection(*sets)), pattern, re))
 
     def nametree(self, pattern=None, re=False, constants_only=False):
         """Return a tree of the common variable names of the simulations based
@@ -1762,20 +1762,21 @@ no support for comparison (>, >=, <=, or <)
     def __contains__(self, item):
         """TODO doc, note overloaded, example
         """
-        if isinstance(item, basestring):
+        if isinstance(item, string_types):
             return all(item in sim for sim in self)
         else:
             return list.__contains__(self, item)
 
-    def __getitem__(self, item):
+    def __getitem__(self, i):
         """TODO doc, example
         can index by number (returns simulation)
         or variable
         """
-        if isinstance(item, basestring):
-            return _VarList([sim[item] for sim in self])
+        if isinstance(i, string_types):
+            return _VarList([sim[i] for sim in self])
         else:
-            return list.__getitem__(self, item)
+            item = list.__getitem__(self, i)
+            return SimResList(item) if isinstance(i, slice) else item
 
     def __str__(self):
         """TODO doc, example
@@ -1887,10 +1888,10 @@ no support for comparison (>, >=, <=, or <)
             suffixes = ['']*len(self)
 
         # Generate the plots.
-        ax1, ax2 = self[0].plot(*args, suffix=suffixes[0], **kwargs)
-        kwargs.update({'ax1': ax1, 'ax2': ax2})
-        for sim, suffix in zip(self[1:], suffixes[1:]):
-            sim.plot(*args, suffix=suffix, **kwargs)
+        for i, (sim, suffix) in enumerate(zip(self, suffixes)):
+            ax1, ax2 = sim.plot(*args, suffix=suffix, **kwargs)
+            if i == 0:
+                kwargs.update({'ax1': ax1, 'ax2': ax2})
         return ax1, ax2
 
 
