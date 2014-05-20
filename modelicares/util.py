@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """Classes and functions to help plot and interpret experimental data
 
-
 **Classes:**
 
 - :class:`ArrowLine` - A matplotlib subclass to draw an arrowhead on a line
@@ -17,6 +16,9 @@
 
 - :meth:`add_vlines` - Add vertical lines to a set of axes with optional
   labels.
+
+- :meth:`cast_sametype` - Decorator to cast the output of a method as an instance of
+  the containing class
 
 - :meth:`color` - Plot 2D scalar data on a color axis in 2D Cartesian
   coordinates.
@@ -82,6 +84,7 @@ import matplotlib.pyplot as plt
 from collections import MutableMapping
 from decimal import Decimal
 from fnmatch import fnmatchcase
+from functools import wraps
 from glob import glob
 from itertools import cycle
 from math import floor
@@ -124,23 +127,8 @@ def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
 
     **Example:**
 
-    .. plot::
-       :scale: 70 %
+    .. plot:: tests/util.add_arrows.py
        :alt: example of add_arrows()
-
-       import numpy as np
-       import matplotlib.pyplot as plt
-       from modelicares import *
-
-       # Create a plot.
-       figure('examples/add_arrows')
-       x = np.arange(100)
-       p = plt.plot(x, np.sin(x/4.0))
-
-       # Add arrows and annotations.
-       add_arrows(p[0], x_locs=x.take(np.arange(20,100,20)),
-                  label="Incr. time", xstar_offset=-0.15)
-       plt.show()
     """
     from math import atan, cos, sin
 
@@ -200,52 +188,15 @@ def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
 
     - *labels*: List of labels for the lines
 
-    - \*\**kwargs*: Line properties (propagated to
+    - *\*\*kwargs*: Line properties (propagated to
       :meth:`matplotlib.pyplot.axhline`)
 
          E.g., ``color='k', linestyle='--', linewidth=0.5``
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> import numpy as np
-       >>> import matplotlib.pyplot as plt
-       >>> from modelicares import *
-
-       >>> # Create a plot.
-       >>> figure('examples/add_hlines') # doctest: +ELLIPSIS
-       <matplotlib.figure.Figure object at 0x...>
-       >>> x = np.arange(100)
-       >>> y = np.sin(x/4.0)
-       >>> plt.plot(x, y) # doctest: +ELLIPSIS
-       [<matplotlib.lines.Line2D object at 0x...>]
-       >>> plt.ylim([-1.2, 1.2])
-       (-1.2, 1.2)
-
-       >>> # Add horizontal lines and labels.
-       >>> add_hlines(positions=[min(y), max(y)], labels=["min", "max"],
-       ...            color='r', ls='--')
-       >>> save()
-       Saved examples/add_hlines.pdf
-       Saved examples/add_hlines.png
-
-    .. testsetup::
-       >>> plt.show()
-       >>> plt.close()
-
-    .. only:: html
-
-       .. image:: ../examples/add_hlines.png
-          :scale: 70 %
-          :alt: example of add_hlines()
-
-    .. only:: latex
-
-       .. figure:: ../examples/add_hlines.pdf
-          :scale: 70 %
-
-          Example of :meth:`add_hlines`
+    .. plot:: tests/util.add_hlines.py
+       :alt: example of add_hlines()
     """
     # Process the inputs.
     if not ax:
@@ -275,52 +226,15 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
 
     - *labels*: List of labels for the lines
 
-    - \*\**kwargs*: Line properties (propagated to
+    - *\*\*kwargs*: Line properties (propagated to
       :meth:`matplotlib.pyplot.axvline`)
 
          E.g., ``color='k', linestyle='--', linewidth=0.5``
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> import numpy as np
-       >>> import matplotlib.pyplot as plt
-       >>> from modelicares import *
-
-       >>> # Create a plot.
-       >>> figure('examples/add_vlines') # doctest: +ELLIPSIS
-       <matplotlib.figure.Figure object at 0x...>
-       >>> x = np.arange(100)
-       >>> y = np.sin(x/4.0)
-       >>> plt.plot(x, y) # doctest: +ELLIPSIS
-       [<matplotlib.lines.Line2D object at 0x...>]
-       >>> plt.ylim([-1.2, 1.2])
-       (-1.2, 1.2)
-
-       >>> # Add horizontal lines and labels.
-       >>> add_vlines(positions=[25, 50, 75], labels=["A", "B", "C"],
-       ...            color='k', ls='--')
-       >>> save()
-       Saved examples/add_vlines.pdf
-       Saved examples/add_vlines.png
-
-    .. testsetup::
-       >>> plt.show()
-       >>> plt.close()
-
-    .. only:: html
-
-       .. image:: ../examples/add_vlines.png
-          :scale: 70 %
-          :alt: example of add_vlines()
-
-    .. only:: latex
-
-       .. figure:: ../examples/add_vlines.pdf
-          :scale: 70 %
-
-          Example of :meth:`add_vlines`
+    .. plot:: tests/util.add_vlines.py
+       :alt: example of add_vlines()
     """
     # Process the inputs.
     if not ax:
@@ -338,6 +252,20 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
         ax.text(positions[i], ypos, label, backgroundcolor='w',
                 horizontalalignment='center', verticalalignment='center')
 
+
+def cast_sametype(f):
+    """Decorator to cast the output of a method as an instance of the
+    containing class.
+    """
+    @wraps(f)
+    def wrapped(self, *args, **kwargs):
+        """Function that casts its output as self.__class__
+        """
+        return self.__class__(f(self, *args, **kwargs))
+
+    return wrapped
+
+
 def color(ax, c, *args, **kwargs):
     """Plot 2D scalar data on a color axis in 2D Cartesian coordinates.
 
@@ -349,44 +277,13 @@ def color(ax, c, *args, **kwargs):
 
     - *c*: color- or c-axis data (2D array)
 
-    - \**args*, \*\**kwargs*: Additional arguments for
+    - *\*args*, *\*\*kwargs*: Additional arguments for
       :meth:`matplotlib.pyplot.imshow`
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> import numpy as np
-       >>> from modelicares import *
-
-       >>> fig = figure('examples/color') # doctest: +ELLIPSIS
-       >>> x, y = np.meshgrid(np.arange(0, 2*np.pi, 0.2),
-       ...                    np.arange(0, 2*np.pi, 0.2))
-       >>> c = np.cos(x) + np.sin(y)
-       >>> ax = fig.add_subplot(111)
-       >>> color(ax, c) # doctest: +ELLIPSIS
-       <matplotlib.image.AxesImage object at 0x...>
-       >>> save()
-       Saved examples/color.pdf
-       Saved examples/color.png
-
-    .. testsetup::
-       >>> import matplotlib.pyplot as plt
-       >>> plt.show()
-       >>> plt.close()
-
-    .. only:: html
-
-       .. image:: ../examples/color.png
-          :scale: 70 %
-          :alt: example of color()
-
-    .. only:: latex
-
-       .. figure:: ../examples/color.pdf
-          :scale: 70 %
-
-          Example of :meth:`color`
+    .. plot:: tests/util.color.py
+       :alt: example of color()
     """
     return ax.imshow(c, *args, **kwargs)
 
@@ -416,7 +313,7 @@ def figure(label='', *args, **kwargs):
 
     - *label*: String to apply to the figure's *label* property
 
-    - \**args*, \*\**kwargs*: Additional arguments for
+    - *\*args*, *\*\*kwargs*: Additional arguments for
       :meth:`matplotlib.pyplot.figure`
 
     **Example:**
@@ -677,7 +574,7 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
          made to cast each column into :class:`int`, :class:`float`, and
          :class:`str` (in that order).
 
-    - \*\**kwargs*: Additional arguments for :meth:`csv.reader`
+    - *\*\*kwargs*: Additional arguments for :meth:`csv.reader`
 
     **Example:**
 
@@ -730,7 +627,7 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
     return data
 
 
-def match(strings, pattern, re):
+def match(strings, pattern=None, re=False):
     r"""Reduce a list of strings to those that match a pattern.
 
     By default, all of the strings are returned.
@@ -774,18 +671,21 @@ def match(strings, pattern, re):
     **Example:**
 
        >>> from modelicares.util import match
-       >>> match(["apple", "orange", "banana"], '*e')
-       ["apple", "orange"]
+       >>> match(['apple', 'orange', 'banana'], '*e')
+       ['apple', 'orange']
+
+
+    .. _Modelica: http://www.modelica.org/
     """
     if pattern is None or (pattern in ['.*', '.+', '.', '.?', ''] if re
                            else pattern == '*'):
-        return strings # Shortcut
+        return list(strings) # Shortcut
     else:
         if re:
             matcher = re_compile(pattern).search
         else:
             matcher = lambda name: fnmatchcase(name, pattern)
-        return filter(matcher, strings)
+        return list(filter(matcher, strings))
 
 
 def plot(y, x=None, ax=None, label=None,
@@ -843,42 +743,14 @@ def plot(y, x=None, ax=None, label=None,
 
          .. Seealso:: http://matplotlib.sourceforge.net/api/collections_api.html
 
-    - \*\**kwargs*: Additional arguments for :meth:`matplotlib.pyplot.plot`
+    - *\*\*kwargs*: Additional arguments for :meth:`matplotlib.pyplot.plot`
 
     **Returns:** List of :class:`matplotlib.lines.Line2D` objects
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> import numpy as np
-       >>> from modelicares import *
-
-       >>> fig = figure('examples/plot') # doctest: +ELLIPSIS
-       >>> ax = fig.add_subplot(111)
-       >>> plot([range(11), range(10, -1, -1)], ax=ax) # doctest: +ELLIPSIS
-       [[<matplotlib.lines.Line2D object at 0x...>], [<matplotlib.lines.Line2D object at 0x...>]]
-       >>> save()
-       Saved examples/plot.pdf
-       Saved examples/plot.png
-
-    .. testsetup::
-       >>> import matplotlib.pyplot as plt
-       >>> plt.show()
-       >>> plt.close()
-
-    .. only:: html
-
-       .. image:: ../examples/plot.png
-          :scale: 70 %
-          :alt: example of plot()
-
-    .. only:: latex
-
-       .. figure:: ../examples/plot.pdf
-          :scale: 70 %
-
-          Example of :meth:`plot`
+    .. plot:: tests/util.plot.py
+       :alt: example of plot()
     """
     # Create axes if necessary.
     if not ax:
@@ -946,45 +818,12 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
 
     - *pivot*: "tail" | "middle" | "tip" (see :meth:`matplotlib.pyplot.quiver`)
 
-    - \*\**kwargs*: Additional arguments for :meth:`matplotlib.pyplot.quiver`
+    - *\*\*kwargs*: Additional arguments for :meth:`matplotlib.pyplot.quiver`
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> import matplotlib.pyplot as plt
-       >>> import numpy as np
-       >>> from modelicares import *
-
-       >>> figure('examples/quiver') # doctest: +ELLIPSIS
-       <matplotlib.figure.Figure object at 0x...>
-       >>> x, y = np.meshgrid(np.arange(0, 2*np.pi, 0.2),
-       ...                    np.arange(0, 2*np.pi, 0.2))
-       >>> u = np.cos(x)
-       >>> v = np.sin(y)
-       >>> ax = plt.subplot(111)
-       >>> quiver(ax, u, v) # doctest: +ELLIPSIS
-       <matplotlib.quiver.Quiver object at 0x...>
-       >>> save()
-       Saved examples/quiver.pdf
-       Saved examples/quiver.png
-
-    .. testsetup::
-       >>> plt.show()
-       >>> plt.close()
-
-    .. only:: html
-
-       .. image:: ../examples/quiver.png
-          :scale: 70 %
-          :alt: example of quiver()
-
-    .. only:: latex
-
-       .. figure:: ../examples/quiver.pdf
-          :scale: 70 %
-
-          Example of :meth:`quiver`
+    .. plot:: tests/util.quiver.py
+       :alt: plot of quiver()
     """
     if x is None or y is None:
         p = ax.quiver(u, v, pivot=pivot, **kwargs)
@@ -1034,15 +873,11 @@ def save(formats=['pdf', 'png'], fname=None, fig=None):
 
        >>> figure('examples/temp') # doctest: +ELLIPSIS
        <matplotlib.figure.Figure object at 0x...>
-       >>> plt.plot(range(10)) # doctest: +ELLIPSIS
+       >>> plt.plot(range(10)) # doctest: +SKIP
        [<matplotlib.lines.Line2D object at 0x...>]
-       >>> save()
+       >>> save() # doctest: +SKIP
        Saved examples/temp.pdf
        Saved examples/temp.png
-
-    .. testsetup::
-       >>> plt.show()
-       >>> plt.close()
 
     .. Note::  The :meth:`figure` method can be used to directly create a
        figure with a label.
@@ -1098,15 +933,11 @@ def saveall(formats=['pdf', 'png']):
 
        >>> figure('examples/temp') # doctest: +ELLIPSIS
        <matplotlib.figure.Figure object at 0x...>
-       >>> plt.plot(range(10)) # doctest: +ELLIPSIS
+       >>> plt.plot(range(10))  # doctest: +SKIP
        [<matplotlib.lines.Line2D object at 0x...>]
-       >>> save()
+       >>> save() # doctest: +SKIP
        Saved examples/temp.pdf
        Saved examples/temp.png
-
-    .. testsetup::
-       >>> plt.show()
-       >>> plt.close()
     """
 
     # Get the figures.
@@ -1210,33 +1041,8 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import *
-
-       >>> setup_subplots(4, 2, label='examples/setup_subplots') # doctest: +ELLIPSIS
-       ([<matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>], 2)
-       >>> save()
-       Saved examples/setup_subplots.pdf
-       Saved examples/setup_subplots.png
-
-    .. testsetup::
-       >>> import matplotlib.pyplot as plt
-       >>> plt.show()
-       >>> plt.close()
-
-    .. only:: html
-
-       .. image:: ../examples/setup_subplots.png
-          :scale: 70 %
-          :alt: example of setup_subplots()
-
-    .. only:: latex
-
-       .. figure:: ../examples/setup_subplots.pdf
-          :scale: 70 %
-
-       Example of :meth:`setup_subplots`
+    .. plot:: tests/util.setup_subplots.py
+       :alt: example of setup_subplots()
     """
     from matplotlib.figure import SubplotParams
 
@@ -1358,54 +1164,8 @@ def shift_scale_x(ax, eagerness=0.325):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> import numpy as np
-       >>> from texunit import number_label
-       >>> from modelicares import *
-
-       >>> # Generate some random data.
-       >>> x = np.linspace(55478, 55486, 100) # Small range and large offset
-       >>> xlabel = number_label('Time', 's')
-       >>> y = np.cumsum(np.random.random(100) - 0.5)
-
-       >>> # Plot the data.
-       >>> ax = setup_subplots(2, 2, label='examples/shift_scale_x')[0]
-       >>> for a in ax:
-       ...     a.plot(x, y)
-       ...     a.set_xlabel(xlabel) # doctest: +ELLIPSIS
-       [<matplotlib.lines.Line2D object at 0x...>]
-       <matplotlib.text.Text object at 0x...>
-       [<matplotlib.lines.Line2D object at 0x...>]
-       <matplotlib.text.Text object at 0x...>
-
-       >>> # Shift and scale the axes.
-       >>> ax[0].set_title('Original plot') # doctest: +ELLIPSIS
-       <matplotlib.text.Text object at 0x...>
-       >>> ax[1].set_title('After applying offset and factor') # doctest: +ELLIPSIS
-       <matplotlib.text.Text object at 0x...>
-       >>> shift_scale_x(ax[1])
-       >>> save()
-       Saved examples/shift_scale_x.pdf
-       Saved examples/shift_scale_x.png
-
-    .. testsetup::
-       >>> import matplotlib.pyplot as plt
-       >>> plt.show()
-       >>> plt.close()
-
-    .. only:: html
-
-       .. image:: ../examples/shift_scale_x.png
-          :scale: 70 %
-          :alt: example of shift_scale_x()
-
-    .. only:: latex
-
-       .. figure:: ../examples/shift_scale_x.pdf
-          :scale: 70 %
-
-          Example of :meth:`shift_scale_x`
+    .. plot:: tests/util.shift_scale_x.py
+       :alt: example of shift_scale_x()
     """
     # This concept is based on:
     # http://efreedom.com/Question/1-3677368/Matplotlib-Format-Axis-Offset-Values-Whole-Numbers-Specific-Number,
@@ -1434,57 +1194,8 @@ def shift_scale_y(ax, eagerness=0.325):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> import numpy as np
-       >>> from texunit import number_label
-       >>> from modelicares import *
-
-       >>> # Generate some random data.
-       >>> x = range(100)
-       >>> y = np.cumsum(np.random.random(100) - 0.5)
-       >>> y -= y.min()
-       >>> y *= 1e-3
-       >>> y += 1e3 # Small magnitude and large offset
-       >>> ylabel = number_label('Velocity', 'mm/s')
-
-       >>> # Plot the data.
-       >>> ax = setup_subplots(2, 2, label='examples/shift_scale_y')[0]
-       >>> for a in ax:
-       ...     a.plot(x, y)
-       ...     a.set_ylabel(ylabel) # doctest: +ELLIPSIS
-       [<matplotlib.lines.Line2D object at 0x...>]
-       <matplotlib.text.Text object at 0x...>
-       [<matplotlib.lines.Line2D object at 0x...>]
-       <matplotlib.text.Text object at 0x...>
-
-       >>> # Shift and scale the axes.
-       >>> ax[0].set_title('Original plot') # doctest: +ELLIPSIS
-       <matplotlib.text.Text object at 0x...>
-       >>> ax[1].set_title('After applying offset and factor') # doctest: +ELLIPSIS
-       <matplotlib.text.Text object at 0x...>
-       >>> shift_scale_y(ax[1])
-       >>> save()
-       Saved examples/shift_scale_y.pdf
-       Saved examples/shift_scale_y.png
-
-    .. testsetup::
-       >>> import matplotlib.pyplot as plt
-       >>> plt.show()
-       >>> plt.close()
-
-    .. only:: html
-
-       .. image:: ../examples/shift_scale_y.png
-          :scale: 70 %
-          :alt: example of shift_scale_y()
-
-    .. only:: latex
-
-       .. figure:: ../examples/shift_scale_y.pdf
-          :scale: 70 %
-
-          Example of :meth:`shift_scale_y`
+    .. plot:: tests/util.shift_scale_y.py
+       :alt: example of shift_scale_y()
     """
     # This concept is based on:
     # http://efreedom.com/Question/1-3677368/Matplotlib-Format-Axis-Offset-Values-Whole-Numbers-Specific-Number,
@@ -1542,8 +1253,9 @@ def tree(strings, delimiter='.'):
     **Example:**
 
        >>> from modelicares.util import tree
-       >>> tree(['alpha.beta.gamma', 'delta.epsilon', 'delta.zeta'])
-       {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
+       >>> tree(['a.b.c', 'd.e', 'd.f'])
+       {'a': {'b': {'c': 'a.b.c'}}, 'd': {'e': 'd.e', 'f': 'd.f'}}
+
     """
     # This method has been copied and modified from DyMat version 0.5
     # (Joerg Raedler,
@@ -1596,48 +1308,13 @@ class ArrowLine(Line2D):
 
         - *arrowheadlength* (=\ *arrowsize*): Length of arrow head
 
-        - \**args*, \*\**kwargs*: Additional arguments for
+        - *\*args*, *\*\*kwargs*: Additional arguments for
           :class:`matplotlib.lines.Line2D`
 
         **Example:**
 
-        .. code-block:: python
-
-           >>> from modelicares import *
-
-           >>> fig = figure('examples/ArrowLine') # doctest: +ELLIPSIS
-           >>> ax = fig.add_subplot(111, autoscale_on=False)
-           >>> t = [-1,2]
-           >>> s = [0,-1]
-           >>> line = ArrowLine(t, s, color='b', ls='-', lw=2, arrow='>',
-           ...                  arrowsize=20)
-           >>> ax.add_line(line) # doctest: +ELLIPSIS
-           <....ArrowLine object at 0x...>
-           >>> ax.set_xlim(-3, 3)
-           (-3, 3)
-           >>> ax.set_ylim(-3, 3)
-           (-3, 3)
-           >>> save()
-           Saved examples/ArrowLine.pdf
-           Saved examples/ArrowLine.png
-
-        .. testsetup::
-           >>> import matplotlib.pyplot as plt
-           >>> plt.show()
-           >>> plt.close()
-
-        .. only:: html
-
-           .. image:: ../examples/ArrowLine.png
-              :scale: 70 %
-              :alt: example of ArrowLine
-
-        .. only:: latex
-
-           .. figure:: ../examples/ArrowLine.pdf
-              :scale: 70 %
-
-              Example of :class:`ArrowLine`
+        .. plot:: tests/util.ArrowLine.py
+           :alt: example of ArrowLine()
         """
         self._arrow = kwargs.pop('arrow', '-')
         self._arrowsize = kwargs.pop('arrowsize', 2*4)

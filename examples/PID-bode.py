@@ -1,18 +1,8 @@
-           
-        .. code-block:: python
+#!/usr/bin/python
 
-           >>> from modelicares import LinRes, save
-           >>> from numpy import pi, logspace
+import numpy as np
+from modelicares import LinRes
 
-           >>> lin = LinRes('examples/PID.mat')
-           >>> lin.bode(label='examples/PID-bode', omega=2*pi*logspace(-2, 3),
-           ...          title="Bode Plot of Modelica.Blocks.Continuous.PID") # doctest: +ELLIPSIS
-           (<matplotlib.axes...AxesSubplot object at 0x...>, <matplotlib.axes...AxesSubplot object at 0x...>)
-           >>> save()
-           Saved examples/PID-bode.pdf
-           Saved examples/PID-bode.png
-
-        .. testsetup::
-           >>> import matplotlib.pyplot as plt
-           >>> plt.show()
-           >>> plt.close()
+lin = LinRes('PID.mat')
+lin.bode(omega=2*np.pi*np.logspace(-2, 3),
+         title="Bode plot of Modelica.Blocks.Continuous.PID")

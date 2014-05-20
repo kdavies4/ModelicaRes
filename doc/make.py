@@ -4,12 +4,13 @@
 # This file has been copied and modified from matplotlib v1.2.
 # Kevin Davies, 9/17/2012
 
+from __future__ import print_function
+
 import glob
 import os
 import shutil
 import sys
 
-from __future__ import print_function
 from shutil import ignore_patterns, copytree
 
 

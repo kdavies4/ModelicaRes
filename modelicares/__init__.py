@@ -36,7 +36,7 @@ __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
 __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
-__version__ = "0.11.0"
+__version__ = "x.x.x"
 
 
 # Essential functions and classes
@@ -77,20 +77,16 @@ def load(*args):
 
     .. code-block:: python
 
-    TODO: update
-       >>> from modelicares import multiload
-       >>> from modelicares.simres import Info
+       >>> from modelicares import load
 
        # Get the mean values of the first capacitor's voltage from two runs
-       # of or the two
-       >>> sims, __ = multiload('examples/ChuaCircuit/*/*.mat') # doctest: +ELLIPSIS
-       >>> mean_C1_voltage = lambda sim: Info.mean(sim, 'C1.v')
-       >>> map(mean_C1_voltage, sims)
+       # of the Chua circuit.
+       >>> sims, __ = load('examples/ChuaCircuit/*/')
+       >>> sims['C1.v'].mean()
        [0.76859528, 0.76859528]
 
        # The values are different because the inductance was set differently:
-       >>> inductance = lambda sim: Info.IV(sim, 'L.L')
-       >>> map(inductance, sims)
+       >>> sims['L.L'].value()
        [10, 18]
     """
 

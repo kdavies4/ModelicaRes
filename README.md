@@ -12,8 +12,8 @@ is possible to
 - produce various plots and diagrams, and
 - export data to various formats via [pandas].
 
-![Plot of Chua circuit with varying parameters](examples/ChuaCircuits-small.png)
-![Sankey diagram of three tanks example](examples/ThreeTanks-small.png)
+![Plot of Chua circuit with varying parameters](doc/_static/ChuaCircuits-small.png)
+![Sankey diagram of three tanks example](doc/_static/ThreeTanks-small.png)
 
 The figures are generated via [matplotlib], which offers a rich set of plotting
 routines.  ModelicaRes includes functions to automatically pre-format and

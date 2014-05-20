@@ -76,6 +76,7 @@ from six import string_types
 from types import GeneratorType
 
 import modelicares.util as util
+
 from . import doe
 
 
@@ -696,6 +697,8 @@ def write_script(experiments=[(None, {}, {})], packages=[],
 
     In "examples/ChuaCircuit/run-sims2.mos", there are commands to run and
     save results from 12 simulation experiments.
+
+    .. _Python: http://www.python.org
     """
     # Preprocess the arguments.
     if not isinstance(experiments, (list, GeneratorType)):

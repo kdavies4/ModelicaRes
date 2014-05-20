@@ -40,6 +40,7 @@ def setup(app):
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.doctest',
               'sphinx.ext.pngmath',
+              'matplotlib.sphinxext.plot_directive'
              ]
 
 # Add any paths that contain templates here, relative to this directory.

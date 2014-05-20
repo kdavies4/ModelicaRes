@@ -6,66 +6,72 @@ The releases are numbered according to the `Semantic Versioning specification
 
 v{version}_ ({date}) -- Updates:
 
-now supports Python3
-
-made wx optional (only required for variable browser)
-
-TODO: finish
-
-added :class:`SimResList`, :class:`LinResList` (based on previous :mod:`modelicares.multi`)
-
-added functions to plot()
-
-label_number->number_str
-label_quantity->quantity_str
-
-added n_constants
-added constants_only to names()
-
-added si_prefix() to util
-
-   - Now supporting format version 1.0 Dymola/OpenModelica files (previously
-     only 1.1).
-   - Changed the way the filename is recorded and retrieved in
-     :class:`~modelicares.simres.SimRes` and
-     :class:`~modelicares.linres.LinRes`.
-   - The *action* argument of :meth:`~modelicares.simres.SimRes.__call__` has
-     been renamed to *method*.
-   - Removed :meth:`~modelicares.util.animate`.  matplotlib now has built-in
-     methods for this; see http://matplotlib.org/api/animation_api.html.
-   - Improved the computational efficiency of :class:`~modelicares.simres.SimRes`.
-   - Added :meth:`~modelicares.simres.SimRes.set_displayUnit`
-     :meth:`~modelicares.simres.SimRes.set_description`
-   - Removed :class:`~modelicares.util.Quantity` and
-     :meth:`~modelicares.util.convert` from :mod:`~modelicares.util`
-   - Eliminated the dependence on :mod:`easygui`; using :mod:`PyQt4` instead.
-   - Removed :meth:`~modelicares.simres.SimRes.get_indices_wi_times` and added
-     :meth:`~modelicares.simres.SimRes.get_values_wi_times`.
-   - :meth:`~modelicares.simres.SimRes.get_values`,
-     :meth:`~modelicares.simres.SimRes.get_times`, and
-     :meth:`~modelicares.simres.SimRes.get_arrays` now return all samples when
-     *i* = *None*.
-   - Added :meth:`~modelicares.linres.LinRes.to_tf` to return a selected
-     transfer function from the state-space representation.
+   - Added IPython notebooks (`tutorial
+     <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb>`_
+     and
+     `advanced <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/advanced.ipynb>`_).
+   - ModelicaRes is now independent with respect to the simulation tool;
+     decoupled the Dymola-specific algorithms and placed them in a submodule.
+   - New classes :class:`~modelicares.simres.SimResList` and
+     :class:`~modelicares.linres.LinResList` to manage, sort, and plot multiple
+     simulation and linearization results (based on the old
+     :mod:`~modelicares.multi` submodule).
+   - Now supports Python 3.
+   - Now supports format version 1.0 Dymola/OpenModelica files (previously only
+     1.1).
+   - Improved the speed of loading files and retrieving data.
+   - Improved test coverage, which continuous integration testing (thanks to
+     `Travis CI <https://travis-ci.org/>`_)
+   - Improved installation setup and instructions.
+   - Added a simpler, more powerful API for accessing data attributes; removed
+     the *get_* methods of :class:`~modelicares.simres.SimRes`.
+   - Added time-based indexing to :class:`~modelicares.simres.SimRes.arrays`,
+     :class:`~modelicares.simres.SimRes.time`, and
+     :class:`~modelicares.simres.SimRes.values`; accepts time, list of times, or
+     slice of time.
    - Added :meth:`~modelicares.simres.SimRes.to_pandas` to return a
      `pandas DataFrame`_ of selected data.
-   - Encoding all variable names as 'latin-1' and stripping null strings from
-     the end.
-   - Added :meth:`~modelicares.simres.SimRes.get_arrays_wi_times`.
-   - Changed the action for :meth:`~modelicares.simres.SimRes.__call__`
-     and :meth:`~modelicares.simres.SimRes.__getitem__`
-     from :meth:`~modelicares.simres.SimRes.get_values`
-     to :meth:`~modelicares.simres.SimRes.get_arrays`.
-   - Removed :meth:`~modelicares.simres.SimRes.get_tuple`
-     and added :meth:`~modelicares.simres.SimRes.get_arrays` instead.
+   - Added *f1* and *f2* arguments to plot additional expressions using
+     :meth:`~modelicares.simres.SimRes.plot`.
+   - Plotting examples are now included as scripts in the *examples* folder.
+     Only the plots are show in the documentation.
+   - :class:`~modelicares.simres.SimRes` and :class:`~modelicares.linres.LinRes`
+     now require the file extension to load files.
+   - Added :meth:`~modelicares.simres.SimRes.n_constants` to return the number
+     of constants in a simulation.
+   - Wx is now optional---only required for variable browser.
+   - Added option to :class:`~modelicares.simres.SimRes.names` to list only the
+     constants.
+   - Added si_prefix() to :mod:`~modelicares.util` (previously nested in
+     :mod:`~modelicares.texunit`)
+   - The *fname* atribute in :class:`~modelicares.simres.SimRes` and
+     :class:`~modelicares.linres.LinRes` now includes the absolute path.
+     :meth:`~modelicares.simres.SimRes.fbase` and
+     :meth:`~modelicares.linres.LinRes.fbase` return the base filename without
+     directory or extension.
+   - Added :meth:`~modelicares.linres.LinRes.to_tf` to return a selected
+     transfer function from the state-space representation.
    - Added pattern matching to :meth:`~modelicares.simres.SimRes.nametree`.
+   - Proper handling of unicode in simulation files.
+   - Eliminated the dependence on :mod:`easygui`; using :mod:`PySide` (Qt)
+     instead.
+   - Renamed :mod:`~modelicares.base` to :mod:`~modelicares.util` for clarity.
+     It is a package of utility functions and classes, not base classes.
+   - Renamed internal submodules with leading underscore to denote that they
+     are not meant for external use.
+   - Renamed :meth:`~modelicares.texunit.label_number` to
+     :meth:`~modelicares.texunit.number_str` and
+     :meth:`~modelicares.texunit.label_quantity` to
+     :meth:`~modelicares.texunit.quantity_str`.
    - Merged :meth:`~modelicares.exps.modelica_array` and
      :meth:`~modelicares.exps.modelica_boolean` into a new function,
      :meth:`~modelicares.exps.modelica_str`.
-   - Renamed :mod:`~modelicares.base` to :mod:`~modelicares.util` for clarity.
-     It is a package of utility functions and classes, not base classes.
+   - Removed :class:`~modelicares.util.Quantity` and
+     :meth:`~modelicares.util.convert` from :mod:`~modelicares.util`.
    - Removed :meth:`~modelicares.simres.merge_times`.  It is not used internally
-     and probably is not useful externally.
+     and probably is not very helpful externally.
+   - Removed :meth:`~modelicares.util.animate`.  matplotlib now has built-in
+     methods for this; see http://matplotlib.org/api/animation_api.html.
 
 v0.10.0_ (2014-4-30) -- Updates:
 

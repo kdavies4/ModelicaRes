@@ -1,5 +1,5 @@
-loadres script
-==============
+``loadres`` script
+==================
 
 Load results from Modelica_ simulation(s) and/or linearization(s) and provide
 a Python_ session to analyze the results.

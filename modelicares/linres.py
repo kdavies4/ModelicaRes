@@ -1,13 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Load, analyze, and plot the result of linearizing a Modelica_ model.
+"""This submodule contains two classes to help load, analyze, and plot results
+from Modelica_ linearizations:
 
-This module contains one class: :class:`LinRes`.
+- :class:`LinRes` - Class to load, contain, and analyze results from a Modelica_
+  linearization
 
-TODO add LinResList
+- :class:`LinResList` - Specialized list of linearization results
+  (:class:`LinRes` instances)
+
 
 .. _Modelica: http://www.modelica.org/
-.. _python-control: http://sourceforge.net/apps/mediawiki/python-control
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
@@ -34,6 +37,20 @@ from modelicares._io.dymola import loadlin as dymola
 loaders = [('dymola', dymola)] # LinRes tries these in order.
 # All of the keys should be in lowercase.
 
+
+def _get_lins(fnames):
+    """Return a list of :class:`LinRes` instances from a list of filenames.
+
+    No errors are given unless no files could be loaded.
+    """
+    lins = []
+    for fname in fnames:
+        try:
+            lins.append(LinRes(fname))
+        except:
+            continue
+    assert len(lins) > 0, "No linearizations were loaded."
+    return lins
 
 class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze
@@ -89,8 +106,10 @@ class LinRes(object):
 
         **Example:**
 
+        .. code-block:: python
+
            >>> from modelicares import LinRes
-           >>> lin = LinRes('examples/PID')
+           >>> lin = LinRes('examples/PID.mat')
         """
 
         # Load the file.
@@ -157,7 +176,7 @@ class LinRes(object):
            >>> from modelicares import LinRes
            >>> lin = LinRes('examples/PID.mat')
            >>> print(lin) # doctest: +ELLIPSIS
-           Modelica linearization results from "...PID.mat"
+           Modelica linearization results from ...PID.mat
         """
         return ('Modelica linearization results from "%s"' %
                 os.path.join(self.dir, self.fbase + '.mat'))
@@ -185,10 +204,12 @@ class LinRes(object):
 
         **Example:**
 
+        .. code-block:: python
+
            >>> from modelicares import LinRes
            >>> lin = LinRes('examples/PID.mat')
            >>> print(lin) # doctest: +ELLIPSIS
-           Modelica linearization results from "...PID.mat"
+           Modelica linearization results from ...PID.mat
         """
         return "Modelica linearization results from {f}".format(f=self.fname)
 
@@ -216,7 +237,7 @@ class LinRes(object):
         .. code-block:: python
 
            >>> from modelicares import LinRes
-           >>> lin = LinRes('examples/PID')
+           >>> lin = LinRes('examples/PID.mat')
            >>> lin.to_tf()
            (array([[  11.,  102.,  200.]]), array([   1.,  100.,    0.]))
         """
@@ -294,7 +315,7 @@ class LinRes(object):
              .. Seealso::
                 http://matplotlib.sourceforge.net/api/collections_api.html
 
-        - \*\**kwargs*: Additional arguments for :meth:`control.freqplot.bode`
+        - *\*\*kwargs*: Additional arguments for :meth:`control.freqplot.bode`
 
         **Returns:**
 
@@ -302,9 +323,7 @@ class LinRes(object):
 
         **Example:**
 
-        .. plot:: ../examples/PID-bode.py
-           :include-source:
-           :scale: 70 %
+        .. plot:: examples/PID-bode.py
            :alt: Bode plot of PID
         """
         # Create axes if necessary.
@@ -314,7 +333,7 @@ class LinRes(object):
 
         # Create a title if necessary.
         if title is None:
-            title = "Bode Plot of %s" % self.fbase()
+            title = "Bode plot of %s" % self.fbase()
 
         # Set up the color(s) and line style(s).
         if not iterable(colors):
@@ -397,7 +416,7 @@ class LinRes(object):
 
              .. Seealso:: http://matplotlib.sourceforge.net/api/colors_api.html
 
-        - \*\**kwargs*: Additional arguments for
+        - *\*\*kwargs*: Additional arguments for
           :meth:`control.freqplot.nyquist`
 
         **Returns:**
@@ -406,11 +425,8 @@ class LinRes(object):
 
         **Example:**
 
-        .. plot:: ../examples/PID-nyquist.py
-           :include-source:
-           :scale: 70 %
+        .. plot:: examples/PID-nyquist.py
            :alt: Nyquist plot of PID
-
         """
         # Create axes if necessary.
         if not ax:
@@ -419,7 +435,7 @@ class LinRes(object):
 
         # Create a title if necessary.
         if title is None:
-            title = "Nyquist Plot of %s" % self.fbase()
+            title = "Nyquist plot of %s" % self.fbase()
 
         # Set up the color(s).
         if not iterable(colors):
@@ -480,10 +496,114 @@ def _get_lins(fnames):
     return lins
 
 class LinResList(ResList):
-    """TODO"""
+    """Specialized list of linearization results
+
+    The entries are :class:`LinRes` instances, but linearizations can be
+    specified via filename when initializing or appending the list.  The list
+    has all of the methods of a standard Python_ list (e.g.,
+    + or `__add__
+    <https://docs.python.org/2/reference/datamodel.html#object.__add__>`_/`__radd__
+    <https://docs.python.org/2/reference/datamodel.html#object.__radd__>`_,
+    :meth:`clear`,
+    **in** or `__contains__
+    <https://docs.python.org/2/reference/datamodel.html#object.__contains__>`_,
+    **del** or `__delitem__
+    <https://docs.python.org/2/reference/datamodel.html#object.__delitem__>`_,
+    `__getitem__
+    <https://docs.python.org/2/reference/datamodel.html#object.__getitem__>`_,
+    += or `__iadd__
+    <https://docs.python.org/2/reference/datamodel.html#object.__iadd__>`_,
+    \*= or `__imul__
+    <https://docs.python.org/2/reference/datamodel.html#object.__imul__>`_,
+    :meth:`iter` or `__iter__
+    <https://docs.python.org/2/reference/datamodel.html#object.__iter__>`_,
+    :meth:`copy`,
+    :meth:`extend`,
+    :meth:`index`,
+    :meth:`insert`,
+    :meth:`len` or `__len__
+    <https://docs.python.org/2/library/functions.html#len>`_,
+    \* or `__mul__
+    <https://docs.python.org/2/reference/datamodel.html#object.__mul__>`_/`__rmul__
+    <https://docs.python.org/2/reference/datamodel.html#object.__rmul__>`_,
+    :meth:`pop`,
+    :meth:`remove`,
+    :meth:`reverse`,
+    :meth:`reversed` or `__reversed__
+    <https://docs.python.org/2/reference/datamodel.html#object.__reversed__>`_,
+    = or `__setitem__
+    <https://docs.python.org/2/reference/datamodel.html#object.__setitem__>`_,
+    and :meth:`__sizeof__`).
+
+    The comparison methods
+    (`< <https://docs.python.org/2/reference/datamodel.html#object.__lt__>`_,
+    `<= <https://docs.python.org/2/reference/datamodel.html#object.__le__>`_,
+    `== <https://docs.python.org/2/reference/datamodel.html#object.__eq__>`_,
+    `!= <https://docs.python.org/2/reference/datamodel.html#object.__ne__>`_,
+    `>= <https://docs.python.org/2/reference/datamodel.html#object.__ge__>`_,
+    `> <https://docs.python.org/2/reference/datamodel.html#object.__gt__>`_),
+    and :meth:`sort`, which relies on them, use the full filenames (with
+    absolute path) for comparison.
+
+    The following method is overloaded for convenience:
+
+    - :meth:`append` - Add linearization(s) to the end of the list of
+      linearizations (accepts a :class:`LinRes` instance, directory, or
+      filename).
+
+    The following methods are added to those in the standard Python_ list:
+
+    - :meth:`basedir` - Return the highest common directory that the result files
+      share.
+
+    - :meth:`bode` - Plot the linearizations onto a single Bode diagram.
+
+    - :meth:`fnames` - Return a list of filenames from which the results were
+      loaded.
+
+    - :meth:`nyquist` - Plot the linearizations onto a single Bode diagram.
+
+
+    .. _Python: http://www.python.org
+    """
 
     def __init__(self, *args):
-        """TODO"""
+        """Initialize as a list of :class:`LinRes` instances, loading files as
+        necessary.
+
+        Initialization signatures:
+
+        - :class:`LinResList`(): Returns an empty linearization list
+
+        - :class:`LinResList`(*lins*), where lins is a list of :class:`LinRes`
+          instances:  Casts the list into a :class:`LinResList`
+
+        - :class:`LinResList`(*filespec*), where *filespec* is a filename or
+          directory, possibly with wildcards a la `glob
+          <https://docs.python.org/2/library/glob.html>`_:  Returns a
+          :class:`LinResList` of :class:`LinRes` instances loaded from the
+          matching or contained files
+
+             The filename or directory must include the absolute path or be
+             resolved to the current directory.
+
+             An error is only raised if no files can be loaded.
+
+        - :class:`LinResList`(*filespec1*, *filespec2, ...): Loads all files
+          matching or contained by *filespec1*, *filespec2*, etc. as above.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import LinResList
+           >>> lins = LinResList('examples/PID/*/*.mat')
+           >>> print(lins) # doctest: +ELLIPSIS
+           List of linearization results (LinRes instances) from the following files
+           in the .../ModelicaRes/examples/PID directory:
+              1/dslin.mat
+              2/dslin.mat
+        """
 
         if not args:
             list.__init__(self, [])
@@ -514,14 +634,46 @@ class LinResList(ResList):
             list.__init__(self, _get_lins(fnames))
 
     def append(self, item):
-        """TODO"""
+        """Add a linearization to the end of the list of linearizations.
 
+        **Arguments:**
+
+        - *item*: :class:`LinRes` instance or a file specification
+
+             The file specification may be a filename or directory, possibly
+             with wildcards a la `glob
+             <https://docs.python.org/2/library/glob.html>`_, where linearization
+             results can be loaded by :class:`LinRes`.  The filename or
+             directory must include the absolute path or be resolved to the
+             current directory.  An error is only raised if no files can be
+             loaded.
+
+         Unlike the `append
+         <https://docs.python.org/2/tutorial/datastructures.html>`_ method of a
+         standard Python_ list, this method may add more than one item.  If
+         *item* is a directory or a wildcarded filename, it may match multiple
+         valid files.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import LinResList
+           >>> lins = LinResList('examples/PID/*/*.mat')
+           >>> lins.append('examples/PID.mat')
+           >>> print(lins) # doctest: +ELLIPSIS
+           List of linearization results (LinRes instances) from the following files
+           in the .../ModelicaRes/examples directory:
+              PID/1/dslin.mat
+              PID/2/dslin.mat
+              PID.mat
+        """
         if isinstance(item, LinRes):
             list.append(self, item)
         else:
-            assert isinstance(item, string_types), ("The linearization list can "
-                "only be appended by providing a LinRes instance, filename, or "
-                "directory.")
+            assert isinstance(item, string_types), ("The linearization list "
+                "can only be appended by providing a LinRes instance, "
+                "filename, or directory.")
 
             # Get the matching filenames.
             if os.path.isdir(item):
@@ -532,10 +684,24 @@ class LinResList(ResList):
                 fnames = [item]
 
             # Load linearizations from the filenames.
-            self.extend(_get_lins(fnames))
+            self.extend(LinResList(_get_lins(fnames)))
 
     def __str__(self):
-        """TODO doc, example
+        """Return str(self).
+
+        This provides a readable description of the :class:LinResList`.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import LinResList
+           >>> lins = LinResList('examples/PID/*/*.mat')
+           >>> print(lins) # doctest: +ELLIPSIS
+           List of linearization results (LinRes instances) from the following files
+           in the .../ModelicaRes/examples/PID directory:
+              1/dslin.mat
+              2/dslin.mat
         """
         if len(self) == 0:
             return "Empty list of linearization results"
@@ -553,12 +719,16 @@ class LinResList(ResList):
             return string
 
     def _get_labels(self, labels):
-        """TODO"""
-        if labels == '':
+        """Create labels for the legend of a Bode or Nyquist plot.
+
+        If *labels* is *None*, then no label will be used.  If it is an empty
+        string (''), then the base filenames will be used.
+        """
+        if labels == None:
+            labels = ['']*len(self)
+        elif labels == '':
             start = len(self.basedir())
             labels = [lin.fname[start:].lstrip(os.sep) for lin in self]
-        elif labels == None:
-            labels = ['']*len(self)
 
         return labels
 
@@ -568,8 +738,8 @@ class LinResList(ResList):
              **kwargs):
         """Plot the linearizations onto a single Bode diagram.
 
-        This method calls :meth:`linres.LinRes.bode` from the included instances
-        of :class:`linres.LinRes`.
+        This method calls :meth:`LinRes.bode` from the included instances
+        of :class:`LinRes`.
 
         **Arguments:**
 
@@ -614,7 +784,7 @@ class LinResList(ResList):
 
              If *leg_kwargs* is *None*, then no legend will be shown.
 
-        - \*\**kwargs*: Additional arguments for :meth:`control.freqplot.bode`
+        - *\*\*kwargs*: Additional arguments for :meth:`control.freqplot.bode`
 
         **Returns:**
 
@@ -622,9 +792,7 @@ class LinResList(ResList):
 
         **Example:**
 
-        .. plot:: ../examples/PIDs-bode.py
-           :include-source:
-           :scale: 70 %
+        .. plot:: examples/PIDs-bode.py
            :alt: Bode plot of PID with varying parameters
         """
         # Create axes if necessary.
@@ -720,7 +888,7 @@ class LinResList(ResList):
 
              If *leg_kwargs* is *None*, then no legend will be shown.
 
-        - \*\**kwargs*: Additional arguments for :meth:`control.freqplot.nyquist`
+        - *\*\*kwargs*: Additional arguments for :meth:`control.freqplot.nyquist`
 
              If *textFreq* is not specified, then only the frequency points of the
              first system will have text labels.
@@ -731,9 +899,7 @@ class LinResList(ResList):
 
         **Example:**
 
-        .. plot:: ../examples/PIDs-nyquist.py
-           :include-source:
-           :scale: 70 %
+        .. plot:: examples/PIDs-nyquist.py
            :alt: Nyquist plot of PID with varying parameters
         """
         # Create axes if necessary.
@@ -771,7 +937,6 @@ class LinResList(ResList):
             loc = leg_kwargs.pop('loc', 'best')
             ax.legend(loc=loc, **leg_kwargs)
         return ax
-
 
 
 if __name__ == '__main__':

@@ -10,6 +10,12 @@
    ...     except TypeError:
    ...         return builtin_round(value, decimals)
 
+# TODO: Organize these tests better.
+# Move examples that aren't useful for users into this folder.
+
+# TODO: Test the inherited methods in SimResList and LinResList.
+
+
 >>> from modelicares import SimRes
 >>> sim = SimRes('examples/ChuaCircuit.mat')
 
@@ -19,7 +25,7 @@ array([[  0.        ,   0.        ],
        [ 10.        ,   0.21083504]], dtype=float32)
 
 >>> sim['L.v'].description
-'Voltage drop between the two pins (= p.v - n.v)'
+u'Voltage drop between the two pins (= p.v - n.v)'
 
 >>> sim['G.T_heatPort'].displayUnit
 'degC'
@@ -31,7 +37,7 @@ array([[  0.        ,   0.        ],
 Traceback (most recent call last):
 ...
 ValueError: The variable is not a constant.  Use values() instead of value().
-    
+
 >>> round(sim(['C1.v', 'L.v']).FV())
 [2.42098355, -0.25352862]
 

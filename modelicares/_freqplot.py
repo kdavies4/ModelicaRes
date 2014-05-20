@@ -5,16 +5,17 @@
 # Kevin Davies 5/14/14:
 # This file has been modified from version 0.6d of control.freqplot (license
 # below):
-# 1.  Added the label and axes arguments to bode_plot()
+# 1.  Added label and axes arguments to bode_plot()
 # 2.  Added label, mark, show_axes, textFreq and ax arguments to nyquist_plot()
 # 3.  Updated the docstrings
-# 4.  The default_frequency_range function has been referenced to the freqplot
+# 4.  The default_frequency_range function is imported from the freqplot
 #     submodule of the installed control package.
 # 5.  The get_pow1000 and si_prefix functions, which I contributed to the
-#     control package, have been referenced to modelicares.util.
-# 6.  Eliminated the import of scipy; using functions from numpy instead
+#     control package, have been imported from modelicares.util rather than
+#     defined here.
+# 6.  Eliminated the scipy import; using functions from numpy instead
 # 7.  Labeled frequencies are shown with a dot in the Bode plot.
-# 8.  bode_plot() also returns the axes (axes).
+# 8.  bode_plot() also returns the axes.
 # 9.  No longer using a configuration file to establish the defaults in
 #     bode_plot()
 # 10. Removed the Plot argument to bode_plot() and nyquist_plot_plot(); assuming
@@ -65,6 +66,7 @@ import matplotlib.pyplot as plt
 
 from control.ctrlutil import unwrap
 from control.freqplot import default_frequency_range
+
 from modelicares.util import get_pow1000, si_prefix, add_hlines, add_vlines
 from modelicares.texunit import number_label
 
@@ -93,7 +95,7 @@ def bode_plot(sys, omega=None, dB=False, Hz=False, deg=True, label=None,
 
          If *None* or (*None*, None*), then axes are created
 
-    - \**args*, \*\**kwargs*: Additional options to matplotlib (color,
+    - *\*args*, *\*\*kwargs*: Additional options to matplotlib (color,
       linestyle, etc.)
 
     **Returns:**
@@ -108,7 +110,8 @@ def bode_plot(sys, omega=None, dB=False, Hz=False, deg=True, label=None,
 
     **Example:**
 
-    .. code-block:: python
+    .. plot::
+       :include-source:
 
        >>> from control.matlab import ss
 
@@ -189,7 +192,7 @@ def nyquist_plot(sys, omega=None, label=None, mark=False, show_axes=True,
 
          If *None*, then axes are created.
 
-    - \**args*, \*\**kwargs*: Additional options to matplotlib (color, etc.)
+    - *\*args*, *\*\*kwargs*: Additional options to matplotlib (color, etc.)
 
          kwargs['linestyle'] is ignored if present.
 
@@ -205,7 +208,8 @@ def nyquist_plot(sys, omega=None, label=None, mark=False, show_axes=True,
 
     **Example:**
 
-    .. code-block:: python
+    .. plot::
+       :include-source:
 
        >>> from control.matlab import ss
 

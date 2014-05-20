@@ -39,6 +39,7 @@ OpenModelica but something else is wrong.
 
 import numpy as np
 from collections import namedtuple
+from itertools import count
 from scipy.io import loadmat
 from control.matlab import ss
 
@@ -141,10 +142,11 @@ class Variable(GenericVariable):
 def chars_to_str(str_arr):
     """Convert a string array to a string.
 
-    Remove trailing whitespace and null characters.  Convert from latin-1 to
-    utf-8 encoding, since SciPy assumes latin-1 and Dymola uses utf-8.
+    Remove trailing whitespace and null characters.  Encode to ascii using
+    latin-1, since that's how SciPy decodes the mat file.  Dymola only uses
+    unicode for variable descriptions.
     """
-    return ''.join(str_arr).rstrip().rstrip('\x00').encode('latin-1').decode('utf-8')
+    return ''.join(str_arr).rstrip().rstrip('\x00').encode('latin-1')
 
 
 def read(fname, constants_only=False):
@@ -220,23 +222,26 @@ def loadsim(fname, constants_only=False):
        >>> variables['L.v'].unit
        'V'
     """
-    # This performs the task of mfiles/traj/tload.m from the Dymola
-    # installation.
+    # This does the task of mfiles/traj/tload.m from the Dymola installation.
 
     def parse(description):
         """Parse the variable description string into description, unit, and
         displayUnit.
         """
         description = chars_to_str(description).rstrip(']')
+        displayUnit = ''
         try:
             description, unit = description.rsplit(' [', 1)
+        except ValueError:
+            unit = ''
+        else:
             try:
                 unit, displayUnit = unit.rsplit('|', 1)
             except ValueError:
-                return description, unit, ''
-        except ValueError:
-            return description, '', ''
-        return description, unit, displayUnit
+                pass # (displayUnit = '')
+
+        # Dymola uses utf-8 for descriptions.
+        return description.decode('utf-8'), unit, displayUnit
 
     # Load the file.
     mat, Aclass = read(fname, constants_only)
@@ -286,13 +291,15 @@ def loadsim(fname, constants_only=False):
         names = [chars_to_str(line)
                  for line in (mat['name'].T if transposed else mat['name'])]
         data_sets = dataInfo[0, :]
-        current_data_set = 1
         variables = _VarDict()
-        while True:
+        for current_data_set in count(1):
             try:
-                d = (mat['data_%i' % current_data_set].T  if transposed else
+                d = (mat['data_%i' % current_data_set].T if transposed else
                      mat['data_%i' % current_data_set])
-                if d.shape[1] > 1:
+            except KeyError:
+                break # There are no more "data_i" variables.
+            else:
+                if d.shape[1] > 1: # It's possible that a data set is empty.
                     times = d[:, 0]
                     for i, (data_set, name) in enumerate(zip(data_sets, names)):
                         if data_set == current_data_set:
@@ -301,13 +308,6 @@ def loadsim(fname, constants_only=False):
                                                                d[:, abs(sign_col)-1],
                                                                sign_col < 0),
                                                        *parse(description[:, i]))
-                current_data_set += 1
-            except KeyError:
-                break # There are no more "data_i" variables.
-            except IndexError:
-                raise IndexError("The variables in the Dymola or OpenModelica "
-                                 "simulation result do not have the expected "
-                                 "shape.")
 
         # Time is from the last data set.
         variables['Time'] = Variable(Samples(times, times, False), 'Time', 's', '')
@@ -351,8 +351,7 @@ def loadlin(fname):
        >>> sys.state_names
        ['I.y', 'D.x']
     """
-    # This performs same task as mfiles/traj/tloadlin.m from the Dymola
-    # installation.
+    # This does the task of mfiles/traj/tloadlin.m in the Dymola installation.
 
     # Load the file.
     mat, Aclass = read(fname)
