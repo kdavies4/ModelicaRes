@@ -10,7 +10,7 @@ from modelicares import SimRes, SimResList, LinResList, read_params
 
 # Options
 dpi = 90 # DPI for the HTML index images
-dpi_small = 45 # DPI for the README images
+dpi_small = 40 # DPI for the README images
 kwargs = dict(bbox_inches='tight', format='png') # Other options
 indir = "../examples"
 outdir = "_static"
@@ -31,6 +31,7 @@ sim.plot(ynames1='L.i', ylabel1="Current",
          ynames2='L.der(i)', ylabel2="Derivative of current",
          title="Chua circuit")
 plt.savefig(join(outdir, 'ChuaCircuit.png'), dpi=dpi, **kwargs)
+plt.savefig(join(outdir, 'ChuaCircuit-small.png'), dpi=dpi_small, **kwargs)
 plt.close()
 
 # ThreeTanks
@@ -45,14 +46,4 @@ sim.sankey(title="Sankey Diagrams of Modelica.Fluid.Examples.Tanks.ThreeTanks",
            pathlengths=2, trunklength=10)
 plt.savefig(join(outdir, 'ThreeTanks.png'), dpi=dpi, **kwargs)
 plt.savefig(join(outdir, 'ThreeTanks-small.png'), dpi=dpi_small, **kwargs)
-plt.close()
-
-# ChuaCircuits
-sims = SimResList(join(indir, 'ChuaCircuit/*/*.mat'))
-sims.reverse()
-sims.plot(title="Chua circuit",
-          suffixes=['L.L = %.0f H' % sim['L.L'].IV()
-                    for sim in sims], # Read legend parameters.
-          ynames1='L.i', ylabel1="Current", leg1_kwargs=dict(loc='upper right'))
-plt.savefig(join(outdir, 'ChuaCircuit-small.png'), dpi=dpi_small, **kwargs)
 plt.close()
