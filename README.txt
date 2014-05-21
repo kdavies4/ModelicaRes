@@ -125,5 +125,5 @@ See also
 .. _netCDF: http://www.unidata.ucar.edu/software/netcdf
 .. _FMI: https://www.fmi-standard.org
 .. _python-control: http://sourceforge.net/apps/mediawiki/python-control
-.. _ArrowLine: http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html
+.. _ArrowLine class: http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html
 .. _efficient base-10 logarithm: http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html
