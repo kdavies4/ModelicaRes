@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Glossary &mdash; Analyze Modelica results in Python</title>
+    
+    <link rel="stylesheet" href="javascripts/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="javascripts/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.11.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="javascripts/jquery.js"></script>
+    <script type="text/javascript" src="javascripts/underscore.js"></script>
+    <script type="text/javascript" src="javascripts/doctools.js"></script>
+    <script type="text/javascript" src="javascripts/copybutton.js"></script>
+    <script type="text/javascript" src="javascripts/analytics.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Analyze Modelica results in Python"
+          href="javascripts/opensearch.xml"/>
+    <link rel="shortcut icon" href="javascripts/favicon.ico"/>
+    <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
+    <link rel="prev" title="modelicares.util" href="util.html" />
+    <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
+    <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
+    <meta name="author" content="Kevin L. Davies">
+ 
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="util.html" title="modelicares.util"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="javascripts/logo.gif" alt="Logo"/>
+            </a></p>
+<h3><a href="index.html">Table of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial (IPython notebook)</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics (ditto)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Glossary</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3><a href="search.html">Search</a></h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
+  <ul>
+    <li><a itemprop="downloadUrl"
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
+           rel="nofollow">Latest version (v0.11.1)</a></li>
+    <li><a href="changelog.html">Change log</a></li>
+  </ul>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="glossary">
+<h1>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h1>
+<p>These terms appear in the documentation and may need clarification:</p>
+<blockquote>
+<div><p><strong>attribute</strong> - a variable, method, or other entity of an object</p>
+<p><strong>constant</strong> - a variable that is not time-varying <a class="footnote-reference" href="#id2" id="id1">[1]</a></p>
+<p><strong>method</strong> - a function bound to an object</p>
+<p><strong>object</strong> - an instance of a class; an abstraction for data</p>
+<p><strong>variable</strong> - an instance of <a class="reference internal" href="simres.html#modelicares.simres.Variable" title="modelicares.simres.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a> that
+contains information about units, description, times, and values of a
+<a class="reference external" href="http://www.modelica.org/">Modelica</a> variable, constant, or parameter over the course of a simulation;
+may be constant or time-varying</p>
+<p><strong>variable name</strong> - a string representing a scalar variable in a <a class="reference external" href="http://www.modelica.org/">Modelica</a>
+model; includes path separators (dots) and if applicable, indices within an
+array</p>
+</div></blockquote>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>This definition differs from the <a class="reference external" href="http://www.modelica.org/">Modelica</a> definition because it
+encompasses parameters and variables without a <tt class="docutils literal"><span class="pre">constant</span></tt> or <tt class="docutils literal"><span class="pre">parameter</span></tt>
+prefix, as long as they do not change over time.  In the post-processing of
+<a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation results, it may not be possible to determine if a
+variable is a <a class="reference external" href="http://www.modelica.org/">Modelica</a> <tt class="docutils literal"><span class="pre">constant</span></tt>, but it is possible to check if it
+changes over time.</td></tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="util.html" title="modelicares.util"
+             >previous</a> |</li>
+        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
+      Last updated on May 21, 2014.
+    </div>
+  </body>
+</html>

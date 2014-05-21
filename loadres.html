@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>loadres &mdash; Analyze Modelica results in Python</title>
+    <title>loadres script &mdash; Analyze Modelica results in Python</title>
     
     <link rel="stylesheet" href="javascripts/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="javascripts/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.10.0',
+        VERSION:     '0.11.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -54,7 +54,7 @@
         <li class="right" >
           <a href="index.html" title="ModelicaRes"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -62,20 +62,22 @@
             <p class="logo"><a href="index.html">
               <img class="logo" src="javascripts/logo.gif" alt="Logo"/>
             </a></p>
-<h3><a href="index.html">Table Of Contents</a></h3>
+<h3><a href="index.html">Table of Contents</a></h3>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial (IPython notebook)</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics (ditto)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="base.html"><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
+<div id="searchbox" style="display: none" role="search">
+  <h3><a href="search.html">Search</a></h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
@@ -83,16 +85,14 @@
       <input type="hidden" name="area" value="default" />
     </form>
     <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
     </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
   <ul>
     <li><a itemprop="downloadUrl"
-           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.10.0.tar.gz"
-           rel="nofollow">Latest version (v0.10.0)</a></li>
-    <li><a href="Changelog.html">Changelog</a></li>
-    <li><a href="ModelicaRes.pdf" onclick=”var that=this;_gaq.push(['_trackEvent','Download','PDF',this.href]);setTimeout(function(){location.href=that.href;},200);return false;”>PDF documentation</a></li>
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
+           rel="nofollow">Latest version (v0.11.1)</a></li>
+    <li><a href="changelog.html">Change log</a></li>
   </ul>
         </div>
       </div>
@@ -102,79 +102,32 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="loadres">
-<h1><tt class="xref py py-mod docutils literal"><span class="pre">loadres</span></tt><a class="headerlink" href="#loadres" title="Permalink to this headline">¶</a></h1>
-<p>Load results from <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation(s) and provide a <a class="reference external" href="http://www.python.org/">Python</a> interpreter
-to analyze the results.</p>
-<p>This script can be executed at the command line.  It will accept as arguments
-the names of result files or names of directories with result files.  The
-filenames may contain wildcards.  If no arguments are given, the script
-provides a dialog to choose a file or folder.  Finally, it provides working
-session of <a class="reference external" href="http://www.ipython.org/">IPython</a> with the results preloaded.
-<a class="reference external" href="http://www.scipy.org/PyLab">PyLab</a> is directly imported (<tt class="docutils literal"><span class="pre">from</span> <span class="pre">pylab</span> <span class="pre">import</span> <span class="pre">*</span></tt>) to provide many functions
-of <a class="reference external" href="http://numpy.scipy.org/">NumPy</a> and <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a> (e.g., <tt class="xref py py-meth docutils literal"><span class="pre">sin()</span></tt> and <tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt>).  The essential
-classes and functions of ModelicaRes are directly available as well.</p>
-<p><strong>Example:</strong></p>
-<p>To begin this example, copy this script (<em>loadres</em>) to the current directory
-along with the <em>examples</em> folder.</p>
-<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>loadres examples
-Valid: SimRes<span class="o">(</span><span class="s1">&#39;.../examples/ChuaCircuit.mat&#39;</span><span class="o">)</span>
-Valid: SimRes<span class="o">(</span><span class="s1">&#39;.../examples/ThreeTanks.mat&#39;</span><span class="o">)</span>
-Valid: LinRes<span class="o">(</span><span class="s1">&#39;.../examples/PID.mat&#39;</span><span class="o">)</span>
-Simulation results have been loaded into sims<span class="o">[</span>0<span class="o">]</span> through sims<span class="o">[</span>1<span class="o">]</span>.
-A linearization result has been loaded into lin.
+  <div class="section" id="loadres-script">
+<h1><tt class="docutils literal"><span class="pre">loadres</span></tt> script<a class="headerlink" href="#loadres-script" title="Permalink to this headline">¶</a></h1>
+<p>Load results from <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation(s) and/or linearization(s) and provide
+a <a class="reference external" href="http://www.python.org/">Python</a> session to analyze the results.</p>
+<p>This script can be executed from the command line.  It accepts as arguments the
+names of result files or directories with result files.  Wildcards can be used.
+If no arguments are given, then the script provides a dialog to choose files or
+a folder.  After loading files, it provides working session of <a class="reference external" href="http://www.ipython.org/">IPython</a> with the results available.  <a class="reference external" href="http://www.scipy.org/PyLab">PyLab</a> is imported
+(<tt class="docutils literal"><span class="pre">from</span> <span class="pre">pylab</span> <span class="pre">import</span> <span class="pre">*</span></tt>) to provide many functions of <a class="reference external" href="http://numpy.scipy.org/">NumPy</a> and <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>
+(e.g., <tt class="xref py py-meth docutils literal"><span class="pre">sin()</span></tt> and <tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt>).  The essential classes and functions of
+<a class="reference external" href="http://kdavies4.github.io/ModelicaRes">ModelicaRes</a> are imported as well (<tt class="docutils literal"><span class="pre">from</span> <span class="pre">modelicares</span> <span class="pre">import</span> <span class="pre">*</span></tt>).</p>
+<p><strong>Setup and example:</strong></p>
+<p>Open a command prompt in the <em>examples</em> folder from the <a class="reference external" href="http://kdavies4.github.io/ModelicaRes">ModelicaRes</a>
+distribution and execute the following command:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>loadres ChuaCircuit.mat PID.mat
+A simulation result has been loaded into sim <span class="o">(</span>a SimRes instance<span class="o">)</span>.
+A linearization result has been loaded into lin <span class="o">(</span>a LinRes instance<span class="o">)</span>.
+...
 </pre></div>
 </div>
-<p>where &#8216;...&#8217; depends on the local system.</p>
-<p>You can now explore the simulation results or create plots using the methods in
-<a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a>.  For example,</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_FV</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span>
-<span class="go">-0.25352862</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_unit</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span>
-<span class="go">&#39;V&#39;</span>
-</pre></div>
-</div>
-<p>If a variable cannot be found, then suggestions are given:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_description</span><span class="p">(</span><span class="s">&#39;L.vv&#39;</span><span class="p">)</span>
-<span class="go">L.vv is not a valid variable name.</span>
-
-<span class="go">Did you mean one of the these?</span>
-<span class="go">       L.v</span>
-<span class="go">       L.p.v</span>
-<span class="go">       L.n.v</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_description</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span>
-<span class="go">&#39;Voltage drop between the two pins (= p.v - n.v)&#39;</span>
-</pre></div>
-</div>
-<p>To return all values of a variable, use its string as an index:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="p">[</span><span class="s">&#39;L.v&#39;</span><span class="p">]</span>
-<span class="go">array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)</span>
-</pre></div>
-</div>
-<p>or an argument:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span>
-<span class="go">array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)</span>
-</pre></div>
-</div>
-<p>To see all the methods, use</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">sims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-</pre></div>
-</div>
-<p>or go to <a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a>.  To search for variable names, use
-<a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a> with wildcards:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">names</span><span class="p">(</span><span class="s">&#39;L.p*&#39;</span><span class="p">)</span>
-<span class="go">[u&#39;L.p.i&#39;, u&#39;L.p.v&#39;]</span>
-</pre></div>
-</div>
-<p>Likewise, you can explore the linearization result or create diagrams using the
-methods in <a class="reference internal" href="linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">lin</span>
-<span class="go">Modelica linearization results from &quot;.../examples/PID.mat&quot;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lin</span><span class="o">.</span><span class="n">sys</span><span class="o">.</span><span class="n">A</span>
-<span class="go">matrix([[   0.,    0.],</span>
-<span class="go">        [   0., -100.]])</span>
-</pre></div>
-</div>
+<p>If this does not work, then the <em>loadres</em> script probably has not been installed
+to a location recognized by the operating system.  Instead, copy it into the
+<em>examples</em> folder and try again.  If necessary, call <a class="reference external" href="http://www.python.org/">Python</a> explicitly
+(<tt class="docutils literal"><span class="pre">python</span> <span class="pre">loadres</span> <span class="pre">ChuaCircuit.mat</span> <span class="pre">PID.mat</span></tt>).</p>
+<p>Please also see the tutorial, which is available as an <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">IPython notebook</a>
+or online as a <a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">static page</a>.</p>
 </div>
 
 
@@ -198,13 +151,12 @@ methods in <a class="reference internal" href="linres.html#modelicares.linres.Li
         <li class="right" >
           <a href="index.html" title="ModelicaRes"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 30, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+        &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
+      Last updated on May 21, 2014.
     </div>
   </body>
 </html>

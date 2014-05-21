@@ -15,7 +15,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.10.0',
+        VERSION:     '0.11.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -47,7 +47,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -55,20 +55,22 @@
             <p class="logo"><a href="index.html">
               <img class="logo" src="javascripts/logo.gif" alt="Logo"/>
             </a></p>
-<h3><a href="index.html">Table Of Contents</a></h3>
+<h3><a href="index.html">Table of Contents</a></h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial (IPython notebook)</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics (ditto)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="base.html"><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
+<div id="searchbox" style="display: none" role="search">
+  <h3><a href="search.html">Search</a></h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
@@ -76,16 +78,14 @@
       <input type="hidden" name="area" value="default" />
     </form>
     <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
     </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
   <ul>
     <li><a itemprop="downloadUrl"
-           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.10.0.tar.gz"
-           rel="nofollow">Latest version (v0.10.0)</a></li>
-    <li><a href="Changelog.html">Changelog</a></li>
-    <li><a href="ModelicaRes.pdf" onclick=”var that=this;_gaq.push(['_trackEvent','Download','PDF',this.href]);setTimeout(function(){location.href=that.href;},200);return false;”>PDF documentation</a></li>
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
+           rel="nofollow">Latest version (v0.11.1)</a></li>
+    <li><a href="changelog.html">Change log</a></li>
   </ul>
         </div>
       </div>
@@ -103,7 +103,6 @@
  | <a href="#A"><strong>A</strong></a>
  | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
- | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
@@ -133,48 +132,28 @@
   <dt><a href="simres.html#modelicares.simres.SimRes.__contains__">__contains__() (modelicares.simres.SimRes method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="simres.html#modelicares.simres.SimResList.__contains__">(modelicares.simres.SimResList method)</a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="simres.html#modelicares.simres.SimRes.__getitem__">__getitem__() (modelicares.simres.SimRes method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
+      <dd><dl>
+        
+  <dt><a href="simres.html#modelicares.simres.SimResList.__getitem__">(modelicares.simres.SimResList method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="simres.html#modelicares.simres.SimRes.__len__">__len__() (modelicares.simres.SimRes method)</a>
   </dt>
 
-      
-  <dt><a href="base.html#modelicares.base.Quantity.__repr__">__repr__() (modelicares.base.Quantity method)</a>
-  </dt>
-
-      <dd><dl>
-        
-  <dt><a href="exps.html#modelicares.exps.Experiment.__repr__">(modelicares.exps.Experiment method)</a>
-  </dt>
-
-        
-  <dt><a href="linres.html#modelicares.linres.LinRes.__repr__">(modelicares.linres.LinRes method)</a>
-  </dt>
-
-        
-  <dt><a href="simres.html#modelicares.simres.SimRes.__repr__">(modelicares.simres.SimRes method)</a>
-  </dt>
-
-      </dl></dd>
-      
-  <dt><a href="exps.html#modelicares.exps.ParamDict.__str__">__str__() (modelicares.exps.ParamDict method)</a>
-  </dt>
-
-      <dd><dl>
-        
-  <dt><a href="linres.html#modelicares.linres.LinRes.__str__">(modelicares.linres.LinRes method)</a>
-  </dt>
-
-        
-  <dt><a href="simres.html#modelicares.simres.SimRes.__str__">(modelicares.simres.SimRes method)</a>
-  </dt>
-
-      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -182,21 +161,27 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="base.html#modelicares.base.add_arrows">add_arrows() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.add_arrows">add_arrows() (in module modelicares.util)</a>
   </dt>
 
       
-  <dt><a href="base.html#modelicares.base.add_hlines">add_hlines() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.add_hlines">add_hlines() (in module modelicares.util)</a>
   </dt>
 
       
-  <dt><a href="base.html#modelicares.base.add_vlines">add_vlines() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.add_vlines">add_vlines() (in module modelicares.util)</a>
   </dt>
 
       
-  <dt><a href="base.html#modelicares.base.animate">animate() (in module modelicares.base)</a>
+  <dt><a href="linres.html#modelicares.linres.LinResList.append">append() (modelicares.linres.LinResList method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="simres.html#modelicares.simres.SimResList.append">(modelicares.simres.SimResList method)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
@@ -204,7 +189,11 @@
   </dt>
 
       
-  <dt><a href="base.html#modelicares.base.ArrowLine">ArrowLine (class in modelicares.base)</a>
+  <dt><a href="simres.html#modelicares.simres.Variable.array">array() (modelicares.simres.Variable method)</a>
+  </dt>
+
+      
+  <dt><a href="util.html#modelicares.util.ArrowLine">ArrowLine (class in modelicares.util)</a>
   </dt>
 
       
@@ -221,6 +210,12 @@
   <dt><a href="linres.html#modelicares.linres.LinRes.bode">bode() (modelicares.linres.LinRes method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="linres.html#modelicares.linres.LinResList.bode">(modelicares.linres.LinResList method)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
@@ -234,33 +229,13 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="base.html#modelicares.base.closeall">closeall() (in module modelicares.base)</a>
-  </dt>
-
-      
-  <dt><a href="base.html#modelicares.base.color">color() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.cast_sametype">cast_sametype() (in module modelicares.util)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="base.html#modelicares.base.convert">convert() (in module modelicares.base)</a>
-  </dt>
-
-  </dl></td>
-</tr></table>
-
-<h2 id="D">D</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="simres.html#modelicares.simres.Info.description">description() (modelicares.simres.Info method)</a>
-  </dt>
-
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="simres.html#modelicares.simres.Info.displayUnit">displayUnit() (modelicares.simres.Info method)</a>
+  <dt><a href="util.html#modelicares.util.color">color() (in module modelicares.util)</a>
   </dt>
 
   </dl></td>
@@ -270,7 +245,7 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="base.html#modelicares.base.expand_path">expand_path() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.expand_path">expand_path() (in module modelicares.util)</a>
   </dt>
 
   </dl></td>
@@ -286,21 +261,27 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="base.html#modelicares.base.Quantity.factor">factor (modelicares.base.Quantity attribute)</a>
+  <dt><a href="linres.html#modelicares.linres.LinRes.fbase">fbase() (modelicares.linres.LinRes method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="simres.html#modelicares.simres.SimRes.fbase">(modelicares.simres.SimRes method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="util.html#modelicares.util.figure">figure() (in module modelicares.util)</a>
   </dt>
 
       
-  <dt><a href="base.html#modelicares.base.figure">figure() (in module modelicares.base)</a>
-  </dt>
-
-      
-  <dt><a href="base.html#modelicares.base.flatten_dict">flatten_dict() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.flatten_dict">flatten_dict() (in module modelicares.util)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="base.html#modelicares.base.flatten_list">flatten_list() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.flatten_list">flatten_list() (in module modelicares.util)</a>
   </dt>
 
       
@@ -308,7 +289,7 @@
   </dt>
 
       
-  <dt><a href="simres.html#modelicares.simres.Info.FV">FV() (modelicares.simres.Info method)</a>
+  <dt><a href="simres.html#modelicares.simres.Variable.FV">FV() (modelicares.simres.Variable method)</a>
   </dt>
 
   </dl></td>
@@ -322,69 +303,17 @@
   </dt>
 
       
-  <dt><a href="simres.html#modelicares.simres.SimRes.get_description">get_description() (modelicares.simres.SimRes method)</a>
-  </dt>
-
-      
-  <dt><a href="simres.html#modelicares.simres.SimRes.get_displayUnit">get_displayUnit() (modelicares.simres.SimRes method)</a>
-  </dt>
-
-      
-  <dt><a href="simres.html#modelicares.simres.SimRes.get_FV">get_FV() (modelicares.simres.SimRes method)</a>
-  </dt>
-
-      
-  <dt><a href="base.html#modelicares.base.get_indices">get_indices() (in module modelicares.base)</a>
-  </dt>
-
-      
-  <dt><a href="simres.html#modelicares.simres.SimRes.get_indices_wi_times">get_indices_wi_times() (modelicares.simres.SimRes method)</a>
-  </dt>
-
-      
-  <dt><a href="simres.html#modelicares.simres.SimRes.get_IV">get_IV() (modelicares.simres.SimRes method)</a>
-  </dt>
-
-      
-  <dt><a href="simres.html#modelicares.simres.SimRes.get_max">get_max() (modelicares.simres.SimRes method)</a>
-  </dt>
-
-      
-  <dt><a href="simres.html#modelicares.simres.SimRes.get_mean">get_mean() (modelicares.simres.SimRes method)</a>
+  <dt><a href="util.html#modelicares.util.get_indices">get_indices() (in module modelicares.util)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="simres.html#modelicares.simres.SimRes.get_min">get_min() (modelicares.simres.SimRes method)</a>
+  <dt><a href="util.html#modelicares.util.get_pow10">get_pow10() (in module modelicares.util)</a>
   </dt>
 
       
-  <dt><a href="base.html#modelicares.base.get_pow10">get_pow10() (in module modelicares.base)</a>
-  </dt>
-
-      
-  <dt><a href="base.html#modelicares.base.get_pow1000">get_pow1000() (in module modelicares.base)</a>
-  </dt>
-
-      
-  <dt><a href="simres.html#modelicares.simres.SimRes.get_times">get_times() (modelicares.simres.SimRes method)</a>
-  </dt>
-
-      
-  <dt><a href="simres.html#modelicares.simres.SimRes.get_tuple">get_tuple() (modelicares.simres.SimRes method)</a>
-  </dt>
-
-      
-  <dt><a href="simres.html#modelicares.simres.SimRes.get_unit">get_unit() (modelicares.simres.SimRes method)</a>
-  </dt>
-
-      
-  <dt><a href="simres.html#modelicares.simres.SimRes.get_values">get_values() (modelicares.simres.SimRes method)</a>
-  </dt>
-
-      
-  <dt><a href="simres.html#modelicares.simres.SimRes.get_values_at_times">get_values_at_times() (modelicares.simres.SimRes method)</a>
+  <dt><a href="util.html#modelicares.util.get_pow1000">get_pow1000() (in module modelicares.util)</a>
   </dt>
 
   </dl></td>
@@ -394,17 +323,13 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="simres.html#modelicares.simres.Info.indices_wi_times">indices_wi_times() (modelicares.simres.Info method)</a>
-  </dt>
-
-      
-  <dt><a href="simres.html#modelicares.simres.Info">Info (class in modelicares.simres)</a>
+  <dt><a href="simres.html#modelicares.simres.Variable.is_constant">is_constant() (modelicares.simres.Variable method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="simres.html#modelicares.simres.Info.IV">IV() (modelicares.simres.Info method)</a>
+  <dt><a href="simres.html#modelicares.simres.Variable.IV">IV() (modelicares.simres.Variable method)</a>
   </dt>
 
   </dl></td>
@@ -414,21 +339,21 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="texunit.html#modelicares.texunit.label_number">label_number() (in module modelicares.texunit)</a>
+  <dt><a href="linres.html#modelicares.linres.LinRes">LinRes (class in modelicares.linres)</a>
   </dt>
 
       
-  <dt><a href="texunit.html#modelicares.texunit.label_quantity">label_quantity() (in module modelicares.texunit)</a>
+  <dt><a href="linres.html#modelicares.linres.LinResList">LinResList (class in modelicares.linres)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="linres.html#modelicares.linres.LinRes">LinRes (class in modelicares.linres)</a>
+  <dt><a href="modelicares.html#modelicares.load">load() (in module modelicares)</a>
   </dt>
 
       
-  <dt><a href="base.html#modelicares.base.load_csv">load_csv() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.load_csv">load_csv() (in module modelicares.util)</a>
   </dt>
 
   </dl></td>
@@ -438,19 +363,23 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="simres.html#modelicares.simres.Info.max">max() (modelicares.simres.Info method)</a>
+  <dt><a href="util.html#modelicares.util.match">match() (in module modelicares.util)</a>
   </dt>
 
       
-  <dt><a href="simres.html#modelicares.simres.Info.mean">mean() (modelicares.simres.Info method)</a>
+  <dt><a href="simres.html#modelicares.simres.Variable.max">max() (modelicares.simres.Variable method)</a>
   </dt>
 
       
-  <dt><a href="simres.html#modelicares.simres.merge_times">merge_times() (in module modelicares.simres)</a>
+  <dt><a href="simres.html#modelicares.simres.Variable.mean">mean() (modelicares.simres.Variable method)</a>
   </dt>
 
       
-  <dt><a href="simres.html#modelicares.simres.Info.min">min() (modelicares.simres.Info method)</a>
+  <dt><a href="simres.html#modelicares.simres.Variable.mean_rectified">mean_rectified() (modelicares.simres.Variable method)</a>
+  </dt>
+
+      
+  <dt><a href="simres.html#modelicares.simres.Variable.min">min() (modelicares.simres.Variable method)</a>
   </dt>
 
       
@@ -458,37 +387,25 @@
   </dt>
 
       
-  <dt><a href="exps.html#modelicares.exps.modelica_array">modelica_array() (in module modelicares.exps)</a>
+  <dt><a href="exps.html#modelicares.exps.modelica_str">modelica_str() (in module modelicares.exps)</a>
   </dt>
 
-      
-  <dt><a href="exps.html#modelicares.exps.modelica_boolean">modelica_boolean() (in module modelicares.exps)</a>
-  </dt>
-
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="modelicares.html#module-modelicares">modelicares (module)</a>
-  </dt>
-
-      
-  <dt><a href="base.html#module-modelicares.base">modelicares.base (module)</a>
   </dt>
 
       
   <dt><a href="exps.html#module-modelicares.exps">modelicares.exps (module)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="exps.doe.html#module-modelicares.exps.doe">modelicares.exps.doe (module)</a>
   </dt>
 
       
   <dt><a href="linres.html#module-modelicares.linres">modelicares.linres (module)</a>
-  </dt>
-
-      
-  <dt><a href="multi.html#module-modelicares.multi">modelicares.multi (module)</a>
   </dt>
 
       
@@ -500,19 +417,7 @@
   </dt>
 
       
-  <dt><a href="multi.html#modelicares.multi.multibode">multibode() (in module modelicares.multi)</a>
-  </dt>
-
-      
-  <dt><a href="multi.html#modelicares.multi.multiload">multiload() (in module modelicares.multi)</a>
-  </dt>
-
-      
-  <dt><a href="multi.html#modelicares.multi.multinyquist">multinyquist() (in module modelicares.multi)</a>
-  </dt>
-
-      
-  <dt><a href="multi.html#modelicares.multi.multiplot">multiplot() (in module modelicares.multi)</a>
+  <dt><a href="util.html#module-modelicares.util">modelicares.util (module)</a>
   </dt>
 
   </dl></td>
@@ -522,23 +427,45 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="simres.html#modelicares.simres.SimRes.n_constants">n_constants() (modelicares.simres.SimRes method)</a>
+  </dt>
+
+      
   <dt><a href="simres.html#modelicares.simres.SimRes.names">names() (modelicares.simres.SimRes method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="simres.html#modelicares.simres.SimResList.names">(modelicares.simres.SimResList method)</a>
+  </dt>
+
+      </dl></dd>
       
   <dt><a href="simres.html#modelicares.simres.SimRes.nametree">nametree() (modelicares.simres.SimRes method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="simres.html#modelicares.simres.SimResList.nametree">(modelicares.simres.SimResList method)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="base.html#modelicares.base.Quantity.number">number (modelicares.base.Quantity attribute)</a>
+  <dt><a href="texunit.html#modelicares.texunit.number_label">number_label() (in module modelicares.texunit)</a>
   </dt>
 
       
   <dt><a href="linres.html#modelicares.linres.LinRes.nyquist">nyquist() (modelicares.linres.LinRes method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="linres.html#modelicares.linres.LinResList.nyquist">(modelicares.linres.LinResList method)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -547,12 +474,6 @@
   <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="exps.doe.html#modelicares.exps.doe.ofat">ofat() (in module modelicares.exps.doe)</a>
-  </dt>
-
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
-      
-  <dt><a href="base.html#modelicares.base.Quantity.offset">offset (modelicares.base.Quantity attribute)</a>
   </dt>
 
   </dl></td>
@@ -572,12 +493,16 @@
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="base.html#modelicares.base.plot">plot() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.plot">plot() (in module modelicares.util)</a>
   </dt>
 
       <dd><dl>
         
   <dt><a href="simres.html#modelicares.simres.SimRes.plot">(modelicares.simres.SimRes method)</a>
+  </dt>
+
+        
+  <dt><a href="simres.html#modelicares.simres.SimResList.plot">(modelicares.simres.SimResList method)</a>
   </dt>
 
       </dl></dd>
@@ -588,13 +513,13 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="base.html#modelicares.base.Quantity">Quantity (class in modelicares.base)</a>
+  <dt><a href="texunit.html#modelicares.texunit.quantity_str">quantity_str() (in module modelicares.texunit)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="base.html#modelicares.base.quiver">quiver() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.quiver">quiver() (in module modelicares.util)</a>
   </dt>
 
   </dl></td>
@@ -607,8 +532,16 @@
   <dt><a href="exps.html#modelicares.exps.read_params">read_params() (in module modelicares.exps)</a>
   </dt>
 
+      
+  <dt><a href="simres.html#modelicares.simres.Variable.RMS">RMS() (modelicares.simres.Variable method)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="simres.html#modelicares.simres.Variable.RMS_AC">RMS_AC() (modelicares.simres.Variable method)</a>
+  </dt>
+
       
   <dt><a href="exps.html#modelicares.exps.run_models">run_models() (in module modelicares.exps)</a>
   </dt>
@@ -624,29 +557,37 @@
   </dt>
 
       
-  <dt><a href="base.html#modelicares.base.save">save() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.save">save() (in module modelicares.util)</a>
   </dt>
 
       
-  <dt><a href="base.html#modelicares.base.saveall">saveall() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.saveall">saveall() (in module modelicares.util)</a>
   </dt>
 
       
-  <dt><a href="base.html#modelicares.base.setup_subplots">setup_subplots() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.setup_subplots">setup_subplots() (in module modelicares.util)</a>
+  </dt>
+
+      
+  <dt><a href="util.html#modelicares.util.shift_scale_x">shift_scale_x() (in module modelicares.util)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="base.html#modelicares.base.shift_scale_x">shift_scale_x() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.shift_scale_y">shift_scale_y() (in module modelicares.util)</a>
   </dt>
 
       
-  <dt><a href="base.html#modelicares.base.shift_scale_y">shift_scale_y() (in module modelicares.base)</a>
+  <dt><a href="util.html#modelicares.util.si_prefix">si_prefix() (in module modelicares.util)</a>
   </dt>
 
       
   <dt><a href="simres.html#modelicares.simres.SimRes">SimRes (class in modelicares.simres)</a>
+  </dt>
+
+      
+  <dt><a href="simres.html#modelicares.simres.SimResList">SimResList (class in modelicares.simres)</a>
   </dt>
 
   </dl></td>
@@ -656,13 +597,21 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="simres.html#modelicares.simres.Info.times">times() (modelicares.simres.Info method)</a>
+  <dt><a href="simres.html#modelicares.simres.Variable.times">times() (modelicares.simres.Variable method)</a>
+  </dt>
+
+      
+  <dt><a href="simres.html#modelicares.simres.SimRes.to_pandas">to_pandas() (modelicares.simres.SimRes method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="simres.html#modelicares.simres.Info.tuple">tuple() (modelicares.simres.Info method)</a>
+  <dt><a href="linres.html#modelicares.linres.LinRes.to_tf">to_tf() (modelicares.linres.LinRes method)</a>
+  </dt>
+
+      
+  <dt><a href="util.html#modelicares.util.tree">tree() (in module modelicares.util)</a>
   </dt>
 
   </dl></td>
@@ -672,11 +621,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="base.html#modelicares.base.Quantity.unit">unit (modelicares.base.Quantity attribute)</a>
+  <dt><a href="simres.html#modelicares.simres.SimResList.unique_IVs">unique_IVs() (modelicares.simres.SimResList method)</a>
   </dt>
 
       
-  <dt><a href="simres.html#modelicares.simres.Info.unit">unit() (modelicares.simres.Info method)</a>
+  <dt><a href="simres.html#modelicares.simres.SimResList.unique_names">unique_names() (modelicares.simres.SimResList method)</a>
   </dt>
 
   </dl></td>
@@ -692,13 +641,17 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="simres.html#modelicares.simres.Info.values">values() (modelicares.simres.Info method)</a>
+  <dt><a href="simres.html#modelicares.simres.Variable.value">value() (modelicares.simres.Variable method)</a>
+  </dt>
+
+      
+  <dt><a href="simres.html#modelicares.simres.Variable.values">values() (modelicares.simres.Variable method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="simres.html#modelicares.simres.Info.values_at_times">values_at_times() (modelicares.simres.Info method)</a>
+  <dt><a href="simres.html#modelicares.simres.Variable">Variable (class in modelicares.simres)</a>
   </dt>
 
   </dl></td>
@@ -736,13 +689,12 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 30, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+        &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
+      Last updated on May 21, 2014.
     </div>
   </body>
 </html>

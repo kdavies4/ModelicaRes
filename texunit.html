@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.10.0',
+        VERSION:     '0.11.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -30,7 +30,7 @@
           href="javascripts/opensearch.xml"/>
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
     <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
-    <link rel="next" title="modelicares.base" href="base.html" />
+    <link rel="next" title="modelicares.util" href="util.html" />
     <link rel="prev" title="modelicares.exps" href="exps.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
@@ -49,12 +49,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="base.html" title="modelicares.base"
+          <a href="util.html" title="modelicares.util"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="exps.html" title="modelicares.exps"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -62,20 +62,22 @@
             <p class="logo"><a href="index.html">
               <img class="logo" src="javascripts/logo.gif" alt="Logo"/>
             </a></p>
-<h3><a href="index.html">Table Of Contents</a></h3>
+<h3><a href="index.html">Table of Contents</a></h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial (IPython notebook)</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics (ditto)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="base.html"><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
+<div id="searchbox" style="display: none" role="search">
+  <h3><a href="search.html">Search</a></h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
@@ -83,16 +85,14 @@
       <input type="hidden" name="area" value="default" />
     </form>
     <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
     </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
   <ul>
     <li><a itemprop="downloadUrl"
-           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.10.0.tar.gz"
-           rel="nofollow">Latest version (v0.10.0)</a></li>
-    <li><a href="Changelog.html">Changelog</a></li>
-    <li><a href="ModelicaRes.pdf" onclick=”var that=this;_gaq.push(['_trackEvent','Download','PDF',this.href]);setTimeout(function(){location.href=that.href;},200);return false;”>PDF documentation</a></li>
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
+           rel="nofollow">Latest version (v0.11.1)</a></li>
+    <li><a href="changelog.html">Change log</a></li>
   </ul>
         </div>
       </div>
@@ -106,16 +106,15 @@
 <span id="modelicares-texunit"></span><h1><a class="reference internal" href="#module-modelicares.texunit" title="modelicares.texunit"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.texunit</span></tt></a><a class="headerlink" href="#module-modelicares.texunit" title="Permalink to this headline">¶</a></h1>
 <p>Functions to format numbers to support <a class="reference external" href="http://www.latex-project.org/">LaTeX</a></p>
 <ul class="simple">
-<li><a class="reference internal" href="#modelicares.texunit.label_number" title="modelicares.texunit.label_number"><tt class="xref py py-meth docutils literal"><span class="pre">label_number()</span></tt></a> - Generate text to label a number as a quantity
-expressed in a unit</li>
-<li><a class="reference internal" href="#modelicares.texunit.label_quantity" title="modelicares.texunit.label_quantity"><tt class="xref py py-meth docutils literal"><span class="pre">label_quantity()</span></tt></a> - Generate text to write a quantity as a number times
-a unit</li>
+<li><a class="reference internal" href="#modelicares.texunit.number_label" title="modelicares.texunit.number_label"><tt class="xref py py-meth docutils literal"><span class="pre">number_label()</span></tt></a> - Return a string to indicate a quantity in a unit</li>
+<li><a class="reference internal" href="#modelicares.texunit.quantity_str" title="modelicares.texunit.quantity_str"><tt class="xref py py-meth docutils literal"><span class="pre">quantity_str()</span></tt></a> - Return a string to represent a quantity as a number
+times a unit</li>
 <li><a class="reference internal" href="#modelicares.texunit.unit2tex" title="modelicares.texunit.unit2tex"><tt class="xref py py-meth docutils literal"><span class="pre">unit2tex()</span></tt></a> - Convert a <a class="reference external" href="http://www.modelica.org/">Modelica</a> unit string to <a class="reference external" href="http://www.latex-project.org/">LaTeX</a></li>
 </ul>
 <dl class="function">
-<dt id="modelicares.texunit.label_number">
-<tt class="descclassname">modelicares.texunit.</tt><tt class="descname">label_number</tt><big>(</big><em>quantity=''</em>, <em>unit=None</em>, <em>times='\\</em>, <em>'</em>, <em>per='\\</em>, <em>/\\</em>, <em>'</em>, <em>roman=False</em><big>)</big><a class="headerlink" href="#modelicares.texunit.label_number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate text to label a number as a quantity expressed in a unit.</p>
+<dt id="modelicares.texunit.number_label">
+<tt class="descclassname">modelicares.texunit.</tt><tt class="descname">number_label</tt><big>(</big><em>quantity=''</em>, <em>unit=None</em>, <em>times='\\</em>, <em>'</em>, <em>per='\\</em>, <em>/\\</em>, <em>'</em>, <em>roman=False</em><big>)</big><a class="headerlink" href="#modelicares.texunit.number_label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string to label a number, specifically a quantity in a unit</p>
 <p>The unit is formatted with <a class="reference external" href="http://www.latex-project.org/">LaTeX</a> as needed.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -143,7 +142,7 @@ division associated with the units on the denominator is always
 indicated by a negative exponential.</p>
 <p>If the unit is not a simple scaling factor, then &#8220;in&#8221; is used instead.
 For example,</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">label_number</span><span class="p">(</span><span class="s">&quot;Gain&quot;</span><span class="p">,</span> <span class="s">&quot;dB&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">number_label</span><span class="p">(</span><span class="s">&quot;Gain&quot;</span><span class="p">,</span> <span class="s">&quot;dB&quot;</span><span class="p">)</span>
 <span class="go">&#39;Gain in $dB$&#39;</span>
 </pre></div>
 </div>
@@ -155,12 +154,12 @@ than italics)</p>
 </ul>
 <p><strong>Examples:</strong></p>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">label_number</span><span class="p">(</span><span class="s">&quot;Mobility&quot;</span><span class="p">,</span> <span class="s">&quot;m2/(V.s)&quot;</span><span class="p">,</span> <span class="n">roman</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">number_label</span><span class="p">(</span><span class="s">&quot;Mobility&quot;</span><span class="p">,</span> <span class="s">&quot;m2/(V.s)&quot;</span><span class="p">,</span> <span class="n">roman</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="go">&#39;Mobility$\\,/\\,\\mathrm{m^{2}\\,V^{-1}\\,s^{-1}}$&#39;</span>
 </pre></div>
 </div>
 <p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: Mobility <img class="math" src="images/math/6392082ab7f0b5986af5238ddc792e4102e0b837.png" alt="\,/\,\mathrm{m^{2}\,V^{-1}\,s^{-1}}"/></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">label_number</span><span class="p">(</span><span class="s">&quot;Mole fraction&quot;</span><span class="p">,</span> <span class="s">&quot;1&quot;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">number_label</span><span class="p">(</span><span class="s">&quot;Mole fraction&quot;</span><span class="p">,</span> <span class="s">&quot;1&quot;</span><span class="p">)</span>
 <span class="go">&#39;Mole fraction&#39;</span>
 </pre></div>
 </div>
@@ -168,8 +167,8 @@ than italics)</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.texunit.label_quantity">
-<tt class="descclassname">modelicares.texunit.</tt><tt class="descname">label_quantity</tt><big>(</big><em>number</em>, <em>unit=''</em>, <em>format='%G'</em>, <em>times='\\</em>, <em>'</em>, <em>roman=False</em><big>)</big><a class="headerlink" href="#modelicares.texunit.label_quantity" title="Permalink to this definition">¶</a></dt>
+<dt id="modelicares.texunit.quantity_str">
+<tt class="descclassname">modelicares.texunit.</tt><tt class="descname">quantity_str</tt><big>(</big><em>number</em>, <em>unit=''</em>, <em>format='%G'</em>, <em>times='\\</em>, <em>'</em>, <em>roman=False</em><big>)</big><a class="headerlink" href="#modelicares.texunit.quantity_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate text to write a quantity as a number times a unit.</p>
 <p>If an exponent is present, then either a LaTeX-formatted exponential or a
 System International (SI) prefix is applied.</p>
@@ -209,22 +208,22 @@ than italics)</p>
 </ul>
 <p><strong>Examples:</strong></p>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">label_quantity</span><span class="p">(</span><span class="mf">1.2345e-3</span><span class="p">,</span> <span class="s">&#39;m&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.3e</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">roman</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quantity_str</span><span class="p">(</span><span class="mf">1.2345e-3</span><span class="p">,</span> <span class="s">&#39;m&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.3e</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">roman</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="go">&#39;1.234$\\,\\mathrm{mm}$&#39;</span>
 </pre></div>
 </div>
 <p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: <img class="math" src="images/math/f8b195efbaf0ffe5542a3a829afb50cb85e233ca.png" alt="1.234\mathrm{\,mm}"/></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">label_quantity</span><span class="p">(</span><span class="mf">1.2345e-3</span><span class="p">,</span> <span class="s">&#39;m&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.3E</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">roman</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quantity_str</span><span class="p">(</span><span class="mf">1.2345e-3</span><span class="p">,</span> <span class="s">&#39;m&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.3E</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">roman</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="go">&#39;1.234$\\times10^{-3}$$\\,\\mathrm{m}$&#39;</span>
 </pre></div>
 </div>
 <p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: <img class="math" src="images/math/28a3677e8a4173f7c7fd600b77071542613f8a95.png" alt="1.234\times10^{-3}\,\mathrm{m}"/></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">label_quantity</span><span class="p">(</span><span class="mf">1.2345e6</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quantity_str</span><span class="p">(</span><span class="mf">1.2345e6</span><span class="p">)</span>
 <span class="go">&#39;1.2345$\\times10^{6}$&#39;</span>
 </pre></div>
 </div>
 <p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: <img class="math" src="images/math/516b366d05af4b384d90cc84ae867097a80e0ebf.png" alt="1.2345\times10^{6}"/></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">label_quantity</span><span class="p">(</span><span class="mf">1e3</span><span class="p">,</span> <span class="s">&#39;\Omega&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.1e</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">roman</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quantity_str</span><span class="p">(</span><span class="mf">1e3</span><span class="p">,</span> <span class="s">&#39;\Omega&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.1e</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">roman</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="go">&#39;1.0$\\,\\mathrm{k\\Omega}$&#39;</span>
 </pre></div>
 </div>
@@ -288,18 +287,17 @@ than italics)</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="base.html" title="modelicares.base"
+          <a href="util.html" title="modelicares.util"
              >next</a> |</li>
         <li class="right" >
           <a href="exps.html" title="modelicares.exps"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 30, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+        &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
+      Last updated on May 21, 2014.
     </div>
   </body>
 </html>

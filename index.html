@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.10.0',
+        VERSION:     '0.11.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -30,7 +30,7 @@
           href="javascripts/opensearch.xml"/>
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
     <link rel="top" title="Analyze Modelica results in Python" href="#" />
-    <link rel="next" title="loadres" href="loadres.html" />
+    <link rel="next" title="loadres script" href="loadres.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
     <meta name="author" content="Kevin L. Davies">
@@ -48,9 +48,9 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="loadres.html" title="loadres"
+          <a href="loadres.html" title="loadres script"
              accesskey="N">next</a> |</li>
-        <li><a href="#">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="#">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -58,20 +58,22 @@
             <p class="logo"><a href="#">
               <img class="logo" src="javascripts/logo.gif" alt="Logo"/>
             </a></p>
-<h3><a href="#">Table Of Contents</a></h3>
+<h3><a href="#">Table of Contents</a></h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial (IPython notebook)</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics (ditto)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="base.html"><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
+<div id="searchbox" style="display: none" role="search">
+  <h3><a href="search.html">Search</a></h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
@@ -79,16 +81,14 @@
       <input type="hidden" name="area" value="default" />
     </form>
     <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
     </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
   <ul>
     <li><a itemprop="downloadUrl"
-           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.10.0.tar.gz"
-           rel="nofollow">Latest version (v0.10.0)</a></li>
-    <li><a href="Changelog.html">Changelog</a></li>
-    <li><a href="ModelicaRes.pdf" onclick=”var that=this;_gaq.push(['_trackEvent','Download','PDF',this.href]);setTimeout(function(){location.href=that.href;},200);return false;”>PDF documentation</a></li>
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
+           rel="nofollow">Latest version (v0.11.1)</a></li>
+    <li><a href="changelog.html">Change log</a></li>
   </ul>
         </div>
       </div>
@@ -101,56 +101,60 @@
   <div class="section" id="modelicares">
 <h1>ModelicaRes<a class="headerlink" href="#modelicares" title="Permalink to this headline">¶</a></h1>
 <p><strong>Python utilities to set up and analyze Modelica simulation experiments</strong></p>
-<p>ModelicaRes is a free, open-source tool to manage <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulations,
-interpret results, and create publishable figures.  It is possible to</p>
+<p>ModelicaRes is a free, open-source tool to conveniently manage <a class="reference external" href="http://www.modelica.org">Modelica</a>
+simulations, interpret results, and create publishable figures.  It is possible
+to</p>
 <ul class="simple">
-<li>Auto-generate simulation scripts,</li>
-<li>Browse data,</li>
-<li>Perform custom calculations, and</li>
-<li>Produce various plots and diagrams.</li>
+<li>auto-generate simulation scripts,</li>
+<li>browse data,</li>
+<li>perform custom calculations,</li>
+<li>produce various plots and diagrams, and</li>
+<li>export data to various formats via <a class="reference external" href="http://pandas.pydata.org">pandas</a>.</li>
 </ul>
-<p>The figures are generated via <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>, which offers a rich set of plotting
-routines.  ModelicaRes includes convenient functions to automatically pre-format
-and label some figures, like xy plots, Bode and Nyquist plots, and Sankey
-diagrams.  ModelicaRes can be scripted or run from a <a class="reference external" href="http://www.python.org/">Python</a> interpreter with
-math and matrix functions from <a class="reference external" href="http://numpy.scipy.org/">NumPy</a>.</p>
+<p>The figures are generated via <a class="reference external" href="http://www.matplotlib.org">matplotlib</a>, which offers a rich set of plotting
+routines.  ModelicaRes includes functions to automatically pre-format and label
+some figures, like xy plots, Bode and Nyquist plots, and Sankey diagrams.
+ModelicaRes can be scripted or used in an interactive <a class="reference external" href="http://www.python.org">Python</a> session with math
+and matrix functions from <a class="reference external" href="http://numpy.scipy.org">NumPy</a>.</p>
 <a class="reference internal image-reference" href="images/browse.png"><img alt="Variable browser" src="images/browse.png" style="width: 371.7px; height: 182.25px;" /></a>
-<a class="reference internal image-reference" href="images/PIDs-nyquist.png"><img alt="Nyquist plot of PID with varying differential time constant" src="images/PIDs-nyquist.png" style="width: 174.65px; height: 164.15px;" /></a>
+<a class="reference internal image-reference" href="images/PIDs-nyquist.png"><img alt="Nyquist plot of PID with varying differential time constant" src="images/PIDs-nyquist.png" style="width: 224.1px; height: 192.6px;" /></a>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<a class="reference internal image-reference" href="images/ChuaCircuit.png"><img alt="Plot of Chua circuit" src="images/ChuaCircuit.png" style="width: 271.6px; height: 164.85px;" /></a>
-<a class="reference internal image-reference" href="images/ThreeTanks.png"><img alt="Sankey digarams of three tanks model" src="images/ThreeTanks.png" style="width: 263.2px; height: 170.45px;" /></a>
-<p>The links below and in the sidebar describe the components of ModelicaRes.
-For an introduction, please see <tt class="xref py py-mod docutils literal"><span class="pre">loadres</span></tt>, which loads data files and
-provides a <a class="reference external" href="http://www.python.org/">Python</a> interpreter to help analyze them.</p>
+<a class="reference internal image-reference" href="images/ChuaCircuit.png"><img alt="Plot of Chua circuit" src="images/ChuaCircuit.png" style="width: 317.25px; height: 193.5px;" /></a>
+<a class="reference internal image-reference" href="images/ThreeTanks.png"><img alt="Sankey digarams of three tanks model" src="images/ThreeTanks.png" style="width: 303.3px; height: 196.2px;" /></a>
+<p>Please see the tutorial, which is available as an <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb">IPython notebook</a>
+or online as a <a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb">static page</a>.
+The links below and in the sidebar provide the full documentation and many
+more examples.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial (IPython notebook)</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics (ditto)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="base.html"><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 </div>
-<p>The top-level module, <a class="reference internal" href="modelicares.html#module-modelicares" title="modelicares"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares</span></tt></a>, provides direct access to the most
-important classes and functions.  Others must be accessed through their
-submodules.  The <a class="reference internal" href="simres.html#module-modelicares.simres" title="modelicares.simres"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.simres</span></tt></a> submodule has classes to load,
-analyze, and plot simulation results.  The <a class="reference internal" href="linres.html#module-modelicares.linres" title="modelicares.linres"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.linres</span></tt></a> submodule
-has a class to load, analyze, and plot results from linearizing a model.
-The <a class="reference internal" href="multi.html#module-modelicares.multi" title="modelicares.multi"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.multi</span></tt></a> submodule has functions to load and plot results
-from multiple data files at once. The <a class="reference internal" href="exps.html#module-modelicares.exps" title="modelicares.exps"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.exps</span></tt></a> submodule has
+<p>The <a class="reference external" href="loadres.html">loadres script</a> helps to load simulation and linearization
+results from the command line.  The top-level module, <a class="reference internal" href="modelicares.html#module-modelicares" title="modelicares"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares</span></tt></a>,
+provides direct access to the most important classes and functions.  Others must
+be accessed through their submodules.  The <a class="reference internal" href="simres.html#module-modelicares.simres" title="modelicares.simres"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.simres</span></tt></a> submodule
+has classes to load, analyze, and plot simulation results.  The
+<a class="reference internal" href="linres.html#module-modelicares.linres" title="modelicares.linres"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.linres</span></tt></a> submodule has a class to load, analyze, and plot
+results from linearizing model(s).  The <a class="reference internal" href="exps.html#module-modelicares.exps" title="modelicares.exps"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.exps</span></tt></a> submodule has
 tools to set up and manage simulation experiments.  The
-<a class="reference internal" href="texunit.html#module-modelicares.texunit" title="modelicares.texunit"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.texunit</span></tt></a> submodule has functions to translate <a class="reference external" href="http://www.modelica.org/">Modelica</a>
-<em>unit</em> and <em>displayUnit</em> strings into <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>-formatted strings.  The last
-submodule, <a class="reference internal" href="base.html#module-modelicares.base" title="modelicares.base"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.base</span></tt></a>, has general supporting functions.</p>
-<p>For a list of changes, please see the <a class="reference external" href="Changelog.html">changelog</a>.  A PDF
-version of this documentation is available <a class="reference external" href="ModelicaRes.pdf">here</a>.</p>
+<a class="reference internal" href="texunit.html#module-modelicares.texunit" title="modelicares.texunit"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.texunit</span></tt></a> submodule has functions to translate <a class="reference external" href="http://www.modelica.org">Modelica</a> <em>unit</em>
+and <em>displayUnit</em> strings into <a class="reference external" href="http://www.latex-project.org">LaTeX</a>-formatted strings.  The last submodule,
+<a class="reference internal" href="util.html#module-modelicares.util" title="modelicares.util"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.util</span></tt></a>, has general supporting functions and classes.</p>
+<p>For a list of changes, please see the <a class="reference external" href="changelog.html">change log</a>.</p>
 <p><strong>Installation</strong></p>
-<p>The easiest way to install this package is to use <a class="reference external" href="https://pypi.python.org/pypi/pip">pip</a>:</p>
+<p>The easiest way to install ModelicaRes is to use <a class="reference external" href="https://pypi.python.org/pypi/pip">pip</a>:</p>
 <div class="highlight-python"><div class="highlight"><pre>pip install modelicares
 </pre></div>
 </div>
@@ -158,8 +162,8 @@ version of this documentation is available <a class="reference external" href="M
 <div class="highlight-python"><div class="highlight"><pre>sudo pip install modelicares
 </pre></div>
 </div>
-<p>Another way is to download and extract a copy of the package from the
-sidebar to the right.  Run the following command from the base folder:</p>
+<p>Another way is to download and extract a copy of the package from the sidebar on
+the right.  Run the following command from the base folder:</p>
 <div class="highlight-python"><div class="highlight"><pre>python setup.py install
 </pre></div>
 </div>
@@ -167,40 +171,44 @@ sidebar to the right.  Run the following command from the base folder:</p>
 <div class="highlight-python"><div class="highlight"><pre>sudo python setup.py install
 </pre></div>
 </div>
-<p>The <em>matplotlibrc</em> file in the base folder has some recommended revisions to
-<a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>&#8216;s defaults.  To use it, copy or move it to the working
-directory or <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>&#8216;s configuration directory.  See
+<p>Some of the required packages may not install automatically.</p>
+<ul class="simple">
+<li>The <a class="reference external" href="http://www.scipy.org/index.html">SciPy</a> stack, including <a class="reference external" href="http://www.matplotlib.org">matplotlib</a> and <a class="reference external" href="http://pandas.pydata.org">pandas</a>, can be installed
+according to the instructions at <a class="reference external" href="http://www.scipy.org/install.html">http://www.scipy.org/install.html</a>.</li>
+<li><a class="reference external" href="http://www.riverbankcomputing.co.uk/software/pyqt">PyQt4</a> can be downloaded from
+<a class="reference external" href="http://www.riverbankcomputing.co.uk/software/pyqt/download">http://www.riverbankcomputing.co.uk/software/pyqt/download</a>.</li>
+<li><a class="reference external" href="http://www.wxpython.org">wxPython</a> can be downloaded from <a class="reference external" href="http://www.wxpython.org/download.php">http://www.wxpython.org/download.php</a>.
+However, it is only required for the <a class="reference external" href="simres.html#modelicares.simres.SimRes.browse">variable browser</a>.</li>
+</ul>
+<p>The <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/release/matplotlibrc">matplotlibrc file</a> has some
+recommended revisions to <a class="reference external" href="http://www.matplotlib.org">matplotlib</a>&#8216;s defaults.  To use it, copy it to the
+working directory or <a class="reference external" href="http://www.matplotlib.org">matplotlib</a>&#8216;s configuration directory.  See
 <a class="reference external" href="http://matplotlib.org/users/customizing.html">http://matplotlib.org/users/customizing.html</a> for details.</p>
 <p><strong>Credits</strong></p>
-<p>The main author is Kevin Davies.  Improvements, bug fixes, and suggestions
-have been provided by Arnout Aertgeerts, Kevin Bandy, Thomas Beutlich,
-Martin Sjölund, Mike Tiller, and Michael Wetter.</p>
-<p>Third-party code has been included from:</p>
+<p>The main author is Kevin Davies.  Code has been included from:</p>
 <ul class="simple">
-<li>Jason Grout (<a class="reference external" href="http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html">ArrowLine</a>
-class),</li>
+<li>Richard Murray (<a class="reference external" href="http://sourceforge.net/apps/mediawiki/python-control">python-control</a>, <a class="reference external" href="https://pypi.python.org/pypi/control">as repackaged</a> by James Goppert),</li>
+<li>Joerg Raedler (method to expand a <a class="reference external" href="http://www.modelica.org">Modelica</a> variable tree&#8212;from <a class="reference external" href="http://www.j-raedler.de/projects/dymat">DyMat</a>),</li>
+<li>Jason Grout (<a class="reference external" href="http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html">ArrowLine class</a>), and</li>
 <li>Jason Heeris (<a class="reference external" href="http://www.mail-archive.com/matplotlib-users&#64;lists.sourceforge.net/msg14433.html">efficient base-10 logarithm</a>),</li>
-<li>Richard Murray (<a class="reference external" href="http://sourceforge.net/apps/mediawiki/python-control">python-control</a>), and</li>
-<li>Joerg Raedler (method to expand a <a class="reference external" href="http://www.modelica.org/">Modelica</a> variable tree&#8212;from
-<a class="reference external" href="http://www.j-raedler.de/projects/dymat/">DyMat</a>).</li>
 </ul>
+<p>Suggestions and bug fixes have been provided by Arnout Aertgeerts, Kevin Bandy,
+Thomas Beutlich, Martin Sjölund, Mike Tiller, and Michael Wetter.</p>
 <p><strong>License terms and development</strong></p>
-<p><a class="reference internal" href="#modelicares">ModelicaRes</a> is published under a BSD license (see LICENSE.txt).  Please share
-any modifications you make (preferably on a Github fork from
-<a class="reference external" href="https://github.com/kdavies4/ModelicaRes">https://github.com/kdavies4/ModelicaRes</a>) in order to help others.  If you find
-a bug, please <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/issues/new">report it</a>.  If you have
+<p>ModelicaRes is published under a <a class="reference external" href="license.html">BSD-compatible license</a>.  The
+development site is <a class="reference external" href="https://github.com/kdavies4/ModelicaRes">https://github.com/kdavies4/ModelicaRes</a>.  Please share any
+modifications you make (preferably as a pull request to the <tt class="docutils literal"><span class="pre">master</span></tt> branch at
+that site) in order to help others.  If you find a bug, please <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/issues/new">report it</a>.  If you have
 suggestions, please <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/wiki/Suggestions">share them</a>.</p>
 <p><strong>See also</strong></p>
-<p>The following <a class="reference external" href="http://www.python.org/">Python</a> projects are related:</p>
 <ul class="simple">
 <li><a class="reference external" href="https://github.com/saroele/awesim">awesim</a>: helps run simulation experiments and organize results</li>
-<li><a class="reference external" href="http://simulationresearch.lbl.gov/modelica/buildingspy/">BuildingsPy</a>: supports unit testing</li>
-<li><a class="reference external" href="http://www.j-raedler.de/projects/dymat/">DyMat</a>: exports <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation data to comma-separated values
-(CSV), <a class="reference external" href="http://www.gnuplot.info/">Gnuplot</a>, MATLAB®, and <a class="reference external" href="http://www.unidata.ucar.edu/software/netcdf/">Network Common
-Data Form (netCDF)</a></li>
+<li><a class="reference external" href="http://simulationresearch.lbl.gov/modelica/buildingspy">BuildingsPy</a>: supports unit testing</li>
+<li><a class="reference external" href="http://www.j-raedler.de/projects/dymat">DyMat</a>: exports <a class="reference external" href="http://www.modelica.org">Modelica</a> simulation data to comma-separated values
+(<a class="reference external" href="http://en.wikipedia.org/wiki/Comma-separated_values">CSV</a>), <a class="reference external" href="http://www.gnuplot.info">Gnuplot</a>, MATLAB®, and Network Common Data Form (<a class="reference external" href="http://www.unidata.ucar.edu/software/netcdf">netCDF</a>)</li>
 <li><a class="reference external" href="https://pypi.python.org/pypi/PyFMI">PyFMI</a>: tools to work with models through the Functional Mock-Up Interface
-(FMI) standard</li>
-<li><a class="reference external" href="https://github.com/PySimulator/PySimulator">PySimulator</a>: elaborate GUI; supports FMI</li>
+(<a class="reference external" href="https://www.fmi-standard.org">FMI</a>) standard</li>
+<li><a class="reference external" href="https://github.com/PySimulator/PySimulator">PySimulator</a>: elaborate GUI; supports <a class="reference external" href="https://www.fmi-standard.org">FMI</a></li>
 </ul>
 </div>
 
@@ -220,15 +228,14 @@ Data Form (netCDF)</a></li>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="loadres.html" title="loadres"
+          <a href="loadres.html" title="loadres script"
              >next</a> |</li>
-        <li><a href="#">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="#">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 30, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+        &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
+      Last updated on May 21, 2014.
     </div>
   </body>
 </html>

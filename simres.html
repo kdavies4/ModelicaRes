@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.10.0',
+        VERSION:     '0.11.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -54,7 +54,7 @@
         <li class="right" >
           <a href="modelicares.html" title="modelicares"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -62,20 +62,22 @@
             <p class="logo"><a href="index.html">
               <img class="logo" src="javascripts/logo.gif" alt="Logo"/>
             </a></p>
-<h3><a href="index.html">Table Of Contents</a></h3>
+<h3><a href="index.html">Table of Contents</a></h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial (IPython notebook)</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics (ditto)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="base.html"><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
+<div id="searchbox" style="display: none" role="search">
+  <h3><a href="search.html">Search</a></h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
@@ -83,16 +85,14 @@
       <input type="hidden" name="area" value="default" />
     </form>
     <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
     </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
   <ul>
     <li><a itemprop="downloadUrl"
-           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.10.0.tar.gz"
-           rel="nofollow">Latest version (v0.10.0)</a></li>
-    <li><a href="Changelog.html">Changelog</a></li>
-    <li><a href="ModelicaRes.pdf" onclick=”var that=this;_gaq.push(['_trackEvent','Download','PDF',this.href]);setTimeout(function(){location.href=that.href;},200);return false;”>PDF documentation</a></li>
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
+           rel="nofollow">Latest version (v0.11.1)</a></li>
+    <li><a href="changelog.html">Change log</a></li>
   </ul>
         </div>
       </div>
@@ -104,208 +104,90 @@
             
   <div class="section" id="module-modelicares.simres">
 <span id="modelicares-simres"></span><h1><a class="reference internal" href="#module-modelicares.simres" title="modelicares.simres"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.simres</span></tt></a><a class="headerlink" href="#module-modelicares.simres" title="Permalink to this headline">¶</a></h1>
-<p>Classes and functions to Load, analyze, and plot results from <a class="reference external" href="http://www.modelica.org/">Modelica</a> 
-simulations</p>
-<p><strong>Classes:</strong></p>
+<p>This submodule contains the following classes:</p>
 <ul class="simple">
-<li><a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> - Class to load and analyze results from a <a class="reference external" href="http://www.modelica.org/">Modelica</a>-based
+<li><a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> - Class to load, analyze, and plot results from a <a class="reference external" href="http://www.modelica.org/">Modelica</a>
 simulation</li>
-<li><a class="reference internal" href="#modelicares.simres.Info" title="modelicares.simres.Info"><tt class="xref py py-class docutils literal"><span class="pre">Info</span></tt></a> - Aliases for the &#8220;get&#8221; methods in <a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a></li>
+<li><a class="reference internal" href="#modelicares.simres.SimResList" title="modelicares.simres.SimResList"><tt class="xref py py-class docutils literal"><span class="pre">SimResList</span></tt></a> - Specialized list of simulation results (<a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a>
+instances)</li>
+<li><a class="reference internal" href="#modelicares.simres.Variable" title="modelicares.simres.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a> - Specialized <a class="reference external" href="https://docs.python.org/2/library/collections.html#collections.namedtuple">namedtuple</a> to represent a variable in a
+simulation, with methods to retrieve and perform calculations on its values</li>
 </ul>
-<p><strong>Functions:</strong></p>
-<ul class="simple">
-<li><a class="reference internal" href="#modelicares.simres.merge_times" title="modelicares.simres.merge_times"><tt class="xref py py-meth docutils literal"><span class="pre">merge_times()</span></tt></a> - Merge a list of multiple time vectors into one vector</li>
-</ul>
-<dl class="class">
-<dt id="modelicares.simres.Info">
-<em class="property">class </em><tt class="descclassname">modelicares.simres.</tt><tt class="descname">Info</tt><a class="headerlink" href="#modelicares.simres.Info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Aliases for the &#8220;get&#8221; methods in <a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a></p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares.simres</span> <span class="kn">import</span> <span class="n">SimRes</span><span class="p">,</span> <span class="n">Info</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Info</span><span class="o">.</span><span class="n">FV</span><span class="p">(</span><span class="n">sim</span><span class="p">,</span> <span class="s">&#39;L.v&#39;</span><span class="p">)</span>
-<span class="go">-0.25352862</span>
-</pre></div>
-</div>
-<dl class="method">
-<dt id="modelicares.simres.Info.FV">
-<tt class="descname">FV</tt><big>(</big><em>names</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f8f50&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.Info.FV" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#modelicares.simres.SimRes.get_FV" title="modelicares.simres.SimRes.get_FV"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes.get_FV()</span></tt></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.Info.IV">
-<tt class="descname">IV</tt><big>(</big><em>names</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f8e60&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.Info.IV" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#modelicares.simres.SimRes.get_IV" title="modelicares.simres.SimRes.get_IV"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes.get_IV()</span></tt></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.Info.description">
-<tt class="descname">description</tt><big>(</big><em>names</em><big>)</big><a class="headerlink" href="#modelicares.simres.Info.description" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#modelicares.simres.SimRes.get_description" title="modelicares.simres.SimRes.get_description"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes.get_description()</span></tt></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.Info.displayUnit">
-<tt class="descname">displayUnit</tt><big>(</big><em>names</em><big>)</big><a class="headerlink" href="#modelicares.simres.Info.displayUnit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#modelicares.simres.SimRes.get_displayUnit" title="modelicares.simres.SimRes.get_displayUnit"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes.get_displayUnit()</span></tt></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.Info.indices_wi_times">
-<tt class="descname">indices_wi_times</tt><big>(</big><em>names</em>, <em>t_1=None</em>, <em>t_2=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.Info.indices_wi_times" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#modelicares.simres.SimRes.get_indices_wi_times" title="modelicares.simres.SimRes.get_indices_wi_times"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes.get_indices_wi_times()</span></tt></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.Info.max">
-<tt class="descname">max</tt><big>(</big><em>names</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f9488&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.Info.max" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#modelicares.simres.SimRes.get_max" title="modelicares.simres.SimRes.get_max"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes.get_max()</span></tt></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.Info.mean">
-<tt class="descname">mean</tt><big>(</big><em>names</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f9578&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.Info.mean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#modelicares.simres.SimRes.get_mean" title="modelicares.simres.SimRes.get_mean"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes.get_mean()</span></tt></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.Info.min">
-<tt class="descname">min</tt><big>(</big><em>names</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f9668&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.Info.min" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#modelicares.simres.SimRes.get_min" title="modelicares.simres.SimRes.get_min"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes.get_min()</span></tt></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.Info.times">
-<tt class="descname">times</tt><big>(</big><em>names</em>, <em>i=slice(0</em>, <em>None</em>, <em>None)</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f90c8&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.Info.times" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#modelicares.simres.SimRes.get_times" title="modelicares.simres.SimRes.get_times"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes.get_times()</span></tt></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.Info.tuple">
-<tt class="descname">tuple</tt><big>(</big><em>names</em>, <em>i=slice(0</em>, <em>None</em>, <em>None)</em><big>)</big><a class="headerlink" href="#modelicares.simres.Info.tuple" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#modelicares.simres.SimRes.get_tuple" title="modelicares.simres.SimRes.get_tuple"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes.get_tuple()</span></tt></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.Info.unit">
-<tt class="descname">unit</tt><big>(</big><em>names</em><big>)</big><a class="headerlink" href="#modelicares.simres.Info.unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#modelicares.simres.SimRes.get_unit" title="modelicares.simres.SimRes.get_unit"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes.get_unit()</span></tt></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.Info.values">
-<tt class="descname">values</tt><big>(</big><em>names</em>, <em>i=slice(0</em>, <em>None</em>, <em>None)</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f9230&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.Info.values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#modelicares.simres.SimRes.get_values" title="modelicares.simres.SimRes.get_values"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes.get_values()</span></tt></a></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.Info.values_at_times">
-<tt class="descname">values_at_times</tt><big>(</big><em>names</em>, <em>times</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f9320&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.Info.values_at_times" title="Permalink to this definition">¶</a></dt>
-<dd><p>Alias for <a class="reference internal" href="#modelicares.simres.SimRes.get_values_at_times" title="modelicares.simres.SimRes.get_values_at_times"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes.get_values_at_times()</span></tt></a></p>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="class">
 <dt id="modelicares.simres.SimRes">
-<em class="property">class </em><tt class="descclassname">modelicares.simres.</tt><tt class="descname">SimRes</tt><big>(</big><em>fname='dsres.mat'</em>, <em>constants_only=False</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">modelicares.simres.</tt><tt class="descname">SimRes</tt><big>(</big><em>fname='dsres.mat'</em>, <em>constants_only=False</em>, <em>tool=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
-<p>Class to load and analyze results from a <a class="reference external" href="http://www.modelica.org/">Modelica</a>-based simulation</p>
-<p>This class contains the following methods:</p>
+<p>Class to load, analyze, and plot results from a <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation</p>
+<p>Methods:</p>
 <ul class="simple">
-<li><a class="reference internal" href="#modelicares.simres.SimRes.browse" title="modelicares.simres.SimRes.browse"><tt class="xref py py-meth docutils literal"><span class="pre">browse()</span></tt></a> - Launch a variable browser</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.get_description" title="modelicares.simres.SimRes.get_description"><tt class="xref py py-meth docutils literal"><span class="pre">get_description()</span></tt></a> - Return the description(s) of variable(s)</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.get_displayUnit" title="modelicares.simres.SimRes.get_displayUnit"><tt class="xref py py-meth docutils literal"><span class="pre">get_displayUnit()</span></tt></a> - Return the <a class="reference external" href="http://www.modelica.org/">Modelica</a> <em>displayUnit</em> attribute(s)
-of variable(s)</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.get_indices_wi_times" title="modelicares.simres.SimRes.get_indices_wi_times"><tt class="xref py py-meth docutils literal"><span class="pre">get_indices_wi_times()</span></tt></a> - Return the widest index pair(s) for which
-the time of signal(s) is within given limits</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.get_IV" title="modelicares.simres.SimRes.get_IV"><tt class="xref py py-meth docutils literal"><span class="pre">get_IV()</span></tt></a> - Return the initial value(s) of variable(s)</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.get_FV" title="modelicares.simres.SimRes.get_FV"><tt class="xref py py-meth docutils literal"><span class="pre">get_FV()</span></tt></a> - Return the final value(s) of variable(s)</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.get_max" title="modelicares.simres.SimRes.get_max"><tt class="xref py py-meth docutils literal"><span class="pre">get_max()</span></tt></a> - Return the maximum value(s) of variable(s)</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.get_mean" title="modelicares.simres.SimRes.get_mean"><tt class="xref py py-meth docutils literal"><span class="pre">get_mean()</span></tt></a> - Return the time-averaged value(s) of variable(s)</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.get_min" title="modelicares.simres.SimRes.get_min"><tt class="xref py py-meth docutils literal"><span class="pre">get_min()</span></tt></a> - Return the minimum value(s) of variable(s)</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.get_times" title="modelicares.simres.SimRes.get_times"><tt class="xref py py-meth docutils literal"><span class="pre">get_times()</span></tt></a> - Return vector(s) of the sample times of variable(s)</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.get_tuple" title="modelicares.simres.SimRes.get_tuple"><tt class="xref py py-meth docutils literal"><span class="pre">get_tuple()</span></tt></a> - Return tuple(s) of time and value vectors for 
-variable(s)</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.get_unit" title="modelicares.simres.SimRes.get_unit"><tt class="xref py py-meth docutils literal"><span class="pre">get_unit()</span></tt></a> - Return the <em>unit</em> attribute(s) of variable(s)</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.get_values" title="modelicares.simres.SimRes.get_values"><tt class="xref py py-meth docutils literal"><span class="pre">get_values()</span></tt></a> - Return vector(s) of the values of the samples of
-variable(s)</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.get_values_at_times" title="modelicares.simres.SimRes.get_values_at_times"><tt class="xref py py-meth docutils literal"><span class="pre">get_values_at_times()</span></tt></a> - Return vector(s) of the values of the
-samples of variable(s)</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a> - Return a list of variable names that match a pattern</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.nametree" title="modelicares.simres.SimRes.nametree"><tt class="xref py py-meth docutils literal"><span class="pre">nametree()</span></tt></a> - Return a tree of all variable names with respect to
-the path names</li>
+<li><a class="reference internal" href="#modelicares.simres.SimRes.browse" title="modelicares.simres.SimRes.browse"><tt class="xref py py-meth docutils literal"><span class="pre">browse()</span></tt></a> - Launch a variable browser.</li>
+<li><a class="reference internal" href="#modelicares.simres.SimRes.fbase" title="modelicares.simres.SimRes.fbase"><tt class="xref py py-meth docutils literal"><span class="pre">fbase()</span></tt></a> - Return the base filename from which the results were
+loaded, without the directory or file extension.</li>
+<li><a class="reference internal" href="#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a> - Return a list of variable names, optionally filtered by
+pattern matching.</li>
+<li><a class="reference internal" href="#modelicares.simres.SimRes.nametree" title="modelicares.simres.SimRes.nametree"><tt class="xref py py-meth docutils literal"><span class="pre">nametree()</span></tt></a> - Return a tree of variable names that reflects the
+<a class="reference external" href="http://www.modelica.org/">Modelica</a> model hierarchy.</li>
+<li><a class="reference internal" href="#modelicares.simres.SimRes.n_constants" title="modelicares.simres.SimRes.n_constants"><tt class="xref py py-meth docutils literal"><span class="pre">n_constants()</span></tt></a> - Return the number of variables that do not change
+over time.</li>
 <li><a class="reference internal" href="#modelicares.simres.SimRes.plot" title="modelicares.simres.SimRes.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a> - Plot data as points and/or curves in 2D Cartesian
-coordinates</li>
-<li><a class="reference internal" href="#modelicares.simres.SimRes.sankey" title="modelicares.simres.SimRes.sankey"><tt class="xref py py-meth docutils literal"><span class="pre">sankey()</span></tt></a> - Create a figure with Sankey diagram(s)</li>
+coordinates.</li>
+<li><a class="reference internal" href="#modelicares.simres.SimRes.sankey" title="modelicares.simres.SimRes.sankey"><tt class="xref py py-meth docutils literal"><span class="pre">sankey()</span></tt></a> - Create a figure with Sankey diagram(s).</li>
+<li><a class="reference internal" href="#modelicares.simres.SimRes.to_pandas" title="modelicares.simres.SimRes.to_pandas"><tt class="xref py py-meth docutils literal"><span class="pre">to_pandas()</span></tt></a> - Return a <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame">pandas DataFrame</a> with selected variables.</li>
 </ul>
-<p>On initialization, load <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation results from a
-MATLAB<sup>®</sup> file in Dymola<sup>®</sup> format.</p>
-<p><strong>Arguments:</strong></p>
+<p>Methods invoked using built-in <a class="reference external" href="http://www.python.org">Python</a> operators and syntax:</p>
 <ul>
-<li><p class="first"><em>fname</em>: Name of the file (may include the path)</p>
+<li><p class="first"><a class="reference internal" href="#modelicares.simres.SimRes.__call__" title="modelicares.simres.SimRes.__call__"><tt class="xref py py-meth docutils literal"><span class="pre">__call__()</span></tt></a> - Access a list of variables by their names (invoked as
+<tt class="docutils literal"><span class="pre">sim(&lt;list</span> <span class="pre">of</span> <span class="pre">variable</span> <span class="pre">names&gt;)</span></tt>).</p>
 <blockquote>
-<div><p>The file extension (&#8216;.mat&#8217;) is optional.</p>
+<div><p>The return value has attributes to retrieve information about all of
+the variables in the list at once (values, units, etc.).</p>
 </div></blockquote>
 </li>
-<li><p class="first"><em>constants_only</em>: <em>True</em>, if only the variables from the first data
-table should be loaded</p>
+<li><p class="first"><a class="reference internal" href="#modelicares.simres.SimRes.__contains__" title="modelicares.simres.SimRes.__contains__"><tt class="xref py py-meth docutils literal"><span class="pre">__contains__()</span></tt></a> - Return <em>True</em> if a variable is present in the
+simulation results (invoked as <tt class="docutils literal"><span class="pre">&lt;variable</span> <span class="pre">name&gt;</span> <span class="pre">in</span> <span class="pre">sim</span></tt>).</p>
+</li>
+<li><p class="first"><a class="reference internal" href="#modelicares.simres.SimRes.__getitem__" title="modelicares.simres.SimRes.__getitem__"><tt class="xref py py-meth docutils literal"><span class="pre">__getitem__()</span></tt></a> - Access a variable by name (invoked as
+<tt class="docutils literal"><span class="pre">sim[&lt;variable</span> <span class="pre">name&gt;]</span></tt>).</p>
 <blockquote>
-<div><p>The first data table typically contains all of the constants,
-parameters, and variables that don&#8217;t vary.  If only that
-information is needed, it will save some time and memory to set
-<em>constants_only</em> to <em>True</em>.</p>
+<div><p>The return value has attributes to retrieve information about the
+variable (values, unit, etc.).</p>
 </div></blockquote>
+</li>
+<li><p class="first"><a class="reference internal" href="#modelicares.simres.SimRes.__len__" title="modelicares.simres.SimRes.__len__"><tt class="xref py py-meth docutils literal"><span class="pre">__len__()</span></tt></a> - Return the number of variables in the simulation
+(invoked as <tt class="docutils literal"><span class="pre">len(sim)</span></tt>).</p>
 </li>
 </ul>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
+<p>Other attributes:</p>
+<ul class="simple">
+<li><em>fname</em> - Filename from which the variables were loaded, with absolute
+path</li>
+<li><em>tool</em> - String indicating the function used to load the results (named
+after the corresponding simulation tool)</li>
+</ul>
 <dl class="method">
 <dt id="modelicares.simres.SimRes.__call__">
-<tt class="descname">__call__</tt><big>(</big><em>names</em>, <em>action=&lt;function get_values at 0x7f62dc0f92a8&gt;</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.__call__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Upon a call to an instance of <a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a>, call a method on
-variable(s) given their name(s).</p>
+<tt class="descname">__call__</tt><big>(</big><em>names</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access a list of variables by their names.</p>
+<p>See <a class="reference internal" href="#modelicares.simres.SimRes.__getitem__" title="modelicares.simres.SimRes.__getitem__"><tt class="xref py py-meth docutils literal"><span class="pre">__getitem__()</span></tt></a> for the attributes that can be accessed via the
+return value.  The result of the corresponding attribute in this class
+is a list of the results of the attribute of each variable.  The
+attributes in this class accept the same call signature.
+<tt class="xref py py-meth docutils literal"><span class="pre">arrays()</span></tt> in this class correponds to <a class="reference internal" href="#modelicares.simres.Variable.array" title="modelicares.simres.Variable.array"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.array()</span></tt></a>.</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
-<li><p class="first"><em>names</em>: String or (possibly nested) list of strings of the variable
-names</p>
-</li>
-<li><p class="first"><em>action</em>: Method for retrieving information about the variable(s)</p>
+<li><p class="first"><em>names</em>: List of variable names</p>
 <blockquote>
-<div><p>The default is <a class="reference internal" href="#modelicares.simres.SimRes.get_values" title="modelicares.simres.SimRes.get_values"><tt class="xref py py-meth docutils literal"><span class="pre">get_values()</span></tt></a>.  <em>action</em> may be a list or
-tuple, in which case the return value is a list or tuple.</p>
+<div><p>The list can be nested, and the results will retain the hierarchy.
+If <em>names</em> is a single variable name, then the result is the same
+as from <a class="reference internal" href="#modelicares.simres.SimRes.__getitem__" title="modelicares.simres.SimRes.__getitem__"><tt class="xref py py-meth docutils literal"><span class="pre">__getitem__()</span></tt></a>.</p>
 </div></blockquote>
 </li>
-<li><p class="first"><em>*args</em>, <em>**kwargs</em>: Additional arguments for <em>action</em></p>
-</li>
 </ul>
-<p><strong>Examples:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares.simres</span> <span class="kn">import</span> <span class="n">SimRes</span><span class="p">,</span> <span class="n">Info</span>
+<p><strong>Example</strong>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-
-<span class="go"># Values of a single variable</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span> 
-<span class="go">array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c"># This is equivalent to:</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span> 
-<span class="go">array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)</span>
-
-<span class="go"># Values of a list of variables</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="p">([</span><span class="s">&#39;L.L&#39;</span><span class="p">,</span> <span class="s">&#39;C1.C&#39;</span><span class="p">],</span> <span class="n">SimRes</span><span class="o">.</span><span class="n">get_description</span><span class="p">)</span>
-<span class="go">[&#39;Inductance&#39;, &#39;Capacitance&#39;]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c"># This is equivalent to:</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_description</span><span class="p">([</span><span class="s">&#39;L.L&#39;</span><span class="p">,</span> <span class="s">&#39;C1.C&#39;</span><span class="p">])</span>
-<span class="go">[&#39;Inductance&#39;, &#39;Capacitance&#39;]</span>
-
-<span class="go"># Other attributes</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="s">&quot;The final value of </span><span class="si">%s</span><span class="s"> is </span><span class="si">%.3f</span><span class="s"> </span><span class="si">%s</span><span class="s">.&quot;</span> <span class="o">%</span>
-<span class="gp">... </span>      <span class="n">sim</span><span class="p">(</span><span class="s">&#39;L.i&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">Info</span><span class="o">.</span><span class="n">description</span><span class="p">,</span> <span class="n">Info</span><span class="o">.</span><span class="n">FV</span><span class="p">,</span> <span class="n">Info</span><span class="o">.</span><span class="n">unit</span><span class="p">)))</span>
-<span class="go">The final value of Current flowing from pin p to pin n is 2.049 A.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="p">([</span><span class="s">&#39;L.v&#39;</span><span class="p">,</span> <span class="s">&#39;L.i&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">unit</span>
+<span class="go">[&#39;V&#39;, &#39;A&#39;]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -313,7 +195,7 @@ tuple, in which case the return value is a list or tuple.</p>
 <dl class="method">
 <dt id="modelicares.simres.SimRes.__contains__">
 <tt class="descname">__contains__</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.__contains__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test if a variable is present in the simulation results.</p>
+<dd><p>Return <em>True</em> if a variable is present in the simulation results.</p>
 <p><strong>Arguments</strong>:</p>
 <ul class="simple">
 <li><em>name</em>: Name of variable</li>
@@ -334,23 +216,47 @@ tuple, in which case the return value is a list or tuple.</p>
 
 <dl class="method">
 <dt id="modelicares.simres.SimRes.__getitem__">
-<tt class="descname">__getitem__</tt><big>(</big><em>names</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.__getitem__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Upon accessing a variable name within an instance of
-<a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a>, return its values.</p>
-<p><strong>Arguments</strong>:</p>
+<tt class="descname">__getitem__</tt><big>(</big><em>name</em>, <em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access a variable by name.</p>
+<p>The return value can be used to retrieve information about the variable.
+It has the following methods:</p>
 <ul class="simple">
-<li><em>names</em>: String or (possibly nested) list of strings of the variable
-names</li>
+<li><a class="reference internal" href="#modelicares.simres.Variable.array" title="modelicares.simres.Variable.array"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.array()</span></tt></a> - Return an array of times and values for the
+variable.</li>
+<li><a class="reference internal" href="#modelicares.simres.Variable.FV" title="modelicares.simres.Variable.FV"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.FV()</span></tt></a> - Return the final value of the variable.</li>
+<li><a class="reference internal" href="#modelicares.simres.Variable.is_constant" title="modelicares.simres.Variable.is_constant"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.is_constant()</span></tt></a> - Return <em>True</em> if the variable does not
+change over time.</li>
+<li><a class="reference internal" href="#modelicares.simres.Variable.IV" title="modelicares.simres.Variable.IV"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.IV()</span></tt></a> - Return the final value of the variable.</li>
+<li><a class="reference internal" href="#modelicares.simres.Variable.max" title="modelicares.simres.Variable.max"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.max()</span></tt></a> - Return the maximum value of the variable.</li>
+<li><a class="reference internal" href="#modelicares.simres.Variable.mean" title="modelicares.simres.Variable.mean"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.mean()</span></tt></a> - Return the time-averaged value of the
+variable.</li>
+<li><a class="reference internal" href="#modelicares.simres.Variable.mean_rectified" title="modelicares.simres.Variable.mean_rectified"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.mean_rectified()</span></tt></a> - Return the time-averaged absolute
+value of the variable.</li>
+<li><a class="reference internal" href="#modelicares.simres.Variable.min" title="modelicares.simres.Variable.min"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.min()</span></tt></a> - Return the minimum value of the variable.</li>
+<li><a class="reference internal" href="#modelicares.simres.Variable.RMS" title="modelicares.simres.Variable.RMS"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.RMS()</span></tt></a> - Return the time-averaged root mean square value
+of the variable.</li>
+<li><a class="reference internal" href="#modelicares.simres.Variable.RMS_AC" title="modelicares.simres.Variable.RMS_AC"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.RMS_AC()</span></tt></a> - Return the time-averaged AC-coupled root
+mean square value of the variable.</li>
+<li><a class="reference internal" href="#modelicares.simres.Variable.times" title="modelicares.simres.Variable.times"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.times()</span></tt></a> - Return the sample times of the variable.</li>
+<li><a class="reference internal" href="#modelicares.simres.Variable.value" title="modelicares.simres.Variable.value"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.value()</span></tt></a> - Return the value of the variable if it is
+a constant (otherwise, error).</li>
+<li><a class="reference internal" href="#modelicares.simres.Variable.values" title="modelicares.simres.Variable.values"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.values()</span></tt></a> - Return the values of the variable.</li>
+</ul>
+<p>and other attributes:</p>
+<ul class="simple">
+<li><em>description</em> - The <a class="reference external" href="http://www.modelica.org/">Modelica</a> variable&#8217;s description string</li>
+<li><em>unit</em> - The <a class="reference external" href="http://www.modelica.org/">Modelica</a> variable&#8217;s <em>unit</em> attribute</li>
+<li><em>displayUnit</em> - The <a class="reference external" href="http://www.modelica.org/">Modelica</a> variable&#8217;s <em>displayUnit</em> attribute</li>
 </ul>
 <p><strong>Examples:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="p">[</span><span class="s">&#39;L.v&#39;</span><span class="p">]</span> 
-<span class="go">array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c"># This is equivalent to:</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span> 
-<span class="go">array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="p">[</span><span class="s">&#39;L.v&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unit</span>
+<span class="go">&#39;V&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="p">[</span><span class="s">&#39;L.v&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">25</span><span class="p">))</span> 
+<span class="go">array([ 0.2108,  0.3046,  0.3904,  0.468 ], dtype=float32)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -359,39 +265,14 @@ names</li>
 <dt id="modelicares.simres.SimRes.__len__">
 <tt class="descname">__len__</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.__len__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of variables in the simulation.</p>
+<p>This includes the time variable.</p>
 <p><strong>Example:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="s">&quot;There are </span><span class="si">%i</span><span class="s"> variables in the </span><span class="si">%s</span><span class="s"> simulation.&quot;</span> <span class="o">%</span>
-<span class="gp">... </span>      <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sim</span><span class="p">),</span> <span class="n">sim</span><span class="o">.</span><span class="n">fbase</span><span class="p">))</span>
+<span class="gp">... </span>      <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sim</span><span class="p">),</span> <span class="n">sim</span><span class="o">.</span><span class="n">fbase</span><span class="p">()))</span>
 <span class="go">There are 62 variables in the ChuaCircuit simulation.</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.SimRes.__repr__">
-<tt class="descname">__repr__</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a formal description of the <a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> instance.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> 
-<span class="go">SimRes(&#39;...ChuaCircuit.mat&#39;)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.SimRes.__str__">
-<tt class="descname">__str__</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return an informal description of the <a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> instance.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span> 
-<span class="go">Modelica simulation results from &quot;...ChuaCircuit.mat&quot;</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -407,384 +288,39 @@ and dropped into a text editor.</p>
 <p><strong>Example:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">browse</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">browse</span><span class="p">()</span> 
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="images/browse.png"><img alt="variable browser" src="images/browse.png" style="width: 743.4px; height: 364.5px;" /></a>
+<a class="reference internal image-reference" href="images/browse.png"><img alt="variable browser" src="images/browse.png" style="width: 660.8px; height: 324.0px;" /></a>
 </dd></dl>
 
 <dl class="method">
-<dt id="modelicares.simres.SimRes.get_FV">
-<tt class="descname">get_FV</tt><big>(</big><em>names</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f8f50&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.get_FV" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the final value(s) of variable(s).</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li><em>names</em>: String or (possibly nested) list of strings of variable
-names</li>
-<li><em>f</em>: Function that should be applied to the value(s) (default is
-identity)</li>
-</ul>
-<p>If <em>names</em> is a string, then the output will be a single value.  If
-<em>names</em> is a (optionally nested) list of strings, then the output will
-be a (nested) list of values.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_FV</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span>
-<span class="go">-0.25352862</span>
-</pre></div>
-</div>
+<dt id="modelicares.simres.SimRes.fbase">
+<tt class="descname">fbase</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.fbase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the base filename from which the variables were loaded,
+without the directory or file extension.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="modelicares.simres.SimRes.get_IV">
-<tt class="descname">get_IV</tt><big>(</big><em>names</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f8e60&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.get_IV" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the initial value(s) of variable(s).</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li><em>names</em>: String or (possibly nested) list of strings of the variable
-names</li>
-<li><em>f</em>: Function that should be applied to the value(s) (default is
-identity)</li>
-</ul>
-<p>If <em>names</em> is a string, then the output will be a single value.  If
-<em>names</em> is a (optionally nested) list of strings, then the output will
-be a (nested) list of values.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_IV</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span>
-<span class="go">0.0</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.SimRes.get_description">
-<tt class="descname">get_description</tt><big>(</big><em>names</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.get_description" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the description(s) of variable(s).</p>
-<p><strong>Arguments:</strong></p>
-<ul>
-<li><p class="first"><em>names</em>: Name(s) of the variable(s) from which to get the
-description(s)</p>
-<blockquote>
-<div><p>This may be a string or (possibly nested) list of strings
-representing the names of the variables.</p>
-</div></blockquote>
-</li>
-</ul>
-<p>If <em>names</em> is a string, then the output will be a single description.
-If <em>names</em> is a (optionally nested) list of strings, then the output
-will be a (nested) list of descriptions.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_description</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span>
-<span class="go">&#39;Voltage drop between the two pins (= p.v - n.v)&#39;</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.SimRes.get_displayUnit">
-<tt class="descname">get_displayUnit</tt><big>(</big><em>names</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.get_displayUnit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the <a class="reference external" href="http://www.modelica.org/">Modelica</a> <em>displayUnit</em> attribute(s) of variable(s).</p>
-<p><strong>Arguments:</strong></p>
-<ul>
-<li><p class="first"><em>names</em>: Name(s) of the variable(s) from which to get the display
-unit(s)</p>
-<blockquote>
-<div><p>This may be a string or (possibly nested) list of strings
-representing the names of the variables.</p>
-</div></blockquote>
-</li>
-</ul>
-<p>If <em>names</em> is a string, then the output will be a single display unit.
-If <em>names</em> is a (optionally nested) list of strings, then the output
-will be a (nested) list of display units.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_displayUnit</span><span class="p">(</span><span class="s">&#39;G.T_heatPort&#39;</span><span class="p">)</span>
-<span class="go">&#39;degC&#39;</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.SimRes.get_indices_wi_times">
-<tt class="descname">get_indices_wi_times</tt><big>(</big><em>names</em>, <em>t_1=None</em>, <em>t_2=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.get_indices_wi_times" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the widest index pair(s) for which the time of signal(s) is
-within given limits.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li><em>names</em>: String or (possibly nested) list of strings of the variable
-names</li>
-<li><em>t_1</em>: Lower bound of time</li>
-<li><em>t_2</em>: Upper bound of time</li>
-</ul>
-<p>If <em>names</em> is a string, then the output will be an array of values.  If
-<em>names</em> is a (optionally nested) list of strings, then the output will
-be a (nested) list of arrays.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_indices_wi_times</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">,</span> <span class="n">t_1</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">t_2</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
-<span class="go">(104, 412)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.SimRes.get_max">
-<tt class="descname">get_max</tt><big>(</big><em>names</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f9488&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.get_max" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the maximum value(s) of variable(s).</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li><em>names</em>: String or (possibly nested) list of strings of variable
-names</li>
-<li><em>f</em>: Function that should be applied before taking the maximum 
-(default is identity)</li>
-</ul>
-<p>If <em>names</em> is a string, then the output will be a single value.  If
-<em>names</em> is a (optionally nested) list of strings, then the output will
-be a (nested) list of values.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_max</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span>
-<span class="go">0.77344114</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.SimRes.get_mean">
-<tt class="descname">get_mean</tt><big>(</big><em>names</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f9578&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.get_mean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the time-averaged value(s) of variable(s).</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li><em>names</em>: String or (possibly nested) list of strings of variable
-names</li>
-<li><em>f</em>: Function that should be applied before taking the mean (default 
-is identity)</li>
-</ul>
-<p>If <em>names</em> is a string, then the output will be a single value.  If
-<em>names</em> is a (optionally nested) list of strings, then the output will
-be a (nested) list of values.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_mean</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span>
-<span class="go">0.014733823</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.SimRes.get_min">
-<tt class="descname">get_min</tt><big>(</big><em>names</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f9668&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.get_min" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the minimum value(s) of variable(s).</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li><em>names</em>: String or (possibly nested) list of strings of variable
-names</li>
-<li><em>f</em>: Function that should be applied before taking the minimum 
-(default is identity)</li>
-</ul>
-<p>If <em>names</em> is a string, then the output will be a single value.  If
-<em>names</em> is a (optionally nested) list of strings, then the output will
-be a (nested) list of values.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_min</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span>
-<span class="go">-0.9450165</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.SimRes.get_times">
-<tt class="descname">get_times</tt><big>(</big><em>names</em>, <em>i=slice(0</em>, <em>None</em>, <em>None)</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f90c8&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.get_times" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return vector(s) of the sample times of variable(s).</p>
-<p><strong>Arguments:</strong></p>
-<ul>
-<li><p class="first"><em>names</em>: String or (possibly nested) list of strings of the variable
-names</p>
-</li>
-<li><p class="first"><em>i</em>: Index (-1 for last), list of indices, or slice of the time(s) to
-return</p>
-<blockquote>
-<div><p>By default, all times are returned.</p>
-</div></blockquote>
-</li>
-<li><p class="first"><em>f</em>: Function that should be applied to all times (default is
-identity)</p>
-</li>
-</ul>
-<p>If <em>names</em> is a string, then the output will be an array of times.  If
-<em>names</em> is a (optionally nested) list of strings, then the output will
-be a (nested) list of arrays.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_times</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span> 
-<span class="go">array([    0.        , ...  2500.        ], dtype=float32)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.SimRes.get_tuple">
-<tt class="descname">get_tuple</tt><big>(</big><em>names</em>, <em>i=slice(0</em>, <em>None</em>, <em>None)</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.get_tuple" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return tuple(s) of time and value vectors for variable(s).</p>
-<p>Each tuple contains two vectors: one for times and one for values.</p>
-<p><strong>Arguments:</strong></p>
-<ul>
-<li><p class="first"><em>names</em>: String or (possibly nested) list of strings of the variable
-names</p>
-</li>
-<li><p class="first"><em>i</em>: Index (-1 for last), list of indices, or slice of the values(s)
-to return</p>
-<blockquote>
-<div><p>By default, all values are returned.</p>
-</div></blockquote>
-</li>
-</ul>
-<p>If <em>names</em> is a string, then the output will be a tuple.  If <em>names</em> is 
-a (optionally nested) list of strings, then the output will be a 
-(nested) list of tuples.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_tuple</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span> 
-<span class="go">(array([    0.        , ... ,  2500.        ], dtype=float32), array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32))</span>
-</pre></div>
-</div>
-<p>Note that this is a tuple of vectors, not a vector of tuples.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.SimRes.get_unit">
-<tt class="descname">get_unit</tt><big>(</big><em>names</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.get_unit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the <em>unit</em> attribute(s) of variable(s).</p>
-<p><strong>Arguments:</strong></p>
-<ul>
-<li><p class="first"><em>names</em>: Name(s) of the variable(s) from which to get the unit(s)</p>
-<blockquote>
-<div><p>This may be a string or (possibly nested) list of strings
-representing the names of the variables.</p>
-</div></blockquote>
-</li>
-</ul>
-<p>If <em>names</em> is a string, then the output will be a single unit.  If
-<em>names</em> is a (optionally nested) list of strings, then the output will
-be a (nested) list of units.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_unit</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span>
-<span class="go">&#39;V&#39;</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.SimRes.get_values">
-<tt class="descname">get_values</tt><big>(</big><em>names</em>, <em>i=slice(0</em>, <em>None</em>, <em>None)</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f9230&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.get_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return vector(s) of the values of the samples of variable(s).</p>
-<p><strong>Arguments:</strong></p>
-<ul>
-<li><p class="first"><em>names</em>: String or (possibly nested) list of strings of the variable
-names</p>
-</li>
-<li><p class="first"><em>i</em>: Index (-1 for last), list of indices, or slice of the values(s)
-to return</p>
-<blockquote>
-<div><p>By default, all values are returned.</p>
-</div></blockquote>
-</li>
-<li><p class="first"><em>f</em>: Function that should be applied to all values (default is
-identity)</p>
-</li>
-</ul>
-<p>If <em>names</em> is a string, then the output will be an array of values.  If
-<em>names</em> is a (optionally nested) list of strings, then the output will
-be a (nested) list of arrays.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_values</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">)</span> 
-<span class="go">array([  0.00000000e+00, ... -2.53528625e-01], dtype=float32)</span>
-</pre></div>
-</div>
-<p>If the variable cannot be found, then possible matches are listed:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_values</span><span class="p">([</span><span class="s">&#39;L.vv&#39;</span><span class="p">])</span> 
-<span class="go">L.vv is not a valid variable name.</span>
-
-<span class="go">Did you mean one of these?</span>
-<span class="go">       L.v</span>
-<span class="go">       L.p.v</span>
-<span class="go">       L.n.v</span>
-</pre></div>
-</div>
-<p>The other <em>get_</em>* methods also give this message when a variable cannot
-be found.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.simres.SimRes.get_values_at_times">
-<tt class="descname">get_values_at_times</tt><big>(</big><em>names</em>, <em>times</em>, <em>f=&lt;function &lt;lambda&gt; at 0x7f62dc0f9320&gt;</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.get_values_at_times" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return vector(s) of the values of the samples of variable(s) at
-given times.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li><em>names</em>: String or (possibly nested) list of strings of the variable
-names</li>
-<li><em>times</em>: Scalar, numeric list, or a numeric array of the times from
-which to pull samples</li>
-<li><em>f</em>: Function that should be applied to all values (default is
-identity)</li>
-</ul>
-<p>If <em>names</em> is a string, then the output will be an array of values.  If
-<em>names</em> is a (optionally nested) list of strings, then the output will
-be a (nested) list of arrays.</p>
-<p>If <em>times</em> is not provided, all of the samples will be returned.  If
-necessary, the values will be interpolated over time.  The function <em>f</em>
-is applied before interpolation.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">get_values_at_times</span><span class="p">(</span><span class="s">&#39;L.v&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2000</span><span class="p">])</span>
-<span class="go">array([ 0.        ,  0.15459341])</span>
-</pre></div>
-</div>
+<dt id="modelicares.simres.SimRes.n_constants">
+<tt class="descname">n_constants</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.n_constants" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of variables that do not change over time.</p>
+<p>There are no arguments.  Note that this number may be greater than the
+number of declared parameters and constants in the <a class="reference external" href="http://www.modelica.org/">Modelica</a> model,
+since a variable may be fixed in value even though it is not declared as
+a constant or parameter.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="modelicares.simres.SimRes.names">
-<tt class="descname">names</tt><big>(</big><em>pattern=None</em>, <em>re=False</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.names" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">names</tt><big>(</big><em>pattern=None</em>, <em>re=False</em>, <em>constants_only=False</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.names" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a list of variable names that match a pattern.</p>
 <p>By default, all names are returned.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><p class="first"><em>pattern</em>: Case-sensitive string used for matching</p>
 <ul>
-<li><p class="first">If <em>re</em> is <em>False</em> (next argument), then the pattern follows the 
+<li><p class="first">If <em>re</em> is <em>False</em> (next argument), then the pattern follows the
 Unix shell style:</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -811,65 +347,67 @@ Unix shell style:</p>
 </tr>
 </tbody>
 </table>
-<p>Wildcard characters (&#8216;*&#8217;) are not automatically added at the 
+<p>Wildcard characters (&#8216;*&#8217;) are not automatically added at the
 beginning or the end of the pattern.  For example, &#8216;x*&#8217; matches
-variables that begin with &#8220;x&#8221;, whereas &#8216;*x*&#8217; matches all variables 
+variables that begin with &#8220;x&#8221;, whereas &#8216;*x*&#8217; matches all variables
 that contain &#8220;x&#8221;.</p>
 </li>
 <li><p class="first">If <em>re</em> is <em>True</em>, regular expressions are used a la <a class="reference external" href="http://docs.python.org/2/library/re.html">Python&#8217;s re
 module</a>.  See also
 <a class="reference external" href="http://docs.python.org/2/howto/regex.html#regex-howto">http://docs.python.org/2/howto/regex.html#regex-howto</a>.</p>
-<p>Since <tt class="xref py py-mod docutils literal"><span class="pre">re.search</span></tt> is used to produce the matches, it is as if 
-wildcards (&#8216;.*&#8217;) are automatically added at the beginning and the 
-end.  For example, &#8216;x&#8217; matches all variables that contain &#8220;x&#8221;.  Use 
-&#8216;^x$&#8217; to match only the variables that begin with &#8220;x&#8221; and &#8216;x$&#8217; to 
+<p>Since <tt class="xref py py-mod docutils literal"><span class="pre">re.search</span></tt> is used to produce the matches, it is as if
+wildcards (&#8216;.*&#8217;) are automatically added at the beginning and the
+end.  For example, &#8216;x&#8217; matches all variables that contain &#8220;x&#8221;.  Use
+&#8216;^x$&#8217; to match only the variables that begin with &#8220;x&#8221; and &#8216;x$&#8217; to
 match only the variables that end with &#8220;x&#8221;.</p>
-<p>Note that &#8216;.&#8217; is a subclass separator in Modelica but a wildcard in 
+<p>Note that &#8216;.&#8217; is a subclass separator in <a class="reference external" href="http://www.modelica.org/">Modelica</a> but a wildcard in
 regular expressions.  Escape the subclass separator as &#8216;\.&#8217;.</p>
 </li>
 </ul>
 </li>
 <li><p class="first"><em>re</em>: <em>True</em> to use regular expressions (<em>False</em> to use shell style)</p>
 </li>
+<li><p class="first"><em>constants_only</em>: <em>True</em> to include only the variables that do not
+change over time</p>
+</li>
 </ul>
-<p><strong>Examples:</strong></p>
+<p><strong>Example:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="c"># Names starting with &quot;L.p&quot;, using shell-style matching:</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">names</span><span class="p">(</span><span class="s">&#39;L.p*&#39;</span><span class="p">)</span>
-<span class="go">[u&#39;L.p.i&#39;, u&#39;L.p.v&#39;]</span>
-</pre></div>
-</div>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="c"># Names ending with &quot;p.v&quot;, using re matching:</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">names</span><span class="p">(</span><span class="s">&#39;p\.v$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-<span class="go">[u&#39;C2.p.v&#39;, u&#39;Gnd.p.v&#39;, u&#39;L.p.v&#39;, u&#39;Nr.p.v&#39;, u&#39;C1.p.v&#39;, u&#39;Ro.p.v&#39;, u&#39;G.p.v&#39;]</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># Names for voltages across all of the components:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">names</span><span class="p">(</span><span class="s">&#39;^[^.]*.v$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">[&#39;G.v&#39;, &#39;L.v&#39;, &#39;C2.v&#39;, &#39;Nr.v&#39;, &#39;Ro.v&#39;, &#39;C1.v&#39;]</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="method">
 <dt id="modelicares.simres.SimRes.nametree">
-<tt class="descname">nametree</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.nametree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a tree of all variable names with respect to the path names.</p>
-<p>The tree represents the structure of the <a class="reference external" href="http://www.modelica.org/">Modelica</a> model.  It is
-returned as a nested dictionary.  The keys are the path elements and
-the values are sub-dictionaries or variable names.</p>
-<p>There are no arguments.</p>
+<tt class="descname">nametree</tt><big>(</big><em>pattern=None</em>, <em>re=False</em>, <em>constants_only=False</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.nametree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a tree of variable names based on the <a class="reference external" href="http://www.modelica.org/">Modelica</a> model
+hierarchy.</p>
+<p>The tree is returned as a nested dictionary.  The keys are the <a class="reference external" href="http://www.modelica.org/">Modelica</a>
+class instances (including the index if there are arrays) and the values
+are are subclasses.  The value at the end of each branch is the full
+variable name.</p>
+<p>All names are included by default, but the names can be filtered using
+<em>pattern</em>, <em>re</em>, and <em>constants_only</em>.  See <tt class="xref py py-mod docutils literal"><span class="pre">names</span></tt> for a
+description of those arguments.</p>
 <p><strong>Example:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">nametree</span><span class="p">()</span> 
-<span class="go">{u&#39;G&#39;: {u&#39;G&#39;: u&#39;G.G&#39;, ... u&#39;n&#39;: {u&#39;i&#39;: u&#39;G.n.i&#39;, u&#39;v&#39;: u&#39;G.n.v&#39;}, ...}, u&#39;L&#39;: {...}, ...}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">nametree</span><span class="p">(</span><span class="s">&#39;L*v&#39;</span><span class="p">)</span> 
+<span class="go">{&#39;L&#39;: {&#39;p&#39;: {&#39;v&#39;: &#39;L.p.v&#39;}, &#39;n&#39;: {&#39;v&#39;: &#39;L.n.v&#39;}, &#39;v&#39;: &#39;L.v&#39;}}</span>
 </pre></div>
 </div>
 </dd></dl>
 
 <dl class="method">
 <dt id="modelicares.simres.SimRes.plot">
-<tt class="descname">plot</tt><big>(</big><em>ynames1=</em>, <span class="optional">[</span><span class="optional">]</span><em>ylabel1=None</em>, <em>legends1=</em>, <span class="optional">[</span><span class="optional">]</span><em>leg1_kwargs={'loc': 'best'}</em>, <em>ax1=None</em>, <em>ynames2=</em>, <span class="optional">[</span><span class="optional">]</span><em>ylabel2=None</em>, <em>legends2=</em>, <span class="optional">[</span><span class="optional">]</span><em>leg2_kwargs={'loc': 'best'}</em>, <em>ax2=None</em>, <em>xname='Time'</em>, <em>xlabel=None</em>, <em>title=None</em>, <em>label='xy'</em>, <em>incl_prefix=False</em>, <em>suffix=None</em>, <em>use_paren=True</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.plot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot data as points and/or curves in 2D Cartesian coordinates.</p>
+<tt class="descname">plot</tt><big>(</big><em>ynames1=</em>, <span class="optional">[</span><span class="optional">]</span><em>ylabel1=None</em>, <em>f1={}</em>, <em>legends1=</em>, <span class="optional">[</span><span class="optional">]</span><em>leg1_kwargs={'loc': 'best'}</em>, <em>ax1=None</em>, <em>ynames2=</em>, <span class="optional">[</span><span class="optional">]</span><em>ylabel2=None</em>, <em>f2={}</em>, <em>legends2=</em>, <span class="optional">[</span><span class="optional">]</span><em>leg2_kwargs={'loc': 'best'}</em>, <em>ax2=None</em>, <em>xname='Time'</em>, <em>xlabel=None</em>, <em>title=None</em>, <em>label='xy'</em>, <em>incl_prefix=False</em>, <em>suffix=None</em>, <em>use_paren=True</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot variables as points and/or curves in 2D Cartesian coordinates.</p>
+<p>The abscissa may be time or any other variable (i.e., scatterplot).</p>
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><p class="first"><em>ynames1</em>: Names of variables for the primary y axis</p>
@@ -884,12 +422,21 @@ same <a class="reference external" href="http://www.modelica.org/">Modelica</a> 
 will be used.  Use &#8216;&#8217; for no label.</p>
 </div></blockquote>
 </li>
+<li><p class="first"><em>f1</em>: Dictionary of labels and functions for additional traces to be
+plotted on the primary y axis</p>
+<blockquote>
+<div><p>The functions take as an input a list of the vectors of values of
+the variables in <em>ynames1</em>, sampled at the values of the &#8216;Time&#8217;
+variable.</p>
+</div></blockquote>
+</li>
 <li><p class="first"><em>legends1</em>: List of legend entries for variables assigned to the
 primary y axis</p>
 <blockquote>
-<div><p>If <em>legends1</em> is an empty list ([]), ynames1 will be used.  If
-<em>legends1</em> is <em>None</em> and all of the variables on the primary axis
-have the same unit, then no legend will be shown.</p>
+<div><p>If <em>legends1</em> is an empty list ([]), ynames1 will be used along
+with the keys from the <em>f1</em> dictionary.  If <em>legends1</em> is <em>None</em>
+and all of the variables on the primary axis have the same unit,
+then no legend will be shown.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>leg1_kwargs</em>: Dictionary of keyword arguments for the primary legend</p>
@@ -900,11 +447,11 @@ have the same unit, then no legend will be shown.</p>
 figure.</p>
 </div></blockquote>
 </li>
-<li><p class="first"><em>ynames2</em>, <em>ylabel2</em>, <em>legends2</em>, <em>leg2_kwargs</em>, and <em>ax2</em>: Similar
-to <em>ynames1</em>, <em>ylabel1</em>, <em>legends1</em>, <em>leg1_kwargs</em>, and <em>ax1</em> but
-for the secondary y axis</p>
+<li><p class="first"><em>ynames2</em>, <em>ylabel2</em>, <em>f2</em>, <em>legends2</em>, <em>leg2_kwargs</em>, and <em>ax2</em>:
+Similar to <em>ynames1</em>, <em>ylabel1</em>, <em>f1</em>, <em>legends1</em>, <em>leg1_kwargs</em>, and
+<em>ax1</em> but for the secondary y axis</p>
 </li>
-<li><p class="first"><em>xname</em>: Name of the x-axis data</p>
+<li><p class="first"><em>xname</em>: Name of the x-axis variable</p>
 </li>
 <li><p class="first"><em>xlabel</em>: Label for the x axis</p>
 <blockquote>
@@ -930,7 +477,7 @@ filename of the class.</p>
 </li>
 <li><p class="first"><em>use_paren</em>: Add parentheses around the suffix</p>
 </li>
-<li><p class="first"><em>**kwargs</em>: Propagated to <tt class="xref py py-meth docutils literal"><span class="pre">base.plot()</span></tt> (and thus to
+<li><p class="first"><em>**kwargs</em>: Propagated to <tt class="xref py py-meth docutils literal"><span class="pre">util.plot()</span></tt> (and thus to
 <tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt>)</p>
 <blockquote>
 <div><p>If both y axes are used (primary and secondary), then the <em>dashes</em>
@@ -945,20 +492,10 @@ and the curves on the secondary axis will be dotted.</p>
 <li><em>ax2</em>: Secondary y axes</li>
 </ol>
 <p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span><span class="p">,</span> <span class="n">save</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ynames1</span><span class="o">=</span><span class="s">&#39;L.i&#39;</span><span class="p">,</span> <span class="n">ylabel1</span><span class="o">=</span><span class="s">&quot;Current&quot;</span><span class="p">,</span>
-<span class="gp">... </span>         <span class="n">ynames2</span><span class="o">=</span><span class="s">&#39;L.der(i)&#39;</span><span class="p">,</span> <span class="n">ylabel2</span><span class="o">=</span><span class="s">&quot;Derivative of current&quot;</span><span class="p">,</span>
-<span class="gp">... </span>         <span class="n">title</span><span class="o">=</span><span class="s">&quot;Chua Circuit&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">&#39;examples/ChuaCircuit&#39;</span><span class="p">)</span> 
-<span class="go">(&lt;matplotlib.axes...AxesSubplot object at 0x...&gt;, &lt;matplotlib.axes...AxesSubplot object at 0x...&gt;)</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
-<span class="go">Saved examples/ChuaCircuit.pdf</span>
-<span class="go">Saved examples/ChuaCircuit.png</span>
-</pre></div>
+<p>(<a class="reference external" href="./examples/ChuaCircuit.py">Source code</a>, <a class="reference external" href="./examples/ChuaCircuit.png">png</a>, <a class="reference external" href="./examples/ChuaCircuit.hires.png">hires.png</a>, <a class="reference external" href="./examples/ChuaCircuit.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="plot of Chua circuit" src="images/ChuaCircuit1.png" />
 </div>
-<a class="reference internal image-reference" href="images/ChuaCircuit.png"><img alt="plot of Chua circuit" src="images/ChuaCircuit.png" style="width: 543.2px; height: 329.7px;" /></a>
 </dd></dl>
 
 <dl class="method">
@@ -969,7 +506,7 @@ and the curves on the secondary axis will be dotted.</p>
 <ul>
 <li><p class="first"><em>names</em>: List of names of the flow variables</p>
 </li>
-<li><p class="first"><em>times</em>: List of times at which the data should be sampled</p>
+<li><p class="first"><em>times</em>: List of times at which the variables should be sampled</p>
 <blockquote>
 <div><p>If multiple times are given, then subfigures will be generated,
 each with a Sankey diagram.</p>
@@ -1010,7 +547,7 @@ subplots</p>
 <li><p class="first"><em>hspace</em>: The amount of height reserved for white space between
 subplots</p>
 </li>
-<li><p class="first"><em>**kwargs</em>: Additional arguments for  <tt class="xref py py-class docutils literal"><span class="pre">matplotlib.sankey.Sankey</span></tt></p>
+<li><p class="first"><em>**kwargs</em>: Additional arguments for <tt class="xref py py-class docutils literal"><span class="pre">matplotlib.sankey.Sankey</span></tt></p>
 </li>
 </ul>
 <p><strong>Returns:</strong></p>
@@ -1018,41 +555,621 @@ subplots</p>
 <li>List of <tt class="xref py py-class docutils literal"><span class="pre">matplotlib.sankey.Sankey</span></tt> instances of the subplots</li>
 </ol>
 <p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span><span class="p">,</span> <span class="n">save</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ThreeTanks&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sankeys</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">sankey</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">&#39;examples/ThreeTanks&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">title</span><span class="o">=</span><span class="s">&quot;Sankey Diagrams of Modelica.Fluid.Examples.Tanks.ThreeTanks&quot;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">times</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">],</span> <span class="n">n_rows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.1f</span><span class="s"> &#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;tank1.ports[1].m_flow&#39;</span><span class="p">,</span> <span class="s">&#39;tank2.ports[1].m_flow&#39;</span><span class="p">,</span>
-<span class="gp">... </span>           <span class="s">&#39;tank3.ports[1].m_flow&#39;</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;Tank 1&#39;</span><span class="p">,</span> <span class="s">&#39;Tank 2&#39;</span><span class="p">,</span> <span class="s">&#39;Tank 3&#39;</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="n">orientations</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-<span class="gp">... </span>    <span class="n">scale</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">pathlengths</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">trunklength</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">save</span><span class="p">()</span>
-<span class="go">Saved examples/ThreeTanks.pdf</span>
-<span class="go">Saved examples/ThreeTanks.png</span>
-</pre></div>
+<p>(<a class="reference external" href="./examples/ThreeTanks.py">Source code</a>, <a class="reference external" href="./examples/ThreeTanks.png">png</a>, <a class="reference external" href="./examples/ThreeTanks.hires.png">hires.png</a>, <a class="reference external" href="./examples/ThreeTanks.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="Sankey diagram of three tanks" src="images/ThreeTanks1.png" />
 </div>
-<a class="reference internal image-reference" href="images/ThreeTanks.png"><img alt="Sankey digarams of three-tank model" src="images/ThreeTanks.png" style="width: 526.4px; height: 340.9px;" /></a>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="function">
-<dt id="modelicares.simres.merge_times">
-<tt class="descclassname">modelicares.simres.</tt><tt class="descname">merge_times</tt><big>(</big><em>times_list</em><big>)</big><a class="headerlink" href="#modelicares.simres.merge_times" title="Permalink to this definition">¶</a></dt>
-<dd><p>Merge a list of multiple time vectors into one vector.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares.simres</span> <span class="kn">import</span> <span class="n">SimRes</span><span class="p">,</span> <span class="n">merge_times</span>
+<dl class="method">
+<dt id="modelicares.simres.SimRes.to_pandas">
+<tt class="descname">to_pandas</tt><big>(</big><em>names=None</em>, <em>aliases={}</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimRes.to_pandas" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a <a class="reference external" href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame">pandas DataFrame</a> with values from selected variables.</p>
+<p>The index is time.  The column headings indicate the units.</p>
+<p>The data frame has methods for further manipulation and exporting (e.g.,
+<tt class="xref py py-meth docutils literal"><span class="pre">to_clipboard()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">to_csv()</span></tt>, <tt class="xref py py-meth docutils literal"><span class="pre">to_excel()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">to_hdf()</span></tt>, and
+<tt class="xref py py-meth docutils literal"><span class="pre">to_html()</span></tt>).</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><p class="first"><em>names</em>: String or list of strings of the variable names</p>
+<blockquote>
+<div><p>If <em>names</em> is <em>None</em> (default), then all variables are included.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><em>aliases</em>: Dictionary of aliases for the variable names</p>
+<blockquote>
+<div><p>The keys are the &#8220;official&#8221; variable names from the simulation and
+the values are the names as they will be included in the column
+headings.  Any variables not in this list will not be aliased.  Any
+unmatched alias will not be used.</p>
+</div></blockquote>
+</li>
+</ul>
+<p><strong>Examples:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimRes</span>
 
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit.mat&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">times_list</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">get_times</span><span class="p">([</span><span class="s">&#39;L.v&#39;</span><span class="p">,</span> <span class="s">&#39;G.T_heatPort&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">merge_times</span><span class="p">(</span><span class="n">times_list</span><span class="p">)</span> 
-<span class="go">array([    0.        , ... 2500.        ], dtype=float32)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">voltages</span> <span class="o">=</span> <span class="n">sim</span><span class="o">.</span><span class="n">names</span><span class="p">(</span><span class="s">&#39;^[^.]*.v$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">(</span><span class="n">voltages</span><span class="p">)</span> 
+<span class="go">            C1.v / V  C2.v / V   G.v / V   L.v / V  Nr.v / V  Ro.v / V</span>
+<span class="go">Time / s</span>
+<span class="go">0.000000    4.000000  0.000000 -4.000000  0.000000  4.000000  0.000000</span>
+<span class="go">5.000000    3.882738  0.109426 -3.773312  0.109235  3.882738  0.000191</span>
+<span class="gp">...</span>
+<span class="go">[514 rows x 6 columns]</span>
 </pre></div>
 </div>
+<p>We can relabel columns using the <em>aliases</em> argument:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span> <span class="o">=</span> <span class="n">SimRes</span><span class="p">(</span><span class="s">&#39;examples/ThreeTanks.mat&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">aliases</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;tank1.level&#39;</span><span class="p">:</span> <span class="s">&quot;Tank 1 level&quot;</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&#39;tank2.level&#39;</span><span class="p">:</span> <span class="s">&quot;Tank 2 level&quot;</span><span class="p">,</span>
+<span class="gp">... </span>           <span class="s">&#39;tank3.level&#39;</span><span class="p">:</span> <span class="s">&quot;Tank 3 level&quot;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sim</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">(</span><span class="n">aliases</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">aliases</span><span class="p">)</span> 
+<span class="go">           Tank 1 level / m  Tank 2 level / m  Tank 3 level / m</span>
+<span class="go">Time / s</span>
+<span class="go">0.000000           8.000000          3.000000          3.000000</span>
+<span class="go">0.400000           7.974962          2.990460          3.034578</span>
+<span class="go">0.800000           7.950003          2.981036          3.068961</span>
+<span class="go">1.200000           7.925121          2.971729          3.103150</span>
+<span class="go">1.600000           7.900317          2.962539          3.137144</span>
+<span class="gp">...</span>
+<span class="go">[502 rows x 3 columns]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="modelicares.simres.SimResList">
+<em class="property">class </em><tt class="descclassname">modelicares.simres.</tt><tt class="descname">SimResList</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimResList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">modelicares._res.ResList</span></tt></p>
+<p>Specialized list of simulation results</p>
+<p>The entries are <a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> instances, but simulations can be specified
+via filename when initializing or appending the list.  The list has all
+of the methods of a standard <a class="reference external" href="http://www.python.org">Python</a> list (e.g.,
++ or <a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__add__">__add__</a>/<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__radd__">__radd__</a>,
+<tt class="xref py py-meth docutils literal"><span class="pre">clear()</span></tt>,
+<strong>del</strong> or <a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__delitem__">__delitem__</a>,
++= or <a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__iadd__">__iadd__</a>,
+*= or <a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__imul__">__imul__</a>,
+<tt class="xref py py-meth docutils literal"><span class="pre">iter()</span></tt> or <a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__iter__">__iter__</a>,
+<tt class="xref py py-meth docutils literal"><span class="pre">copy()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">extend()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">index()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">insert()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">len()</span></tt> or <a class="reference external" href="https://docs.python.org/2/library/functions.html#len">__len__</a>,
+* or <a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__mul__">__mul__</a>/<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__rmul__">__rmul__</a>,
+<tt class="xref py py-meth docutils literal"><span class="pre">pop()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">remove()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">reverse()</span></tt>,
+<tt class="xref py py-meth docutils literal"><span class="pre">reversed()</span></tt> or <a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__reversed__">__reversed__</a>,
+= or <a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__setitem__">__setitem__</a>,
+and <tt class="xref py py-meth docutils literal"><span class="pre">__sizeof__()</span></tt>).  Note that <tt class="xref py py-meth docutils literal"><span class="pre">len()</span></tt> returns the number of
+simulations, not the number of variables like it does for <a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a>.</p>
+<p>The comparison methods
+(<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__lt__">&lt;</a>,
+<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__le__">&lt;=</a>,
+<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__eq__">==</a>,
+<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__ne__">!=</a>,
+<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__ge__">&gt;=</a>,
+<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__gt__">&gt;</a>),
+and <tt class="xref py py-meth docutils literal"><span class="pre">sort()</span></tt>, which relies on them, use the full filenames (with
+absolute path) for comparison.</p>
+<p>The following methods are overloaded for convenience:</p>
+<ul>
+<li><p class="first"><a class="reference internal" href="#modelicares.simres.SimResList.append" title="modelicares.simres.SimResList.append"><tt class="xref py py-meth docutils literal"><span class="pre">append()</span></tt></a> - Add simulation(s) to the end of the list of simulations
+(accepts a <a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> instance, directory, or filename).</p>
+</li>
+<li><p class="first"><a class="reference internal" href="#modelicares.simres.SimResList.__getitem__" title="modelicares.simres.SimResList.__getitem__"><tt class="xref py py-meth docutils literal"><span class="pre">__getitem__()</span></tt></a> - Retrieve a simulation using an index, simulations
+using a slice, or a variable across the list of simulations using a
+variable name.</p>
+</li>
+<li><p class="first"><a class="reference internal" href="#modelicares.simres.SimResList.__contains__" title="modelicares.simres.SimResList.__contains__"><tt class="xref py py-meth docutils literal"><span class="pre">__contains__()</span></tt></a> - Return <em>True</em> iff:</p>
+<blockquote>
+<div><ul class="simple">
+<li>a simulation is in the list of simulations or</li>
+<li>a variable name is present in all of the simulations in the list.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>The following methods are added to those in the standard <a class="reference external" href="http://www.python.org">Python</a> list:</p>
+<ul class="simple">
+<li><tt class="xref py py-meth docutils literal"><span class="pre">basedir()</span></tt> - Return the highest common directory that the result files
+share.</li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">fnames()</span></tt> - Return a list of filenames from which the results were
+loaded.</li>
+<li><a class="reference internal" href="#modelicares.simres.SimResList.names" title="modelicares.simres.SimResList.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a> - Return a list of names of variables that are present in all
+of the simulations and that match a pattern.</li>
+<li><a class="reference internal" href="#modelicares.simres.SimResList.nametree" title="modelicares.simres.SimResList.nametree"><tt class="xref py py-meth docutils literal"><span class="pre">nametree()</span></tt></a> - Return a tree of the common variable names of the
+simulations based on the <a class="reference external" href="http://www.modelica.org/">Modelica</a> model hierarchy.</li>
+<li><a class="reference internal" href="#modelicares.simres.SimResList.plot" title="modelicares.simres.SimResList.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a> - Plot data from the simulations in 2D Cartesian coordinates.</li>
+<li><a class="reference internal" href="#modelicares.simres.SimResList.unique_IVs" title="modelicares.simres.SimResList.unique_IVs"><tt class="xref py py-meth docutils literal"><span class="pre">unique_IVs()</span></tt></a> - Return a dictionary of initial values that are
+different among the variables that the simulations share.</li>
+<li><a class="reference internal" href="#modelicares.simres.SimResList.unique_names" title="modelicares.simres.SimResList.unique_names"><tt class="xref py py-meth docutils literal"><span class="pre">unique_names()</span></tt></a> - Return a dictionary of variable names that are not
+in all of the simulations.</li>
+</ul>
+<dl class="method">
+<dt id="modelicares.simres.SimResList.__contains__">
+<tt class="descname">__contains__</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimResList.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return key in self.</p>
+<p>This method is overloaded.  If y is a <a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> instance, then
+it returns <em>True</em> iff the instance is in the list of simulation results.
+If y is a string, then it returns <em>True</em> iff the string is the name of a
+variable that is included in all of the simulations in the list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.SimResList.__getitem__">
+<tt class="descname">__getitem__</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimResList.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>x.__getitem__(y) &lt;==&gt; x[y]</p>
+<p>This method is overloaded beyond the standard indexing and slicing.  If
+the index (<em>i</em>) is a variable name (string), then a specialized list of
+variables is returned with references to the corresponding variable in
+each of the simulations.  That list can be queried for the attributes
+listed in <a class="reference internal" href="#modelicares.simres.SimRes.__getitem__" title="modelicares.simres.SimRes.__getitem__"><tt class="xref py py-meth docutils literal"><span class="pre">SimRes.__getitem__()</span></tt></a>.  The same call signature applies
+here except that <tt class="xref py py-meth docutils literal"><span class="pre">arrays()</span></tt> in this class correponds to
+<a class="reference internal" href="#modelicares.simres.Variable.array" title="modelicares.simres.Variable.array"><tt class="xref py py-meth docutils literal"><span class="pre">Variable.array()</span></tt></a>.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimResList</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span> <span class="o">=</span> <span class="n">SimResList</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit/*/*.mat&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span><span class="p">[</span><span class="s">&#39;L.v&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="go">[0.014733823, 0.0044694417]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.SimResList.append">
+<tt class="descname">append</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimResList.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a simulation to the end of the list of simulations.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><p class="first"><em>item</em>: <a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> instance or a file specification</p>
+<blockquote>
+<div><p>The file specification may be a filename or directory, possibly
+with wildcards a la <a class="reference external" href="https://docs.python.org/2/library/glob.html">glob</a>, where simulation
+results can be loaded by <a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a>.  The filename or
+directory must include the absolute path or be resolved to the
+current directory.  An error is only raised if no files can be
+loaded.</p>
+</div></blockquote>
+</li>
+</ul>
+<blockquote>
+<div>Unlike the <a class="reference external" href="https://docs.python.org/2/tutorial/datastructures.html">append</a> method of a
+standard <a class="reference external" href="http://www.python.org">Python</a> list, this method may add more than one item.  If
+<em>item</em> is a directory or a wildcarded filename, it may match multiple
+valid files.</div></blockquote>
+<p><strong>Example:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimResList</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span> <span class="o">=</span> <span class="n">SimResList</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit/*/*.mat&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;examples/ThreeTanks.mat&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">sims</span><span class="p">)</span> 
+<span class="go">List of simulation results (SimRes instances) from the following files</span>
+<span class="go">in the .../ModelicaRes/examples directory:</span>
+<span class="go">   ChuaCircuit/1/dsres.mat</span>
+<span class="go">   ChuaCircuit/2/dsres.mat</span>
+<span class="go">   ThreeTanks.mat</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.SimResList.names">
+<tt class="descname">names</tt><big>(</big><em>pattern=None</em>, <em>re=False</em>, <em>constants_only=False</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimResList.names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of names of variables that are present in all of the
+simulations and that match a pattern.</p>
+<p>By default, all of the common variables are returned.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><p class="first"><em>pattern</em>: Case-sensitive string used for matching</p>
+<ul>
+<li><p class="first">If <em>re</em> is <em>False</em> (next argument), then the pattern follows the
+Unix shell style:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="70%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Character(s)</th>
+<th class="head">Role</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>*</td>
+<td>Matches everything</td>
+</tr>
+<tr class="row-odd"><td>?</td>
+<td>Matches any single character</td>
+</tr>
+<tr class="row-even"><td>[seq]</td>
+<td>Matches any character in seq</td>
+</tr>
+<tr class="row-odd"><td>[!seq]</td>
+<td>Matches any char not in seq</td>
+</tr>
+</tbody>
+</table>
+<p>Wildcard characters (&#8216;*&#8217;) are not automatically added at the
+beginning or the end of the pattern.  For example, &#8216;x*&#8217; matches
+variables that begin with &#8220;x&#8221;, whereas &#8216;*x*&#8217; matches all variables
+that contain &#8220;x&#8221;.</p>
+</li>
+<li><p class="first">If <em>re</em> is <em>True</em>, regular expressions are used a la <a class="reference external" href="http://docs.python.org/2/library/re.html">Python&#8217;s re
+module</a>.  See also
+<a class="reference external" href="http://docs.python.org/2/howto/regex.html#regex-howto">http://docs.python.org/2/howto/regex.html#regex-howto</a>.</p>
+<p>Since <tt class="xref py py-mod docutils literal"><span class="pre">re.search</span></tt> is used to produce the matches, it is as if
+wildcards (&#8216;.*&#8217;) are automatically added at the beginning and the
+end.  For example, &#8216;x&#8217; matches all variables that contain &#8220;x&#8221;.  Use
+&#8216;^x$&#8217; to match only the variables that begin with &#8220;x&#8221; and &#8216;x$&#8217; to
+match only the variables that end with &#8220;x&#8221;.</p>
+<p>Note that &#8216;.&#8217; is a subclass separator in <a class="reference external" href="http://www.modelica.org/">Modelica</a> but a wildcard in
+regular expressions.  Escape the subclass separator as &#8216;\.&#8217;.</p>
+</li>
+</ul>
+</li>
+<li><p class="first"><em>re</em>: <em>True</em> to use regular expressions (<em>False</em> to use shell style)</p>
+</li>
+<li><p class="first"><em>constants_only</em>: <em>True</em> to include only the variables that do not
+change over time</p>
+</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimResList</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span> <span class="o">=</span> <span class="n">SimResList</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit/*/*.mat&#39;</span><span class="p">)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># Names for voltages across all of the components:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span><span class="o">.</span><span class="n">names</span><span class="p">(</span><span class="s">&#39;^[^.]*.v$&#39;</span><span class="p">,</span> <span class="n">re</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">[&#39;G.v&#39;, &#39;L.v&#39;, &#39;C2.v&#39;, &#39;Nr.v&#39;, &#39;Ro.v&#39;, &#39;C1.v&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.SimResList.nametree">
+<tt class="descname">nametree</tt><big>(</big><em>pattern=None</em>, <em>re=False</em>, <em>constants_only=False</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimResList.nametree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a tree of the common variable names of the simulations based
+on the <a class="reference external" href="http://www.modelica.org/">Modelica</a> model hierarchy.</p>
+<p>The tree is returned as a nested dictionary.  The keys are the <a class="reference external" href="http://www.modelica.org/">Modelica</a>
+class instances (including the index if there are arrays) and the values
+are are subclasses.  The value at the end of each branch is the full
+variable name.</p>
+<p>All names are included by default, but the names can be filtered using
+<em>pattern</em>, <em>re</em>, and <em>constants_only</em>.  See <tt class="xref py py-mod docutils literal"><span class="pre">names</span></tt> for a
+description of those arguments.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimResList</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span> <span class="o">=</span> <span class="n">SimResList</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit/*/*.mat&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span><span class="o">.</span><span class="n">nametree</span><span class="p">(</span><span class="s">&#39;L*v&#39;</span><span class="p">)</span> 
+<span class="go">{&#39;L&#39;: {&#39;p&#39;: {&#39;v&#39;: &#39;L.p.v&#39;}, &#39;n&#39;: {&#39;v&#39;: &#39;L.n.v&#39;}, &#39;v&#39;: &#39;L.v&#39;}}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.SimResList.plot">
+<tt class="descname">plot</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimResList.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot data from selected variables over all of the simulations in 2D
+Cartesian coordinates.</p>
+<p>This method calls <tt class="xref py py-meth docutils literal"><span class="pre">simres.SimRes.plot()</span></tt> from the included instances
+of <tt class="xref py py-class docutils literal"><span class="pre">simres.SimRes</span></tt>.</p>
+<p>A new figure is created if necessary.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><p class="first"><em>suffixes</em>: Suffix or list of suffixes for the legends (see
+<tt class="xref py py-meth docutils literal"><span class="pre">simres.SimRes.plot()</span></tt>)</p>
+<blockquote>
+<div><p>If <em>suffixes</em> is <em>None</em>, then no suffix will be used.  If it is an
+empty string (&#8216;&#8217;), then the base filenames will be used.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><em>color</em>: Single entry, list, or <tt class="xref py py-class docutils literal"><span class="pre">itertools.cycle</span></tt> of colors that
+will be used sequentially</p>
+<blockquote>
+<div><p>Each entry may be a character, grayscale, or rgb value.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://matplotlib.sourceforge.net/api/colors_api.html">http://matplotlib.sourceforge.net/api/colors_api.html</a></p>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first"><em>dashes</em>: Single entry, list, or <tt class="xref py py-class docutils literal"><span class="pre">itertools.cycle</span></tt> of dash styles
+that will be used sequentially</p>
+<blockquote>
+<div><p>Each style is a tuple of on/off lengths representing dashes.  Use
+(0, 1) for no line and (None ,None) for a solid line.</p>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference external" href="http://matplotlib.sourceforge.net/api/collections_api.html">http://matplotlib.sourceforge.net/api/collections_api.html</a></p>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first"><em>*args</em>, <em>**kwargs</em>: Propagated to <tt class="xref py py-meth docutils literal"><span class="pre">simres.SimRes.plot()</span></tt> (and
+thus to <tt class="xref py py-meth docutils literal"><span class="pre">util.plot()</span></tt> and finally <tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt>)</p>
+</li>
+</ul>
+<p><strong>Returns:</strong></p>
+<ol class="arabic simple">
+<li><em>ax1</em>: Primary y axes</li>
+<li><em>ax2</em>: Secondary y axes</li>
+</ol>
+<p><strong>Example:</strong></p>
+<p>(<a class="reference external" href="./examples/ChuaCircuits.py">Source code</a>, <a class="reference external" href="./examples/ChuaCircuits.png">png</a>, <a class="reference external" href="./examples/ChuaCircuits.hires.png">hires.png</a>, <a class="reference external" href="./examples/ChuaCircuits.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="plot of a Chua circuit with different inductances" src="images/ChuaCircuits.png" />
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.SimResList.unique_IVs">
+<tt class="descname">unique_IVs</tt><big>(</big><em>constants_only=False</em><big>)</big><a class="headerlink" href="#modelicares.simres.SimResList.unique_IVs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary of initial values that are different among the
+variables that the simulations share.  Each key is a variable name and
+each value is an initial value.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimResList</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span> <span class="o">=</span> <span class="n">SimResList</span><span class="p">(</span><span class="s">&#39;examples/ChuaCircuit/*/*.mat&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">sims</span><span class="p">)</span> 
+<span class="go">List of simulation results (SimRes instances) from the following files</span>
+<span class="go">in the .../ModelicaRes/examples/ChuaCircuit directory:</span>
+<span class="go">   1/dsres.mat</span>
+<span class="go">   2/dsres.mat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span><span class="o">.</span><span class="n">unique_IVs</span><span class="p">()[</span><span class="s">&#39;L.L&#39;</span><span class="p">]</span>
+<span class="go">[18.0, 10.0]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.SimResList.unique_names">
+<tt class="descname">unique_names</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.simres.SimResList.unique_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dictionary of variable names that are not in all of the
+simulations.  Each key is a variable name and each value is a Boolean
+list indicating if the associated variable appears in each of the
+simulations.</p>
+<p><strong>Example:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">SimResList</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span> <span class="o">=</span> <span class="n">SimResList</span><span class="p">(</span><span class="s">&#39;examples/*&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">sims</span><span class="p">)</span> 
+<span class="go">List of simulation results (SimRes instances) from the following files</span>
+<span class="go">in the .../ModelicaRes/examples directory:</span>
+<span class="go">   ThreeTanks.mat</span>
+<span class="go">   ChuaCircuit.mat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sims</span><span class="o">.</span><span class="n">unique_names</span><span class="p">()[</span><span class="s">&#39;L.L&#39;</span><span class="p">]</span>
+<span class="go">[False, True]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="modelicares.simres.Variable">
+<em class="property">class </em><tt class="descclassname">modelicares.simres.</tt><tt class="descname">Variable</tt><a class="headerlink" href="#modelicares.simres.Variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">modelicares.simres.VariableBase</span></tt></p>
+<p>Specialized <a class="reference external" href="https://docs.python.org/2/library/collections.html#collections.namedtuple">namedtuple</a> to represent a variable in a simulation, with
+methods to retrieve and perform calculations on its values</p>
+<p>Instances of this class are returned when indexing a variable name from a
+simulation result (<a class="reference internal" href="#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> instance).  Lists of instances are
+returned when indexing multiple variables from a simulation result or a
+single variable from multiple simulations (in a <a class="reference internal" href="#modelicares.simres.SimResList" title="modelicares.simres.SimResList"><tt class="xref py py-class docutils literal"><span class="pre">SimResList</span></tt></a>).</p>
+<dl class="method">
+<dt id="modelicares.simres.Variable.FV">
+<tt class="descname">FV</tt><big>(</big><em>f=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.Variable.FV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return function <em>f</em> of the final value of the variable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.Variable.IV">
+<tt class="descname">IV</tt><big>(</big><em>f=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.Variable.IV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return function <em>f</em> of the initial value of the variable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.Variable.RMS">
+<tt class="descname">RMS</tt><big>(</big><em>f=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.Variable.RMS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the time-averaged root mean square value of function <em>f</em> of
+the variable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.Variable.RMS_AC">
+<tt class="descname">RMS_AC</tt><big>(</big><em>f=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.Variable.RMS_AC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the time-averaged AC-coupled root mean square value of
+function <em>f</em> of the variable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.Variable.array">
+<tt class="descname">array</tt><big>(</big><em>t=None</em>, <em>ft=None</em>, <em>fv=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.Variable.array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an array with function <em>ft</em> of the times of the variable as
+the first column and function <em>fv</em> of the values of the variable as the
+second column.</p>
+<p>The times and values are taken at index or slice <em>i</em>.  If <em>i</em> is <em>None</em>,
+then all times and values are returned.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><p class="first"><em>t</em>: Time index</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Default or <em>None</em>: All samples are included.</p>
+</li>
+<li><p class="first"><em>float</em>: Interpolate to a single time.</p>
+</li>
+<li><p class="first"><em>list</em>: Interpolate to a list of times.</p>
+</li>
+<li><p class="first"><em>tuple</em>: Extract samples from a range of times.  The structure is
+similar to the arguments of Python&#8217;s <a class="reference external" href="https://docs.python.org/2/library/functions.html#slice">slice</a> function, except that
+the start and stop values can be floating point numbers.  The
+samples within and up to the limits are included.  Interpolation
+is not used.</p>
+<blockquote>
+<div><ul>
+<li><p class="first">(<em>stop</em>,): All samples up to <em>stop</em> are included.</p>
+<blockquote>
+<div><p>Be sure to include the comma to distinguish this from a
+float.</p>
+</div></blockquote>
+</li>
+<li><p class="first">(<em>start</em>, <em>stop</em>): All samples between <em>start</em> and <em>stop</em>
+are included.</p>
+</li>
+<li><p class="first">(<em>start</em>, <em>stop</em>, <em>skip</em>): Every <em>skip*th sample is included
+between *start</em> and <em>stop</em>.</p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><em>ft</em>: Function that operates on the vector of times (default or
+<em>None</em> is identity)</p>
+</li>
+<li><p class="first"><em>fv</em>: Function that operates on the vector of values (default or
+<em>None</em> is identity)</p>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.Variable.is_constant">
+<tt class="descname">is_constant</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.simres.Variable.is_constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <em>True</em> if the variable does not change over time.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.Variable.max">
+<tt class="descname">max</tt><big>(</big><em>f=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.Variable.max" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the maximum value of function <em>f</em> of the variable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.Variable.mean">
+<tt class="descname">mean</tt><big>(</big><em>f=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.Variable.mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the time-averaged mean value of function <em>f</em> of the variable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.Variable.mean_rectified">
+<tt class="descname">mean_rectified</tt><big>(</big><em>f=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.Variable.mean_rectified" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the time-averaged rectified mean value of function <em>f</em> of the
+variable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.Variable.min">
+<tt class="descname">min</tt><big>(</big><em>f=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.Variable.min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the minimum value of function <em>f</em> of the variable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.Variable.times">
+<tt class="descname">times</tt><big>(</big><em>t=None</em>, <em>f=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.Variable.times" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return function <em>f</em> of the recorded times of the variable.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><p class="first"><em>t</em>: Time index</p>
+<blockquote>
+<div><p>This may have any of the forms list in <a class="reference internal" href="#modelicares.simres.Variable.values" title="modelicares.simres.Variable.values"><tt class="xref py py-meth docutils literal"><span class="pre">values()</span></tt></a>, but the
+useful ones are:</p>
+<ul>
+<li><p class="first">Default or <em>None</em>: All times are included.</p>
+</li>
+<li><p class="first"><em>tuple</em>: Extract recorded times from a range of times.  The
+structure is similar to the arguments of Python&#8217;s <a class="reference external" href="https://docs.python.org/2/library/functions.html#slice">slice</a>
+function, except that the start and stop values can be floating
+point numbers.  The times within and up to the limits are
+included.  Interpolation is not used.</p>
+<blockquote>
+<div><ul>
+<li><p class="first">(<em>stop</em>,): All times up to <em>stop</em> are included.</p>
+<blockquote>
+<div><p>Be sure to include the comma to distinguish this from a
+float.</p>
+</div></blockquote>
+</li>
+<li><p class="first">(<em>start</em>, <em>stop</em>): All recorded times between <em>start</em> and
+<em>stop</em> are included.</p>
+</li>
+<li><p class="first">(<em>start</em>, <em>stop</em>, <em>skip</em>): Every <em>skip*th recorded time is
+included between *start</em> and <em>stop</em>.</p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><em>f</em>: Function that operates on the vector of recorded times (default
+or <em>None</em> is identity)</p>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.Variable.value">
+<tt class="descname">value</tt><big>(</big><em>f=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.Variable.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return function <em>f</em> of the value of the constant variable.</p>
+<p>This method raises a <strong>ValueError</strong> if the variable is time-varying.</p>
+<p><strong>Arguments:</strong></p>
+<ul class="simple">
+<li><em>f</em>: Function that operates on the value (default or <em>None</em> is
+identity)</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.simres.Variable.values">
+<tt class="descname">values</tt><big>(</big><em>t=None</em>, <em>f=None</em><big>)</big><a class="headerlink" href="#modelicares.simres.Variable.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return function <em>f</em> of the values of the variable.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><p class="first"><em>t</em>: Time index</p>
+<blockquote>
+<div><ul>
+<li><p class="first">Default or <em>None</em>: All samples are included.</p>
+</li>
+<li><p class="first"><em>float</em>: Interpolate to a single time.</p>
+</li>
+<li><p class="first"><em>list</em>: Interpolate to a list of times.</p>
+</li>
+<li><p class="first"><em>tuple</em>: Extract samples from a range of times.  The structure is
+similar to the arguments of Python&#8217;s <a class="reference external" href="https://docs.python.org/2/library/functions.html#slice">slice</a> function, except that
+the start and stop values can be floating point numbers.  The
+samples within and up to the limits are included.  Interpolation
+is not used.</p>
+<blockquote>
+<div><ul>
+<li><p class="first">(<em>stop</em>,): All samples up to <em>stop</em> are included.</p>
+<blockquote>
+<div><p>Be sure to include the comma to distinguish this from a
+float.</p>
+</div></blockquote>
+</li>
+<li><p class="first">(<em>start</em>, <em>stop</em>): All samples between <em>start</em> and <em>stop</em>
+are included.</p>
+</li>
+<li><p class="first">(<em>start</em>, <em>stop</em>, <em>skip</em>): Every <em>skip*th sample is included
+between *start</em> and <em>stop</em>.</p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><em>f</em>: Function that operates on the vector of values (default or <em>None</em>
+is identity)</p>
+</li>
+</ul>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -1078,13 +1195,12 @@ subplots</p>
         <li class="right" >
           <a href="modelicares.html" title="modelicares"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 30, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+        &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
+      Last updated on May 21, 2014.
     </div>
   </body>
 </html>

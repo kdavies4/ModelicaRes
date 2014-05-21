@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.10.0',
+        VERSION:     '0.11.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -31,7 +31,7 @@
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
     <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
     <link rel="next" title="modelicares.texunit" href="texunit.html" />
-    <link rel="prev" title="modelicares.multi" href="multi.html" />
+    <link rel="prev" title="modelicares.linres" href="linres.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
     <meta name="author" content="Kevin L. Davies">
@@ -52,9 +52,9 @@
           <a href="texunit.html" title="modelicares.texunit"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="multi.html" title="modelicares.multi"
+          <a href="linres.html" title="modelicares.linres"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -62,20 +62,22 @@
             <p class="logo"><a href="index.html">
               <img class="logo" src="javascripts/logo.gif" alt="Logo"/>
             </a></p>
-<h3><a href="index.html">Table Of Contents</a></h3>
+<h3><a href="index.html">Table of Contents</a></h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial (IPython notebook)</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics (ditto)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="multi.html"><tt class="docutils literal"><span class="pre">modelicares.multi</span></tt></a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="base.html"><tt class="docutils literal"><span class="pre">modelicares.base</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
+<div id="searchbox" style="display: none" role="search">
+  <h3><a href="search.html">Search</a></h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
@@ -83,16 +85,14 @@
       <input type="hidden" name="area" value="default" />
     </form>
     <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
     </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
   <ul>
     <li><a itemprop="downloadUrl"
-           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.10.0.tar.gz"
-           rel="nofollow">Latest version (v0.10.0)</a></li>
-    <li><a href="Changelog.html">Changelog</a></li>
-    <li><a href="ModelicaRes.pdf" onclick=”var that=this;_gaq.push(['_trackEvent','Download','PDF',this.href]);setTimeout(function(){location.href=that.href;},200);return false;”>PDF documentation</a></li>
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
+           rel="nofollow">Latest version (v0.11.1)</a></li>
+    <li><a href="changelog.html">Change log</a></li>
   </ul>
         </div>
       </div>
@@ -132,16 +132,14 @@ modifiers, formatted for <a class="reference external" href="http://www.modelica
 </ul>
 <p><strong>Functions:</strong></p>
 <ul class="simple">
-<li><a class="reference internal" href="#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-meth docutils literal"><span class="pre">gen_experiments()</span></tt></a> - Return a generator for a set of simulation 
+<li><a class="reference internal" href="#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-meth docutils literal"><span class="pre">gen_experiments()</span></tt></a> - Return a generator for a set of simulation
 experiments using permutation or simple element-wise grouping</li>
-<li><a class="reference internal" href="#modelicares.exps.modelica_array" title="modelicares.exps.modelica_array"><tt class="xref py py-meth docutils literal"><span class="pre">modelica_array()</span></tt></a> - Convert a <a class="reference external" href="http://numpy.scipy.org/">NumPy</a> array to a <a class="reference external" href="http://www.modelica.org/">Modelica</a>-formatted 
-string</li>
-<li><a class="reference internal" href="#modelicares.exps.modelica_boolean" title="modelicares.exps.modelica_boolean"><tt class="xref py py-meth docutils literal"><span class="pre">modelica_boolean()</span></tt></a> - Convert a Boolean variable to a <a class="reference external" href="http://www.modelica.org/">Modelica</a> string</li>
-<li><a class="reference internal" href="#modelicares.exps.read_params" title="modelicares.exps.read_params"><tt class="xref py py-meth docutils literal"><span class="pre">read_params()</span></tt></a> - Read parameter values from an initialization or final 
+<li><a class="reference internal" href="#modelicares.exps.modelica_str" title="modelicares.exps.modelica_str"><tt class="xref py py-meth docutils literal"><span class="pre">modelica_str()</span></tt></a> - Express a Python variable as a Modelica string</li>
+<li><a class="reference internal" href="#modelicares.exps.read_params" title="modelicares.exps.read_params"><tt class="xref py py-meth docutils literal"><span class="pre">read_params()</span></tt></a> - Read parameter values from an initialization or final
 values file</li>
-<li><a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-meth docutils literal"><span class="pre">run_models()</span></tt></a> - Run <a class="reference external" href="http://www.modelica.org/">Modelica</a> models via pairs of executables and 
+<li><a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-meth docutils literal"><span class="pre">run_models()</span></tt></a> - Run <a class="reference external" href="http://www.modelica.org/">Modelica</a> models via pairs of executables and
 initialization files (not yet implemented)</li>
-<li><a class="reference internal" href="#modelicares.exps.write_params" title="modelicares.exps.write_params"><tt class="xref py py-meth docutils literal"><span class="pre">write_params()</span></tt></a> - Write parameter values to a simulation initialization 
+<li><a class="reference internal" href="#modelicares.exps.write_params" title="modelicares.exps.write_params"><tt class="xref py py-meth docutils literal"><span class="pre">write_params()</span></tt></a> - Write parameter values to a simulation initialization
 file</li>
 <li><a class="reference internal" href="#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a> - Write a <a class="reference external" href="http://www.modelica.org/">Modelica</a> script to run simulations</li>
 </ul>
@@ -153,24 +151,7 @@ file</li>
 <dt id="modelicares.exps.Experiment">
 <em class="property">class </em><tt class="descclassname">modelicares.exps.</tt><tt class="descname">Experiment</tt><a class="headerlink" href="#modelicares.exps.Experiment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
-<p>Named tuple class to represent a simulation experiment</p>
-<p>Instances of this class may be used in the <em>experiments</em> argument of
-<a class="reference internal" href="#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a> and <a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-meth docutils literal"><span class="pre">run_models()</span></tt></a>, although there are some
-differences in the entries (see those functions for details).</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">experiment</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="s">&#39;ChuaCircuit&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;L.L&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">},</span> <span class="n">args</span><span class="o">=</span><span class="p">{})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">experiment</span><span class="o">.</span><span class="n">model</span>
-<span class="go">&#39;ChuaCircuit&#39;</span>
-</pre></div>
-</div>
-<dl class="method">
-<dt id="modelicares.exps.Experiment.__repr__">
-<tt class="descname">__repr__</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.exps.Experiment.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a nicely formatted representation string</p>
-</dd></dl>
-
+<p>Experiment(model, params, args)</p>
 <dl class="attribute">
 <dt id="modelicares.exps.Experiment.args">
 <tt class="descname">args</tt><a class="headerlink" href="#modelicares.exps.Experiment.args" title="Permalink to this definition">¶</a></dt>
@@ -199,50 +180,12 @@ differences in the entries (see those functions for details).</p>
 modifiers, formatted for <a class="reference external" href="http://www.modelica.org/">Modelica</a></p>
 <p>Otherwise, this class is the same as <tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt>.  The underlying
 structure is not nested or reformatted&#8212;only the informal representation
-(<a class="reference internal" href="#modelicares.exps.ParamDict.__str__" title="modelicares.exps.ParamDict.__str__"><tt class="xref py py-meth docutils literal"><span class="pre">ParamDict.__str__()</span></tt></a>).</p>
-<dl class="method">
-<dt id="modelicares.exps.ParamDict.__str__">
-<tt class="descname">__str__</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.exps.ParamDict.__str__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Map the <a class="reference internal" href="#modelicares.exps.ParamDict" title="modelicares.exps.ParamDict"><tt class="xref py py-class docutils literal"><span class="pre">ParamDict</span></tt></a> instance to a string using tuple-based
-modifiers formatted for <a class="reference external" href="http://www.modelica.org/">Modelica</a>.</p>
-<p>Each key is interpreted as a parameter name (including the full model
-path in <a class="reference external" href="http://www.modelica.org/">Modelica</a> dot notation) and each entry is a parameter value.
-The value may be a number (integer or float), Boolean constant (in
-<a class="reference external" href="http://www.python.org/">Python</a> format&#8212;<em>True</em> or <em>False</em>, not &#8216;true&#8217; or &#8216;false&#8217;), string, or
-<a class="reference external" href="http://numpy.scipy.org/">NumPy</a> arrays of these.  <a class="reference external" href="http://www.modelica.org/">Modelica</a> strings must be given with double
-quotes included (e.g., &#8216;&#8220;hello&#8221;&#8217;).  Enumerations may be used as values
-(e.g., &#8216;Axis.x&#8217;).  Values may include functions, but the entire value
-must be expressed as a <a class="reference external" href="http://www.python.org/">Python</a> string (e.g., &#8216;fill(true, 2, 2)&#8217;).
-Items with a value of <em>None</em> are not shown.</p>
-<p>Redeclarations and other prefixes must be included in the key along
-with the name of the instance (e.g., &#8216;redeclare Region
-regions[n_x, n_y, n_z]&#8217;).  The single quotes must be explicitly
-included for instance names that contain symbols (e.g., &#8220;&#8216;H+&#8217;&#8221;).</p>
-<p>Note that <a class="reference external" href="http://www.python.org/">Python</a> dictionaries do not preserve order.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">ParamDict</span><span class="p">({</span><span class="s">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&#39;b.c&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]),</span> <span class="s">&#39;b.d&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">,</span>
-<span class="gp">... </span>               <span class="s">&#39;b.e&#39;</span><span class="p">:</span> <span class="s">&#39;&quot;hello&quot;&#39;</span><span class="p">,</span> <span class="s">&#39;b.f&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-<span class="go">(a=1, b(c={2, 3}, e=&quot;hello&quot;, d=false))</span>
-
-<span class="go"># The formal representation (and the internal structure) is unaffected:</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span>
-<span class="go">{&#39;a&#39;: 1, &#39;b.c&#39;: array([2, 3]), &#39;b.f&#39;: None, &#39;b.e&#39;: &#39;&quot;hello&quot;&#39;, &#39;b.d&#39;: False}</span>
-
-<span class="go"># An empty dictionary prints as an empty string (not &quot;()&quot;):</span>
-<span class="go">print(ParamDict({}))</span>
-</pre></div>
-</div>
-</dd></dl>
-
+(<tt class="xref py py-meth docutils literal"><span class="pre">ParamDict.__str__()</span></tt>).</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="modelicares.exps.gen_experiments">
-<tt class="descclassname">modelicares.exps.</tt><tt class="descname">gen_experiments</tt><big>(</big><em>models=None</em>, <em>params={}</em>, <em>args={}</em>, <em>design=&lt;function fullfact at 0x7f62e4e40050&gt;</em><big>)</big><a class="headerlink" href="#modelicares.exps.gen_experiments" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modelicares.exps.</tt><tt class="descname">gen_experiments</tt><big>(</big><em>models=None</em>, <em>params={}</em>, <em>args={}</em>, <em>design=&lt;function fullfact at 0x7f6243925410&gt;</em><big>)</big><a class="headerlink" href="#modelicares.exps.gen_experiments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a generator for a set of simulation experiments using permutation
 or simple element-wise grouping.</p>
 <p>The generator yields instances of <a class="reference internal" href="#modelicares.exps.Experiment" title="modelicares.exps.Experiment"><tt class="xref py py-class docutils literal"><span class="pre">Experiment</span></tt></a>&#8212;named tuples of
@@ -357,36 +300,31 @@ generates the simulation settings.  Several options are available in
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.exps.modelica_array">
-<tt class="descclassname">modelicares.exps.</tt><tt class="descname">modelica_array</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#modelicares.exps.modelica_array" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a <a class="reference external" href="http://numpy.scipy.org/">NumPy</a> array to a <a class="reference external" href="http://www.modelica.org/">Modelica</a>-formatted string.</p>
-<p>Square brackets are curled and Booleans are cast to lowercase.</p>
-<p><strong>Example:</strong></p>
+<dt id="modelicares.exps.modelica_str">
+<tt class="descclassname">modelicares.exps.</tt><tt class="descname">modelica_str</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#modelicares.exps.modelica_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Express a Python variable as a Modelica string</p>
+<p>A Boolean variable (<tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt>) becomes &#8216;true&#8217; or &#8216;false&#8217; (lowercase).</p>
+<p>For <a class="reference external" href="http://numpy.scipy.org/">NumPy</a> arrays, square brackets are curled.</p>
+<p><strong>Examples:</strong></p>
+<p>Booleans:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># Booleans:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">modelica_str</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+<span class="go">&#39;true&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">modelica_str</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
+<span class="go">&#39;false&#39;</span>
+</pre></div>
+</div>
+<p>Arrays:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">modelica_array</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">modelica_str</span><span class="p">(</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]))</span>
 <span class="go">&#39;{{1, 2}, {3, 4}}&#39;</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">modelica_array</span><span class="p">(</span><span class="n">array</span><span class="p">([[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">],</span> <span class="p">[</span><span class="bp">False</span><span class="p">,</span> <span class="bp">False</span><span class="p">]]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">modelica_str</span><span class="p">(</span><span class="n">array</span><span class="p">([[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">],</span> <span class="p">[</span><span class="bp">False</span><span class="p">,</span> <span class="bp">False</span><span class="p">]]))</span>
 <span class="go">&#39;{{true, true}, {false, false}}&#39;</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="modelicares.exps.modelica_boolean">
-<tt class="descclassname">modelicares.exps.</tt><tt class="descname">modelica_boolean</tt><big>(</big><em>x</em><big>)</big><a class="headerlink" href="#modelicares.exps.modelica_boolean" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a Boolean variable (<tt class="xref py py-class docutils literal"><span class="pre">bool</span></tt>) to a <a class="reference external" href="http://www.modelica.org/">Modelica</a> string (&#8216;true&#8217;
-or &#8216;false&#8217;).</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="o">*</span>
-
-<span class="gp">&gt;&gt;&gt; </span><span class="n">modelica_boolean</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
-<span class="go">&#39;true&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">modelica_boolean</span><span class="p">(</span><span class="bp">False</span><span class="p">)</span>
-<span class="go">&#39;false&#39;</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -394,7 +332,7 @@ or &#8216;false&#8217;).</p>
 <dl class="function">
 <dt id="modelicares.exps.read_params">
 <tt class="descclassname">modelicares.exps.</tt><tt class="descname">read_params</tt><big>(</big><em>names</em>, <em>fname='dsin.txt'</em><big>)</big><a class="headerlink" href="#modelicares.exps.read_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read parameter values from an initialization or final values file (e.g., 
+<dd><p>Read parameter values from an initialization or final values file (e.g.,
 dsin.txt or dsfinal.txt).</p>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -402,7 +340,7 @@ dsin.txt or dsfinal.txt).</p>
 <a class="reference external" href="http://www.modelica.org/">Modelica</a> dot notation)</p>
 <blockquote>
 <div><p>A parameter name includes array indices (if any) in <a class="reference external" href="http://www.modelica.org/">Modelica</a>
-representation (1-base indexing); the values are scalar.</p>
+representation (1-based indexing); the values are scalar.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>fname</em>: Name of the file (may include the file path)</p>
@@ -472,7 +410,7 @@ simulation number in the sequence of experiments.</p>
 <dl class="function">
 <dt id="modelicares.exps.write_params">
 <tt class="descclassname">modelicares.exps.</tt><tt class="descname">write_params</tt><big>(</big><em>params</em>, <em>fname='dsin.txt'</em><big>)</big><a class="headerlink" href="#modelicares.exps.write_params" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write parameter values to a simulation initialization file (e.g., 
+<dd><p>Write parameter values to a simulation initialization file (e.g.,
 dsin.txt).</p>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -481,7 +419,7 @@ dsin.txt).</p>
 <div><p>Each key is a parameter name (including the full model path in
 <a class="reference external" href="http://www.modelica.org/">Modelica</a> dot notation) and each entry is a parameter value.  The
 parameter name includes array indices (if any) in <a class="reference external" href="http://www.modelica.org/">Modelica</a>
-representation (1-bases indexing).  The values must be representable
+representation (1-based indexing).  The values must be representable
 as scalar numbers (integer or floating point).  <em>True</em> and <em>False</em>
 (not &#8216;true&#8217; and &#8216;false&#8217;) are automatically mapped to 1 and 0.
 Enumerations must be given explicitly as the unsigned integer
@@ -526,8 +464,8 @@ tool or environment (see below for Dymola<sup>®</sup>).</p>
 <p>The keys or variable names in the <em>params</em> dictionary must indicate
 the hierarchy within the model&#8212;either in <a class="reference external" href="http://www.modelica.org/">Modelica</a> dot notation or
 via nested dictionaries.  If <em>model</em> is <em>None</em>, then <em>params</em> is not
-used.  <a class="reference external" href="http://www.python.org/">Python</a> values are automatically mapped to their <a class="reference external" href="http://www.modelica.org/">Modelica</a>
-equivalent (see <a class="reference internal" href="#modelicares.exps.ParamDict.__str__" title="modelicares.exps.ParamDict.__str__"><tt class="xref py py-meth docutils literal"><span class="pre">ParamDict.__str__()</span></tt></a>).  Redeclarations and other
+used.  <a class="reference external" href="http://www.python.org">Python</a> values are automatically mapped to their <a class="reference external" href="http://www.modelica.org/">Modelica</a>
+equivalent (see <tt class="xref py py-meth docutils literal"><span class="pre">ParamDict.__str__()</span></tt>).  Redeclarations and other
 prefixes must be included in the keys along with the variable names.</p>
 <p><a class="reference internal" href="#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-meth docutils literal"><span class="pre">gen_experiments()</span></tt></a> can be used to create a generator for this
 argument.</p>
@@ -675,15 +613,14 @@ save results from 12 simulation experiments.</p>
           <a href="texunit.html" title="modelicares.texunit"
              >next</a> |</li>
         <li class="right" >
-          <a href="multi.html" title="modelicares.multi"
+          <a href="linres.html" title="modelicares.linres"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.10.0 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2012-2013, Kevin Davies, Georgia Tech Research Corporation.
-      Last updated on Apr 30, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+        &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
+      Last updated on May 21, 2014.
     </div>
   </body>
 </html>
