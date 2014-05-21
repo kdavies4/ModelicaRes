@@ -1887,11 +1887,10 @@ class SimResList(ResList):
            >>> print(sims) # doctest: +ELLIPSIS
            List of simulation results (SimRes instances) from the following files
            in the .../ModelicaRes/examples directory:
-              ChuaCircuit.mat
               ThreeTanks.mat
-
+              ChuaCircuit.mat
            >>> sims.unique_names()['L.L']
-           [True, False]
+           [False, True]
         """
         sets = [set(sim.names()) for sim in self]
         all_names = set.union(*sets)

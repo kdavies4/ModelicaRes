@@ -16,7 +16,7 @@ from distutils.core import setup
 #        from distutils.core import setup
 
 setup(name='ModelicaRes',
-      version="{version}",
+      version="0.11.0",
       description='Utilities to set up and analyze Modelica simulation experiments',
       long_description=open('README.txt').read(),
       author='Kevin Davies',

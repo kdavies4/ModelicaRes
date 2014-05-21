@@ -25,4 +25,4 @@ install:
   - python setup.py build && sudo python setup.py install
 
 script:
-  - python runtests.py
+  - python runtests.py --raise

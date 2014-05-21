@@ -47,8 +47,8 @@ more examples.
 
 .. toctree::
 
-  Tutorial <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb>
-  Advanced topics <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/advanced.ipynb>
+  Tutorial (IPython notebook) <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>
+  Advanced topics (ditto) <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb>
   loadres
   modelicares
   simres
@@ -56,6 +56,7 @@ more examples.
   exps
   texunit
   util
+  glossary
 
 The `loadres script <loadres.html>`_ helps to load simulation and linearization
 results from the command line.  The top-level module, :mod:`modelicares`,
@@ -69,7 +70,7 @@ tools to set up and manage simulation experiments.  The
 and *displayUnit* strings into LaTeX_-formatted strings.  The last submodule,
 :mod:`modelicares.util`, has general supporting functions and classes.
 
-For a list of changes, please see the `change log <Changelog.html>`_.
+For a list of changes, please see the `change log <changelog.html>`_.
 
 **Installation**
 
@@ -121,8 +122,7 @@ Thomas Beutlich, Martin Sjölund, Mike Tiller, and Michael Wetter.
 
 **License terms and development**
 
-ModelicaRes is published under a `BSD-compatible license
-<https://github.com/kdavies4/ModelicaRes/blob/release/LICENSE.txt>`_.  The
+ModelicaRes is published under a `BSD-compatible license <license.html>`_.  The
 development site is https://github.com/kdavies4/ModelicaRes.  Please share any
 modifications you make (preferably as a pull request to the ``master`` branch at
 that site) in order to help others.  If you find a bug, please `report it

@@ -6,15 +6,16 @@ This module provides convenient access to the most important functions and
 classes from its submodules.  These are:
 
 - To manage simulation experiments (:mod:`~modelicares.exps` module):
-  :class:`~exps.Experiment`, :mod:`~modelicares.exps.doe`, :meth:`~exps.gen_experiments`,
-  :class:`~exps.ParamDict`, :meth:`~exps.read_params`, :meth:`~exps.run_models`,
-  :meth:`~exps.write_params`, and :meth:`~exps.write_script`
+  :mod:`~modelicares.exps.doe`, :class:`~exps.Experiment`,
+  :meth:`~exps.gen_experiments`, :class:`~exps.ParamDict`,
+  :meth:`~exps.run_models`, :meth:`~exps.write_params`, and
+  :meth:`~exps.write_script`
 
 - For simulation results (:mod:`~modelicares.simres` module):
-  :class:`~simres.SimRes`, :class:`~simres.SimResList`
+  :class:`~simres.SimRes` and :class:`~simres.SimResList`
 
 - For linearization results (:mod:`~modelicares.linres` module):
-  :class:`~linres.LinRes`, :class:`~linres.LinResList`
+  :class:`~linres.LinRes` and :class:`~linres.LinResList`
 
 - To label numbers and quantities (:mod:`~modelicares.texunit` module):
   :meth:`~texunit.number_label`, :meth:`~texunit.quantity_str`, and
@@ -26,8 +27,7 @@ classes from its submodules.  These are:
   :meth:`~util.load_csv`, :meth:`~util.save`, :meth:`~util.saveall`, and
   :meth:`~util.setup_subplots`
 
-A function is also provided to load multiple simulation and linearization
-results at once (see below).
+A function is also provided:
 
 
 .. _Modelica: http://www.modelica.org/
@@ -36,7 +36,7 @@ __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
 __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
-__version__ = "x.x.x"
+__version__ = "0.11.0"
 
 
 # Essential functions and classes
@@ -49,8 +49,8 @@ from modelicares.util import (add_arrows, add_hlines, add_vlines, ArrowLine,
                               closeall, figure, load_csv, save, saveall,
                               setup_subplots)
 from modelicares.exps import (doe, Experiment, gen_experiments, ParamDict,
-                              read_params, run_models, write_params,
-                              write_script)
+                              read_params, write_params, write_script)
+# TODO: Add run_models and include in the doc list once supported.
 from modelicares.texunit import number_label, quantity_str, unit2tex
 
 
@@ -67,9 +67,9 @@ def load(*args):
 
     **Returns:**
 
-    1. :class:`simres.SimResList` of simulations
+    1. :class:`~simres.SimResList` of simulations
 
-    2. :class:linres.LinResList` of linearizations
+    2. :class:`~linres.LinResList` of linearizations
 
     Either may be an empty list.
 

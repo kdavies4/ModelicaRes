@@ -127,7 +127,7 @@ def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
 
     **Example:**
 
-    .. plot:: tests/util.add_arrows.py
+    .. plot:: examples/util-add_arrows.py
        :alt: example of add_arrows()
     """
     from math import atan, cos, sin
@@ -195,7 +195,7 @@ def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
 
     **Example:**
 
-    .. plot:: tests/util.add_hlines.py
+    .. plot:: examples/util-add_hlines.py
        :alt: example of add_hlines()
     """
     # Process the inputs.
@@ -233,7 +233,7 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
 
     **Example:**
 
-    .. plot:: tests/util.add_vlines.py
+    .. plot:: examples/util-add_vlines.py
        :alt: example of add_vlines()
     """
     # Process the inputs.
@@ -282,7 +282,7 @@ def color(ax, c, *args, **kwargs):
 
     **Example:**
 
-    .. plot:: tests/util.color.py
+    .. plot:: examples/util-color.py
        :alt: example of color()
     """
     return ax.imshow(c, *args, **kwargs)
@@ -749,7 +749,7 @@ def plot(y, x=None, ax=None, label=None,
 
     **Example:**
 
-    .. plot:: tests/util.plot.py
+    .. plot:: examples/util-plot.py
        :alt: example of plot()
     """
     # Create axes if necessary.
@@ -822,7 +822,7 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
 
     **Example:**
 
-    .. plot:: tests/util.quiver.py
+    .. plot:: examples/util-quiver.py
        :alt: plot of quiver()
     """
     if x is None or y is None:
@@ -1041,7 +1041,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
 
     **Example:**
 
-    .. plot:: tests/util.setup_subplots.py
+    .. plot:: examples/util-setup_subplots.py
        :alt: example of setup_subplots()
     """
     from matplotlib.figure import SubplotParams
@@ -1164,7 +1164,7 @@ def shift_scale_x(ax, eagerness=0.325):
 
     **Example:**
 
-    .. plot:: tests/util.shift_scale_x.py
+    .. plot:: examples/util-shift_scale_x.py
        :alt: example of shift_scale_x()
     """
     # This concept is based on:
@@ -1194,7 +1194,7 @@ def shift_scale_y(ax, eagerness=0.325):
 
     **Example:**
 
-    .. plot:: tests/util.shift_scale_y.py
+    .. plot:: examples/util-shift_scale_y.py
        :alt: example of shift_scale_y()
     """
     # This concept is based on:
@@ -1313,7 +1313,7 @@ class ArrowLine(Line2D):
 
         **Example:**
 
-        .. plot:: tests/util.ArrowLine.py
+        .. plot:: examples/util-ArrowLine.py
            :alt: example of ArrowLine()
         """
         self._arrow = kwargs.pop('arrow', '-')

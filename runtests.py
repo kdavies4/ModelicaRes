@@ -1,25 +1,33 @@
 #!/usr/bin/python
-# Top-level test to run all tests on ModelicaRes.
+# Top-level test to run all of the main tests on ModelicaRes.
+#
+# To raise an error if a test fails, run this with option '--raise'.  Otherwise,
+# the results are just printed.
 
+import sys
 import doctest
 import modelicares
 
+raise_on_error = len(sys.argv) > 1 and sys.argv[1] == '--raise'
+testfile = lambda fname: doctest.testfile(fname, raise_on_error=raise_on_error)
+testmod = lambda mod: doctest.testmod(mod, raise_on_error=raise_on_error)
+
 # Tests from the tests folder
-doctest.testfile('tests/tests.txt')
+testfile('tests/tests.txt')
 
 # Doctests from the modules
-doctest.testfile("modelicares/_gui.py") # Isn't imported in modelicares, so test as file
-doctest.testmod(modelicares._freqplot)
-doctest.testmod(modelicares._io)
-doctest.testmod(modelicares._io.dymola)
-doctest.testmod(modelicares.exps)
-doctest.testmod(modelicares.exps.doe)
-doctest.testmod(modelicares.linres)
-doctest.testmod(modelicares.simres)
-doctest.testmod(modelicares.texunit)
-doctest.testmod(modelicares.util)
+testfile("modelicares/_gui.py") # Test as file; isn't imported in modelicares
+testmod(modelicares._freqplot)
+testmod(modelicares._io)
+testmod(modelicares._io.dymola)
+testmod(modelicares.exps)
+testmod(modelicares.exps.doe)
+testmod(modelicares.linres)
+testmod(modelicares.simres)
+testmod(modelicares.texunit)
+testmod(modelicares.util)
 
-# TODO: Note that the GUI isn't tested.
-# Create a separate set of tests for the GUIs (in loadres, util.save, util.saveall, and SimRes.browse)
-
-print("The bin/loadres script must be tested manually.")
+# TODO: Include test of the GUIs, but add an option to bypass it for Travis CI.
+print("The bin/loadres script and the GUI-based functions and methods "
+      "util.save, util.saveall, and simres.SimRes.browse must be tested "
+      "manually.")

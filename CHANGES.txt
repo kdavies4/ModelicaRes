@@ -1,17 +1,17 @@
 Change log
 ==========
 
-The releases are numbered according to the `Semantic Versioning specification
+The releases are numbered according to the `Semantic Versioning Specification
 <http://semver.org>`_.
 
-v{version}_ ({date}) -- Updates:
+v0.11.0_ (2014-5-21) -- Updates:
 
    - Added IPython notebooks (`tutorial
      <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb>`_
      and
      `advanced <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/advanced.ipynb>`_).
-   - ModelicaRes is now independent with respect to the simulation tool;
-     decoupled the Dymola-specific algorithms and placed them in a submodule.
+   - Decoupled the Dymola-specific algorithms and placed them in a submodule.
+     ModelicaRes is now independent with respect to the simulation tool.
    - New classes :class:`~modelicares.simres.SimResList` and
      :class:`~modelicares.linres.LinResList` to manage, sort, and plot multiple
      simulation and linearization results (based on the old
@@ -20,8 +20,8 @@ v{version}_ ({date}) -- Updates:
    - Now supports format version 1.0 Dymola/OpenModelica files (previously only
      1.1).
    - Improved the speed of loading files and retrieving data.
-   - Improved test coverage, which continuous integration testing (thanks to
-     `Travis CI <https://travis-ci.org/>`_)
+   - Improved test coverage, with continuous integration testing (thanks to
+     `Travis CI <https://travis-ci.org/>`_).
    - Improved installation setup and instructions.
    - Added a simpler, more powerful API for accessing data attributes; removed
      the *get_* methods of :class:`~modelicares.simres.SimRes`.
@@ -34,20 +34,20 @@ v{version}_ ({date}) -- Updates:
    - Added *f1* and *f2* arguments to plot additional expressions using
      :meth:`~modelicares.simres.SimRes.plot`.
    - Plotting examples are now included as scripts in the *examples* folder.
-     Only the plots are show in the documentation.
+     Only the plots are show in the documentation, with links to the source
+     files.
    - :class:`~modelicares.simres.SimRes` and :class:`~modelicares.linres.LinRes`
      now require the file extension to load files.
    - Added :meth:`~modelicares.simres.SimRes.n_constants` to return the number
      of constants in a simulation.
-   - Wx is now optional---only required for variable browser.
+   - wx is now optional---only required for variable browser.
    - Added option to :class:`~modelicares.simres.SimRes.names` to list only the
      constants.
-   - Added si_prefix() to :mod:`~modelicares.util` (previously nested in
+   - Added :mod:`~modelicares.util.si_prefix` (previously nested in
      :mod:`~modelicares.texunit`)
    - The *fname* atribute in :class:`~modelicares.simres.SimRes` and
      :class:`~modelicares.linres.LinRes` now includes the absolute path.
-     :meth:`~modelicares.simres.SimRes.fbase` and
-     :meth:`~modelicares.linres.LinRes.fbase` return the base filename without
+     :meth:`~modelicares.simres.SimRes.fbase` returns the base filename without
      directory or extension.
    - Added :meth:`~modelicares.linres.LinRes.to_tf` to return a selected
      transfer function from the state-space representation.
@@ -60,7 +60,7 @@ v{version}_ ({date}) -- Updates:
    - Renamed internal submodules with leading underscore to denote that they
      are not meant for external use.
    - Renamed :meth:`~modelicares.texunit.label_number` to
-     :meth:`~modelicares.texunit.number_str` and
+     :meth:`~modelicares.texunit.label_number` and
      :meth:`~modelicares.texunit.label_quantity` to
      :meth:`~modelicares.texunit.quantity_str`.
    - Merged :meth:`~modelicares.exps.modelica_array` and
@@ -70,7 +70,7 @@ v{version}_ ({date}) -- Updates:
      :meth:`~modelicares.util.convert` from :mod:`~modelicares.util`.
    - Removed :meth:`~modelicares.simres.merge_times`.  It is not used internally
      and probably is not very helpful externally.
-   - Removed :meth:`~modelicares.util.animate`.  matplotlib now has built-in
+   - Removed :meth:`~modelicares.util.animate`.  matplotlib_ now has built-in
      methods for this; see http://matplotlib.org/api/animation_api.html.
 
 v0.10.0_ (2014-4-30) -- Updates:
@@ -263,4 +263,5 @@ v0.1_ (2012-11-8) -- Initial release
 .. _v0.2: https://github.com/kdavies4/ModelicaRes/archive/v0.2.zip
 .. _v0.1: https://github.com/kdavies4/ModelicaRes/archive/v0.1.zip
 
+.. _matplotlib: http://matplotlib.org/
 .. _Pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
