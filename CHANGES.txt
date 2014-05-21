@@ -4,6 +4,10 @@ Change log
 The releases are numbered according to the `Semantic Versioning Specification
 <http://semver.org>`_.
 
+v0.11.1_ (2014-5-21) -- Updates:
+
+   - Fixed the release to PyPI.
+
 v0.11.0_ (2014-5-21) -- Updates:
 
    - Added IPython notebooks (`tutorial
