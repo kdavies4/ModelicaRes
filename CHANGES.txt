@@ -247,6 +247,7 @@ v0.2_ (2012-11-20) -- Updates:
 v0.1_ (2012-11-8) -- Initial release
 
 
+.. _v0.11.1: https://github.com/kdavies4/ModelicaRes/archive/v0.11.1.zip
 .. _v0.11.0: https://github.com/kdavies4/ModelicaRes/archive/v0.11.0.zip
 .. _v0.10.0: https://github.com/kdavies4/ModelicaRes/archive/v0.10.0.zip
 .. _v0.9.0: https://github.com/kdavies4/ModelicaRes/archive/v0.9.0.zip
