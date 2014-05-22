@@ -76,7 +76,8 @@ The main author is Kevin Davies.  Code has been included from:
 - Jason Heeris (`efficient base-10 logarithm`_),
 
 Suggestions and bug fixes have been provided by Arnout Aertgeerts, Kevin Bandy,
-Thomas Beutlich, Martin Sjölund, Mike Tiller, and Michael Wetter.
+Thomas Beutlich, Moritz Lauster, Martin Sjölund, Mike Tiller, and Michael
+Wetter.
 
 License terms and development
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

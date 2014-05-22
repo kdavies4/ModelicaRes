@@ -1897,8 +1897,8 @@ class SimResList(ResList):
         unique_names = all_names - set(self.names())
         return {name: [name in sim for sim in self] for name in unique_names}
 
-    def __contains__(self, key):
-        """Return key in self.
+    def __contains__(self, item):
+        """Return item in self.
 
         This method is overloaded.  If y is a :class:`SimRes` instance, then
         it returns *True* iff the instance is in the list of simulation results.

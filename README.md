@@ -75,7 +75,8 @@ The main author is Kevin Davies.  Code has been included from:
   ([efficient base-10 logarithm](http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html)).
 
 Suggestions and bug fixes have been provided by Arnout Aertgeerts, Kevin Bandy,
-Thomas Beutlich, Martin Sjölund, Mike Tiller, and Michael Wetter.
+Thomas Beutlich, Moritz Lauster, Martin Sjölund, Mike Tiller, and Michael
+Wetter.
 
 ### License terms and development
 
