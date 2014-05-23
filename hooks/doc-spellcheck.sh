@@ -22,7 +22,7 @@ if $reduce; then
    head --lines=1 $wordfile.bak > $wordfile
    while read word; do
        # echo $word
-       files=`grep --files-with-matches --max-count=1 "$word" $root/doc/*.html`
+       files=`grep --files-with-matches --max-count=1 "$word" $root/doc/build/html/*.html`
        if [ ! -z "$files" ]; then
            echo $word >> $wordfile
        fi
@@ -32,6 +32,6 @@ rm $wordfile.bak
 
 
 # Check the spelling.
-for f in $root/doc/*.html; do
+for f in $root/doc/build/html/*.html; do
     aspell --dont-backup --extra-dicts=$extrafile --personal=$wordfile -c $f
 done

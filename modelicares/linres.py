@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""This submodule contains two classes to help load, analyze, and plot results
-from Modelica_ linearizations:
+"""This submodule contains classes to help load, analyze, and plot results from
+Modelica_ linearizations:
 
 - :class:`LinRes` - Class to load, contain, and analyze results from a Modelica_
   linearization
@@ -56,24 +56,37 @@ class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze
     those results
 
-    This class contains two user-accessible methods:
+    **Initialization arguments:**
 
-    - :meth:`bode` - Create a Bode plot of the system's response
+    - *fname*: Name of the file (including the directory if necessary)
+
+         The file must contain four matrices:  *Aclass* (specifies the class
+         name, which must be "AlinearSystem"), *nx*, *xuyName*, and *ABCD*.
+
+    - *tool*: String indicating the simulation tool that created the file
+      and thus the function to be used to load it
+
+         By default, the available functions are tried in order until one
+         works (or none do).
+
+    **Methods:**
+
+    - :meth:`bode` - Create a Bode plot of the system's response.
 
     - :meth:`fbase` - Return the base filename from which the data was loaded,
-      without the directory or file extension
+      without the directory or file extension.
 
-    - :meth:`nyquist` - Create a Nyquist plot of the system's response
+    - :meth:`nyquist` - Create a Nyquist plot of the system's response.
 
-    - :meth:`to_tf` - Return a transfer function given input and output names
+    - :meth:`to_tf` - Return a transfer function given input and output names.
 
-    Attributes:
+    **Attributes:**
 
-    - *fname* - filename from which the data was loaded, with the directory and
+    - *fname* - Filename from which the data was loaded, with the directory and
       file extension
 
     - *tool* - String indicating the function used to load the results (named
-      after the corresponding linearization tool)
+      after the corresponding Modelica_ tool)
 
     - *sys* - State-space system as an instance of :class:`control.StateSpace`
 
@@ -91,25 +104,22 @@ class LinRes(object):
          - *input_names*: List of names of the inputs (*u*)
 
          - *output_names*: List of names of the outputs (*y*)
+
+    **Example:**
+
+    .. code-block:: python
+
+       >>> from modelicares import LinRes
+       >>> lin = LinRes('examples/PID.mat')
+       >>> print(lin)
+       Modelica linearization results from examples/PID.mat
     """
 
     def __init__(self, fname='dslin.mat', tool=None):
         """Upon initialization, load Modelica_ linearization results from a
         file.
 
-        **Arguments:**
-
-        - *fname*: Name of the file (including the directory if necessary)
-
-             The file must contain four matrices:  *Aclass* (specifies the class
-             name, which must be "AlinearSystem"), *nx*, *xuyName*, and *ABCD*.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import LinRes
-           >>> lin = LinRes('examples/PID.mat')
+        See the top-level class documentation.
         """
 
         # Load the file.
@@ -287,17 +297,19 @@ class LinRes(object):
         - *pairs*: List of (input index, output index) tuples of each transfer
           function to be evaluated
 
-             If not provided, all of the transfer functions will be plotted.
+             By default, all of the transfer functions will be plotted.
 
         - *label*: Label for the figure (ignored if *axes* is provided)
 
-             This will be used as the base filename if the figure is saved.
+             This is used as the base filename if the figure is saved using
+             :meth:`~modelicares.simres.util.save` or
+             :meth:`~modelicares.simres.util.saveall`.
 
         - *title*: Title for the figure
 
-             If *title* is *None* (default), then the title will be "Bode Plot
-             of *fbase*", where *fbase* is the base filename of the data.  Use
-             '' for no title.
+             If *title* is *None* (default), then the title will be "Bode plot
+             of fbase", where fbase is the base filename of the data.  Use ''
+             for no title.
 
         - *colors*: Color or list of colors that will be used sequentially
 
@@ -308,9 +320,9 @@ class LinRes(object):
         - *styles*: Line/dash style or list of line/dash styles that will be
           used sequentially
 
-             Each style is a string representing a linestyle (e.g., "--") or a
-             tuple of on/off lengths representing dashes.  Use "" for no line
-             and "-" for a solid line.
+             Each style is a string representing a linestyle (e.g., '--') or a
+             tuple of on/off lengths representing dashes.  Use '' for no line
+             or '-' for a solid line.
 
              .. Seealso::
                 http://matplotlib.sourceforge.net/api/collections_api.html
@@ -394,17 +406,19 @@ class LinRes(object):
         - *pairs*: List of (input index, output index) tuples of each transfer
           function to be evaluated
 
-             If not provided, all of the transfer functions will be plotted.
+             By default, all of the transfer functions will be plotted.
 
         - *label*: Label for the figure (ignored if ax is provided)
 
-             This will be used as the base filename if the figure is saved.
+             This is used as the base filename if the figure is saved using
+             :meth:`~modelicares.simres.util.save` or
+             :meth:`~modelicares.simres.util.saveall`.
 
         - *title*: Title for the figure
 
              If *title* is *None* (default), then the title will be "Nyquist
-             Plot of *fbase*", where *fbase* is the base filename of the data.
-             Use '' for no title.
+             plot of fbase", where fbase is the base filename of the data.  Use
+             '' for no title.
 
         - *xlabel*: x-axis label
 
@@ -498,6 +512,29 @@ def _get_lins(fnames):
 class LinResList(ResList):
     """Specialized list of linearization results
 
+    **Initialization signatures:**
+
+    - :class:`LinResList`(): Returns an empty linearization list
+
+    - :class:`LinResList`(*lins*), where lins is a list of :class:`LinRes`
+      instances:  Casts the list into a :class:`LinResList`
+
+    - :class:`LinResList`(*filespec*), where *filespec* is a filename or
+      directory, possibly with wildcards a la `glob
+      <https://docs.python.org/2/library/glob.html>`_:  Returns a
+      :class:`LinResList` of :class:`LinRes` instances loaded from the
+      matching or contained files
+
+         The filename or directory must include the absolute path or be
+         resolved to the current directory.
+
+         An error is only raised if no files can be loaded.
+
+    - :class:`LinResList`(*filespec1*, *filespec2, ...): Loads all files
+      matching or contained by *filespec1*, *filespec2*, etc. as above.
+
+    **Built-in methods:**
+
     The entries are :class:`LinRes` instances, but linearizations can be
     specified via filename when initializing or appending the list.  The list
     has all of the methods of a standard Python_ list (e.g.,
@@ -545,13 +582,13 @@ class LinResList(ResList):
     and :meth:`sort`, which relies on them, use the full filenames (with
     absolute path) for comparison.
 
-    The following method is overloaded for convenience:
+    **Overloaded methods:**
 
     - :meth:`append` - Add linearization(s) to the end of the list of
       linearizations (accepts a :class:`LinRes` instance, directory, or
       filename).
 
-    The following methods are added to those in the standard Python_ list:
+    **Additional methods:**
 
     - :meth:`basedir` - Return the highest common directory that the result files
       share.
@@ -563,6 +600,18 @@ class LinResList(ResList):
 
     - :meth:`nyquist` - Plot the linearizations onto a single Bode diagram.
 
+    **Example:**
+
+    .. code-block:: python
+
+       >>> from modelicares import LinResList
+       >>> lins = LinResList('examples/PID/*/*.mat')
+       >>> print(lins) # doctest: +ELLIPSIS
+       List of linearization results (LinRes instances) from the following files
+       in the .../ModelicaRes/examples/PID directory:
+          1/dslin.mat
+          2/dslin.mat
+
 
     .. _Python: http://www.python.org
     """
@@ -571,38 +620,7 @@ class LinResList(ResList):
         """Initialize as a list of :class:`LinRes` instances, loading files as
         necessary.
 
-        Initialization signatures:
-
-        - :class:`LinResList`(): Returns an empty linearization list
-
-        - :class:`LinResList`(*lins*), where lins is a list of :class:`LinRes`
-          instances:  Casts the list into a :class:`LinResList`
-
-        - :class:`LinResList`(*filespec*), where *filespec* is a filename or
-          directory, possibly with wildcards a la `glob
-          <https://docs.python.org/2/library/glob.html>`_:  Returns a
-          :class:`LinResList` of :class:`LinRes` instances loaded from the
-          matching or contained files
-
-             The filename or directory must include the absolute path or be
-             resolved to the current directory.
-
-             An error is only raised if no files can be loaded.
-
-        - :class:`LinResList`(*filespec1*, *filespec2, ...): Loads all files
-          matching or contained by *filespec1*, *filespec2*, etc. as above.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import LinResList
-           >>> lins = LinResList('examples/PID/*/*.mat')
-           >>> print(lins) # doctest: +ELLIPSIS
-           List of linearization results (LinRes instances) from the following files
-           in the .../ModelicaRes/examples/PID directory:
-              1/dslin.mat
-              2/dslin.mat
+        See the top-level class documentation.
         """
 
         if not args:
@@ -754,7 +772,9 @@ class LinResList(ResList):
 
         - *label*: Label for the figure (ignored if axes is provided)
 
-             This will be used as the base filename if the figure is saved.
+             This is used as the base filename if the figure is saved using
+             :meth:`~modelicares.simres.util.save` or
+             :meth:`~modelicares.simres.util.saveall`.
 
         - *title*: Title for the figure
 
@@ -772,9 +792,9 @@ class LinResList(ResList):
         - *styles*: Line/dash style or list of line/dash styles that will be
           used sequentially
 
-             Each style is a string representing a linestyle (e.g., "--") or a
-             tuple of on/off lengths representing dashes.  Use "" for no line
-             and "-" for a solid line.
+             Each style is a string representing a linestyle (e.g., '--') or a
+             tuple of on/off lengths representing dashes.  Use '' for no line
+             and '-' for a solid line.
 
              .. Seealso::
                 http://matplotlib.sourceforge.net/api/collections_api.html
@@ -864,7 +884,9 @@ class LinResList(ResList):
 
         - *label*: Label for the figure (ignored if axes is provided)
 
-             This will be used as the base filename if the figure is saved.
+             This is used as the base filename if the figure is saved using
+             :meth:`~modelicares.simres.util.save` or
+             :meth:`~modelicares.simres.util.saveall`.
 
         - *title*: Title for the figure
 

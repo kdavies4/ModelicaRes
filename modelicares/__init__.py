@@ -1,27 +1,27 @@
 #!/usr/bin/python
 """Functions and classes to set up Modelica_ simulations and load, analyze, and
-plot the results.
+plot the results
 
 This module provides convenient access to the most important functions and
 classes from its submodules.  These are:
 
-- To manage simulation experiments (:mod:`~modelicares.exps` module):
+- To manage simulation experiments (:mod:`~modelicares.exps` submodule):
   :mod:`~modelicares.exps.doe`, :class:`~exps.Experiment`,
   :meth:`~exps.gen_experiments`, :class:`~exps.ParamDict`,
   :meth:`~exps.run_models`, :meth:`~exps.write_params`, and
   :meth:`~exps.write_script`
 
-- For simulation results (:mod:`~modelicares.simres` module):
+- For simulation results (:mod:`~modelicares.simres` submodule):
   :class:`~simres.SimRes` and :class:`~simres.SimResList`
 
-- For linearization results (:mod:`~modelicares.linres` module):
+- For linearization results (:mod:`~modelicares.linres` submodule):
   :class:`~linres.LinRes` and :class:`~linres.LinResList`
 
-- To label numbers and quantities (:mod:`~modelicares.texunit` module):
+- To label numbers and quantities (:mod:`~modelicares.texunit` submodule):
   :meth:`~texunit.number_label`, :meth:`~texunit.quantity_str`, and
   :meth:`~texunit.unit2tex`
 
-- Supporting classes and functions (:mod:`~modelicares.util` module):
+- Supporting classes and functions (:mod:`~modelicares.util` submodule):
   :meth:`~util.add_arrows`, :meth:`~util.add_hlines`, :meth:`~util.add_vlines`,
   :class:`~util.ArrowLine`, :meth:`~util.closeall`, :meth:`~util.figure`,
   :meth:`~util.load_csv`, :meth:`~util.save`, :meth:`~util.saveall`, and

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Set up and help run Modelica_ simulation experiments.
 
-This module supports two approaches for managing simulations.  The first is to
+This module supports two approaches to managing simulations.  The first is to
 create a Modelica_ script (using :meth:`write_script`) and run it within
 a Modelica_ environment (see the scripts in "examples/ChuaCircuit/"), which
 translates and simulates the models with the prescribed settings.  The second
@@ -21,35 +21,33 @@ parameter may have multiple possible values.  The dictionary is passed to the
 dictionary format), which combines the values of all the variables (by
 piecewise alignment or permutation) and returns a generator to step through the
 experiments.  Finally, the generator is passed to the :meth:`write_script` or
-:meth:`run_models` function (see first paragraph).
-
+:meth:`run_models` function (see the first paragraph).
 
 **Classes:**
 
 - :class:`ParamDict` - Dictionary that prints its items as nested tuple-based
   modifiers, formatted for Modelica_
 
-- :class:`Experiment` - Named tuple class to represent a simulation experiment
-
+- :class:`Experiment` - Specialized namedtuple_ to represent a simulation
+  experiment
 
 **Functions:**
 
 - :meth:`gen_experiments` - Return a generator for a set of simulation
-  experiments using permutation or simple element-wise grouping
+  experiments using permutation or simple element-wise grouping.
 
-- :meth:`modelica_str` - Express a Python variable as a Modelica string
+- :meth:`modelica_str` - Express a Python_ variable as a Modelica_ string.
 
 - :meth:`read_params` - Read parameter values from an initialization or final
-  values file
+  values file.
 
 - :meth:`run_models` - Run Modelica_ models via pairs of executables and
-  initialization files (not yet implemented)
+  initialization files (not yet implemented).
 
 - :meth:`write_params` - Write parameter values to a simulation initialization
-  file
+  file.
 
-- :meth:`write_script` - Write a Modelica_ script to run simulations
-
+- :meth:`write_script` - Write a Modelica_ script to run simulations.
 
 **Submodules:**
 
@@ -57,7 +55,9 @@ experiments.  Finally, the generator is passed to the :meth:`write_script` or
 
 
 .. _Modelica: http://www.modelica.org/
+.. _Python: http://www.python.org
 .. _NumPy: http://numpy.scipy.org/
+.. _namedtuple: https://docs.python.org/2/library/collections.html#collections.namedtuple
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
@@ -130,7 +130,7 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
 
          This is a function that returns a iterable object that contains or
          generates the simulation settings.  Several options are available in
-         :mod:`modelicares.doe`.
+         :mod:`~modelicares.exps.doe`.
 
     **Example 1 (element-wise list of experiments):**
 
@@ -230,7 +230,7 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
               "entries in params and args must be lists.")
 
 def modelica_str(x):
-    """Express a Python variable as a Modelica string
+    """Express a Python_ variable as a Modelica_ string
 
     A Boolean variable (:class:`bool`) becomes 'true' or 'false' (lowercase).
 
@@ -697,8 +697,6 @@ def write_script(experiments=[(None, {}, {})], packages=[],
 
     In "examples/ChuaCircuit/run-sims2.mos", there are commands to run and
     save results from 12 simulation experiments.
-
-    .. _Python: http://www.python.org
     """
     # Preprocess the arguments.
     if not isinstance(experiments, (list, GeneratorType)):

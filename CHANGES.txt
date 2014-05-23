@@ -4,6 +4,18 @@ Change log
 The releases are numbered according to the `Semantic Versioning Specification
 <http://semver.org>`_.
 
+v0.xx.x_ (2014-x-xx) -- Updates:
+
+   - Removed :meth:`~modelicaras.util.pow10`.  It is not used internally and
+     probably is not very helpful externally.
+   - Change the default value of *Roman* in
+     :meth:`~modelicares.texunit.quantity_str` to *False*.
+   - Renamed and reordered the arguments of
+     :meth:`~modelicaras.util.setup_subplots` and
+     :meth:`~modelicaras.util.setup_subplots` for clarity and simplicity
+
+Fixed the release to PyPI.
+
 v0.11.1_ (2014-5-21) -- Updates:
 
    - Fixed the release to PyPI.
@@ -49,7 +61,7 @@ v0.11.0_ (2014-5-21) -- Updates:
      constants.
    - Added :mod:`~modelicares.util.si_prefix` (previously nested in
      :mod:`~modelicares.texunit`)
-   - The *fname* atribute in :class:`~modelicares.simres.SimRes` and
+   - The *fname* attribute in :class:`~modelicares.simres.SimRes` and
      :class:`~modelicares.linres.LinRes` now includes the absolute path.
      :meth:`~modelicares.simres.SimRes.fbase` returns the base filename without
      directory or extension.

@@ -17,8 +17,8 @@
 - :meth:`add_vlines` - Add vertical lines to a set of axes with optional
   labels.
 
-- :meth:`cast_sametype` - Decorator to cast the output of a method as an instance of
-  the containing class
+- :meth:`cast_sametype` - Decorator to cast the output of a method as an
+  instance of the containing class
 
 - :meth:`color` - Plot 2D scalar data on a color axis in 2D Cartesian
   coordinates.
@@ -27,7 +27,7 @@
   :meth:`destroy_all` from :class:`matplotlib._pylab_helpers.Gcf`).
 
 - :meth:`expand_path` - Expand a file path by replacing '~' with the user
-  directory and makes the path absolute.
+  directory and make the path absolute.
 
 - :meth:`flatten_dict` - Flatten a nested dictionary.
 
@@ -37,9 +37,6 @@
 
 - :meth:`get_indices` - Return the pair of indices that bound a target value in
   a monotonically increasing vector.
-
-- :meth:`get_pow10` - Return the exponent of 10 for which the significand
-  of a number is within the range [1, 10).
 
 - :meth:`get_pow1000` - Return the exponent of 1000 for which the
   significand of a number is within the range [1, 1000).
@@ -282,8 +279,18 @@ def color(ax, c, *args, **kwargs):
 
     **Example:**
 
-    .. plot:: examples/util-color.py
-       :alt: example of color()
+    .. code-block:: python
+
+       >>> import numpy as np
+       >>> import matplotlib.pyplot as plt
+       >>> from modelicares import util
+
+       >>> x, y = np.meshgrid(np.arange(0, 2*np.pi, 0.2), np.arange(0, 2*np.pi, 0.2))
+       >>> c = np.cos(x) + np.sin(y)
+
+       >>> fig = plt.figure()
+       >>> ax = fig.add_subplot(111)
+       >>> util.color(ax, c)
     """
     return ax.imshow(c, *args, **kwargs)
 
@@ -325,7 +332,7 @@ def figure(label='', *args, **kwargs):
        'velocity_vs_time'
 
     .. Note::  The *label* property is used as the base filename in the
-       :meth:`saveall` method.
+       :meth:`save` and :meth:`saveall` functions.
     """
     fig = plt.figure(*args, **kwargs)
     plt.setp(fig, 'label', label)
@@ -511,26 +518,6 @@ def get_indices(x, target):
     return i_1, i_2
 
 
-def get_pow10(num):
-    """Return the exponent of 10 for which the significand of a number is
-    within the range [1, 10).
-
-    **Example:**
-
-       >>> get_pow10(50)
-       1
-    """
-    # Based on an algorithm by Jason Heeris 11/18/2009:
-    #
-
-    dnum = Decimal(str(num))
-    if dnum == 0:
-        return 0
-    elif dnum < 0:
-        dnum = -dnum
-    return int(floor(dnum.log10()))
-
-
 def get_pow1000(num):
     """Return the exponent of 1000 for which the significand of a number is
     within the range [1, 1000).
@@ -649,9 +636,9 @@ def match(strings, pattern=None, re=False):
         ============   ============================
 
         Wildcard characters ('\*') are not automatically added at the
-        beginning or the end of the pattern.  For example, 'x\*' matches
-        variables that begin with "x", whereas '\*x\*' matches all variables
-        that contain "x".
+        beginning or the end of the pattern.  For example, '\*x\*' matches all
+        strings that contain "x", but 'x\*' matches only the strings that begin
+        with "x".
 
       - If *re* is *True*, regular expressions are used a la `Python's re
         module <http://docs.python.org/2/library/re.html>`_.  See also
@@ -659,9 +646,9 @@ def match(strings, pattern=None, re=False):
 
         Since :mod:`re.search` is used to produce the matches, it is as if
         wildcards ('.*') are automatically added at the beginning and the
-        end.  For example, 'x' matches all variables that contain "x".  Use
-        '^x$' to match only the variables that begin with "x" and 'x$' to
-        match only the variables that end with "x".
+        end.  For example, 'x' matches all strings that contain "x".  Use '^x$'
+        to match only the strings that begin with "x" and 'x$' to match only the
+        strings that end with "x".
 
         Note that '.' is a subclass separator in Modelica_ but a wildcard in
         regular expressions.  Escape the subclass separator as '\\.'.
@@ -697,18 +684,16 @@ def plot(y, x=None, ax=None, label=None,
     coordinates.
 
     This is similar to :meth:`matplotlib.pyplot.plot` (and actually calls that
-    method), but provides direct support for plotting an arbitrary number of
+    function) but provides direct support for plotting an arbitrary number of
     curves.
 
     **Arguments:**
 
-    - *y*: y-axis data
-
-         This may contain multiple series.
+    - *y*: List of y-axis series
 
     - *x*: x-axis data
 
-         If *x* is not provided, the y-axis data will be plotted versus its
+         If *x* is not provided, the y-axis series will be plotted versus its
          indices.  If *x* is a single series, it will be used for all of the
          y-axis series.  If it is a list of series, each x-axis series will be
          matched to a y-axis series.
@@ -730,8 +715,8 @@ def plot(y, x=None, ax=None, label=None,
     - *marker*: Single entry, list, or :class:`itertools.cycle` of markers that
       will be used sequentially
 
-         Use *None* for no marker.  A good assortment is ["o", "v", "^", "<",
-         ">", "s", "p", "*", "h", "H", "D", "d"]. All of the possible entries
+         Use *None* for no marker.  A good assortment is ['o', 'v', '^', '<',
+         '>', 's', 'p', '*', 'h', 'H', 'D', 'd']. All of the possible entries
          are listed at:
          http://matplotlib.sourceforge.net/api/artist_api.html#matplotlib.lines.Line2D.set_marker.
 
@@ -739,7 +724,7 @@ def plot(y, x=None, ax=None, label=None,
       that will be used sequentially
 
          Each style is a tuple of on/off lengths representing dashes.  Use
-         (0, 1) for no line and (None, None) for a solid line.
+         (0, 1) for no line and (*None*, *None*) for a solid line.
 
          .. Seealso:: http://matplotlib.sourceforge.net/api/collections_api.html
 
@@ -749,8 +734,11 @@ def plot(y, x=None, ax=None, label=None,
 
     **Example:**
 
-    .. plot:: examples/util-plot.py
-       :alt: example of plot()
+    .. code-block:: python
+
+       >>> from modelicares import util
+
+       >>> util.plot([range(11), range(10, -1, -1)])
     """
     # Create axes if necessary.
     if not ax:
@@ -801,9 +789,8 @@ def plot(y, x=None, ax=None, label=None,
 
 
 def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
-    """Plot 2D vector data as arrows in 2D Cartesian coordinates.
-
-    Uses a uniform grid.
+    """Plot 2D vector data as arrows in 2D Cartesian coordinates using a uniform
+    grid.
 
     **Arguments:**
 
@@ -816,7 +803,7 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
     - *pad*: Amount of white space around the data (relative to the span of the
       field)
 
-    - *pivot*: "tail" | "middle" | "tip" (see :meth:`matplotlib.pyplot.quiver`)
+    - *pivot*: 'tail' | 'middle' | 'tip' (see :meth:`matplotlib.pyplot.quiver`)
 
     - *\*\*kwargs*: Additional arguments for :meth:`matplotlib.pyplot.quiver`
 
@@ -846,7 +833,7 @@ def save(formats=['pdf', 'png'], fname=None, fig=None):
     2. the *label* property of the figure, if it is not empty
     3. the response from a file dialog
 
-    A forward slash ("/") can be used as a path separator, even if the operating
+    A forward slash (;/') can be used as a path separator, even if the operating
     system is Windows.  Folders are created as needed.
 
     **Arguments:**
@@ -879,7 +866,7 @@ def save(formats=['pdf', 'png'], fname=None, fig=None):
        Saved examples/temp.pdf
        Saved examples/temp.png
 
-    .. Note::  The :meth:`figure` method can be used to directly create a
+    .. Note::  The :meth:`figure` function can be used to directly create a
        figure with a label.
     """
     # Get the figures.
@@ -912,9 +899,10 @@ def saveall(formats=['pdf', 'png']):
     """Save all open figures as images in a format or list of formats.
 
     The directory and base filenames (without extension) are taken from the
-    *label* property of the present figures.  If a figure has an empty *label*,
+    *label* property of the open figures.  If a figure has an empty *label*,
     then a file dialog is opened to choose the filename.  Note that the
-    :meth:`figure` method can be used to directly create a figure with a label.
+    :meth:`figure` function can be used to directly create a figure with a
+    label.
 
     **Arguments:**
 
@@ -953,20 +941,16 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
                    xlabel="", xticklabels=None, xticks=None,
                    ylabel="", yticklabels=None, yticks=None,
                    ctype=None, clabel="",
-                   margin_left=rcParams['figure.subplot.left'],
-                   margin_right=1-rcParams['figure.subplot.right'],
-                   margin_bottom=rcParams['figure.subplot.bottom'],
-                   margin_top=1-rcParams['figure.subplot.top'],
-                   margin_cbar=0.2,
-                   wspace=0.1, hspace=0.25,
+                   left=0.05, right=0.05, bottom=0.05, top=0.1,
+                   hspace=0.1, vspace=0.25, cbar=0.2,
                    cbar_space=0.1, cbar_width=0.05):
     """Create an array of subplots and return their axes.
 
     **Arguments:**
 
-    - *n_plots*: Number of (sub)plots
+    - *n_plots*: Number of subplots
 
-    - *n_rows*: Number of rows of (sub)plots
+    - *n_rows*: Number of rows of subplots
 
     - *title*: Title for the figure
 
@@ -1005,23 +989,21 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
 
     - *clabel*: Label for the color- or c-bar axis
 
-    - *margin_left*: Left margin
+    - *left*: Left margin
 
-    - *margin_right*: Right margin (ignored if
-      ``cbar_orientation == 'vertical'``)
+    - *right*: Right margin (ignored if *cbar_orientation* is 'vertical')
 
-    - *margin_bottom*: Bottom margin (ignored if
-      ``cbar_orientation == 'horizontal'``)
+    - *bottom*: Bottom margin (ignored if *cbar_orientation* is 'horizontal')
 
-    - *margin_top*: Top margin
+    - *top*: Top margin
 
-    - *margin_cbar*: Margin reserved for the colorbar (right margin if
-      ``cbar_orientation == 'vertical'`` and bottom margin if
-      ``cbar_orientation == 'horizontal'``)
+    - *cbar*: Margin reserved for the colorbar (right margin if
+      *cbar_orientation* is 'vertical' and bottom margin if *cbar_orientation*
+      is 'horizontal')
 
-    - *wspace*: The amount of width reserved for blank space between subplots
+    - *hspace*: Horizontal space between columns of subplots
 
-    - *hspace*: The amount of height reserved for white space between subplots
+    - *vspace*: Vertical space between rows of subplots
 
     - *cbar_space*: Space between the subplot rectangles and the colorbar
 
@@ -1035,7 +1017,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
 
     1. List of subplot axes
 
-    2. Colorbar axis (returned iff ``cbar != None``)
+    2. Colorbar axis (returned iff *cbar* is not *None*)
 
     3. Number of columns of subplots
 
@@ -1050,10 +1032,10 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
         "cytpe must be 'vertical', 'horizontal', or None."
 
     # Create the figure.
-    subplotpars = SubplotParams(left=margin_left, top=1-margin_top,
-        right=1-(margin_cbar if ctype == 'vertical' else margin_right),
-        bottom=(margin_cbar if ctype == 'horizontal' else margin_bottom),
-        wspace=wspace, hspace=hspace)
+    subplotpars = SubplotParams(left=left, top=1-top,
+                                right=1-(cbar if ctype == 'vertical' else right),
+                                bottom=cbar if ctype == 'horizontal' else bottom,
+                                wspace=hspace, hspace=vspace)
     fig = figure(label, subplotpars=subplotpars)
     fig.suptitle(t=title, fontsize=rcParams['axes.titlesize'])
     # For some reason, the suptitle() function doesn't automatically follow the
@@ -1097,19 +1079,17 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
     # Add the colorbar.
     if ctype:
         if ctype == 'vertical':
-            #fig.subplots_adjust(left=margin_left, bottom=margin_top,
-            #    right=1-margin_cbar, top=1-margin_top,
-            #    wspace=wspace, hspace=hspace)
-            cax = fig.add_axes([1 - margin_cbar + cbar_space, margin_bottom,
-                                cbar_width, 1 - margin_bottom - margin_top])
+            #fig.subplots_adjust(left=left, bottom=top, right=1-cbar, top=1-top,
+            #                    hspace=hspace, vspace=vspace)
+            cax = fig.add_axes([1 - cbar + cbar_space, bottom,
+                                cbar_width, 1 - bottom - top])
             #cax.set_ylabel(clabel)
         else:
-            #fig.subplots_adjust(left=margin_left, bottom=margin_cbar,
-            #    right=1-margin_left, top=1-margin_top,
-            #    wspace=wspace, hspace=hspace)
-            cax = fig.add_axes([margin_left,
-                                margin_cbar - cbar_space - cbar_width,
-                                1 - margin_left - margin_right, cbar_width])
+            #fig.subplots_adjust(left=left, bottom=cbar, right=1-left, top=1-top,
+            #                    hspace=hspace, vspace=vspace)
+            cax = fig.add_axes([left,
+                                cbar - cbar_space - cbar_width,
+                                1 - left - right, cbar_width])
             #cax.set_xlabel(clabel)
         cax.set_ylabel(clabel)
         return ax, cax, n_cols
@@ -1117,16 +1097,16 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
         return ax, n_cols
 
 # TODO: Remove the "_" prefix and add it to the list once this is finished.
-def _shift_scale_c(cbar, v_min, v_max, eagerness=0.325):
-    """"Apply an offset and a factor as necessary to the colorbar.
+def _shift_scale_c(cbar, vmin, vmax, eagerness=0.325):
+    """"If helpful, apply an offset and a factor to the colorbar.
 
     **Arguments:**
 
     - *cbar*: :class:`matplotlib.colorbar.Colorbar` object
 
-    - *v_min*: Minimum of the color-axis data
+    - *vmin*: Minimum of the color-axis data
 
-    - *v_max*: Maximum of the color-axis data
+    - *vmax*: Maximum of the color-axis data
 
     - *eagerness*: Parameter to adjust how little of an offset is allowed
       before the label will be recentered
@@ -1141,15 +1121,15 @@ def _shift_scale_c(cbar, v_min, v_max, eagerness=0.325):
     # accessed 2010/11/10
     label = cbar.ax.get_ylabel()
     ticks = cbar.ax.get_yticks()
-    offset, offset_factor, offset_pow1000, pow1000 = _gen_offset_factor(v_min,
-                                                                        v_max)
-    label, offset, pow1000 = _gen_offset_factor(label, v_min, v_max, eagerness)
+    offset, offset_factor, offset_pow1000, pow1000 = _gen_offset_factor(vmin,
+                                                                        vmax)
+    label, offset, pow1000 = _gen_offset_factor(label, vmin, vmax, eagerness)
     cbar.set_ticklabels(["%.1f" % x for x in (ticks - offset)/1000**pow1000])
     cbar.set_label(label)
 
 
 def shift_scale_x(ax, eagerness=0.325):
-    """Apply an offset and a factor as necessary to the x axis.
+    """If helpful, apply an offset and a factor to the x axis.
 
     **Arguments:**
 
@@ -1179,7 +1159,7 @@ def shift_scale_x(ax, eagerness=0.325):
 
 
 def shift_scale_y(ax, eagerness=0.325):
-    """Apply an offset and a factor as necessary to the y axis.
+    """If helpful, apply an offset and a factor to the y axis.
 
     **Arguments:**
 
@@ -1257,7 +1237,7 @@ def tree(strings, delimiter='.'):
        {'a': {'b': {'c': 'a.b.c'}}, 'd': {'e': 'd.e', 'f': 'd.f'}}
 
     """
-    # This method has been copied and modified from DyMat version 0.5
+    # This function has been copied and modified from DyMat version 0.5
     # (Joerg Raedler,
     # http://www.j-raedler.de/2011/09/dymat-reading-modelica-results-with-python/,
     # BSD License).
@@ -1276,7 +1256,10 @@ def tree(strings, delimiter='.'):
 # From http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html,
 # accessed 2010/11/2012
 class ArrowLine(Line2D):
-    """A matplotlib subclass to draw an arrowhead on a line
+    """A matplotlib_ subclass to draw an arrowhead on a line
+
+
+    .. _matplotlib: http://www.matplotlib.org
     """
     __author__ = "Jason Grout"
     __copyright__ = "Copyright (C) 2008"

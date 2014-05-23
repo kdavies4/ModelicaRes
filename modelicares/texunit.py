@@ -71,8 +71,8 @@ def number_label(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
             >>> number_label("Gain", "dB")
             'Gain in $dB$'
 
-    - *roman*: *True*, if the units should be typeset in Roman text (rather
-      than italics)
+    - *roman*: *True*, if the units should be typeset in Roman (rather than
+      italics)
 
     **Examples:**
 
@@ -93,8 +93,8 @@ def number_label(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
     else:
         return quantity
 
-def quantity_str(number, unit='', format='%G', times='\,', roman=False):
-    r"""Generate text to write a quantity as a number times a unit.
+def quantity_str(number, unit='', format='%G', times='\,', roman=True):
+    r"""Generate a string to write a quantity as a number times a unit.
 
     If an exponent is present, then either a LaTeX-formatted exponential or a
     System International (SI) prefix is applied.
@@ -109,10 +109,9 @@ def quantity_str(number, unit='', format='%G', times='\,', roman=False):
 
     - *format*: Modified Python_ number formatting string
 
-         If LaTeX-formatted exponentials should be applied, then then use an
+         If LaTeX-formatted exponentials should be applied, then use an
          uppercase exponential formatter ('E' or 'G').  A lowercase exponential
-         formatter ('e' or 'g') will result in a System International (SI)
-         prefix, if applicable.
+         formatter ('e' or 'g') will result in a SI prefix, if applicable.
 
          .. Seealso::
             http://docs.python.org/release/2.5.2/lib/typesseq-strings.html
@@ -125,17 +124,17 @@ def quantity_str(number, unit='', format='%G', times='\,', roman=False):
          the significand and the exponent is always indicated by
          ":math:`\times`".
 
-    - *roman*: *True*, if the units should be typeset in Roman text (rather
-      than italics)
+    - *roman*: *True*, if the units should be typeset in Roman (rather than
+      italics)
 
     **Examples:**
 
-       >>> quantity_str(1.2345e-3, 'm', format='%.3e', roman=True)
+       >>> quantity_str(1.2345e-3, 'm', format='%.3e')
        '1.234$\\,\\mathrm{mm}$'
 
        in LaTeX_: :math:`1.234\mathrm{\,mm}`
 
-       >>> quantity_str(1.2345e-3, 'm', format='%.3E', roman=True)
+       >>> quantity_str(1.2345e-3, 'm', format='%.3E')
        '1.234$\\times10^{-3}$$\\,\\mathrm{m}$'
 
        in LaTeX_: :math:`1.234\times10^{-3}\,\mathrm{m}`
@@ -145,7 +144,7 @@ def quantity_str(number, unit='', format='%G', times='\,', roman=False):
 
        in LaTeX_: :math:`1.2345\times10^{6}`
 
-       >>> quantity_str(1e3, '\Omega', format='%.1e', roman=True)
+       >>> quantity_str(1e3, '\Omega', format='%.1e')
        '1.0$\\,\\mathrm{k\\Omega}$'
 
        in LaTeX_: :math:`1.0\,\mathrm{k\Omega}`
@@ -209,8 +208,8 @@ def unit2tex(unit, times='\,', roman=False):
          *times* is applied between the number and the first unit and between
          units.  The default is 3/18 quad space.
 
-    - *roman*: *True*, if the units should be typeset in Roman text (rather
-      than italics)
+    - *roman*: *True*, if the units should be typeset in Roman (rather than
+      italics)
 
     **Example:**
 
