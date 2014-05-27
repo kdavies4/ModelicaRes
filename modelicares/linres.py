@@ -111,8 +111,8 @@ class LinRes(object):
 
        >>> from modelicares import LinRes
        >>> lin = LinRes('examples/PID.mat')
-       >>> print(lin)
-       Modelica linearization results from examples/PID.mat
+       >>> print(lin) # doctest: +ELLIPSIS
+       Modelica linearization results from .../examples/PID.mat
     """
 
     def __init__(self, fname='dslin.mat', tool=None):
@@ -155,6 +155,15 @@ class LinRes(object):
     def fbase(self):
         """Return the base filename from which the data was loaded, without the
         directory or file extension.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import LinRes
+           >>> lin = LinRes('examples/PID.mat')
+           >>> lin.fbase()
+           'PID'
         """
         return os.path.splitext(os.path.split(self.fname)[1])[0]
 
@@ -169,7 +178,7 @@ class LinRes(object):
            >>> from modelicares import LinRes
            >>> lin = LinRes('examples/PID.mat')
            >>> lin # doctest: +ELLIPSIS
-           LinRes('...PID.mat')
+           LinRes('.../examples/PID.mat')
         """
         return "%s('%s')" % (self.__class__.__name__,
                              os.path.join(self.dir, self.fbase + '.mat'))
@@ -186,7 +195,7 @@ class LinRes(object):
            >>> from modelicares import LinRes
            >>> lin = LinRes('examples/PID.mat')
            >>> print(lin) # doctest: +ELLIPSIS
-           Modelica linearization results from ...PID.mat
+           Modelica linearization results from .../examples/PID.mat
         """
         return ('Modelica linearization results from "%s"' %
                 os.path.join(self.dir, self.fbase + '.mat'))
@@ -201,7 +210,7 @@ class LinRes(object):
            >>> from modelicares import LinRes
            >>> lin = LinRes('examples/PID.mat')
            >>> lin # doctest: +ELLIPSIS
-           LinRes('...PID.mat')
+           LinRes('.../examples/PID.mat')
         """
         return "{Class}('{fname}')".format(Class=self.__class__.__name__,
                                            fname=self.fname)
@@ -219,7 +228,7 @@ class LinRes(object):
            >>> from modelicares import LinRes
            >>> lin = LinRes('examples/PID.mat')
            >>> print(lin) # doctest: +ELLIPSIS
-           Modelica linearization results from ...PID.mat
+           Modelica linearization results from .../examples/PID.mat
         """
         return "Modelica linearization results from {f}".format(f=self.fname)
 
@@ -608,7 +617,7 @@ class LinResList(ResList):
        >>> lins = LinResList('examples/PID/*/*.mat')
        >>> print(lins) # doctest: +ELLIPSIS
        List of linearization results (LinRes instances) from the following files
-       in the .../ModelicaRes/examples/PID directory:
+       in the .../examples/PID directory:
           1/dslin.mat
           2/dslin.mat
 
@@ -681,7 +690,7 @@ class LinResList(ResList):
            >>> lins.append('examples/PID.mat')
            >>> print(lins) # doctest: +ELLIPSIS
            List of linearization results (LinRes instances) from the following files
-           in the .../ModelicaRes/examples directory:
+           in the .../examples directory:
               PID/1/dslin.mat
               PID/2/dslin.mat
               PID.mat
@@ -717,7 +726,7 @@ class LinResList(ResList):
            >>> lins = LinResList('examples/PID/*/*.mat')
            >>> print(lins) # doctest: +ELLIPSIS
            List of linearization results (LinRes instances) from the following files
-           in the .../ModelicaRes/examples/PID directory:
+           in the .../examples/PID directory:
               1/dslin.mat
               2/dslin.mat
         """
@@ -963,5 +972,24 @@ class LinResList(ResList):
 
 if __name__ == '__main__':
     """Test the contents of this file."""
+    import os
     import doctest
-    doctest.testmod()
+
+    if os.path.isdir('examples'):
+        doctest.testmod()
+    else:
+        # Create a link to the examples folder.
+        example_dir = '../examples'
+        if not os.path.isdir(example_dir):
+            raise IOError("Could not find the examples folder.")
+        try:
+            os.symlink(example_dir, 'examples')
+        except AttributeError:
+            raise AttributeError("This method of testing isn't supported in "
+                                "Windows.  Use runtests.py in the base folder.")
+
+        # Test the docstrings in this file.
+        doctest.testmod()
+
+        # Remove the link.
+        os.remove('examples')

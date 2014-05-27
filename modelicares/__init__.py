@@ -7,9 +7,9 @@ classes from its submodules.  These are:
 
 - To manage simulation experiments (:mod:`~modelicares.exps` submodule):
   :mod:`~modelicares.exps.doe`, :class:`~exps.Experiment`,
-  :meth:`~exps.gen_experiments`, :class:`~exps.ParamDict`,
-  :meth:`~exps.run_models`, :meth:`~exps.write_params`, and
-  :meth:`~exps.write_script`
+  :meth:`~exps.gen_experiments`, :meth:`~exps.modelica_str`,
+  :class:`~exps.ParamDict`, :meth:`~exps.run_models`,
+  :meth:`~exps.write_params`, and :meth:`~exps.write_script`
 
 - For simulation results (:mod:`~modelicares.simres` submodule):
   :class:`~simres.SimRes` and :class:`~simres.SimResList`
@@ -48,8 +48,9 @@ from modelicares.linres import LinRes, LinResList
 from modelicares.util import (add_arrows, add_hlines, add_vlines, ArrowLine,
                               closeall, figure, load_csv, save, saveall,
                               setup_subplots)
-from modelicares.exps import (doe, Experiment, gen_experiments, ParamDict,
-                              read_params, write_params, write_script)
+from modelicares.exps import (doe, Experiment, gen_experiments, modelica_str,
+                              ParamDict, read_params, write_params,
+                              write_script)
 # TODO: Add run_models and include in the doc list once supported.
 from modelicares.texunit import number_label, quantity_str, unit2tex
 
@@ -82,12 +83,13 @@ def load(*args):
        # Get the mean values of the first capacitor's voltage from two runs
        # of the Chua circuit.
        >>> sims, __ = load('examples/ChuaCircuit/*/')
-       >>> sims['C1.v'].mean()
-       [0.76859528, 0.76859528]
 
-       # The values are different because the inductance was set differently:
+       >>> sims['C1.v'].mean()
+       [0.76859528, 2.3572168]
+
+       # The voltage is different because the inductance is different:
        >>> sims['L.L'].value()
-       [10, 18]
+       [18.0, 10.0]
     """
 
     import os
@@ -96,12 +98,12 @@ def load(*args):
     # Get a unique list of matching filenames.
     fnames = set()
     for arg in args:
-        if os.path.isdir(arg):
-            fnames = fnames.union(set(glob(os.path.join(arg, '*.mat'))))
-        elif '*' in arg or '?' in arg or '[' in arg:
-            fnames = fnames.union(set(glob(arg)))
-        else:
-            fnames.add(arg)
+        globbed = glob(arg)
+        for g in globbed:
+            if os.path.isdir(g):
+                fnames = fnames.union(set(glob(os.path.join(g, '*.mat'))))
+            else:
+                fnames = fnames.add(g)
 
     # Load the files and append each result onto the appropriate list.
     sims = SimResList()
@@ -122,5 +124,24 @@ def load(*args):
 
 if __name__ == '__main__':
     """Test the contents of this file."""
+    import os
     import doctest
-    doctest.testmod()
+
+    if os.path.isdir('examples'):
+        doctest.testmod(raise_on_error=True)
+    else:
+        # Create a link to the examples folder.
+        example_dir = '../examples'
+        if not os.path.isdir(example_dir):
+            raise IOError("Could not find the examples folder.")
+        try:
+            os.symlink(example_dir, 'examples')
+        except AttributeError:
+            raise AttributeError("This method of testing isn't supported in "
+                                "Windows.  Use runtests.py in the base folder.")
+
+        # Test the docstrings in this file.
+        doctest.testmod()
+
+        # Remove the link.
+        os.remove('examples')

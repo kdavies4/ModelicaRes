@@ -8,16 +8,18 @@ build/
 
 # Generated files
 dist/
-examples/*/*/*
-examples/*.pdf
-examples/*.png
-examples/ChuaCircuit-voltages.csv
+/examples/*/*/*
+/examples/*.pdf
+/examples/*.png
+/examples/ChuaCircuit-voltages.csv
+/examples/*.mpg
 doc/_images/math/*
 MANIFEST
 ModelicaRes.egg-info
 .fuse*
-examples/*.mpg
 *.mos
+doc/examples
+modelicares/examples
 
 # Backup files
 .ipynb_checkpoints

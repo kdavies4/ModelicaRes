@@ -15,7 +15,7 @@ def fullfact(*space):
 
     .. code-block:: python
 
-       >>> from modelicares import *
+       >>> from modelicares import doe
 
        >>> settings = doe.fullfact([0, 1], [0, 1], [0, 1, 2])
        >>> for s in settings:
@@ -44,7 +44,7 @@ def aslisted(*space):
 
     .. code-block:: python
 
-       >>> from modelicares import *
+       >>> from modelicares import doe
 
        >>> settings = doe.aslisted([0, 1], [0, 1], [0, 1, 2])
        >>> for s in settings:
@@ -64,7 +64,7 @@ def ofat(*space):
 
     .. code-block:: python
 
-       >>> from modelicares import *
+       >>> from modelicares import doe
 
        >>> settings = doe.ofat([0, 1], [0, 1], [0, 1, 2])
        >>> for s in settings:

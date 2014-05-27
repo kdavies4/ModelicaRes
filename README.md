@@ -49,13 +49,10 @@ Or, on Linux:
     sudo python setup.py install
 
 Some of the required packages may not install automatically.
-- The [SciPy] stack, including [matplotlib] and [pandas], can be installed
-  according to the instructions at http://www.scipy.org/install.html.
-- [PyQt] can be downloaded from
-  http://www.riverbankcomputing.co.uk/software/pyqt/download.
-- [wxPython] can be downloaded from http://www.wxpython.org/download.php.
-  However, it is only required for the
-  [variable browser](http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.browse).
+- [SciPy] can be installed according to the instructions at
+  http://www.scipy.org/install.html.
+- The GUIs require [Qt], which can be installed via [PyQt4], [guidata], or
+  [PySide].
 
 The [matplotlibrc](matplotlibrc) file has some recommended revisions to
 [matplotlib]'s defaults.  To use it, copy it to the working directory or
@@ -102,24 +99,26 @@ suggestions, please
 [main website]: http://kdavies4.github.io/ModelicaRes
 [PyPI page]: http://pypi.python.org/pypi/ModelicaRes
 
-[Modelica]: http://www.modelica.org
-[Python]: http://www.python.org
-[pandas]: http://pandas.pydata.org
+[Modelica]: http://www.modelica.org/
+[Python]: http://www.python.org/
+[pandas]: http://pandas.pydata.org/
 [matplotlib]: http://www.matplotlib.org
-[NumPy]: http://numpy.scipy.org
+[NumPy]: http://numpy.scipy.org/
 [SciPy]: http://www.scipy.org/index.html
-[PyQt4]: http://www.riverbankcomputing.co.uk/software/pyqt
-[wxPython]: http://www.wxpython.org
+[Qt]: http://qt-project.org/
+[PyQt4]: http://www.riverbankcomputing.co.uk/software/pyqt/
+[quidata]: https://code.google.com/p/guidata/
+[PySide]: http://qt-project.org/wiki/pyside
 [pip]: https://pypi.python.org/pypi/pip
 [awesim]: https://github.com/saroele/awesim
 [BuildingsPy]: http://simulationresearch.lbl.gov/modelica/buildingspy
 [DyMat]: http://www.j-raedler.de/projects/dymat
 [PyFMI]: https://pypi.python.org/pypi/PyFMI
 [PySimulator]: https://github.com/PySimulator/PySimulator
-[Gnuplot]: http://www.gnuplot.info
+[Gnuplot]: http://www.gnuplot.info/
 [CSV]: http://en.wikipedia.org/wiki/Comma-separated_values
 [netCDF]: http://www.unidata.ucar.edu/software/netcdf
-[FMI]: https://www.fmi-standard.org
+[FMI]: https://www.fmi-standard.org/
 [python-control]: http://sourceforge.net/apps/mediawiki/python-control
 [ArrowLine]: http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html
 [efficient base-10 logarithm]: http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html

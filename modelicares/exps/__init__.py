@@ -4,10 +4,10 @@
 
 This module supports two approaches to managing simulations.  The first is to
 create a Modelica_ script (using :meth:`write_script`) and run it within
-a Modelica_ environment (see the scripts in "examples/ChuaCircuit/"), which
+a Modelica_ environment (see the scripts in *examples/ChuaCircuit/*), which
 translates and simulates the models with the prescribed settings.  The second
 approach is to execute pre-translated models.  The :meth:`run_models` method
-handles this by writing to initialization file(s) (e.g, "dsin.txt") and
+handles this by writing to initialization file(s) (e.g, *dsin.txt*) and
 launching the appropriate model executables.  The advantage of the first
 approach is that formal parameters (those that are hard-coded during
 translation) can be adjusted.  However, the second approach is faster because it
@@ -28,8 +28,7 @@ experiments.  Finally, the generator is passed to the :meth:`write_script` or
 - :class:`ParamDict` - Dictionary that prints its items as nested tuple-based
   modifiers, formatted for Modelica_
 
-- :class:`Experiment` - Specialized namedtuple_ to represent a simulation
-  experiment
+- :class:`Experiment` - namedtuple_ to represent a simulation experiment
 
 **Functions:**
 
@@ -77,11 +76,11 @@ from types import GeneratorType
 
 import modelicares.util as util
 
-from . import doe
+from modelicares.exps import doe
 
 
 Experiment = namedtuple('Experiment', ['model', 'params', 'args'])
-"""Named tuple class to represent a simulation experiment
+"""namedtuple_ to represent a simulation experiment
 
 Instances of this class may be used in the *experiments* argument of
 :meth:`write_script` and :meth:`run_models`, although there are some
@@ -91,8 +90,7 @@ differences in the entries (see those functions for details).
 
 .. code-block:: python
 
-   >>> from modelicares import *
-
+   >>> from modelicares import Experiment
    >>> experiment = Experiment('ChuaCircuit', params={'L.L': 18}, args={})
    >>> experiment.model
    'ChuaCircuit'
@@ -136,7 +134,7 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
 
     .. code-block:: python
 
-       >>> from modelicares import *
+       >>> from modelicares import gen_experiments
 
        >>> experiments = gen_experiments(
        ...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit']*3,
@@ -153,7 +151,7 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
 
     .. code-block:: python
 
-       >>> from modelicares import *
+       >>> from modelicares import gen_experiments
 
        >>> experiments = gen_experiments(
        ...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
@@ -171,7 +169,7 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
 
     .. code-block:: python
 
-       >>> from modelicares import *
+       >>> from modelicares import gen_experiments
 
        >>> experiments = gen_experiments(
        ...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
@@ -193,7 +191,7 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
 
     .. code-block:: python
 
-       >>> from modelicares import *
+       >>> from modelicares import gen_experiments
 
        >>> models = ['Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis']
        >>> params = dict(axis=dict(motor=dict(i_max=[5, 15],
@@ -242,20 +240,18 @@ def modelica_str(x):
 
     .. code-block:: python
 
-       >>> from modelicares import *
+       >>> from modelicares import modelica_str
 
        >>> # Booleans:
        >>> modelica_str(True)
        'true'
-       >>> modelica_str(False)
-       'false'
 
     Arrays:
 
     .. code-block:: python
 
        >>> from numpy import array
-       >>> from modelicares import *
+       >>> from modelicares import modelica_str
 
        >>> modelica_str(array([[1, 2], [3, 4]]))
        '{{1, 2}, {3, 4}}'
@@ -294,8 +290,7 @@ def read_params(names, fname='dsin.txt'):
 
     .. code-block:: python
 
-       >>> from modelicares import *
-
+       >>> from modelicares import read_params
        >>> read_params(['L.L', 'C1.C'], 'examples/dsin.txt')
        [18.0, 10.0]
     """
@@ -425,7 +420,7 @@ import os
 
 from itertools import count, product
 
-from modelicares import *
+from modelicares import gen_doe
 
 model = 'Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis'
 params = {'axis.motor.i_max': [5, 9, 15],
@@ -473,14 +468,13 @@ def write_params(params, fname='dsin.txt'):
 
     .. code-block:: python
 
-       >>> from modelicares import *
-
+       >>> from modelicares import write_params
        >>> write_params({'L.L': 10, 'C1.C': 15}, 'examples/dsin.txt')
 
     .. testcleanup::
        >>> write_params({'L.L': 18, 'C1.C': 10}, 'examples/dsin.txt')
 
-    This updates the appropriate lines in "examples/dsin.txt":
+    This updates the appropriate lines in *examples/dsin.txt*:
 
     .. code-block:: modelica
 
@@ -646,7 +640,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
 
     .. code-block:: python
 
-       >>> from modelicares import *
+       >>> from modelicares import Experiment, write_script
 
        >>> experiment = Experiment(model='Modelica.Electrical.Analog.Examples.ChuaCircuit',
        ...                         params={},
@@ -655,7 +649,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
        ...              fname="examples/ChuaCircuit/run-sims1.mos") # doctest: +ELLIPSIS
        (['ChuaCircuit'], '...examples/ChuaCircuit')
 
-    In "examples/ChuaCircuit/run-sims1.mos":
+    In *examples/ChuaCircuit/run-sims1.mos*:
 
     .. code-block:: modelica
 
@@ -685,7 +679,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
 
     .. code-block:: python
 
-       >>> from modelicares import *
+       >>> from modelicares import gen_experiments, write_script
 
        >>> experiments = gen_experiments(
        ...     models=["Modelica.Electrical.Analog.Examples.ChuaCircuit"],
@@ -695,8 +689,8 @@ def write_script(experiments=[(None, {}, {})], packages=[],
        >>> write_script(experiments, fname="examples/ChuaCircuit/run-sims2.mos") # doctest: +ELLIPSIS
        (['ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit'], '...examples/ChuaCircuit')
 
-    In "examples/ChuaCircuit/run-sims2.mos", there are commands to run and
-    save results from 12 simulation experiments.
+    In *examples/ChuaCircuit/run-sims2.mos*, there are commands to run and save
+    results from 12 simulation experiments.
     """
     # Preprocess the arguments.
     if not isinstance(experiments, (list, GeneratorType)):
@@ -801,7 +795,7 @@ class ParamDict(dict):
         .. code-block:: python
 
            >>> from numpy import array
-           >>> from modelicares import *
+           >>> from modelicares import ParamDict
 
            >>> d = ParamDict({'a': 1, 'b.c': array([2, 3]), 'b.d': False,
            ...                'b.e': '"hello"', 'b.f': None})
@@ -853,4 +847,24 @@ class ParamDict(dict):
 if __name__ == '__main__':
     """Test the contents of this file."""
     import doctest
-    doctest.testmod()
+
+    if os.path.isdir('examples'):
+        doctest.testmod()
+    else:
+        # Create a link to the examples folder.
+        for example_dir in ['../examples', '../../examples']:
+            if os.path.isdir(example_dir):
+                break
+        else:
+            raise IOError("Could not find the examples folder.")
+        try:
+            os.symlink(example_dir, 'examples')
+        except AttributeError:
+            raise AttributeError("This method of testing isn't supported in "
+                                "Windows.  Use runtests.py in the base folder.")
+
+        # Test the docstrings in this file.
+        doctest.testmod()
+
+        # Remove the link.
+        os.remove('examples')

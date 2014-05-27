@@ -16,8 +16,9 @@
 .. _namedtuple: https://docs.python.org/2/library/collections.html#collections.namedtuple
 
 .. testsetup::
+   >>> decimals = 4
    >>> import numpy as np
-   >>> np.set_printoptions(precision=4)
+   >>> np.set_printoptions(precision=decimals)
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
@@ -631,8 +632,8 @@ class SimRes(object):
 
        >>> from modelicares import SimRes
        >>> sim = SimRes('examples/ChuaCircuit.mat')
-       >>> print(sim)
-       Modelica simulation results from 'examples/ChuaCircuit.mat'
+       >>> print(sim) # doctest: +ELLIPSIS
+       Modelica simulation results from .../examples/ChuaCircuit.mat
 
 
     .. _Python: http://www.python.org
@@ -872,6 +873,15 @@ class SimRes(object):
     def fbase(self):
         """Return the base filename from which the variables were loaded,
         without the directory or file extension.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+           >>> sim.fbase()
+           'ChuaCircuit'
         """
         return os.path.splitext(os.path.split(self.fname)[1])[0]
 
@@ -970,6 +980,17 @@ class SimRes(object):
         There are no arguments.  Note that this number may be greater than the
         number of declared constants in the Modelica_ model, since a variable
         may have a constant value even if it is not declared as a constant.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import SimRes
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+
+           >>> print("There are %i constants in the %s simulation." %
+           ...       (sim.n_constants(), sim.fbase()))
+           There are 23 constants in the ChuaCircuit simulation.
         """
         return sum([variable.is_constant()
                     for variable in self._variables.values()])
@@ -1326,7 +1347,6 @@ class SimRes(object):
         .. code-block:: python
 
            >>> from modelicares import SimRes
-
            >>> sim = SimRes('examples/ChuaCircuit.mat')
            >>> voltages = sim.names('^[^.]*.v$', re=True)
            >>> sim.to_pandas(voltages) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
@@ -1527,7 +1547,6 @@ class SimRes(object):
 
            >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-
            >>> print("There are %i variables in the %s simulation." %
            ...       (len(sim), sim.fbase()))
            There are 62 variables in the ChuaCircuit simulation.
@@ -1679,7 +1698,7 @@ class SimResList(ResList):
        >>> sims = SimResList('examples/ChuaCircuit/*/*.mat')
        >>> print(sims) # doctest: +ELLIPSIS
        List of simulation results (SimRes instances) from the following files
-       in the .../ModelicaRes/examples/ChuaCircuit directory:
+       in the .../examples/ChuaCircuit directory:
           1/dsres.mat
           2/dsres.mat
 
@@ -1748,7 +1767,7 @@ class SimResList(ResList):
            >>> sims.append('examples/ThreeTanks.mat')
            >>> print(sims) # doctest: +ELLIPSIS
            List of simulation results (SimRes instances) from the following files
-           in the .../ModelicaRes/examples directory:
+           in the .../examples directory:
               ChuaCircuit/1/dsres.mat
               ChuaCircuit/2/dsres.mat
               ThreeTanks.mat
@@ -1917,7 +1936,7 @@ class SimResList(ResList):
            >>> sims = SimResList('examples/ChuaCircuit/*/*.mat')
            >>> print(sims) # doctest: +ELLIPSIS
            List of simulation results (SimRes instances) from the following files
-           in the .../ModelicaRes/examples/ChuaCircuit directory:
+           in the .../examples/ChuaCircuit directory:
               1/dsres.mat
               2/dsres.mat
         """
@@ -2029,7 +2048,7 @@ class SimResList(ResList):
            >>> sims = SimResList('examples/ChuaCircuit/*/*.mat')
            >>> print(sims) # doctest: +ELLIPSIS
            List of simulation results (SimRes instances) from the following files
-           in the .../ModelicaRes/examples/ChuaCircuit directory:
+           in the .../examples/ChuaCircuit directory:
               1/dsres.mat
               2/dsres.mat
            >>> sims.unique_IVs()['L.L']
@@ -2056,7 +2075,7 @@ class SimResList(ResList):
            >>> sims = SimResList('examples/*')
            >>> print(sims) # doctest: +ELLIPSIS
            List of simulation results (SimRes instances) from the following files
-           in the .../ModelicaRes/examples directory:
+           in the .../examples directory:
               ThreeTanks.mat
               ChuaCircuit.mat
            >>> sims.unique_names()['L.L']
@@ -2069,5 +2088,24 @@ class SimResList(ResList):
 
 if __name__ == '__main__':
     """Test the contents of this file."""
+    import os
     import doctest
-    doctest.testmod()
+
+    if os.path.isdir('examples'):
+        doctest.testmod()
+    else:
+        # Create a link to the examples folder.
+        example_dir = '../examples'
+        if not os.path.isdir(example_dir):
+            raise IOError("Could not find the examples folder.")
+        try:
+            os.symlink(example_dir, 'examples')
+        except AttributeError:
+            raise AttributeError("This method of testing isn't supported in "
+                                "Windows.  Use runtests.py in the base folder.")
+
+        # Test the docstrings in this file.
+        doctest.testmod()
+
+        # Remove the link.
+        os.remove('examples')

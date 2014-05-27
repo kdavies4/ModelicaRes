@@ -93,13 +93,9 @@ Or, on Linux::
 
 Some of the required packages may not install automatically.
 
-- The SciPy_ stack, including matplotlib_ and pandas_, can be installed
-  according to the instructions at http://www.scipy.org/install.html.
-- PyQt4_ can be downloaded from
-  http://www.riverbankcomputing.co.uk/software/pyqt/download.
-- wxPython_ can be downloaded from http://www.wxpython.org/download.php.
-  However, it is only required for the `variable browser
-  <simres.html#modelicares.simres.SimRes.browse>`_.
+- SciPy_ can be installed according to the instructions at
+  http://www.scipy.org/install.html.
+- The GUIs require Qt_, which can be installed via PyQt4_, guidata_, or PySide_.
 
 The `matplotlibrc file
 <https://github.com/kdavies4/ModelicaRes/blob/release/matplotlibrc>`_ has some
@@ -150,7 +146,10 @@ suggestions, please `share them
 .. _matplotlib: http://www.matplotlib.org
 .. _NumPy: http://numpy.scipy.org
 .. _SciPy: http://www.scipy.org/index.html
-.. _PyQt4: http://www.riverbankcomputing.co.uk/software/pyqt
+.. _Qt: http://qt-project.org/
+.. _PyQt4: http://www.riverbankcomputing.co.uk/software/pyqt/
+.. _quidata: https://code.google.com/p/guidata/
+.. _PySide: http://qt-project.org/wiki/pyside
 .. _wxPython: http://www.wxpython.org
 .. _pip: https://pypi.python.org/pypi/pip
 .. _LaTeX: http://www.latex-project.org

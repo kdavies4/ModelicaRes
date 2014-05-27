@@ -143,8 +143,12 @@ def chars_to_str(str_arr):
     """Convert a string array to a string.
 
     Remove trailing whitespace and null characters.  Encode to ascii using
-    latin-1, since that's how SciPy decodes the mat file.  Dymola only uses
-    unicode for variable descriptions.
+    latin-1, since that's how SciPy decodes the mat file.  Per the `Modelica
+    Specification`_, Dymola only uses Unicode_ for variable descriptions.
+
+
+    .. _Modelica Specification: https://www.modelica.org/documents
+    .. _Unicode: http://en.wikipedia.org/wiki/Unicode
     """
     return ''.join(str_arr).rstrip().rstrip('\x00').encode('latin-1')
 
@@ -388,5 +392,26 @@ def loadlin(fname):
 
 if __name__ == '__main__':
     """Test the contents of this file."""
+    import os
     import doctest
-    doctest.testmod()
+
+    if os.path.isdir('examples'):
+        doctest.testmod()
+    else:
+        # Create a link to the examples folder.
+        for example_dir in ['../examples', '../../examples']:
+            if os.path.isdir(example_dir):
+                break
+        else:
+            raise IOError("Could not find the examples folder.")
+        try:
+            os.symlink(example_dir, 'examples')
+        except AttributeError:
+            raise AttributeError("This method of testing isn't supported in "
+                                "Windows.  Use runtests.py in the base folder.")
+
+        # Test the docstrings in this file.
+        doctest.testmod()
+
+        # Remove the link.
+        os.remove('examples')

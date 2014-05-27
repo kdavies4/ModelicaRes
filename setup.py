@@ -41,10 +41,10 @@ setup(name='ModelicaRes',
       keywords=['Modelica', 'plot', 'results', 'simulation', 'experiment',
                 'Dymola', 'matplotlib', 'pandas'],
       provides=['modelicares'],
-      #install_requires=['numpy', 'scipy>=0.10.0', 'matplotlib>=1.3.1', 'pandas',
-      #                  'control', 'six'],
+      install_requires=['numpy', 'scipy>=0.10.0', 'matplotlib>=1.3.1', 'pandas',
+                        'control', 'six'],
       requires=['numpy', 'scipy (>=0.10.0)', 'matplotlib (>=1.3.1)', 'pandas',
-                'PySide', 'control', 'six'],
+                'control', 'six'],
       platforms='any',
       )
       # This package may run with scipy as early as 0.7.0.  However, the control

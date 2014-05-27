@@ -4,7 +4,7 @@ Change log
 The releases are numbered according to the `Semantic Versioning Specification
 <http://semver.org>`_.
 
-v0.xx.x_ (2014-x-xx) -- Updates:
+v0.12.0_ (2014-x-xx) -- Updates:
 
    - Removed :meth:`~modelicaras.util.pow10`.  It is not used internally and
      probably is not very helpful externally.
@@ -13,12 +13,14 @@ v0.xx.x_ (2014-x-xx) -- Updates:
    - Renamed and reordered the arguments of
      :meth:`~modelicaras.util.setup_subplots` and
      :meth:`~modelicaras.util.setup_subplots` for clarity and simplicity
-
-Fixed the release to PyPI.
+   - Supported Qt_ via several installations: PyQt4_, guidata_, and PySide_.
+     PySide_ is no longer required, but if no Qt_ installation is available,
+     then file dialogs are not available in :meth:`~modelicares.util.save` or
+     the `loadres <loadres.html>`_ script.
 
 v0.11.1_ (2014-5-21) -- Updates:
 
-   - Fixed the release to PyPI.
+   - Fixed the release to PyPI_.
 
 v0.11.0_ (2014-5-21) -- Updates:
 
@@ -68,7 +70,7 @@ v0.11.0_ (2014-5-21) -- Updates:
    - Added :meth:`~modelicares.linres.LinRes.to_tf` to return a selected
      transfer function from the state-space representation.
    - Added pattern matching to :meth:`~modelicares.simres.SimRes.nametree`.
-   - Proper handling of unicode in simulation files.
+   - Proper handling of Unicode_ in simulation files.
    - Eliminated the dependence on :mod:`easygui`; using :mod:`PySide` (Qt)
      instead.
    - Renamed :mod:`~modelicares.base` to :mod:`~modelicares.util` for clarity.
@@ -128,9 +130,9 @@ v0.9.0_ (2014-3-17) -- Updates:
    - Updated the credits.
    - Added *doc/_images* per tbeu_.
    - Narrowed the margins in HTML documentation.
-   - Explained setup in the :mod:`loadres` example.
+   - Explained setup in the loadres_ example.
    - Updated expected example output.
-   - Updated *matplotlibrc*.
+   - Updated matplotlibrc_.
 
 v0.8.2_ (2013-10-16) -- Updates:
 
@@ -138,11 +140,11 @@ v0.8.2_ (2013-10-16) -- Updates:
 
 v0.8.1_ (2013-8-6) -- Updates:
 
-   - Added missing :mod:`bin/loadres` script.
+   - Added missing loadres_ script.
 
 v0.8.0_ (2013-8-6) -- Updates:
 
-   - Updated :doc:`matplotlibrc` (default formatting).
+   - Updated `matplotlibrc <matplotlibrc>`_ (default formatting).
    - Added patterns to :meth:`~modelicares.exps.write_params` to match more
      entries in a dsin file.
    - :meth:`~modelicares.exps.write_script` now clears the log between runs.
@@ -174,7 +176,7 @@ v0.7.2_ (2013-7-9) -- Updates:
 
 v0.7.1_ (2013-7-7) -- Updates:
 
-   - Added missing files to :doc:`MANIFEST`.
+   - Added missing files to `MANIFEST <MANIFEST>`_.
 
 v0.7.0_ (2013-7-7) -- Updates:
 
@@ -204,7 +206,7 @@ v0.6.2_ (2013-7-4) -- Updates:
      bounds or a list of frequencies.
    - :meth:`~modelicares.exps.write_script` now saves the Dymola command log
      with translation information.
-   - Fixed error in :mod:`loadres` script in loading from a folder.
+   - Fixed error in loadres_ script in loading from a folder.
    - Added option to :class:`~modelicares.simres.SimRes` (*constants_only*) to
      load only constants.
    - Added :meth:`~modelicares.simres.SimRes.keys` method to list variable names
@@ -214,7 +216,7 @@ v0.6.2_ (2013-7-4) -- Updates:
 
 v0.6.1_ (2013-7-2) -- Updates:
 
-   - Fixed :doc:`README.txt`.
+   - Fixed `README.txt <README.txt>`_.
 
 v0.6.0_ (2013-7-2) -- Updates:
 
@@ -238,7 +240,7 @@ v0.5.1_ (2013-6-18) -- Updates:
 
 v0.5_ (2013-6-5) -- Updates:
 
-   - Updated :doc:`README.txt`.
+   - Updated `README.txt <README.txt>`_.
 
 v0.4_ (2012-12-10) -- Updates:
 
@@ -280,5 +282,11 @@ v0.1_ (2012-11-8) -- Initial release
 .. _v0.2: https://github.com/kdavies4/ModelicaRes/archive/v0.2.zip
 .. _v0.1: https://github.com/kdavies4/ModelicaRes/archive/v0.1.zip
 
+.. _PyPI: https://pypi.python.org/pypi/ModelicaRes
 .. _matplotlib: http://matplotlib.org/
 .. _Pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
+.. _Qt: http://qt-project.org/
+.. _PyQt4: http://www.riverbankcomputing.co.uk/software/pyqt/
+.. _quidata: https://code.google.com/p/guidata/
+.. _PySide: http://qt-project.org/wiki/pyside
+.. _Unicode: http://en.wikipedia.org/wiki/Unicode

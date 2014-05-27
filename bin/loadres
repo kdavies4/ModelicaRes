@@ -51,9 +51,39 @@ import os
 import time
 
 from sys import argv
-from PySide.QtGui import QApplication, QFileDialog, QMessageBox, QPushButton
+from PySide.QtGui import QApplication, QMessageBox, QPushButton
 
 from modelicares import load
+
+# Load the dialog functions from an available Qt installation.
+try:
+    from PyQt4.QtGui import QFileDialog
+    getFiles = (lambda *args, **kwargs:
+                       str(QFileDialog.getOpenFileNames(*args, **kwargs)))
+    getDir = (lambda *args, **kwargs:
+                       QFileDialog.getExistingDirectory(*args, **kwargs))
+    del QFileDialog
+except:
+    try:
+        from guidata.qt.QtGui import QFileDialog
+        getFiles = (lambda *args, **kwargs:
+                           str(QFileDialog.getOpenFileNames(*args, **kwargs)))
+        getDir = (lambda *args, **kwargs:
+                           QFileDialog.getExistingDirectory(*args, **kwargs))
+        del QFileDialog
+    except:
+        try:
+            from PySide.QtGui import QFileDialog
+            getFiles = (lambda *args, **kwargs:
+                               QFileDialog.getOpenFileNames(*args, **kwargs)[0])
+            getDir = (lambda *args, **kwargs:
+                               QFileDialog.getExistingDirectory(*args, **kwargs))
+            del QFileDialog
+        except:
+            getFiles = lambda *args, **kwargs: None
+            getDir = lambda *args, **kwargs: None
+
+del QApplication, QMessageBox, QPushButton,
 
 # Default path for choosing the files or folder (empty string for current
 # directory).
@@ -84,26 +114,26 @@ if __name__ == '__main__':
     """Load Modelica_ results and provide a Python_ session to analyze them.
     """
     # Determine the file location(s).
-    if len(argv) == 1:
+    if len(argv) == 1: # TODO: finish support of PyQt4, guidata, or PySide
         app = QApplication([])
         Files = QPushButton("Files")
         Folder = QPushButton("Folder")
         choice = files_or_folder()
         if choice == Files:
-            getFiles = QFileDialog.getOpenFileNames
-            loc, __ = getFiles(None, "Choose Modelica results files.",
-                               default_path, "*.mat")
+            loc = getFiles(None, "Choose Modelica results files.",
+                           default_path, "*.mat")
         elif choice == Folder:
-            getDir = QFileDialog.getExistingDirectory
             loc = getDir(None, "Choose a folder with Modelica results.",
                          default_path)
-            loc = [] if not loc else [loc]
+            loc = [] if not loc else [loc] # TODO: what if loc == ""?
         else:
             app.exit()
             delayed_exit()
         app.exit()
-        if not loc:
+        if loc == "":
             delayed_exit()
+        elif loc is None:
+            loc = []
         del Files, Folder
     else:
         loc = argv[1:]
@@ -138,8 +168,8 @@ if __name__ == '__main__':
         print("\n")
 
     # Delete some variables to reduce clutter in the Python session below.
-    del (os, time, argv, QApplication, QFileDialog, QMessageBox, QPushButton,
-         loc, default_path, nsims, nlins, delayed_exit, files_or_folder, load)
+    del (os, time, argv, loc, default_path, nsims, nlins, delayed_exit,
+         files_or_folder, load)
 
     # Embed an IPython or standard Python interpreter.
     #    Based on

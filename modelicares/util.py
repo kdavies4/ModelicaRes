@@ -91,8 +91,24 @@ from matplotlib.cbook import iterable
 from matplotlib.lines import Line2D
 from re import compile as re_compile
 from six import string_types
-from PySide.QtGui import QFileDialog
 
+# Load the getSaveFileName function from an available Qt installation.
+try:
+    from PyQt4.QtGui import QFileDialog
+    getSaveFileName = (lambda *args, **kwargs:
+                       str(QFileDialog.getSaveFileName(*args, **kwargs)))
+except:
+    try:
+        from guidata.qt.QtGui import QFileDialog
+        getSaveFileName = (lambda *args, **kwargs:
+                           str(QFileDialog.getSaveFileName(*args, **kwargs)))
+    except:
+        try:
+            from PySide.QtGui import QFileDialog
+            getSaveFileName = (lambda *args, **kwargs:
+                               QFileDialog.getSaveFileName(*args, **kwargs)[0])
+        except:
+            getSaveFileName = lambda *args, **kwargs: None
 
 # Function to close all open figures
 closeall = Gcf.destroy_all
@@ -290,7 +306,8 @@ def color(ax, c, *args, **kwargs):
 
        >>> fig = plt.figure()
        >>> ax = fig.add_subplot(111)
-       >>> util.color(ax, c)
+       >>> util.color(ax, c) # doctest: +ELLIPSIS
+       <matplotlib.image.AxesImage object at 0x...>
     """
     return ax.imshow(c, *args, **kwargs)
 
@@ -738,7 +755,8 @@ def plot(y, x=None, ax=None, label=None,
 
        >>> from modelicares import util
 
-       >>> util.plot([range(11), range(10, -1, -1)])
+       >>> util.plot([range(11), range(10, -1, -1)]) # doctest: +ELLIPSIS
+       [[<matplotlib.lines.Line2D object at 0x...>], [<matplotlib.lines.Line2D object at 0x...>]]
     """
     # Create axes if necessary.
     if not ax:
@@ -860,11 +878,16 @@ def save(formats=['pdf', 'png'], fname=None, fig=None):
 
        >>> figure('examples/temp') # doctest: +ELLIPSIS
        <matplotlib.figure.Figure object at 0x...>
-       >>> plt.plot(range(10)) # doctest: +SKIP
+       >>> plt.plot(range(10)) # doctest: +ELLIPSIS
        [<matplotlib.lines.Line2D object at 0x...>]
-       >>> save() # doctest: +SKIP
+       >>> save()
        Saved examples/temp.pdf
        Saved examples/temp.png
+
+    .. testsetup::
+       >>> import os
+       >>> os.remove("examples/temp.pdf")
+       >>> os.remove("examples/temp.png")
 
     .. Note::  The :meth:`figure` function can be used to directly create a
        figure with a label.
@@ -877,10 +900,14 @@ def save(formats=['pdf', 'png'], fname=None, fig=None):
     if not fname:
         fname = fig.get_label()
         if not fname:
-            fname, __ = QFileDialog.getSaveFileName(None,
-                                                    "Choose a base filename.")
-            if not fname:
+            fname = getSaveFileName(None, "Choose a base filename.")
+            if fname == '':
                 print("Cancelled.")
+                return
+            elif fname is None:
+                print("The figure was not saved.  Specify the filename via the "
+                      "fname argument or the figure's label attribute, or "
+                      "install PyQt4, guidata, or PySide to use a file dialog.")
                 return
 
     # Create folders if necessary.
@@ -921,11 +948,16 @@ def saveall(formats=['pdf', 'png']):
 
        >>> figure('examples/temp') # doctest: +ELLIPSIS
        <matplotlib.figure.Figure object at 0x...>
-       >>> plt.plot(range(10))  # doctest: +SKIP
+       >>> plt.plot(range(10)) # doctest: +ELLIPSIS
        [<matplotlib.lines.Line2D object at 0x...>]
-       >>> save() # doctest: +SKIP
+       >>> save()
        Saved examples/temp.pdf
        Saved examples/temp.png
+
+    .. testsetup::
+       >>> import os
+       >>> os.remove("examples/temp.pdf")
+       >>> os.remove("examples/temp.png")
     """
 
     # Get the figures.
@@ -1367,5 +1399,24 @@ class ArrowLine(Line2D):
 
 if __name__ == "__main__":
     """Test the contents of this file."""
+    import os
     import doctest
-    doctest.testmod()
+
+    if os.path.isdir('examples'):
+        doctest.testmod()
+    else:
+        # Create a link to the examples folder.
+        example_dir = '../examples'
+        if not os.path.isdir(example_dir):
+            raise IOError("Could not find the examples folder.")
+        try:
+            os.symlink(example_dir, 'examples')
+        except AttributeError:
+            raise AttributeError("This method of testing isn't supported in "
+                                "Windows.  Use runtests.py in the base folder.")
+
+        # Test the docstrings in this file.
+        doctest.testmod()
+
+        # Remove the link.
+        os.remove('examples')
