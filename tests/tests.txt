@@ -91,7 +91,8 @@ u'Temperature of HeatPort'
 >>> sim = SimRes('tests/unicode.mat')
 >>> 'ΔΘ'.decode('utf8') == sim['DeltaTheta'].description
 True
->>> sim.plot('DeltaTheta', title="The y axis label should be $\Delta\Theta$", 
-...          label='unicode')
+>>> sim.plot('DeltaTheta', title="The y axis label should be $\Delta\Theta$.",
+...          label='tests/unicode') # doctest: +ELLIPSIS
+(<matplotlib.axes.AxesSubplot object at 0x...>, None)
 >>> save(['pdf'])
-
+Saved tests/unicode.pdf

@@ -1920,7 +1920,7 @@ class SimResList(ResList):
            >>> from modelicares import SimResList
            >>> sims = SimResList('examples/ChuaCircuit/*/*.mat')
            >>> sims['L.v'].mean()
-           [0.014733823, 0.0044694417]
+           [0.0013353984, 0.023054097]
         """
         if isinstance(i, slice):
             # Slice the simulation list and cast it as a SimResList.
@@ -2046,10 +2046,18 @@ class SimResList(ResList):
                 kwargs.update({'ax1': ax1, 'ax2': ax2})
         return ax1, ax2
 
-    def unique_IVs(self, constants_only=False):
+    def unique_IVs(self, constants_only=False, tolerance = 1e-10):
         """Return a dictionary of initial values that are different among the
         variables that the simulations share.  Each key is a variable name and
         each value is a list of initial values across the simulations.
+
+        **Arguments:**
+
+        - *constants_only*: *True* to include only the variables that do not
+          change over time
+
+        - *tolerance*: Maximum variation allowed for values to still be
+          considered the same.
 
         **Example:**
 
@@ -2063,12 +2071,12 @@ class SimResList(ResList):
               1/dsres.mat
               2/dsres.mat
            >>> sims.unique_IVs()['L.L']
-           [18.0, 10.0]
+           [15.0, 21.0]
         """
         unique_IVs = {}
         for name in self.names(constants_only=constants_only):
             IVs = self[name].IV()
-            if len(set(IVs)) > 1:
+            if max(IVs) - min(IVs) > tolerance:
                 unique_IVs[name] = IVs
         return unique_IVs
 

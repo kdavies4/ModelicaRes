@@ -13,7 +13,8 @@ dist/
 /examples/*.png
 /examples/ChuaCircuit-voltages.csv
 /examples/*.mpg
-doc/_images/math/*
+/doc/_images/math/*
+/tests/*.pdf
 MANIFEST
 ModelicaRes.egg-info
 .fuse*

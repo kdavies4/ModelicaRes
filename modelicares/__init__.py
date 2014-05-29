@@ -80,16 +80,16 @@ def load(*args):
 
        >>> from modelicares import load
 
-       # Get the mean values of the first capacitor's voltage from two runs
-       # of the Chua circuit.
+       # Get the mean values of the first capacitor's voltage from two runs of
+       # the Chua circuit.
        >>> sims, __ = load('examples/ChuaCircuit/*/')
 
        >>> sims['C1.v'].mean()
-       [0.76859528, 2.3572168]
+       [-1.6083468, 0.84736514]
 
        # The voltage is different because the inductance is different:
        >>> sims['L.L'].value()
-       [18.0, 10.0]
+       [15.0, 21.0]
     """
 
     import os

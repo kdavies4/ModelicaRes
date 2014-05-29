@@ -179,12 +179,13 @@ def quantity_str(number, unit='', format='%G', times=r'\,', roman=True):
             if e >= 0:
                 pow1000 = int(e/3) # The int casting is necessary in Python3.
             else:
-                pow1000 = -int(-e/3)
-            if -8 <= pow1000 <= 8:
-                unit = si_prefix(pow1000) + unit
-                numstr, exponent = (format % (number/1000**pow1000)).split('e')
-        if not use_SI or exponent != '+00': # Use LaTeX formatting.
-            exponent = (exponent[0] + exponent[1:].lstrip('0')).lstrip('+')
+                pow1000 = -int((1 - e)/3)
+            pow1000 = max(min(pow1000, 8), -8) # Apply limits of SI prefixes.
+            unit = si_prefix(pow1000) + unit
+            format = format.replace('e', 'f').replace('g', 'f')
+            numstr = format % (number/1000**pow1000)
+        else: # Use LaTeX formatting.
+            exponent = str(int(exponent))
             numstr = significand + r'$\times10^{' + exponent + '}$'
     if unit:
         return numstr + r'$\,' + unit2tex(unit, times, roman) + '$'

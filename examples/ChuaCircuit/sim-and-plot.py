@@ -30,7 +30,7 @@ packages = []
 # List or generator of simulations to run
 experiments = gen_experiments(
                     models=['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
-                    params={'L.L': [10, 26]}, # Can use none for default
+                    params={'L.L': [15, 21]}, # Can use none for default
                     args=dict(stopTime=[2500]))
 
 # Formats in which to save the figures (e.g., ['pdf', 'eps', 'svg', 'png'])

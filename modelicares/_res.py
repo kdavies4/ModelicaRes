@@ -40,12 +40,20 @@ class ResList(list):
         """
         return list.__add__(self, value)
 
+    @cast_sametype
+    def __getslice__(self, i, j):
+        """x.__getslice__(i, j) <==> x[i:j]
+
+        Use of negative indices is not supported.
+        """
+        return super(ResList, self).__getslice__(i, j)
+
     def __getitem__(self, i):
         """x.__getitem__(y) <==> x[y]
         """
         if isinstance(i, slice):
             # Cast as the same type.
-            return self.__class__(list.__getitem__(self, i))
+            return self.__class__(super(ResList, self).__getitem__(i))
         else:
             return list.__getitem__(self, i)
 

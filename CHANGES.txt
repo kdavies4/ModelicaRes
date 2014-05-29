@@ -6,6 +6,8 @@ The releases are numbered according to the `Semantic Versioning Specification
 
 v0.12.0_ (2014-x-xx) -- Updates:
 
+   - Improved the generation of defaults for the Bode and Nyquist plots.
+   - Fixed an issue with slicing a :class:`~modelicaras.simres.SimResList`.
    - Removed :meth:`~modelicaras.util.pow10`.  It is not used internally and
      probably is not very helpful externally.
    - Change the default value of *Roman* in

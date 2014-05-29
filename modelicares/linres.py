@@ -354,17 +354,19 @@ class LinRes(object):
 
         - *\*\*kwargs*: Additional plotting arguments:
 
-             - *omega*: Range of frequencies (list or bounds) in rad/s
+             - *freqs*: List or frequencies or tuple of (min, max) frequencies
+               over which to plot the system response.
 
-             - *dB*: If *True* (default), plot the magnitude in dB
+                  If *freqs* is *None*, then an appropriate range will be
+                  determined automatically.
 
-             - *Hz*: If *True* (default), plot the frequency in Hz (otherwise,
-               rad/s)
+             - *in_Hz*: If *True* (default), the frequencies (*freqs*) are in
+               Hz and should be plotted in Hz (otherwise, rad/s)
 
-                  Regardless, *omega* must be provided in rad/s.
+             - *in_dB*: If *True* (default), plot the magnitude in dB
 
-             - *deg*: If *True* (default), plot the phase in degrees (otherwise,
-               radians)
+             - *in_deg*: If *True* (default), plot the phase in degrees
+               (otherwise, radians)
 
              Other keyword arguments are passed to
              :meth:`matplotlib.pyplot.plot`.
@@ -472,7 +474,14 @@ class LinRes(object):
 
         - *\*\*kwargs*: Additional plotting arguments:
 
-             - *omega*: Range of frequencies (list or bounds) in rad/s
+             - *freqs*: List or frequencies or tuple of (min, max) frequencies
+               over which to plot the system response.
+
+                  If *freqs* is *None*, then an appropriate range will be
+                  determined automatically.
+
+             - *in_Hz*: If *True* (default), the frequencies (*freqs*) are in
+               Hz and should be plotted in Hz (otherwise, rad/s)
 
              - *mark*: *True*, if the -1 point should be marked on the plot
 
@@ -526,7 +535,8 @@ class LinRes(object):
             # Note: modelicares._freqplot.nyquist() is currently only
             # implemented for SISO systems.
 
-        # Decorate and finish.
+
+        # Decorate.
         if len(pairs) > 1:
             ax.legend()
         ax.set_title(title)
@@ -534,6 +544,7 @@ class LinRes(object):
             ax.set_xlabel(xlabel)
         if ylabel: # Same purpose
             ax.set_ylabel(ylabel)
+
         return ax
 
 
@@ -851,17 +862,19 @@ class LinResList(ResList):
 
         - *\*\*kwargs*: Additional plotting arguments:
 
-             - *omega*: Range of frequencies (list or bounds) in rad/s
+             - *freqs*: List or frequencies or tuple of (min, max) frequencies
+               over which to plot the system response.
 
-             - *dB*: If *True* (default), plot the magnitude in dB
+                  If *freqs* is *None*, then an appropriate range will be
+                  determined automatically.
 
-             - *Hz*: If *True* (default), plot the frequency in Hz (otherwise,
-               rad/s)
+             - *in_Hz*: If *True* (default), the frequencies (*freqs*) are in
+               Hz and should be plotted in Hz (otherwise, rad/s)
 
-                  Regardless, *omega* must be provided in rad/s.
+             - *in_dB*: If *True* (default), plot the magnitude in dB
 
-             - *deg*: If *True* (default), plot the phase in degrees (otherwise,
-               radians)
+             - *in_deg*: If *True* (default), plot the phase in degrees
+               (otherwise, radians)
 
              Other keyword arguments are passed to
              :meth:`matplotlib.pyplot.plot`.
@@ -909,9 +922,8 @@ class LinResList(ResList):
                 sys = lin.to_siso(pair[0], pair[1])
             else:
                 sys = lin.sys
-            bode_plot(sys, Hz=True, label=label,
-                      color=colors[np.mod(i, n_colors)], axes=axes,
-                      **kwargs)
+            bode_plot(sys, label=label, color=colors[np.mod(i, n_colors)],
+                      axes=axes, **kwargs)
 
         # Decorate and finish.
         axes[0].set_title(title)
@@ -972,14 +984,18 @@ class LinResList(ResList):
 
         - *\*\*kwargs*: Additional plotting arguments:
 
+             - *freqs*: List or frequencies or tuple of (min, max) frequencies
+               over which to plot the system response.
 
-             - *omega*: Range of frequencies (list or bounds) in rad/s
+                  If *freqs* is *None*, then an appropriate range will be
+                  determined automatically.
+
+             - *in_Hz*: If *True* (default), the frequencies (*freqs*) are in
+               Hz and should be plotted in Hz (otherwise, rad/s)
 
              - *mark*: *True*, if the -1 point should be marked on the plot
 
              - *show_axes*: *True*, if the axes should be shown
-
-             - *skip*: Label every nth frequency on the plot
 
              - *skip*: Mark every nth frequency on the plot with a dot
 
@@ -987,9 +1003,6 @@ class LinResList(ResList):
 
              - *label_freq*: If *True*, if the marked frequencies should be
                labeled
-
-                  By default (*None*), only the marked frequencies of the first
-                  system will be labeled.
 
              Other keyword arguments are passed to
              :meth:`matplotlib.pyplot.plot`.
@@ -1039,6 +1052,7 @@ class LinResList(ResList):
         if leg_kwargs is not None:
             loc = leg_kwargs.pop('loc', 'best')
             ax.legend(loc=loc, **leg_kwargs)
+
         return ax
 
 
