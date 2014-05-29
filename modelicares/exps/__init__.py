@@ -656,6 +656,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
 
     .. code-block:: modelica
 
+       // Modelica experiment script written by modelicares ...
        import Modelica.Utilities.Files.copy;
        import Modelica.Utilities.Files.createDirectory;
        Advanced.TranslationInCommandLog = true "Also include translation log in command log";
@@ -663,7 +664,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
        destination = ".../examples/ChuaCircuit/";
 
        // Experiment 1
-       ok = simulateModel("Modelica.Electrical.Analog.Examples.ChuaCircuit", stopTime=2500);
+       ok = simulateModel(problem="Modelica.Electrical.Analog.Examples.ChuaCircuit", stopTime=2500);
        if ok then
            savelog();
            createDirectory(destination + "1");
@@ -673,6 +674,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
            copy("dymosim", destination + "1/dymosim", true);
            copy("dymolalg.txt", destination + "1/dymolalg.txt", true);
        end if;
+       clearlog();
 
        exit();
 
@@ -690,10 +692,10 @@ def write_script(experiments=[(None, {}, {})], packages=[],
        ...             'C1.C': [8, 10],
        ...             'C2.C': [80, 100, 120]})
        >>> write_script(experiments, fname="examples/ChuaCircuit/run-sims2.mos") # doctest: +ELLIPSIS
-       (['ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit', 'ChuaCircuit'], '...examples/ChuaCircuit')
+       (['ChuaCircuit', ..., 'ChuaCircuit'], '...examples/ChuaCircuit')
 
     In *examples/ChuaCircuit/run-sims2.mos*, there are commands to run and save
-    results from 12 simulation experiments.
+    results from twelve simulations.
     """
     # Preprocess the arguments.
     if not isinstance(experiments, (list, GeneratorType)):

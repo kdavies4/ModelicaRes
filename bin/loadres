@@ -58,8 +58,6 @@ DEFAULT_PATH = ""
 #DEFAULT_PATH = os.path.expanduser("~/Documents/Modelica")
 
 
-app = None # For PyQT4 and guidata, the GUI application must be global.
-
 def delayed_exit(t=0.5):
     """Exit with a message and a delay.
     """
@@ -124,7 +122,7 @@ def get_locations():
             msgBox.exec_()
             return msgBox.clickedButton()
 
-        global app
+        global app # For PyQt4 and guidata, the GUI application must be global.
         app = QApplication([])
         Files = QPushButton("Files")
         Folder = QPushButton("Folder")

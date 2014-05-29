@@ -3,10 +3,12 @@
 
 .. testsetup::
    >>> decimals = 8
+
    >>> import numpy as np
    >>> np.set_printoptions(precision=decimals)
-   >>> builtin_round = round
+
    >>> # Don't use np.round; it's stupid.
+   >>> builtin_round = round
    >>> def round(value):
    ...     try:
    ...         return [round(v) for v in value]
@@ -86,5 +88,10 @@ Did you mean one of these?
 'degC'
 >>> sim['G.T_heatPort'].description
 u'Temperature of HeatPort'
->>> SimRes('tests/unicode.mat')['a'].description
-u'\u0394\u0398'
+>>> sim = SimRes('tests/unicode.mat')
+>>> 'ΔΘ'.decode('utf8') == sim['DeltaTheta'].description
+True
+>>> sim.plot('DeltaTheta', title="The y axis label should be $\Delta\Theta$", 
+...          label='unicode')
+>>> save(['pdf'])
+

@@ -6,13 +6,13 @@ __version__ = "2013-7-4"
 
 import os
 
-from fcres import gen_experiments, write_script
+from modelicares import gen_experiments, write_script
 
 # Settings
 # Begin customize--------------------------------------------------------------
 
 # Name of the Modelica script (may include the path)
-fname = 'lin.mos'
+fname = 'run-lins.mos'
 
 # Working directory
 working_dir = '~/Documents/Modelica'
@@ -25,7 +25,7 @@ packages = []
 
 # List or generator of simulations to run
 experiments = gen_experiments(['Modelica.Blocks.Continuous.PID'],
-                              params=dict(Td=[0.1, 10]))
+                              params=dict(Td=[0.01, 1]))
 
 # End customize----------------------------------------------------------------
 
