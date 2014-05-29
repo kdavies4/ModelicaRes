@@ -1,7 +1,7 @@
 #!/bin/bash
 # List the TODO tags in various project files.
 
-locations="runtests.sh *.py modelicares/*.py modelicares/*/*.py bin/* CHANGES.txt tests/tests.txt hooks/*.sh hooks/*.py doc/*.py"
+locations="*.py modelicares/*.py modelicares/*/*.py bin/* CHANGES.txt runtests.sh .travis.yml tests/tests.txt hooks/*.sh hooks/*.py doc/*.py"
 
 grep TODO $locations -n --colour=always |
   sed -re  's/^([^:]+:[^:]+):(\x1b\[m\x1b\[K)[[:space:]]*(.*)/\1\x01\2\3/' |

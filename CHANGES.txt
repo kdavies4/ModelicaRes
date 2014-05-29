@@ -10,9 +10,9 @@ v0.12.0_ (2014-x-xx) -- Updates:
      probably is not very helpful externally.
    - Change the default value of *Roman* in
      :meth:`~modelicares.texunit.quantity_str` to *False*.
-   - Renamed and reordered the arguments of
+   - Renamed and/or reordered the arguments of
      :meth:`~modelicaras.util.setup_subplots` and
-     :meth:`~modelicaras.util.setup_subplots` for clarity and simplicity
+     :meth:`~modelicaras.exps.modelica_str` for clarity and simplicity
    - Supported Qt_ via several installations: PyQt4_, guidata_, and PySide_.
      PySide_ is no longer required, but if no Qt_ installation is available,
      then file dialogs are not available in :meth:`~modelicares.util.save` or

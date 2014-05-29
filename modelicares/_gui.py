@@ -17,22 +17,26 @@ from six import string_types
 from modelicares.texunit import unit2tex
 
 
+#pylint: disable=C0103, E1121, R0904
+
 class PreviewPanel(wx.Panel):
     """Panel for information about a variable
     """
-    def __init__(self, parent, id):
+    def __init__(self, parent, id_num):
 
         # Change the matplotlb backend, but remember the original.
         orig_backend = rcParams['backend']
         rcParams['backend'] = 'WXAgg'
 
-        wx.Panel.__init__(self, parent, id)
+        wx.Panel.__init__(self, parent, id_num)
         txtpanel = wx.Panel(self, -1)
 
-        self.display = wx.StaticText(txtpanel, -1, "Click on a variable to "
-            "list its attributes and plot its values.\n"
-            "You can also drag variable name into a text document.", (10,10),
-            style=wx.ALIGN_LEFT)
+        self.display = wx.StaticText(txtpanel, -1,
+                                     "Click on a variable to list its "
+                                     "attributes and plot its values.\n"
+                                     "You can also drag variable name into a "
+                                     "text document.", (10, 10),
+                                     style=wx.ALIGN_LEFT)
         self.figure = Figure(figsize=(2, 2))
         self.figure.subplots_adjust(left=0.17, right=0.95, bottom=0.15,
                                     top=0.95)
@@ -78,11 +82,11 @@ class Browser(wx.Frame):
 
     - *parent*: Parent frame
 
-    - *id*: Indentification number
+    - *id_num*: Indentification number
 
     - *sim*: Instance of :class:`simres.SimRes`
     """
-    def __init__(self, parent, id, sim):
+    def __init__(self, parent, id_num, sim):
 
         def _build_tree(branches, branch):
             """Build the variable tree.
@@ -98,16 +102,16 @@ class Browser(wx.Frame):
                     _build_tree(branches[key], subbranch) # Recursion
 
         # Initial setup
-        wx.Frame.__init__(self, parent, id, pos=wx.DefaultPosition,
+        wx.Frame.__init__(self, parent, id_num, pos=wx.DefaultPosition,
                           size=wx.Size(800, 350))
         hbox = wx.BoxSizer(wx.HORIZONTAL)
         vbox = wx.BoxSizer(wx.VERTICAL)
-        panelL = wx.Panel(self, -1)
-        self.panelR = PreviewPanel(self, -1)
+        panel_left = wx.Panel(self, -1)
+        self.panel_right = PreviewPanel(self, -1)
         self.sim = sim
 
         # Add the tree.
-        self.tree = wx.TreeCtrl(panelL, 1, wx.DefaultPosition, (-1, -1),
+        self.tree = wx.TreeCtrl(panel_left, 1, wx.DefaultPosition, (-1, -1),
                                 wx.TR_HIDE_ROOT|wx.TR_HAS_BUTTONS)
         root = sim.nametree()
         _build_tree(root, self.tree.AddRoot(sim.fbase()))
@@ -116,9 +120,9 @@ class Browser(wx.Frame):
         self.tree.Bind(wx.EVT_TREE_BEGIN_DRAG, self.OnDragInit)
         self.tree.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelChanged, id=1)
         vbox.Add(self.tree, 1, wx.EXPAND)
-        hbox.Add(panelL, 2, wx.EXPAND)
-        hbox.Add(self.panelR, 3, wx.EXPAND)
-        panelL.SetSizer(vbox)
+        hbox.Add(panel_left, 2, wx.EXPAND)
+        hbox.Add(self.panel_right, 3, wx.EXPAND)
+        panel_left.SetSizer(vbox)
         self.SetSizer(hbox)
         self.Centre()
 
@@ -133,4 +137,4 @@ class Browser(wx.Frame):
     def OnSelChanged(self, event):
         """Update the variable's attributes and plot."""
         name = self.tree.GetItemData(event.GetItem()).GetData()
-        self.panelR.preview(name, self.sim)
+        self.panel_right.preview(name, self.sim)

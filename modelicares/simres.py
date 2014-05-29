@@ -47,22 +47,25 @@ from modelicares import util
 from modelicares._res import ResList
 from modelicares.texunit import unit2tex, number_label
 
+#pylint: disable=C0103, C0302, E0213, R0904, R0912, R0913, R0914, R0915, W0102,
+#pylint: disable=W0142
 
-def _apply_function(g):
+
+def _apply_function(func):
     """Return a method that applies a function to its output, given a
-    method that doesn't (*g*).
+    method that doesn't (*func*).
 
     I.e., a decorator to apply a function to the return value
     """
-    @wraps(g)
+    @wraps(func)
     def wrapped(self, f=None, *args, **kwargs):
         """Function that applies a function *f* to its output
 
         If *f* is *None* (default), no function is applied (i.e., pass
         through or identity).
         """
-        return (g(self, *args, **kwargs) if f is None else
-                f(g(self, *args, **kwargs)))
+        return (func(self, *args, **kwargs) if f is None else
+                f(func(self, *args, **kwargs)))
 
     return wrapped
 
@@ -80,13 +83,13 @@ def _get_sims(fnames):
     assert len(sims) > 0, "No simulations were loaded."
     return sims
 
-def _select(f):
+def _select(func):
     """Return a method that uses time-based indexing to return values,
     given a method that returns all values (*f*).
 
     I.e., a decorator to use time-based indexing to select values
     """
-    @wraps(f)
+    @wraps(func)
     def wrapped(cls, t=None, *args, **kwargs):
         """Function that uses time-based indexing to return values
 
@@ -95,14 +98,14 @@ def _select(f):
         """
         if t is None:
             # Return all values.
-            return f(cls, *args, **kwargs)
+            return func(cls, *args, **kwargs)
         elif isinstance(t, tuple):
             # Apply a slice with optional start time, stop time, and number
             # of samples to skip.
-            return f(cls, *args, **kwargs)[cls._slice(t)]
+            return func(cls, *args, **kwargs)[cls._slice(t)]
         else:
             # Interpolate at single time or list of times.
-            function_at_ = interp1d(cls.times(), f(cls, *args, **kwargs))
+            function_at_ = interp1d(cls.times(), func(cls, *args, **kwargs))
             # For some reason, this wraps single values as arrays, so need to
             # cast back to float.
             try:
@@ -114,7 +117,7 @@ def _select(f):
 
     return wrapped
 
-def _swap(g):
+def _swap(func):
     """Decorator that swaps the first two arguments of a method and gives them
     each a default of *None*.
 
@@ -123,10 +126,10 @@ def _swap(g):
     (_apply_function decorator), but we want time to be the first
     argument and the function to be the second.
     """
-    @wraps(g)
+    @wraps(func)
     def wrapped(self, t=None, f=None):
         """Look up the variable and pass it to the original function."""
-        return g(self, f, t)
+        return func(self, f, t)
 
     return wrapped
 
@@ -143,7 +146,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
     """
 
     def array(self, t=None, ft=None, fv=None):
-        """Return an array with function *ft* of the times of the variable as
+        r"""Return an array with function *ft* of the times of the variable as
         the first column and function *fv* of the values of the variable as the
         second column.
 
@@ -240,7 +243,8 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         """
         t = self.times()
         mean = self.mean(f=f)
-        return mean + np.sqrt(integral((self.values(f=f) - mean)**2, t)/(t[-1] - t[0]))
+        return mean + np.sqrt(integral((self.values(f=f) - mean)**2, t)
+                              /(t[-1] - t[0]))
 
     @abstractmethod
     def times(self, t=None, f=None):
@@ -296,7 +300,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
 
     @abstractmethod
     def values(self, t=None, f=None):
-        """Return function *f* of the values of the variable.
+        r"""Return function *f* of the values of the variable.
 
         **Arguments:**
 
@@ -372,11 +376,11 @@ class _VarDict(dict):
     :class:`Variable`)
     """
     def __getitem__(self, key):
-       """Include suggestions in the error message if a variable is missing.
-       """
-       try:
-           return dict.__getitem__(self, key)
-       except KeyError:
+        """Include suggestions in the error message if a variable is missing.
+        """
+        try:
+            return dict.__getitem__(self, key)
+        except KeyError:
             msg = '%s is not a valid variable name.' % key
             close_matches = get_close_matches(key, self.keys())
             if close_matches:
@@ -393,20 +397,20 @@ class _VarList(list):
     The list may be nested.
     """
 
-    def _method(f):
+    def _method(func):
         """Return a method that operates on all of the variables in the list of
         variables, given a function that operates on a single variable.
         """
-        @wraps(f)
-        def wrapped(cls, *args, **kwargs):
+        @wraps(func)
+        def wrapped(self, *args, **kwargs):
             """Traverse the list recursively until the argument is a single
             variable, then pass it to the function and return the result
             upwards.
             """
-            return [f(variable, *args, **kwargs)
+            return [func(variable, *args, **kwargs)
                     if isinstance(variable, Variable) else
                     wrapped(variable, *args, **kwargs)
-                    for variable in cls]
+                    for variable in self]
 
         return wrapped
 
@@ -422,7 +426,7 @@ class _VarList(list):
 
     @_method
     def arrays(variable, *args, **kwargs):
-        """Return a list containing an array of times and values for each
+        r"""Return a list containing an array of times and values for each
         variable.
 
         Arguments *\*args* and *\*\*kwargs* are passed directly to
@@ -432,7 +436,7 @@ class _VarList(list):
 
     @_method
     def FV(variable, *args, **kwargs):
-        """Return a list containing the final of each variable.
+        r"""Return a list containing the final of each variable.
 
         Arguments *\*args* and *\*\*kwargs* are passed directly to
         :meth:`Variable.FV`, so this method has the same call signature.
@@ -450,7 +454,7 @@ class _VarList(list):
 
     @_method
     def IV(variable, *args, **kwargs):
-        """Return a list containing the initial value of each variable.
+        r"""Return a list containing the initial value of each variable.
 
         Arguments *\*args* and *\*\*kwargs* are passed directly to
         :meth:`Variable.IV`, so this method has the same call signature.
@@ -459,7 +463,7 @@ class _VarList(list):
 
     @_method
     def max(variable, *args, **kwargs):
-        """Return a list containing the maximum value of each variable.
+        r"""Return a list containing the maximum value of each variable.
 
         Arguments *\*args* and *\*\*kwargs* are passed directly to
         :meth:`Variable.max`, so this method has the same call signature.
@@ -468,7 +472,7 @@ class _VarList(list):
 
     @_method
     def mean(variable, *args, **kwargs):
-        """Return a list containing the time-averaged mean value of each
+        r"""Return a list containing the time-averaged mean value of each
         variable.
 
         Arguments *\*args* and *\*\*kwargs* are passed directly to
@@ -478,7 +482,7 @@ class _VarList(list):
 
     @_method
     def mean_rectified(variable, *args, **kwargs):
-        """Return a list containing the time-averaged rectified mean of each
+        r"""Return a list containing the time-averaged rectified mean of each
         variable.
 
         Arguments *\*args* and *\*\*kwargs* are passed directly to
@@ -489,7 +493,7 @@ class _VarList(list):
 
     @_method
     def min(variable, *args, **kwargs):
-        """Return a list containing the minimum value of each variable.
+        r"""Return a list containing the minimum value of each variable.
 
         Arguments *\*args* and *\*\*kwargs* are passed directly to
         :meth:`Variable.min`, so this method has the same call signature.
@@ -498,7 +502,7 @@ class _VarList(list):
 
     @_method
     def RMS(variable, *args, **kwargs):
-        """Return a list containing the time-averaged root mean square of each
+        r"""Return a list containing the time-averaged root mean square of each
         variable.
 
         Arguments *\*args* and *\*\*kwargs* are passed directly to
@@ -508,7 +512,7 @@ class _VarList(list):
 
     @_method
     def RMS_AC(variable, *args, **kwargs):
-        """Return a list containing the time-averaged AC-coupled root mean
+        r"""Return a list containing the time-averaged AC-coupled root mean
         square of each variable.
 
         Arguments *\*args* and *\*\*kwargs* are passed directly to
@@ -518,7 +522,7 @@ class _VarList(list):
 
     @_method
     def times(variable, *args, **kwargs):
-        """Return a list containing the sampling times of each variable.
+        r"""Return a list containing the sampling times of each variable.
 
         Arguments *\*args* and *\*\*kwargs* are passed directly to
         :meth:`Variable.times`, so this method has the same call signature.
@@ -527,7 +531,7 @@ class _VarList(list):
 
     @_method
     def value(variable, *args, **kwargs):
-        """Return a list containing the value of each constant variable.
+        r"""Return a list containing the value of each constant variable.
 
         This method raises a **ValueError** if any of the variables are
         time-varying.
@@ -539,7 +543,7 @@ class _VarList(list):
 
     @_method
     def values(variable, *args, **kwargs):
-        """Return a list containing the values of each variable.
+        r"""Return a list containing the values of each variable.
 
         Arguments *\*args* and *\*\*kwargs* are passed directly to
         :meth:`Variable.values`, so this method has the same call signature.
@@ -666,8 +670,9 @@ class SimRes(object):
             try:
                 load = loaderdict[tool.lower()]
             except:
-                raise LookupError('"%s" is not one of the available tools ("%s").'
-                                  % (tool, '", "'.join(list(loaderdict))))
+                raise LookupError('"%s" is not one of the available tools '
+                                  '("%s").' % (tool,
+                                               '", "'.join(list(loaderdict))))
         self._variables = load(fname, constants_only)
 
         # Remember the tool and filename.
@@ -691,19 +696,20 @@ class SimRes(object):
 
         return wrapped
 
-    def _fromname(f):
+    def _fromname(func):
         """Return a function that accepts the name of variable, given a function
         that accepts the variable itself.
         """
-        @wraps(f)
+        @wraps(func)
         def wrapped(self, name, *args, **kwargs):
             """Look up the variable and pass it to the original function."""
             try:
-                return f(self._variables[name], *args, **kwargs)
+                return func(self._variables[name], *args, **kwargs)
             except TypeError:
                 if isinstance(name, list):
                     raise TypeError("To access a list of variables, use the "
-                               "call method (parentheses instead of brackets).")
+                                    "call method (parentheses instead of "
+                                    "brackets).")
                 else:
                     raise
 
@@ -719,7 +725,7 @@ class SimRes(object):
              top=1-rcParams['figure.subplot.top'],
              hspace=0.1, vspace=0.25,
              leg_kwargs=None, **kwargs):
-        """Create a sequence of bar plots at times.
+        r"""Create a sequence of bar plots at times.
 
         **Arguments:**
 
@@ -752,8 +758,8 @@ class SimRes(object):
         - *label*: Label for the figure
 
              This is used as the base filename if the figure is saved using
-             :meth:`~modelicares.simres.util.save` or
-             :meth:`~modelicares.simres.util.saveall`.
+             :meth:`~modelicares.util.save` or
+             :meth:`~modelicares.util.saveall`.
 
         - *xlabel*: Label for the x-axes (only shown for the subplots on the
           bottom row)
@@ -800,11 +806,12 @@ class SimRes(object):
         # Set up the subplots.
         n_plots = len(times) # Number of plots
         ax = util.setup_subplots(n_plots=n_plots, n_rows=n_rows,
-                            title=title, subtitles=subtitles, label=label,
-                            xlabel=xlabel, xticks=ind, xticklabels=xticklabels,
-                            ylabel=ylabel,
-                            left=left, right=right, bottom=bottom, top=top,
-                            hspace=hspace, vspace=vspace)[0]
+                                 title=title, subtitles=subtitles, label=label,
+                                 xlabel=xlabel, xticks=ind,
+                                 xticklabels=xticklabels,
+                                 ylabel=ylabel,
+                                 left=left, right=right, bottom=bottom, top=top,
+                                 hspace=hspace, vspace=vspace)[0]
 
         # Create the bar plots.
         for axis, time in zip(ax, times):
@@ -1002,7 +1009,7 @@ class SimRes(object):
              xname='Time', xlabel=None,
              title=None, label="xy", incl_prefix=False, suffix=None,
              use_paren=True, **kwargs):
-        """Plot variables as points and/or curves in 2D Cartesian coordinates.
+        r"""Plot variables as points and/or curves in 2D Cartesian coordinates.
 
         The abscissa may be time or any other variable (i.e., scatterplots are
         possible).
@@ -1060,8 +1067,8 @@ class SimRes(object):
         - *label*: Label for the figure (ignored if *ax* is provided)
 
              This is used as the base filename if the figure is saved using
-             :meth:`~modelicares.simres.util.save` or
-             :meth:`~modelicares.simres.util.saveall`.
+             :meth:`~modelicares.util.save` or
+             :meth:`~modelicares.util.saveall`.
 
         - *incl_prefix*: If *True*, prefix the legend strings with the base
           filename of the class.
@@ -1222,7 +1229,7 @@ class SimRes(object):
                label="sankey",
                left=0.05, right=0.05, bottom=0.05, top=0.1,
                hspace=0.1, vspace=0.25, **kwargs):
-        """Create a figure with one or more Sankey diagrams.
+        r"""Create a figure with one or more Sankey diagrams.
 
         **Arguments:**
 
@@ -1250,8 +1257,8 @@ class SimRes(object):
         - *label*: Label for the figure
 
              This is used as the base filename if the figure is saved using
-             :meth:`~modelicares.simres.util.save` or
-             :meth:`~modelicares.simres.util.saveall`.
+             :meth:`~modelicares.util.save` or
+             :meth:`~modelicares.util.saveall`.
 
         - *left*: Left margin
 
@@ -1265,7 +1272,8 @@ class SimRes(object):
 
         - *vspace*: Vertical space between rows of subplots
 
-        - *\*\*kwargs*: Additional arguments for :class:`matplotlib.sankey.Sankey`
+        - *\*\*kwargs*: Additional arguments for
+          :class:`matplotlib.sankey.Sankey`
 
         **Returns:**
 
@@ -1304,9 +1312,10 @@ class SimRes(object):
                 elif time == stop_time:
                     subtitles[i] += " (final)"
         axes = util.setup_subplots(n_plots=n_plots, n_rows=n_rows, title=title,
-                                 subtitles=subtitles, label=label,
-                                 left=left, right=right, bottom=bottom, top=top,
-                                 hspace=hspace, vspace=vspace)[0]
+                                   subtitles=subtitles, label=label,
+                                   left=left, right=right, bottom=bottom,
+                                   top=top,
+                                   hspace=hspace, vspace=vspace)[0]
 
         # Create the plots.
         sankeys = []
@@ -1314,7 +1323,7 @@ class SimRes(object):
             ax.get_xaxis().set_visible(False)
             ax.get_yaxis().set_visible(False)
             sankeys.append(Sankey(ax, flows=[Qdot[i] for Qdot in Qdots],
-                           unit=flow_unit, **kwargs).finish())
+                                  unit=flow_unit, **kwargs).finish())
         return sankeys
 
     def to_pandas(self, names=None, aliases={}):
@@ -1500,8 +1509,8 @@ class SimRes(object):
 
         - :meth:`~Variable.min` - Return the minimum value of the variable.
 
-        - :meth:`~Variable.RMS` - Return the time-averaged root mean square value
-          of the variable.
+        - :meth:`~Variable.RMS` - Return the time-averaged root mean square
+          value of the variable.
 
         - :meth:`~Variable.RMS_AC` - Return the time-averaged AC-coupled root
           mean square value of the variable.
@@ -1582,11 +1591,11 @@ class SimRes(object):
            >>> print(sim) # doctest: +ELLIPSIS
            Modelica simulation results from ...ChuaCircuit.mat
         """
-        return "Modelica simulation results from {f}".format(f=self.fname)
+        return "Modelica simulation results from " + self.fname
 
 
 class SimResList(ResList):
-    """Specialized list of simulation results (:class:`SimRes` instances)
+    r"""Specialized list of simulation results (:class:`SimRes` instances)
 
     **Initialization signatures:**
 
@@ -1670,14 +1679,14 @@ class SimResList(ResList):
 
     **Additional methods:**
 
-    - :meth:`basedir` - Return the highest common directory that the result files
-      share.
+    - :meth:`basedir` - Return the highest common directory that the result
+      files share.
 
     - :meth:`fnames` - Return a list of filenames from which the results were
       loaded.
 
-    - :meth:`names` - Return a list of names of variables that are present in all
-      of the simulations and that match a pattern.
+    - :meth:`names` - Return a list of names of variables that are present in
+      all of the simulations and that match a pattern.
 
     - :meth:`nametree` - Return a tree of the common variable names of the
       simulations based on the Modelica_ model hierarchy.
@@ -1712,7 +1721,7 @@ class SimResList(ResList):
 
         """
         if not args:
-            list.__init__(self, [])
+            super(SimResList, self).__init__([])
         elif isinstance(args[0], string_types):
             # The arguments are filenames or directories.
 
@@ -1775,9 +1784,9 @@ class SimResList(ResList):
         if isinstance(item, SimRes):
             list.append(self, item)
         else:
-            assert isinstance(item, string_types), ("The simulation list can "
-                "ony be appended by providing a SimRes instance, filename, or "
-                "directory.")
+            assert isinstance(item, string_types), (
+                "The simulation list can ony be appended by providing a SimRes "
+                "instance, filename, or directory.")
 
             # Get the matching filenames.
             if os.path.isdir(item):
@@ -1951,12 +1960,13 @@ class SimResList(ResList):
             short_fnames = [fname[start:] for fname in self.fnames()]
             string = ("List of simulation results (SimRes instances) from the "
                       "following files")
-            string += "\nin the %s directory:\n   " % basedir if basedir else ":\n   "
+            string += ("\nin the %s directory:\n   "
+                       % basedir if basedir else ":\n   ")
             string += "\n   ".join(short_fnames)
             return string
 
     def plot(self, *args, **kwargs):
-        """Plot data from selected variables over all of the simulations in 2D
+        r"""Plot data from selected variables over all of the simulations in 2D
         Cartesian coordinates.
 
         This method calls :meth:`SimRes.plot` from the included instances of
@@ -2006,7 +2016,8 @@ class SimResList(ResList):
         # Get the local arguments.
         suffixes = kwargs.pop('suffixes', '')
         color = kwargs.pop('color', ['b', 'g', 'r', 'c', 'm', 'y', 'k'])
-        dashes = kwargs.pop('dashes', [(None, None), (3, 3), (1, 1), (3, 2, 1, 2)])
+        dashes = kwargs.pop('dashes', [(None, None), (3, 3), (1, 1),
+                                       (3, 2, 1, 2)])
 
         # Set up the color(s) and dash style(s).
         cyc = type(cycle([]))
@@ -2087,22 +2098,23 @@ class SimResList(ResList):
         return {name: [name in sim for sim in self] for name in unique_names}
 
 if __name__ == '__main__':
-    """Test the contents of this file."""
-    import os
+    # Test the contents of this file.
+
     import doctest
 
     if os.path.isdir('examples'):
         doctest.testmod()
     else:
         # Create a link to the examples folder.
-        example_dir = '../examples'
-        if not os.path.isdir(example_dir):
+        EXAMPLE_DIR = '../examples'
+        if not os.path.isdir(EXAMPLE_DIR):
             raise IOError("Could not find the examples folder.")
         try:
-            os.symlink(example_dir, 'examples')
+            os.symlink(EXAMPLE_DIR, 'examples')
         except AttributeError:
             raise AttributeError("This method of testing isn't supported in "
-                                "Windows.  Use runtests.py in the base folder.")
+                                 "Windows.  Use runtests.py in the base "
+                                 "folder.")
 
         # Test the docstrings in this file.
         doctest.testmod()

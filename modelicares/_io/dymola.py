@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Classes and functions to load results from Dymola and OpenModelica
+r"""Classes and functions to load results from Dymola and OpenModelica
 
 Classes:
 
@@ -37,7 +37,6 @@ The last three errors occur when the file does appear to be from Dymola or
 OpenModelica but something else is wrong.
 """
 
-import numpy as np
 from collections import namedtuple
 from itertools import count
 from scipy.io import loadmat
@@ -46,6 +45,8 @@ from control.matlab import ss
 from modelicares.simres import _VarDict, _select, _apply_function, _swap
 from modelicares.simres import Variable as GenericVariable
 
+
+#pylint: disable=C0103, C0325, R0912, R0914, W0221, W0631
 
 # Namedtuple to store the time and value information of each variable
 Samples = namedtuple('Samples', ['times', 'values', 'negated'])
@@ -154,7 +155,7 @@ def chars_to_str(str_arr):
 
 
 def read(fname, constants_only=False):
-    """Read variables from a MATLAB\ :sup:`®` file with Dymola\ :sup:`®` or
+    r"""Read variables from a MATLAB\ :sup:`®` file with Dymola\ :sup:`®` or
     OpenModelica results.
 
     **Arguments:**
@@ -198,7 +199,7 @@ def read(fname, constants_only=False):
 
 
 def loadsim(fname, constants_only=False):
-    """Load Dymola\ :sup:`®` or OpenModelica simulation results.
+    r"""Load Dymola\ :sup:`®` or OpenModelica simulation results.
 
     **Arguments:**
 
@@ -252,11 +253,11 @@ def loadsim(fname, constants_only=False):
 
     # Check the type of results.
     if Aclass[0] == 'AlinearSystem':
-       raise AssertionError('"%s" is a linearization result.  Use LinRes '
-                            'instead.' % fname)
+        raise AssertionError('"%s" is a linearization result.  Use LinRes '
+                             'instead.' % fname)
     else:
-       assert Aclass[0] == 'Atrajectory', ('File "%s" is not a simulation '
-                                           'or linearization result.' % fname)
+        assert Aclass[0] == 'Atrajectory', ('File "%s" is not a simulation '
+                                            'or linearization result.' % fname)
 
     # Determine if the data is transposed.
     try:
@@ -264,10 +265,10 @@ def loadsim(fname, constants_only=False):
     except IndexError:
         transposed = False
     else:
-        assert transposed or Aclass[3] == 'binNormal', ('The orientation of '
-            'the Dymola/OpenModelica results is not recognized.  The third '
-            'line of the "Aclass" variable is "%s", but it should be '
-            '"binNormal" or "binTrans".' % Aclass[3])
+        assert transposed or Aclass[3] == 'binNormal', (
+            'The orientation of the Dymola/OpenModelica results is not '
+            'recognized.  The third line of the "Aclass" variable is "%s", but '
+            'it should be "binNormal" or "binTrans".' % Aclass[3])
 
     # Get the format version.
     version = Aclass[1]
@@ -279,11 +280,12 @@ def loadsim(fname, constants_only=False):
     # If changes are made to this code, be sure to compare the performance
     # (e.g., using timeit in IPython).
     if version == '1.0':
-        d = mat['data'].T if transposed else mat['data']
-        times = d[:, 0]
+        data = mat['data'].T if transposed else mat['data']
+        times = data[:, 0]
         names = [chars_to_str(line)
                  for line in (mat['names'].T if transposed else mat['names'])]
-        variables = {name: Variable(Samples(times, d[:, i], False), '', '', '')
+        variables = {name: Variable(Samples(times, data[:, i], False),
+                                    '', '', '')
                      for i, name in enumerate(names)}
         variables = _VarDict(variables)
     else:
@@ -298,29 +300,31 @@ def loadsim(fname, constants_only=False):
         variables = _VarDict()
         for current_data_set in count(1):
             try:
-                d = (mat['data_%i' % current_data_set].T if transposed else
-                     mat['data_%i' % current_data_set])
+                data = (mat['data_%i' % current_data_set].T if transposed else
+                        mat['data_%i' % current_data_set])
             except KeyError:
                 break # There are no more "data_i" variables.
             else:
-                if d.shape[1] > 1: # It's possible that a data set is empty.
-                    times = d[:, 0]
+                if data.shape[1] > 1: # It's possible that a data set is empty.
+                    times = data[:, 0]
                     for i, (data_set, name) in enumerate(zip(data_sets, names)):
                         if data_set == current_data_set:
                             sign_col = dataInfo[1, i]
-                            variables[name] = Variable(Samples(times,
-                                                               d[:, abs(sign_col)-1],
-                                                               sign_col < 0),
-                                                       *parse(description[:, i]))
+                            variables[name] = \
+                                      Variable(Samples(times,
+                                                       data[:, abs(sign_col)-1],
+                                                       sign_col < 0),
+                                               *parse(description[:, i]))
 
         # Time is from the last data set.
-        variables['Time'] = Variable(Samples(times, times, False), 'Time', 's', '')
+        variables['Time'] = Variable(Samples(times, times, False),
+                                     'Time', 's', '')
 
     return variables
 
 
 def loadlin(fname):
-    """Load Dymola\ :sup:`®` or OpenModelica linearization results.
+    r"""Load Dymola\ :sup:`®` or OpenModelica linearization results.
 
     **Arguments:**
 
@@ -362,11 +366,11 @@ def loadlin(fname):
 
     # Check the type of results.
     if Aclass[0] == 'Atrajectory':
-       raise AssertionError('"%s" is a simulation result.  Use SimRes '
-                            'instead.' % fname)
+        raise AssertionError('"%s" is a simulation result.  Use SimRes '
+                             'instead.' % fname)
     else:
-       assert Aclass[0] == 'AlinearSystem', ('File "%s" is not a simulation '
-                                             'or linearization result.' % fname)
+        assert Aclass[0] == 'AlinearSystem', ('File "%s" is not a simulation or'
+                                              ' linearization result.' % fname)
 
     # Determine the number of states, inputs, and outputs.
     ABCD = mat['ABCD']
@@ -385,13 +389,15 @@ def loadlin(fname):
     xuyName = mat['xuyName']
     sys.state_names = [chars_to_str(xuyName[i]) for i in range(nx)]
     sys.input_names = [chars_to_str(xuyName[i]) for i in range(nx, nx+nu)]
-    sys.output_names = [chars_to_str(xuyName[i]) for i in range(nx+nu, nx+nu+ny)]
+    sys.output_names = [chars_to_str(xuyName[i]) for i in range(nx+nu,
+                                                                nx+nu+ny)]
 
     return sys
 
 
 if __name__ == '__main__':
-    """Test the contents of this file."""
+    # Test the contents of this file.
+
     import os
     import doctest
 
@@ -408,7 +414,8 @@ if __name__ == '__main__':
             os.symlink(example_dir, 'examples')
         except AttributeError:
             raise AttributeError("This method of testing isn't supported in "
-                                "Windows.  Use runtests.py in the base folder.")
+                                 "Windows.  Use runtests.py in the base "
+                                 "folder.")
 
         # Test the docstrings in this file.
         doctest.testmod()

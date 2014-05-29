@@ -31,7 +31,7 @@ def publish():
     """
     # TODO: finish this; move sitemap notification here.
 
-    branch = current branch
+    #branch = current branch
     os.system('git stash save "Work in progress while updating gh-pages"')
     os.system('git checkout gh-pages')
 
@@ -41,7 +41,7 @@ def publish():
         os.remove(f)
     for f in glob('build/html/*.html') + glob('*.inv'):
         os.copy(f, os.path.split(f))
-
+    """"TODO:
     cp -f doc/build/html/*.html ./
     cp -f doc/build/html/*.inv ./
     git add *.inv
@@ -75,11 +75,12 @@ def publish():
        os.system('git push origin gh-pages')
     git checkout branch
     git stash pop
-
+    """
     print("""If Optional: Update the sitemap using http://www.xml-sitemaps.com/.  Put
     it in the base folder of the *gh-pages* branch and push to origin again
     (``git push origin gh-pages``).  Update it in Google Webmaster tools
-    (https://www.google.com/webmasters/tools/sitemap-list?hl=en&siteUrl=http%3A%2F%2Fkdavies4.github.com%2FFCSys%2F#MAIN_TAB=1&CARD_TAB=-1)."""")
+    (https://www.google.com/webmasters/tools/sitemap-list?hl=en&siteUrl=http%3A%2F%2Fkdavies4.github.com%2FFCSys%2F#MAIN_TAB=1&CARD_TAB=-1).""")
+
 def spellcheck():
     """Spellcheck the HTML docs.
     """

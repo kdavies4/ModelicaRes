@@ -10,5 +10,6 @@ for f in tests/tests.txt `find modelicares -name "*.py"`; do
     fi
 done
 
-echo "All tests passed, but simres.SimRes.browse() and the bin/loadres script "
-echo "must be tested manually."
+echo "All tests passed, but simres.SimRes.browse(), the bin/loadres script, "
+echo "and the IPython notebooks (examples/tutorial.ipynb and "
+echo "examples/advanced.ipynb) must be tested manually."

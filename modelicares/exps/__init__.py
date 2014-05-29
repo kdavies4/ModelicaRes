@@ -78,23 +78,25 @@ import modelicares.util as util
 
 from modelicares.exps import doe
 
+#pylint: disable=C0103, R0913, R0914, W0102, W0120, W0142, W0631
 
-Experiment = namedtuple('Experiment', ['model', 'params', 'args'])
-"""namedtuple_ to represent a simulation experiment
+class Experiment(namedtuple('Experiment', ['model', 'params', 'args'])):
+    """namedtuple_ to represent a simulation experiment
 
-Instances of this class may be used in the *experiments* argument of
-:meth:`write_script` and :meth:`run_models`, although there are some
-differences in the entries (see those functions for details).
+    Instances of this class may be used in the *experiments* argument of
+    :meth:`write_script` and :meth:`run_models`, although there are some
+    differences in the entries (see those functions for details).
 
-**Example:**
+    **Example:**
 
-.. code-block:: python
+    .. code-block:: python
 
-   >>> from modelicares import Experiment
-   >>> experiment = Experiment('ChuaCircuit', params={'L.L': 18}, args={})
-   >>> experiment.model
-   'ChuaCircuit'
-"""
+       >>> from modelicares import Experiment
+       >>> experiment = Experiment('ChuaCircuit', params={'L.L': 18}, args={})
+       >>> experiment.model
+       'ChuaCircuit'
+    """
+    pass
 
 def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
     """Return a generator for a set of simulation experiments using permutation
@@ -216,19 +218,19 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
     """
     params = util.flatten_dict(params)
     i_args = len(params) + 1
-    experiment = lambda x: Experiment(
-                             model=x[0],
-                             params=ParamDict(zip(params.keys(), x[1:i_args])),
-                             args=dict(zip(args.keys(), x[i_args:])))
+    experiment = lambda x: Experiment(model=x[0],
+                                      params=ParamDict(zip(params.keys(),
+                                                           x[1:i_args])),
+                                      args=dict(zip(args.keys(), x[i_args:])))
     try:
         return (experiment(x) for x in
-                    design(*([models] + params.values() + args.values())))
+                design(*([models] + params.values() + args.values())))
     except TypeError:
         print("Error in call to gen_experiments(): models and all of the "
               "entries in params and args must be lists.")
 
-def modelica_str(x):
-    """Express a Python_ variable as a Modelica_ string
+def modelica_str(value):
+    """Express a Python_ value as a Modelica_ string
 
     A Boolean variable (:class:`bool`) becomes 'true' or 'false' (lowercase).
 
@@ -259,18 +261,18 @@ def modelica_str(x):
        >>> modelica_str(array([[True, True], [False, False]]))
        '{{true, true}, {false, false}}'
     """
-    if isinstance(x, bool):
-        return 'true' if x else 'false'
-    elif isinstance(x, np.ndarray):
-        x = str(x)
-        for old, new in [('\[', '{'), ('\]', '}'), (r'\n', ''),
+    if isinstance(value, bool):
+        return 'true' if value else 'false'
+    elif isinstance(value, np.ndarray):
+        value = str(value)
+        for old, new in [(r'\[', '{'), (r'\]', '}'), (r'\n', ''),
                          (' ?True', 'true'), ('False', 'false'), (' +', ', ')]:
             # Python 2.7 puts an extra space before True when representing an
             # array.
-            x = re.sub(old, new, x)
-        return x
+            value = re.sub(old, new, value)
+        return value
     else:
-        return str(x)
+        return str(value)
 
 def read_params(names, fname='dsin.txt'):
     """Read parameter values from an initialization or final values file (e.g.,
@@ -295,9 +297,9 @@ def read_params(names, fname='dsin.txt'):
        [18.0, 10.0]
     """
     # Aliases for some regular subexpressions
-    u = '\d+' # Unsigned integer
+    u = r'\d+' # Unsigned integer
     i = '[+-]?' + u # Integer
-    f = i + '(?:\.' + u + ')?(?:[Ee][+-]' + u + ')?' # Floating point number
+    f = i + r'(?:\.' + u + ')?(?:[Ee][+-]' + u + ')?' # Floating point number
 
     # Possible regular expressions for a parameter specification (with '%s' for
     # the parameter name)
@@ -348,7 +350,7 @@ def read_params(names, fname='dsin.txt'):
         for pattern in patterns:
             try:
                 return float(re.search(pattern % namere, text,
-                             re.MULTILINE).group(1))
+                                       re.MULTILINE).group(1))
             except AttributeError:
                 pass # Try the next pattern.
         else:
@@ -363,9 +365,8 @@ def read_params(names, fname='dsin.txt'):
 
 
 def run_models(experiments=[(None, {}, {})],
-               filemap = {'dslog.txt': '%s_%i.log',
-                          'dsres.mat': '%s_%i.mat'}):
-    """Run Modelica_ models via pairs of executables and initialization files.
+               filemap={'dslog.txt': '%s_%i.log', 'dsres.mat': '%s_%i.mat'}):
+    r"""Run Modelica_ models via pairs of executables and initialization files.
 
     .. Warning:: This function has not yet been implemented.
 
@@ -486,23 +487,25 @@ def write_params(params, fname='dsin.txt'):
     for key, value in params.items():
         if isinstance(value, bool):
             params[key] = 1 if value else 0
-        assert not isinstance(value, np.ndarray), ("Arrays must be split "
-            "into scalars for the simulation initialization file.")
-        assert not isinstance(value, string_types), ("Strings cannot be "
-            "used as values in the simulation initialization file.")
+        assert not isinstance(value, np.ndarray), (
+            "Arrays must be split into scalars for the simulation "
+            "initialization file.")
+        assert not isinstance(value, string_types), (
+            "Strings cannot be used as values in the simulation initialization "
+            "file.")
 
     # Aliases for some regular subexpressions
-    u = '\d+' # Unsigned integer
+    u = r'\d+' # Unsigned integer
     i = '[+-]?' + u # Integer
-    f = i + '(?:\.' + u + ')?(?:[Ee][+-]' + u + ')?' # Floating point number
+    f = i + r'(?:\.' + u + ')?(?:[Ee][+-]' + u + ')?' # Floating point number
 
     # Possible regular expressions for a parameter specification (with '%s' for
     # the parameter name)
     patterns = [# Dymola 1- or 2-line parameter specification
                 (r'(^\s*%s\s+)%s(\s+%s\s+%s\s+%s\s+%s\s*#\s*%s\s*$)'
                  % (i, f, f, f, u, u, '%s')),
-                (r'(^\s*)' + i + '(\s*#\s*%s)'),
-                (r'(^\s*)' + f + '(\s*#\s*%s)'),
+                r'(^\s*)' + i + r'(\s*#\s*%s)',
+                r'(^\s*)' + f + r'(\s*#\s*%s)',
                 # See read_params() for a description of the columns.
                ]
     # These are tried in order until there is a match.  The first group or pair
@@ -518,9 +521,9 @@ def write_params(params, fname='dsin.txt'):
     for name, value in params.items():
         namere = re.escape(name) # Escape the dots, square brackets, etc.
         for pattern in patterns:
-            text, n = re.subn(pattern % namere, r'\g<1>%s\2' % value, text, 1,
-                              re.MULTILINE)
-            if n == 1:
+            text, num = re.subn(pattern % namere, r'\g<1>%s\2' % value, text, 1,
+                                re.MULTILINE)
+            if num == 1:
                 break
         else:
             raise AssertionError(
@@ -537,7 +540,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
                  command='simulateModel',
                  results=['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x',
                           'dymolalg.txt']):
-    """Write a Modelica_ script to run simulations.
+    r"""Write a Modelica_ script to run simulations.
 
     **Arguments**:
 
@@ -709,7 +712,8 @@ def write_script(experiments=[(None, {}, {})], packages=[],
                   % date.isoformat(date.today()))
         mos.write('import Modelica.Utilities.Files.copy;\n')
         mos.write('import Modelica.Utilities.Files.createDirectory;\n')
-        mos.write('Advanced.TranslationInCommandLog = true "Also include translation log in command log";\n')
+        mos.write('Advanced.TranslationInCommandLog = true "Also include '
+                  'translation log in command log";\n')
         mos.write('cd("%s");\n' % working_dir)
         for package in packages:
             if package.endswith('.mos'):
@@ -719,7 +723,8 @@ def write_script(experiments=[(None, {}, {})], packages=[],
                 if package.endswith('.mo'):
                     mos.write('openModel("%s");\n' % package)
                 else:
-                    mos.write('openModel("%s");\n' % os.path.join(package, 'package.mo'))
+                    mos.write('openModel("%s");\n' % os.path.join(package,
+                                                                  'package.mo'))
                 mos.write('cd("%s");\n' % working_dir)
         mos.write('destination = "%s";\n'
                   % (os.path.normpath(results_dir) + os.path.sep))
@@ -739,7 +744,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
             mos.write('// Experiment %i\n' % i)
             if model:
                 params = ParamDict(util.flatten_dict(params))
-                args['problem'] =  '"%s%s"' % (model, params)
+                args['problem'] = '"%s%s"' % (model, params)
             if args:
                 mos.write('ok = %s%s;\n' % (command, ParamDict(args)))
             else:
@@ -802,7 +807,8 @@ class ParamDict(dict):
            >>> print(d)
            (a=1, b(c={2, 3}, e="hello", d=false))
 
-           # The formal representation (and the internal structure) is unaffected:
+           # The formal representation (and the internal structure) is
+           # unaffected:
            >>> d
            {'a': 1, 'b.c': array([2, 3]), 'b.f': None, 'b.e': '"hello"', 'b.d': False}
 
@@ -811,7 +817,7 @@ class ParamDict(dict):
 
         .. _Python: http://www.python.org/
         """
-        def _str(d):
+        def _str(dictionary):
             """Return a string representation of a dictionary in the form of
             tuple-based modifiers (e.g., (a=1, b(c={2, 3}, d=false))).
 
@@ -819,7 +825,7 @@ class ParamDict(dict):
             arrays in Modelica_.
             """
             elements = []
-            for key, value in d.items():
+            for key, value in dictionary.items():
                 if isinstance(value, ParamDict):
                     elements.append('%s%s' % (key, value))
                 elif value is not None:
@@ -845,7 +851,8 @@ class ParamDict(dict):
 
 
 if __name__ == '__main__':
-    """Test the contents of this file."""
+    # Test the contents of this file.
+
     import doctest
 
     if os.path.isdir('examples'):
@@ -861,7 +868,8 @@ if __name__ == '__main__':
             os.symlink(example_dir, 'examples')
         except AttributeError:
             raise AttributeError("This method of testing isn't supported in "
-                                "Windows.  Use runtests.py in the base folder.")
+                                 "Windows.  Use runtests.py in the base "
+                                 "folder.")
 
         # Test the docstrings in this file.
         doctest.testmod()

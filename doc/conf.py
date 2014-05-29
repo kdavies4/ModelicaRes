@@ -42,6 +42,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.pngmath',
               'matplotlib.sphinxext.plot_directive'
              ]
+# Note: sphinx.ext.autosummary produces a table, but I'd rather have a bulleted
+# list.
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

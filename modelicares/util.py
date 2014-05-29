@@ -82,7 +82,6 @@ from collections import MutableMapping
 from decimal import Decimal
 from fnmatch import fnmatchcase
 from functools import wraps
-from glob import glob
 from itertools import cycle
 from math import floor
 from matplotlib import rcParams
@@ -91,6 +90,9 @@ from matplotlib.cbook import iterable
 from matplotlib.lines import Line2D
 from re import compile as re_compile
 from six import string_types
+
+#pylint: disable=C0302, C0103, C0302, C0325, R0904, R0912, R0913, R0914, W0102,
+#pylint: disable=W0141, W0142, W0621
 
 # Load the getSaveFileName function from an available Qt installation.
 try:
@@ -113,14 +115,13 @@ except:
 # Function to close all open figures
 closeall = Gcf.destroy_all
 
-def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
-               lstar=0.05, label='',
-               orientation='tangent', color='r'):
+def add_arrows(plot, x_locs=[0], xstar_offset=0, ystar_offset=0,
+               lstar=0.05, label='', orientation='tangent', color='r'):
     """Overlay arrows with annotations on a pre-plotted line.
 
     **Arguments:**
 
-    - *p*: A plot instance (:class:`matplotlib.lines.Line2D` object)
+    - *plot*: A plot instance (:class:`matplotlib.lines.Line2D` object)
 
     - *x_locs*: x-axis locations of the arrows
 
@@ -146,9 +147,9 @@ def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
     from math import atan, cos, sin
 
     # Get data from the plot lines object.
-    x_dat = plt.getp(p, 'xdata')
-    y_dat = plt.getp(p, 'ydata')
-    ax = p.get_axes()
+    x_dat = plt.getp(plot, 'xdata')
+    y_dat = plt.getp(plot, 'ydata')
+    ax = plot.get_axes()
     Deltax = np.diff(ax.get_xlim())[0]
     Deltay = np.diff(ax.get_ylim())[0]
 
@@ -191,7 +192,7 @@ def add_arrows(p, x_locs=[0], xstar_offset=0, ystar_offset=0,
 
 
 def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
-    """Add horizontal lines to a set of axes with optional labels.
+    r"""Add horizontal lines to a set of axes with optional labels.
 
     **Arguments:**
 
@@ -215,7 +216,7 @@ def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
     if not ax:
         ax = plt.gca()
     if not iterable(positions):
-        xpositions = (xpositions,)
+        positions = (positions,)
     if not iterable(labels):
         labels = (labels,)
 
@@ -229,7 +230,7 @@ def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
 
 
 def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
-    """Add vertical lines to a set of axes with optional labels.
+    r"""Add vertical lines to a set of axes with optional labels.
 
     **Arguments:**
 
@@ -266,21 +267,21 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
                 horizontalalignment='center', verticalalignment='center')
 
 
-def cast_sametype(f):
+def cast_sametype(func):
     """Decorator to cast the output of a method as an instance of the
     containing class.
     """
-    @wraps(f)
+    @wraps(func)
     def wrapped(self, *args, **kwargs):
         """Function that casts its output as self.__class__
         """
-        return self.__class__(f(self, *args, **kwargs))
+        return self.__class__(func(self, *args, **kwargs))
 
     return wrapped
 
 
 def color(ax, c, *args, **kwargs):
-    """Plot 2D scalar data on a color axis in 2D Cartesian coordinates.
+    r"""Plot 2D scalar data on a color axis in 2D Cartesian coordinates.
 
     This uses a uniform grid.
 
@@ -301,7 +302,8 @@ def color(ax, c, *args, **kwargs):
        >>> import matplotlib.pyplot as plt
        >>> from modelicares import util
 
-       >>> x, y = np.meshgrid(np.arange(0, 2*np.pi, 0.2), np.arange(0, 2*np.pi, 0.2))
+       >>> x, y = np.meshgrid(np.arange(0, 2*np.pi, 0.2),
+       ...                    np.arange(0, 2*np.pi, 0.2))
        >>> c = np.cos(x) + np.sin(y)
 
        >>> fig = plt.figure()
@@ -331,7 +333,7 @@ def expand_path(path):
 
 
 def figure(label='', *args, **kwargs):
-    """Create a figure and set its label.
+    r"""Create a figure and set its label.
 
     **Arguments:**
 
@@ -556,7 +558,7 @@ def get_pow1000(num):
 
 
 def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
-    """Load a CSV file into a dictionary.
+    r"""Load a CSV file into a dictionary.
 
     The strings from the header row are used as dictionary keys.
 
@@ -695,9 +697,9 @@ def match(strings, pattern=None, re=False):
 def plot(y, x=None, ax=None, label=None,
          color=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
          marker=None,
-         dashes=[(None,None), (3,3), (1,1), (3,2,1,2)],
+         dashes=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)],
          **kwargs):
-    """Plot 1D scalar data as points and/or line segments in 2D Cartesian
+    r"""Plot 1D scalar data as points and/or line segments in 2D Cartesian
     coordinates.
 
     This is similar to :meth:`matplotlib.pyplot.plot` (and actually calls that
@@ -807,8 +809,8 @@ def plot(y, x=None, ax=None, label=None,
 
 
 def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
-    """Plot 2D vector data as arrows in 2D Cartesian coordinates using a uniform
-    grid.
+    r"""Plot 2D vector data as arrows in 2D Cartesian coordinates using a
+    uniform grid.
 
     **Arguments:**
 
@@ -1065,8 +1067,10 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
 
     # Create the figure.
     subplotpars = SubplotParams(left=left, top=1-top,
-                                right=1-(cbar if ctype == 'vertical' else right),
-                                bottom=cbar if ctype == 'horizontal' else bottom,
+                                right=1 - (cbar if ctype == 'vertical'
+                                           else right),
+                                bottom=(cbar if ctype == 'horizontal'
+                                        else bottom),
                                 wspace=hspace, hspace=vspace)
     fig = figure(label, subplotpars=subplotpars)
     fig.suptitle(t=title, fontsize=rcParams['axes.titlesize'])
@@ -1080,7 +1084,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
     for i in range(n_plots):
         # Create the axes.
         i_col = np.mod(i, n_cols)
-        i_row = (i - i_col)/n_cols
+        #i_row = (i - i_col)/n_cols
         a = fig.add_subplot(n_rows, n_cols, i+1)
         ax.append(a)
 
@@ -1111,14 +1115,14 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
     # Add the colorbar.
     if ctype:
         if ctype == 'vertical':
-            #fig.subplots_adjust(left=left, bottom=top, right=1-cbar, top=1-top,
-            #                    hspace=hspace, vspace=vspace)
+            #fig.subplots_adjust(left=left, bottom=top, right=1-cbar,
+            #                    top=1-top, hspace=hspace, vspace=vspace)
             cax = fig.add_axes([1 - cbar + cbar_space, bottom,
                                 cbar_width, 1 - bottom - top])
             #cax.set_ylabel(clabel)
         else:
-            #fig.subplots_adjust(left=left, bottom=cbar, right=1-left, top=1-top,
-            #                    hspace=hspace, vspace=vspace)
+            #fig.subplots_adjust(left=left, bottom=cbar, right=1-left,
+            #                    top=1-top, hspace=hspace, vspace=vspace)
             cax = fig.add_axes([left,
                                 cbar - cbar_space - cbar_width,
                                 1 - left - right, cbar_width])
@@ -1153,8 +1157,6 @@ def _shift_scale_c(cbar, vmin, vmax, eagerness=0.325):
     # accessed 2010/11/10
     label = cbar.ax.get_ylabel()
     ticks = cbar.ax.get_yticks()
-    offset, offset_factor, offset_pow1000, pow1000 = _gen_offset_factor(vmin,
-                                                                        vmax)
     label, offset, pow1000 = _gen_offset_factor(label, vmin, vmax, eagerness)
     cbar.set_ticklabels(["%.1f" % x for x in (ticks - offset)/1000**pow1000])
     cbar.set_label(label)
@@ -1302,10 +1304,10 @@ class ArrowLine(Line2D):
 
     arrows = {'>' : '_draw_triangle_arrow'}
     _arrow_path = Path([[0.0, 0.0], [-1.0, 1.0], [-1.0, -1.0], [0.0, 0.0]],
-                       [Path.MOVETO, Path.LINETO,Path.LINETO, Path.CLOSEPOLY])
+                       [Path.MOVETO, Path.LINETO, Path.LINETO, Path.CLOSEPOLY])
 
     def __init__(self, *args, **kwargs):
-        """Initialize the line and arrow.
+        r"""Initialize the line and arrow.
 
         **Arguments:**
 
@@ -1380,8 +1382,8 @@ class ArrowLine(Line2D):
         length = renderer.points_to_pixels(self._arrowheadlength)
         transform = Affine2D().scale(length, halfwidth).rotate(angle)\
                                                        .translate(endx, endy)
-        rgbFace = self._get_rgb_arrowface()
-        renderer.draw_path(gc, self._arrow_path, transform, rgbFace)
+        rgb_face = self._get_rgb_arrowface()
+        renderer.draw_path(gc, self._arrow_path, transform, rgb_face)
 
     def _get_rgb_arrowface(self):
         """Get the color of the arrow face.
@@ -1391,29 +1393,30 @@ class ArrowLine(Line2D):
 
         facecolor = self._arrowfacecolor
         if is_string_like(facecolor) and facecolor.lower() == 'none':
-            rgbFace = None
+            rgb_face = None
         else:
-            rgbFace = colorConverter.to_rgb(facecolor)
-        return rgbFace
+            rgb_face = colorConverter.to_rgb(facecolor)
+        return rgb_face
 
 
 if __name__ == "__main__":
-    """Test the contents of this file."""
-    import os
+    # Test the contents of this file.
+
     import doctest
 
     if os.path.isdir('examples'):
         doctest.testmod()
     else:
         # Create a link to the examples folder.
-        example_dir = '../examples'
-        if not os.path.isdir(example_dir):
+        EXAMPLE_DIR = '../examples'
+        if not os.path.isdir(EXAMPLE_DIR):
             raise IOError("Could not find the examples folder.")
         try:
-            os.symlink(example_dir, 'examples')
+            os.symlink(EXAMPLE_DIR, 'examples')
         except AttributeError:
             raise AttributeError("This method of testing isn't supported in "
-                                "Windows.  Use runtests.py in the base folder.")
+                                 "Windows.  Use runtests.py in the base "
+                                 "folder.")
 
         # Test the docstrings in this file.
         doctest.testmod()

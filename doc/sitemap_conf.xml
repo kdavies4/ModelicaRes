@@ -37,7 +37,7 @@
 -->
  <site
   base_url="http://kdavies4.github.io/ModelicaRes/"
-  store_into="build/html/sitemap.xml"
+  store_into="sitemap.xml"
   verbose="1"
   sitemap_type="web"
  >
@@ -66,7 +66,7 @@
   -->
 
   <directory
-     path="build/html/"
+     path="../"
      url="http://kdavies4.github.io/ModelicaRes/"
      default_file="index.html"
      remove_empty_directories="true"
@@ -102,16 +102,22 @@
   they are.
   ********************************************************* -->
 
-  <!-- Exclude URLs that end with a '~'   (IE: emacs backup files)      -->
-  <filter  action="drop"  type="wildcard"  pattern="*~"           />
-
-  <!-- Exclude URLs within UNIX-style hidden files or directories       -->
-  <filter action="drop" type="regexp"   pattern="/\.[^/]*"     />
-  <filter action="drop" type="wildcard" pattern="*icons*" />
-  <filter action="drop" type="wildcard" pattern="*logos*" />
-  <filter action="drop" type="wildcard" pattern="*todo*" />
-  <filter action="drop" type="wildcard" pattern="*Easter*" />
-  <filter action="drop" type="wildcard" pattern="*/help/help/*" />
-  <filter action="drop" type="wildcard" pattern="*/press/*.gif" />
-
+  <filter action="drop" type="wildcard" pattern="*.css" />
+  <filter action="drop" type="wildcard" pattern="*.ico" />
+  <filter action="drop" type="wildcard" pattern="*.inv" />
+  <filter action="drop" type="wildcard" pattern="*.js" />
+  <filter action="drop" type="wildcard" pattern="*.xml" />
+  <filter action="drop" type="wildcard" pattern="*images/math/" />
+  <filter action="drop" type="wildcard" pattern="*images/math/*.png" />
+  <filter action="drop" type="wildcard" pattern="*_sources/*" />
+  <filter action="drop" type="wildcard" pattern="*_static/" />
+  <filter action="drop" type="wildcard" pattern="*_static/ajax-loader*" />
+  <filter action="drop" type="wildcard" pattern="*_static/comment*" />
+  <filter action="drop" type="wildcard" pattern="*_static/contents*" />
+  <filter action="drop" type="wildcard" pattern="*_static/down*" />
+  <filter action="drop" type="wildcard" pattern="*_static/file*" />
+  <filter action="drop" type="wildcard" pattern="*_static/minus*" />
+  <filter action="drop" type="wildcard" pattern="*_static/navigation*" />
+  <filter action="drop" type="wildcard" pattern="*_static/plus*" />
+  <filter action="drop" type="wildcard" pattern="*_static/up*" />
 </site>

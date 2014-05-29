@@ -21,23 +21,25 @@ import re
 
 from modelicares.util import si_prefix
 
+#pylint: disable=C0103, W0622
 
 # Special replacements for unit strings in tex
-rpls = [(re.compile(rpl[0]), rpl[1])
-        for rpl in
-        [('degC', '^{\circ}C'),
-         ('degF', '^{\circ}F'),
-         ('%', r'\%'),
-         ('ohm', r'\Omega'),
-         ('angstrom', r'\AA'),
-         ('pi', r'\pi'),
-         ('alpha', r'\alpha'),
-         ('Phi', r'\Phi'),
-         ('mu', r'\mu'),
-         ('epsilon', r'\epsilon')]]
+REPLACEMENTS = [(re.compile(replacement[0]), replacement[1])
+                for replacement in
+                [('degC', r'^{\circ}C'),
+                 ('degF', r'^{\circ}F'),
+                 ('%', r'\%'),
+                 ('ohm', r'\Omega'),
+                 ('angstrom', r'\AA'),
+                 ('pi', r'\pi'),
+                 ('alpha', r'\alpha'),
+                 ('Phi', r'\Phi'),
+                 ('mu', r'\mu'),
+                 ('epsilon', r'\epsilon')]]
 
 
-def number_label(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
+def number_label(quantity="", unit=None, times=r'\,', per=r'\,/\,',
+                 roman=False):
     r"""Return a string to label a number, specifically a quantity in a unit
 
     The unit is formatted with LaTeX_ as needed.
@@ -93,7 +95,7 @@ def number_label(quantity="", unit=None, times='\,', per='\,/\,', roman=False):
     else:
         return quantity
 
-def quantity_str(number, unit='', format='%G', times='\,', roman=True):
+def quantity_str(number, unit='', format='%G', times=r'\,', roman=True):
     r"""Generate a string to write a quantity as a number times a unit.
 
     If an exponent is present, then either a LaTeX-formatted exponential or a
@@ -169,6 +171,9 @@ def quantity_str(number, unit='', format='%G', times='\,', roman=True):
     # Use LaTeX formatting or SI prefixes if an exponent is present.
     try: # to format the exponent in LaTeX.
         significand, exponent = numstr.split('e')
+    except ValueError:
+        pass # since no exponent.
+    else:
         if use_SI:
             e = int(exponent)
             if e >= 0:
@@ -181,15 +186,13 @@ def quantity_str(number, unit='', format='%G', times='\,', roman=True):
         if not use_SI or exponent != '+00': # Use LaTeX formatting.
             exponent = (exponent[0] + exponent[1:].lstrip('0')).lstrip('+')
             numstr = significand + r'$\times10^{' + exponent + '}$'
-    except:
-        pass # since no exponent.
     if unit:
-        return numstr + '$\,' + unit2tex(unit, times, roman) + '$'
+        return numstr + r'$\,' + unit2tex(unit, times, roman) + '$'
     else:
         return numstr
 
 
-def unit2tex(unit, times='\,', roman=False):
+def unit2tex(unit, times=r'\,', roman=False):
     r"""Convert a Modelica_ unit string to LaTeX_.
 
     **Arguments:**
@@ -256,16 +259,17 @@ def unit2tex(unit, times='\,', roman=False):
             unit = _process_group(unit, times)
 
         # Make the special replacements.
-        for rpl in rpls:
+        for rpl in REPLACEMENTS:
             unit = rpl[0].sub(rpl[1], unit)
 
         if roman:
-            unit = '\mathrm{%s}' % unit
+            unit = r'\mathrm{%s}' % unit
 
     return unit
 
 
 if __name__ == '__main__':
-    """Test the contents of this file."""
+    # Test the contents of this file.
+
     import doctest
     doctest.testmod()

@@ -99,11 +99,11 @@ def load(*args):
     fnames = set()
     for arg in args:
         globbed = glob(arg)
-        for g in globbed:
-            if os.path.isdir(g):
-                fnames = fnames.union(set(glob(os.path.join(g, '*.mat'))))
+        for path in globbed:
+            if os.path.isdir(path):
+                fnames = fnames.union(set(glob(os.path.join(path, '*.mat'))))
             else:
-                fnames = fnames.add(g)
+                fnames = fnames.add(path)
 
     # Load the files and append each result onto the appropriate list.
     sims = SimResList()
@@ -123,7 +123,8 @@ def load(*args):
 
 
 if __name__ == '__main__':
-    """Test the contents of this file."""
+    # Test the contents of this file.
+
     import os
     import doctest
 
@@ -131,14 +132,15 @@ if __name__ == '__main__':
         doctest.testmod(raise_on_error=True)
     else:
         # Create a link to the examples folder.
-        example_dir = '../examples'
-        if not os.path.isdir(example_dir):
+        EXAMPLE_DIR = '../examples'
+        if not os.path.isdir(EXAMPLE_DIR):
             raise IOError("Could not find the examples folder.")
         try:
-            os.symlink(example_dir, 'examples')
+            os.symlink(EXAMPLE_DIR, 'examples')
         except AttributeError:
             raise AttributeError("This method of testing isn't supported in "
-                                "Windows.  Use runtests.py in the base folder.")
+                                 "Windows.  Use runtests.py in the base "
+                                 "folder.")
 
         # Test the docstrings in this file.
         doctest.testmod()

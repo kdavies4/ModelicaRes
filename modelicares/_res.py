@@ -15,18 +15,18 @@ from functools import wraps
 from modelicares.util import cast_sametype
 
 
-def check_sametype(f):
+def check_sametype(func):
     """Decorator that checks that an argument to a method is also an instance of
     the containing class
     """
-    @wraps(f)
+    @wraps(func)
     def wrapped(self, other):
         """Method that can only operate on an instance of the containing class
         """
         if not isinstance(other, self.__class__):
-           raise TypeError("A {obj} can only be combined with another "
-                           "{obj}.".format(obj=self.__class__.__name__))
-        return f(self, other)
+            raise TypeError("A {obj} can only be combined with another "
+                            "{obj}.".format(obj=self.__class__.__name__))
+        return func(self, other)
 
     return wrapped
 
@@ -44,7 +44,8 @@ class ResList(list):
         """x.__getitem__(y) <==> x[y]
         """
         if isinstance(i, slice):
-            return self.__class__(list.__getitem__(self, i)) # Cast as same type.
+            # Cast as the same type.
+            return self.__class__(list.__getitem__(self, i))
         else:
             return list.__getitem__(self, i)
 
@@ -59,7 +60,7 @@ class ResList(list):
     def __radd__(self, value):
         """Return value+self.
         """
-        return other + self
+        return value + self
 
     @cast_sametype
     def __rmul__(self, n):
@@ -105,6 +106,7 @@ class ResList(list):
         return self
 
 if __name__ == '__main__':
-    """Test the contents of this file."""
+    # Test the contents of this file.
+
     import doctest
     doctest.testmod()

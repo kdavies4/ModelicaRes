@@ -6,7 +6,7 @@
 # This file has been modified from version 0.6d of control.freqplot (license
 # below):
 # 1.  Added label and axes arguments to bode_plot()
-# 2.  Added label, mark, show_axes, textFreq and ax arguments to nyquist_plot()
+# 2.  Added label, mark, show_axes, text_freq and ax arguments to nyquist_plot()
 # 3.  Updated the docstrings
 # 4.  The default_frequency_range function is imported from the freqplot
 #     submodule of the installed control package.
@@ -70,10 +70,11 @@ from control.freqplot import default_frequency_range
 from modelicares.util import get_pow1000, si_prefix, add_hlines, add_vlines
 from modelicares.texunit import number_label
 
+#pylint: disable=C0103, R0913, R0914
 
 def bode_plot(sys, omega=None, dB=False, Hz=False, deg=True, label=None,
               axes=None, *args, **kwargs):
-    """Create a Bode plot for a system.
+    r"""Create a Bode plot for a system.
 
     **Arguments:**
 
@@ -123,8 +124,8 @@ def bode_plot(sys, omega=None, dB=False, Hz=False, deg=True, label=None,
         omega = default_frequency_range(sys)
 
     if sys.inputs > 1 or sys.outputs > 1:
-        raise NotImplementedError(
-                "This function is currently only implemented for SISO systems.")
+        raise NotImplementedError("This function is currently only implemented "
+                                  "for SISO systems.")
         # TODO: Support MIMO.
 
     # Get the magnitude and phase of the system.
@@ -160,15 +161,15 @@ def bode_plot(sys, omega=None, dB=False, Hz=False, deg=True, label=None,
     # Add a grid and labels.
     axes[1].grid(True)
     axes[1].grid(True, which='minor')
-    axes[1].set_xlabel(number_label("Frequency" , "Hz" if Hz else "rad/s"))
+    axes[1].set_xlabel(number_label("Frequency", "Hz" if Hz else "rad/s"))
     axes[1].set_ylabel("Phase / deg" if deg else "Phase / rad")
 
     return mag, phase, omega, axes
 
 
 def nyquist_plot(sys, omega=None, label=None, mark=False, show_axes=True,
-                 labelFreq=0, textFreq=True, ax=None, *args, **kwargs):
-    """Create a Nyquist plot for a system.
+                 skip=0, text_freq=True, ax=None, *args, **kwargs):
+    r"""Create a Nyquist plot for a system.
 
     **Arguments:**
 
@@ -182,9 +183,9 @@ def nyquist_plot(sys, omega=None, label=None, mark=False, show_axes=True,
 
     - *show_axes*: *True*, if the axes should be shown
 
-    - *labelFreq*: Label every nth frequency on the plot (int)
+    - *skip*: Label every nth frequency on the plot (int)
 
-    - *textFreq*: If *True*, if the frequency labels should include text
+    - *text_freq*: If *True*, if the frequency labels should include text
 
          Otherwise, just dots are used.
 
@@ -217,8 +218,8 @@ def nyquist_plot(sys, omega=None, label=None, mark=False, show_axes=True,
        >>> x, y, omega, ax = nyquist_plot(sys)
     """
     if sys.inputs > 1 or sys.outputs > 1:
-        raise NotImplementedError(
-                "This function is currently only implemented for SISO systems.")
+        raise NotImplementedError("This function is currently only implemented "
+                                  "for SISO systems.")
         # TODO: Support MIMO.
 
     if omega is None:
@@ -262,20 +263,20 @@ def nyquist_plot(sys, omega=None, label=None, mark=False, show_axes=True,
         add_vlines(ax, color='k', linestyle='--', linewidth=0.5)
 
     # Label the frequencies.
-    if labelFreq:
-        for xpt, ypt, omegapt in zip(x[::labelFreq], y[::labelFreq], omega[::labelFreq]):
+    if skip:
+        for xpt, ypt, omegapt in zip(x[::skip], y[::skip], omega[::skip]):
             # Convert to Hz.
-            f = omegapt/(2*np.pi)
+            freq = omegapt/(2*np.pi)
 
             # Get the SI prefix.
-            pow1000 = max(min(get_pow1000(f), 8), -8)
+            pow1000 = max(min(get_pow1000(freq), 8), -8)
             prefix = si_prefix(pow1000)
 
             # Apply the text.
             # Use a space before the text to prevent overlap with the data.
-            if textFreq:
+            if text_freq:
                 ax.text(xpt, ypt,
-                        ' ' + str(int(np.round(f/1000**pow1000, 0))) +
+                        ' ' + str(int(np.round(freq/1000**pow1000, 0))) +
                         ' ' + prefix + 'Hz')
                 # np.round() is used because 0.99... appears instead of 1.0, and
                 # this would otherwise be truncated to 0.

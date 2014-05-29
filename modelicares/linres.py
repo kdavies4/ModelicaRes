@@ -34,23 +34,62 @@ from modelicares._res import ResList
 
 # File loading functions
 from modelicares._io.dymola import loadlin as dymola
-loaders = [('dymola', dymola)] # LinRes tries these in order.
+LOADERS = [('dymola', dymola)] # LinRes tries these in order.
 # All of the keys should be in lowercase.
 
+#pylint: disable=C0103, C0325, R0913, R0914, W0102, W0142
 
-def _get_lins(fnames):
-    """Return a list of :class:`LinRes` instances from a list of filenames.
+def _from_names(func):
+    """Return a method that accepts names or indices to identify system inputs
+    and outputs, given a method that only accepts indices (*func*).
 
-    No errors are given unless no files could be loaded.
+    I.e., a decorator to accept names or indices to identify inputs and outputs
     """
-    lins = []
-    for fname in fnames:
-        try:
-            lins.append(LinRes(fname))
-        except:
-            continue
-    assert len(lins) > 0, "No linearizations were loaded."
-    return lins
+    @wraps(func)
+    def wrapped(cls, iu=None, iy=None):
+        """Method that accepts names or indices to identify system inputs and
+        outputs
+
+        **Arguments:**
+
+        - *iu*: Index or name of the input
+
+             This must be specified unless the system has only one input.
+
+        - *iy*: Index or name of the output
+
+             This must be specified unless the system has only one output.
+        """
+        # Get the input index.
+        if iu is None:
+            if len(cls.sys.input_names) == 1:
+                iu = 0
+            else:
+                raise IndexError("iu must be specified since this is a MI "
+                                 "system.")
+        elif not isinstance(iu, int):
+            try:
+                iu = cls.sys.input_names.index(iu)
+            except ValueError:
+                raise ValueError('The input "%s" is invalid.' % iu)
+
+        # Get the output index.
+        if iy is None:
+            if len(cls.sys.output_names) == 1:
+                iy = 0
+            else:
+                raise IndexError("iy must be specified since this is a MO "
+                                 "system.")
+        elif not isinstance(iy, int):
+            try:
+                iy = cls.sys.output_names.index(iy)
+            except ValueError:
+                raise ValueError('The output "%s" is invalid.' % iy)
+
+        return func(cls, iu, iy)
+
+    return wrapped
+
 
 class LinRes(object):
     """Class for Modelica_-based linearization results and methods to analyze
@@ -63,7 +102,7 @@ class LinRes(object):
          The file must contain four matrices:  *Aclass* (specifies the class
          name, which must be "AlinearSystem"), *nx*, *xuyName*, and *ABCD*.
 
-    - *tool*: String indicating the simulation tool that created the file
+    - *tool*: String indicating the linearization tool that created the file
       and thus the function to be used to load it
 
          By default, the available functions are tried in order until one
@@ -77,6 +116,9 @@ class LinRes(object):
       without the directory or file extension.
 
     - :meth:`nyquist` - Create a Nyquist plot of the system's response.
+
+    - :meth:`to_siso` - Return a SISO state-space system given input and output
+      names.
 
     - :meth:`to_tf` - Return a transfer function given input and output names.
 
@@ -125,7 +167,7 @@ class LinRes(object):
         # Load the file.
         if tool is None:
             # Load the file and store the data.
-            for (tool, load) in loaders[:-1]:
+            for (tool, load) in LOADERS[:-1]:
                 try:
                     self.sys = load(fname)
                 except IOError:
@@ -137,14 +179,15 @@ class LinRes(object):
                     continue
                 else:
                     break
-            (tool, load) = loaders[-1]
+            (tool, load) = LOADERS[-1]
         else:
-            loaderdict = dict(loaders)
+            loaderdict = dict(LOADERS)
             try:
                 load = loaderdict[tool.lower()]
             except:
-                raise LookupError('"%s" is not one of the available tools ("%s").'
-                                  % (tool, '", "'.join(list(loaderdict))))
+                raise LookupError('"%s" is not one of the available tools '
+                                  '("%s").' % (tool,
+                                               '", "'.join(list(loaderdict))))
         self.sys = load(fname)
 
         # Remember the tool and filename.
@@ -180,8 +223,7 @@ class LinRes(object):
            >>> lin # doctest: +ELLIPSIS
            LinRes('.../examples/PID.mat')
         """
-        return "%s('%s')" % (self.__class__.__name__,
-                             os.path.join(self.dir, self.fbase + '.mat'))
+        return "%s('%s')" % (self.__class__.__name__, self.fname)
         # Note:  The class name is indirectly inquired so that this method will
         # still be valid if the class is extended.
 
@@ -197,48 +239,46 @@ class LinRes(object):
            >>> print(lin) # doctest: +ELLIPSIS
            Modelica linearization results from .../examples/PID.mat
         """
-        return ('Modelica linearization results from "%s"' %
-                os.path.join(self.dir, self.fbase + '.mat'))
+        return "Modelica linearization results from " + self.fname
 
-    def __repr__(self):
-        """Return a formal description of the :class:`LinRes` instance.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import LinRes
-           >>> lin = LinRes('examples/PID.mat')
-           >>> lin # doctest: +ELLIPSIS
-           LinRes('.../examples/PID.mat')
-        """
-        return "{Class}('{fname}')".format(Class=self.__class__.__name__,
-                                           fname=self.fname)
-        # Note:  The class name is inquired so that this method will still be
-        # correct if the class is extended.
-
-
-    def __str__(self):
-        """Return an informal description of the :class:`LinRes` instance.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import LinRes
-           >>> lin = LinRes('examples/PID.mat')
-           >>> print(lin) # doctest: +ELLIPSIS
-           Modelica linearization results from .../examples/PID.mat
-        """
-        return "Modelica linearization results from {f}".format(f=self.fname)
-
-    def _to_siso(self, iu, iy):
+    @_from_names
+    def to_siso(self, iu, iy):
         """Return a SISO system given input and output indices.
+
+        **Arguments:**
+
+        - *iu*: Index or name of the input
+
+             This must be specified unless the system has only one input.
+
+        - *iy*: Index or name of the output
+
+             This must be specified unless the system has only one output.
+
+        **Example:**
+
+        .. code-block:: python
+
+           >>> from modelicares import LinRes
+           >>> lin = LinRes('examples/PID.mat')
+           >>> lin.to_siso()
+           A = [[   0.    0.]
+            [   0. -100.]]
+           <BLANKLINE>
+           B = [[   2.]
+            [ 100.]]
+           <BLANKLINE>
+           C = [[  1. -10.]]
+           <BLANKLINE>
+           D = [[ 11.]]
+           <BLANKLINE>
+
         """
-        return ss(self.sys.A,         self.sys.B[:, iu],
+        return ss(self.sys.A, self.sys.B[:, iu],
                   self.sys.C[iy, :], self.sys.D[iy, iu])
 
-    def to_tf(self, iu=None, iy=None):
+    @_from_names
+    def to_tf(self, iu, iy):
         """Return a transfer function given input and output names.
 
         **Arguments:**
@@ -260,38 +300,14 @@ class LinRes(object):
            >>> lin.to_tf()
            (array([[  11.,  102.,  200.]]), array([   1.,  100.,    0.]))
         """
-        # Get the input index.
-        if iu is None:
-            if len(self.sys.input_names) == 1:
-                iu = 0
-            else:
-                raise IndexError("iu must be specified since this is a MI system.")
-        else:
-            try:
-                iu = self.sys.input_names.index(iu)
-            except ValueError:
-                raise(ValueError('The input "%s" is invalid.' % iu))
-
-        # Get the output index.
-        if iy is None:
-            if len(self.sys.output_names) == 1:
-                iy = 0
-            else:
-                raise IndexError("iy must be specified since this is a MO system.")
-        else:
-            try:
-                iy = self.sys.output_names.index(iy)
-            except ValueError:
-                raise(ValueError('The output "%s" is invalid.' % iy))
-
         # Return the TF.
-        return ss2tf(self.sys.A,        self.sys.B,
+        return ss2tf(self.sys.A, self.sys.B,
                      self.sys.C[iy, :], self.sys.D[iy, :], input=iu)
 
     def bode(self, axes=None, pairs=None, label='bode',
-             title=None, colors=['b','g','r','c','m','y','k'],
-             styles=[(None,None), (3,3), (1,1), (3,2,1,2)], **kwargs):
-        """Create a Bode plot of the system's response.
+             title=None, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
+             styles=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)], **kwargs):
+        r"""Create a Bode plot of the system's response.
 
         The Bode plots of a MIMO system are overlayed. This is different than
         MATLAB\ :sup:`®`, which creates an array of subplots.
@@ -303,16 +319,16 @@ class LinRes(object):
              If *axes* is not provided, then axes will be created in a new
              figure.
 
-        - *pairs*: List of (input index, output index) tuples of each transfer
-          function to be evaluated
+        - *pairs*: List of (input name or index, output name or index) tuples of
+          each transfer function to be evaluated
 
              By default, all of the transfer functions will be plotted.
 
         - *label*: Label for the figure (ignored if *axes* is provided)
 
              This is used as the base filename if the figure is saved using
-             :meth:`~modelicares.simres.util.save` or
-             :meth:`~modelicares.simres.util.saveall`.
+             :meth:`~modelicares.util.save` or
+             :meth:`~modelicares.util.saveall`.
 
         - *title*: Title for the figure
 
@@ -381,7 +397,7 @@ class LinRes(object):
             else:
                 kwargs['dashes'] = style
                 kwargs.pop('linestyle', None)
-            bode_plot(self._to_siso(iu, iy), axes=axes,
+            bode_plot(self.to_siso(iu, iy), axes=axes,
                       label='$Y_{%i}/U_{%i}$' % (iy, iu),
                       Hz=True, color=colors[np.mod(i, n_colors)], **kwargs)
             # Note: ._freqplot.bode() is currently only implemented for
@@ -400,8 +416,8 @@ class LinRes(object):
 
     def nyquist(self, ax=None, pairs=None, label="nyquist", title=None,
                 xlabel="Real axis", ylabel="Imaginary axis",
-                colors=['b','g','r','c','m','y','k'], **kwargs):
-        """Create a Nyquist plot of the system's response.
+                colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'], **kwargs):
+        r"""Create a Nyquist plot of the system's response.
 
         The Nyquist plots of a MIMO system are overlayed. This is different
         than MATLAB\ :sup:`®`, which creates an array of subplots.
@@ -412,16 +428,16 @@ class LinRes(object):
 
              If *ax* is not provided, then axes will be created in a new figure.
 
-        - *pairs*: List of (input index, output index) tuples of each transfer
-          function to be evaluated
+        - *pairs*: List of (input name or index, output name or index) tuples of
+          each transfer function to be evaluated
 
              By default, all of the transfer functions will be plotted.
 
         - *label*: Label for the figure (ignored if ax is provided)
 
              This is used as the base filename if the figure is saved using
-             :meth:`~modelicares.simres.util.save` or
-             :meth:`~modelicares.simres.util.saveall`.
+             :meth:`~modelicares.util.save` or
+             :meth:`~modelicares.util.saveall`.
 
         - *title*: Title for the figure
 
@@ -474,7 +490,7 @@ class LinRes(object):
 
         # Create the plots.
         for i, (iu, iy) in enumerate(pairs):
-            nyquist_plot(self._to_siso(iu, iy), ax=ax,
+            nyquist_plot(self.to_siso(iu, iy), ax=ax,
                          label=r'$Y_{%i}/U_{%i}$' % (iy, iu),
                          color=colors[np.mod(i, n_colors)], **kwargs)
             # Note: modelicares._freqplot.nyquist() is currently only
@@ -491,19 +507,6 @@ class LinRes(object):
         return ax
 
 
-def _cast_LinResList(f):
-    """Return a method that casts its output as a :class:`LinResList`, given one
-    that doesn't (*f*).
-    """
-    @wraps(f)
-    def wrapped(self, *args, **kwargs):
-        """Function that casts its output as a :class:`LinResList`
-        """
-        return LinResList(f(self, *args, **kwargs))
-
-    return wrapped
-
-
 def _get_lins(fnames):
     """Return a list of :class:`LinRes` instances from a list of filenames.
 
@@ -518,8 +521,9 @@ def _get_lins(fnames):
     assert len(lins) > 0, "No linearizations were loaded."
     return lins
 
+
 class LinResList(ResList):
-    """Specialized list of linearization results
+    r"""Specialized list of linearization results
 
     **Initialization signatures:**
 
@@ -599,8 +603,8 @@ class LinResList(ResList):
 
     **Additional methods:**
 
-    - :meth:`basedir` - Return the highest common directory that the result files
-      share.
+    - :meth:`basedir` - Return the highest common directory that the result
+      files share.
 
     - :meth:`bode` - Plot the linearizations onto a single Bode diagram.
 
@@ -633,7 +637,7 @@ class LinResList(ResList):
         """
 
         if not args:
-            list.__init__(self, [])
+            super(LinResList, self).__init__([])
         elif len(args) == 1 and isinstance(args[0], list):
             # The argument is a list of LinRes instances.
             for lin in args[0]:
@@ -646,10 +650,10 @@ class LinResList(ResList):
             # Get a unique list of matching filenames.
             fnames = set()
             for arg in args:
-                assert isinstance(arg, string_types), ("The linearization list "
-                    "can only be initialized by providing a list of LinRes "
-                    "instances or a series of arguments, each of which is a "
-                    "filename or directory.")
+                assert isinstance(arg, string_types), (
+                    "The linearization list can only be initialized by "
+                    "providing a list of LinRes instances or a series of "
+                    "arguments, each of which is a filename or directory.")
                 if os.path.isdir(arg):
                     fnames = fnames.union(set(glob(os.path.join(arg, '*.mat'))))
                 elif '*' in arg or '?' in arg or '[' in arg:
@@ -669,11 +673,11 @@ class LinResList(ResList):
 
              The file specification may be a filename or directory, possibly
              with wildcards a la `glob
-             <https://docs.python.org/2/library/glob.html>`_, where linearization
-             results can be loaded by :class:`LinRes`.  The filename or
-             directory must include the absolute path or be resolved to the
-             current directory.  An error is only raised if no files can be
-             loaded.
+             <https://docs.python.org/2/library/glob.html>`_, where
+             linearization results can be loaded by :class:`LinRes`.  The
+             filename or directory must include the absolute path or be resolved
+             to the current directory.  An error is only raised if no files can
+             be loaded.
 
          Unlike the `append
          <https://docs.python.org/2/tutorial/datastructures.html>`_ method of a
@@ -698,9 +702,9 @@ class LinResList(ResList):
         if isinstance(item, LinRes):
             list.append(self, item)
         else:
-            assert isinstance(item, string_types), ("The linearization list "
-                "can only be appended by providing a LinRes instance, "
-                "filename, or directory.")
+            assert isinstance(item, string_types), (
+                "The linearization list can only be appended by providing a "
+                "LinRes instance, filename, or directory.")
 
             # Get the matching filenames.
             if os.path.isdir(item):
@@ -741,7 +745,8 @@ class LinResList(ResList):
             short_fnames = [fname[start:] for fname in self.fnames()]
             string = ("List of linearization results (LinRes instances) from "
                       "the following files")
-            string += "\nin the %s directory:\n   "  % basedir if basedir else ":\n   "
+            string += ("\nin the %s directory:\n   "
+                       % basedir if basedir else ":\n   ")
             string += "\n   ".join(short_fnames)
             return string
 
@@ -761,9 +766,9 @@ class LinResList(ResList):
 
     def bode(self, axes=None, pair=(0, 0), label='bode', title="Bode plot",
              labels='', colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
-             styles=[(None,None), (3,3), (1,1), (3,2,1,2)], leg_kwargs={},
+             styles=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)], leg_kwargs={},
              **kwargs):
-        """Plot the linearizations onto a single Bode diagram.
+        r"""Plot the linearizations onto a single Bode diagram.
 
         This method calls :meth:`LinRes.bode` from the included instances
         of :class:`LinRes`.
@@ -772,18 +777,19 @@ class LinResList(ResList):
 
         - *axes*: Tuple (pair) of axes for the magnitude and phase plots
 
-             If *axes* is not provided, then axes will be created in a new figure.
+             If *axes* is not provided, then axes will be created in a new
+             figure.
 
-        - *pair*: Tuple of (input index, output index) for the transfer function
-          to be chosen from each system (applied to all)
+        - *pair*: Tuple of (input name or index, output name or index) for the
+          transfer function to be chosen from each system (applied to all)
 
              This is ignored if the system is SISO.
 
         - *label*: Label for the figure (ignored if axes is provided)
 
              This is used as the base filename if the figure is saved using
-             :meth:`~modelicares.simres.util.save` or
-             :meth:`~modelicares.simres.util.saveall`.
+             :meth:`~modelicares.util.save` or
+             :meth:`~modelicares.util.saveall`.
 
         - *title*: Title for the figure
 
@@ -855,7 +861,7 @@ class LinResList(ResList):
                 kwargs['dashes'] = style
                 kwargs.pop('linestyle', None)
             if lin.sys.inputs > 1 or lin.sys.outputs > 1:
-                sys = self._to_siso(pair[0], pair[1])
+                sys = lin.to_siso(pair[0], pair[1])
             else:
                 sys = lin.sys
             bode_plot(sys, Hz=True, label=label,
@@ -871,11 +877,11 @@ class LinResList(ResList):
         return axes
 
     def nyquist(self, ax=None, pair=(0, 0), label='nyquist',
-                title="Nyquist plot",  xlabel="Real axis",
+                title="Nyquist plot", xlabel="Real axis",
                 ylabel="Imaginary axis", labels='',
                 colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
                 leg_kwargs={}, **kwargs):
-        """Plot the linearizations onto a single Nyquist diagram.
+        r"""Plot the linearizations onto a single Nyquist diagram.
 
         This method calls :meth:`linres.LinRes.nyquist` from the included
         instances of :class:`linres.LinRes`.
@@ -886,16 +892,16 @@ class LinResList(ResList):
 
              If *ax* is not provided, then axes will be created in a new figure.
 
-        - *pair*: Tuple of (input index, output index) for the transfer function
-          to be chosen from each system (applied to all)
+        - *pair*: Tuple of (input name or index, output name or index) for the
+          transfer function to be chosen from each system (applied to all)
 
              This is ignored if the system is SISO.
 
         - *label*: Label for the figure (ignored if axes is provided)
 
              This is used as the base filename if the figure is saved using
-             :meth:`~modelicares.simres.util.save` or
-             :meth:`~modelicares.simres.util.saveall`.
+             :meth:`~modelicares.util.save` or
+             :meth:`~modelicares.util.saveall`.
 
         - *title*: Title for the figure
 
@@ -919,10 +925,11 @@ class LinResList(ResList):
 
              If *leg_kwargs* is *None*, then no legend will be shown.
 
-        - *\*\*kwargs*: Additional arguments for :meth:`control.freqplot.nyquist`
+        - *\*\*kwargs*: Additional arguments for
+          :meth:`control.freqplot.nyquist`
 
-             If *textFreq* is not specified, then only the frequency points of the
-             first system will have text labels.
+             If *text_freq* is not specified, then only the frequency points of
+             the first system will have text labels.
 
         **Returns:**
 
@@ -948,19 +955,20 @@ class LinResList(ResList):
         n_colors = len(colors)
 
         # Create the plots.
-        textFreq = kwargs.pop('textFreq', None)
+        text_freq = kwargs.pop('text_freq', None)
         for i, (lin, label) in enumerate(zip(self, labels)):
             if lin.sys.inputs > 1 or lin.sys.outputs > 1:
-                sys = self._to_siso(pair[0], pair[1])
+                sys = lin.to_siso(pair[0], pair[1])
             else:
                 sys = lin.sys
             nyquist_plot(sys, mark=False, label=label, ax=ax,
-                         textFreq=i==0 if textFreq is None else textFreq,
+                         text_freq=i == 0 if text_freq is None else text_freq,
                          color=colors[np.mod(i, n_colors)], **kwargs)
 
         # Decorate and finish.
         ax.set_title(title)
-        if xlabel: # Without this check, xlabel=None will give a label of "None".
+        if xlabel:
+            # Without this check, xlabel=None will give a label of "None".
             ax.set_xlabel(xlabel)
         if ylabel: # Same purpose
             ax.set_ylabel(ylabel)
@@ -971,22 +979,23 @@ class LinResList(ResList):
 
 
 if __name__ == '__main__':
-    """Test the contents of this file."""
-    import os
+    # Test the contents of this file.
+
     import doctest
 
     if os.path.isdir('examples'):
         doctest.testmod()
     else:
         # Create a link to the examples folder.
-        example_dir = '../examples'
-        if not os.path.isdir(example_dir):
+        EXAMPLE_DIR = '../examples'
+        if not os.path.isdir(EXAMPLE_DIR):
             raise IOError("Could not find the examples folder.")
         try:
-            os.symlink(example_dir, 'examples')
+            os.symlink(EXAMPLE_DIR, 'examples')
         except AttributeError:
             raise AttributeError("This method of testing isn't supported in "
-                                "Windows.  Use runtests.py in the base folder.")
+                                 "Windows.  Use runtests.py in the base "
+                                 "folder.")
 
         # Test the docstrings in this file.
         doctest.testmod()

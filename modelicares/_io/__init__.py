@@ -37,7 +37,7 @@ tool but something else is wrong.
 """
 
 if __name__ == '__main__':
-    """Test the contents of this file.
-    """
+    # Test the contents of this file.
+
     import doctest
     doctest.testmod()
