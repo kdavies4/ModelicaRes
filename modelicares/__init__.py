@@ -103,7 +103,7 @@ def load(*args):
             if os.path.isdir(path):
                 fnames = fnames.union(set(glob(os.path.join(path, '*.mat'))))
             else:
-                fnames = fnames.add(path)
+                fnames.add(path)
 
     # Load the files and append each result onto the appropriate list.
     sims = SimResList()

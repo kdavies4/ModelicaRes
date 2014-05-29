@@ -48,107 +48,118 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 
 
 import os
-import time
-
-from sys import argv
-from PySide.QtGui import QApplication, QMessageBox, QPushButton
 
 from modelicares import load
 
-# Load the dialog functions from an available Qt installation.
-try:
-    from PyQt4.QtGui import QFileDialog
-    getFiles = (lambda *args, **kwargs:
-                       str(QFileDialog.getOpenFileNames(*args, **kwargs)))
-    getDir = (lambda *args, **kwargs:
-                       QFileDialog.getExistingDirectory(*args, **kwargs))
-    del QFileDialog
-except:
-    try:
-        from guidata.qt.QtGui import QFileDialog
-        getFiles = (lambda *args, **kwargs:
-                           str(QFileDialog.getOpenFileNames(*args, **kwargs)))
-        getDir = (lambda *args, **kwargs:
-                           QFileDialog.getExistingDirectory(*args, **kwargs))
-        del QFileDialog
-    except:
-        try:
-            from PySide.QtGui import QFileDialog
-            getFiles = (lambda *args, **kwargs:
-                               QFileDialog.getOpenFileNames(*args, **kwargs)[0])
-            getDir = (lambda *args, **kwargs:
-                               QFileDialog.getExistingDirectory(*args, **kwargs))
-            del QFileDialog
-        except:
-            getFiles = lambda *args, **kwargs: None
-            getDir = lambda *args, **kwargs: None
-
-del QApplication, QMessageBox, QPushButton,
 
 # Default path for choosing the files or folder (empty string for current
 # directory).
-default_path = ""
-#default_path = os.path.expanduser("~/Documents/Modelica")
+DEFAULT_PATH = ""
+#DEFAULT_PATH = os.path.expanduser("~/Documents/Modelica")
 
-def files_or_folder():
-    """Launch a GUI to choose to load from files or a folder.
-    """
-    # TODO: Make the buttons appear in order: Files, Folder, and Cancel.
-    msgBox = QMessageBox()
-    msgBox.setText("Do you want to open selected files\nor all files from a folder?")
-    msgBox.addButton(Folder, QMessageBox.AcceptRole)
-    msgBox.addButton(Files, QMessageBox.AcceptRole)
-    msgBox.addButton(QMessageBox.Cancel)
-    msgBox.setDefaultButton(Files)
-    msgBox.exec_()
-    return msgBox.clickedButton()
+
+app = None # For PyQT4 and guidata, the GUI application must be global.
 
 def delayed_exit(t=0.5):
     """Exit with a message and a delay.
     """
+    import time
+
     print("Exiting...")
     time.sleep(t)
     exit()
 
-if __name__ == '__main__':
-    """Load Modelica_ results and provide a Python_ session to analyze them.
+def get_locations():
+    """Get file or folder locations from the command line or a dialog.
     """
+
+    from sys import argv
+
     # Determine the file location(s).
-    if len(argv) == 1: # TODO: finish support of PyQt4, guidata, or PySide
+    if len(argv) == 1:
+
+        # Load the dialog GUI classes from an available Qt installation.
+        try: # PyQt4
+            from PyQt42.QtGui import (QApplication, QPushButton, QMessageBox,
+                                     QFileDialog)
+            getFiles = (lambda *args, **kwargs:
+                        map(str, QFileDialog.getOpenFileNames(*args, **kwargs)))
+            getDir = (lambda *args, **kwargs:
+                      str(QFileDialog.getExistingDirectory(*args, **kwargs)))
+        except ImportError:
+            try: # guidata
+                from guidata2.qt.QtGui import (QApplication, QPushButton,
+                                              QMessageBox, QFileDialog)
+                getFiles = (lambda *args, **kwargs:
+                            map(str, QFileDialog.getOpenFileNames(*args,
+                                                                  **kwargs)))
+                getDir = (lambda *args, **kwargs:
+                          str(QFileDialog.getExistingDirectory(*args,
+                                                               **kwargs)))
+            except ImportError:
+                try: # PySide
+                    from PySide.QtGui import (QApplication, QPushButton,
+                                              QMessageBox, QFileDialog)
+                    getFiles = (lambda *args, **kwargs:
+                                QFileDialog.getOpenFileNames(*args,
+                                                             **kwargs)[0])
+                    getDir = (lambda *args, **kwargs:
+                              QFileDialog.getExistingDirectory(*args, **kwargs))
+                except ImportError:
+                    raise ImportError("No files could be selected.  Specify "
+                                      "files as arguments to loadres or "
+                                      "install PyQt4, guidata, or PySide to "
+                                      "use a file dialog.")
+
+        def files_or_folder():
+            """Launch a GUI to choose to load from files or a folder.
+            """
+            msgBox = QMessageBox()
+            msgBox.setText("Do you want to open selected files\n"
+                           "or all files from a folder?")
+            msgBox.addButton(Folder, QMessageBox.AcceptRole)
+            msgBox.addButton(Files, QMessageBox.AcceptRole)
+            msgBox.addButton(QMessageBox.Cancel)
+            msgBox.setDefaultButton(Files)
+            msgBox.exec_()
+            return msgBox.clickedButton()
+
+        global app
         app = QApplication([])
         Files = QPushButton("Files")
         Folder = QPushButton("Folder")
         choice = files_or_folder()
         if choice == Files:
-            loc = getFiles(None, "Choose Modelica results files.",
-                           default_path, "*.mat")
+            locations = getFiles(None, "Choose Modelica results files.",
+                                 DEFAULT_PATH, "*.mat")
         elif choice == Folder:
-            loc = getDir(None, "Choose a folder with Modelica results.",
-                         default_path)
-            loc = [] if not loc else [loc] # TODO: what if loc == ""?
+            locations = getDir(None, "Choose a folder with Modelica results.",
+                               DEFAULT_PATH)
+            locations = [locations] if locations else []
         else:
             app.exit()
             delayed_exit()
         app.exit()
-        if loc == "":
-            delayed_exit()
-        elif loc is None:
-            loc = []
-        del Files, Folder
+        return locations
     else:
-        loc = argv[1:]
+        return argv[1:]
+
+if __name__ == '__main__':
+    # Load Modelica_ results and provide a Python_ session to analyze them.
 
     # Load the file(s).
-    sims, lins = load(*loc)
+    sims, lins = load(*get_locations())
 
     # Handle the simulation list.
     nsims = len(sims)
     if nsims == 1:
         sim = sims[0]
         del sims
-        print("\nA simulation result has been loaded into sim (a SimRes instance).")
+        print("\nA simulation result has been loaded into sim (a SimRes "
+              "instance).")
     elif nsims > 1:
-        print("\n%i simulation results have been loaded into sims (a SimResList)." % nsims)
+        print("\n%i simulation results have been loaded into sims (a "
+              "SimResList)." % nsims)
     else:
         del sims
 
@@ -157,9 +168,11 @@ if __name__ == '__main__':
     if nlins == 1:
         lin = lins[0]
         del lins
-        print("A linearization result has been loaded into lin (a LinRes instance).\n")
+        print("A linearization result has been loaded into lin (a LinRes "
+              "instance).\n")
     elif nlins > 1:
-        print("%i linearization results have been loaded into lins (a LinResList).\n" % nlins)
+        print("%i linearization results have been loaded into lins (a "
+              "LinResList).\n" % nlins)
     elif nsims == 0:
         print("No files were loaded.")
         delayed_exit()
@@ -168,15 +181,14 @@ if __name__ == '__main__':
         print("\n")
 
     # Delete some variables to reduce clutter in the Python session below.
-    del (os, time, argv, loc, default_path, nsims, nlins, delayed_exit,
-         files_or_folder, load)
+    del (os, DEFAULT_PATH, load, delayed_exit, get_locations, nsims, nlins)
 
     # Embed an IPython or standard Python interpreter.
     #    Based on
     #    http://writeonly.wordpress.com/2008/09/08/embedding-a-python-shell-in-a-python-script/,
     #    accessed 2010/11/2
-    from pylab import *
-    from modelicares import *
+    #from pylab import *
+    #from modelicares import *
 
     try:
         # IPython

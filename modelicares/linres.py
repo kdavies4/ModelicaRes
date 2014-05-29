@@ -352,7 +352,22 @@ class LinRes(object):
              .. Seealso::
                 http://matplotlib.sourceforge.net/api/collections_api.html
 
-        - *\*\*kwargs*: Additional arguments for :meth:`control.freqplot.bode`
+        - *\*\*kwargs*: Additional plotting arguments:
+
+             - *omega*: Range of frequencies (list or bounds) in rad/s
+
+             - *dB*: If *True* (default), plot the magnitude in dB
+
+             - *Hz*: If *True* (default), plot the frequency in Hz (otherwise,
+               rad/s)
+
+                  Regardless, *omega* must be provided in rad/s.
+
+             - *deg*: If *True* (default), plot the phase in degrees (otherwise,
+               radians)
+
+             Other keyword arguments are passed to
+             :meth:`matplotlib.pyplot.plot`.
 
         **Returns:**
 
@@ -399,7 +414,7 @@ class LinRes(object):
                 kwargs.pop('linestyle', None)
             bode_plot(self.to_siso(iu, iy), axes=axes,
                       label='$Y_{%i}/U_{%i}$' % (iy, iu),
-                      Hz=True, color=colors[np.mod(i, n_colors)], **kwargs)
+                      color=colors[np.mod(i, n_colors)], **kwargs)
             # Note: ._freqplot.bode() is currently only implemented for
             # SISO systems.
             # 5/23/11: Since ._freqplot.bode() already uses subplots for
@@ -455,8 +470,23 @@ class LinRes(object):
 
              .. Seealso:: http://matplotlib.sourceforge.net/api/colors_api.html
 
-        - *\*\*kwargs*: Additional arguments for
-          :meth:`control.freqplot.nyquist`
+        - *\*\*kwargs*: Additional plotting arguments:
+
+             - *omega*: Range of frequencies (list or bounds) in rad/s
+
+             - *mark*: *True*, if the -1 point should be marked on the plot
+
+             - *show_axes*: *True*, if the axes should be shown
+
+             - *skip*: Mark every nth frequency on the plot with a dot
+
+                  If *skip* is 0 or *None*, then the frequencies are not marked.
+
+             - *label_freq*: If *True*, if the marked frequencies should be
+               labeled
+
+             Other keyword arguments are passed to
+             :meth:`matplotlib.pyplot.plot`.
 
         **Returns:**
 
@@ -819,7 +849,22 @@ class LinResList(ResList):
 
              If *leg_kwargs* is *None*, then no legend will be shown.
 
-        - *\*\*kwargs*: Additional arguments for :meth:`control.freqplot.bode`
+        - *\*\*kwargs*: Additional plotting arguments:
+
+             - *omega*: Range of frequencies (list or bounds) in rad/s
+
+             - *dB*: If *True* (default), plot the magnitude in dB
+
+             - *Hz*: If *True* (default), plot the frequency in Hz (otherwise,
+               rad/s)
+
+                  Regardless, *omega* must be provided in rad/s.
+
+             - *deg*: If *True* (default), plot the phase in degrees (otherwise,
+               radians)
+
+             Other keyword arguments are passed to
+             :meth:`matplotlib.pyplot.plot`.
 
         **Returns:**
 
@@ -925,11 +970,29 @@ class LinResList(ResList):
 
              If *leg_kwargs* is *None*, then no legend will be shown.
 
-        - *\*\*kwargs*: Additional arguments for
-          :meth:`control.freqplot.nyquist`
+        - *\*\*kwargs*: Additional plotting arguments:
 
-             If *text_freq* is not specified, then only the frequency points of
-             the first system will have text labels.
+
+             - *omega*: Range of frequencies (list or bounds) in rad/s
+
+             - *mark*: *True*, if the -1 point should be marked on the plot
+
+             - *show_axes*: *True*, if the axes should be shown
+
+             - *skip*: Label every nth frequency on the plot
+
+             - *skip*: Mark every nth frequency on the plot with a dot
+
+                  If *skip* is 0 or *None*, then the frequencies are not marked.
+
+             - *label_freq*: If *True*, if the marked frequencies should be
+               labeled
+
+                  By default (*None*), only the marked frequencies of the first
+                  system will be labeled.
+
+             Other keyword arguments are passed to
+             :meth:`matplotlib.pyplot.plot`.
 
         **Returns:**
 
@@ -955,14 +1018,15 @@ class LinResList(ResList):
         n_colors = len(colors)
 
         # Create the plots.
-        text_freq = kwargs.pop('text_freq', None)
+        label_freq = kwargs.pop('label_freq', None)
         for i, (lin, label) in enumerate(zip(self, labels)):
             if lin.sys.inputs > 1 or lin.sys.outputs > 1:
                 sys = lin.to_siso(pair[0], pair[1])
             else:
                 sys = lin.sys
             nyquist_plot(sys, mark=False, label=label, ax=ax,
-                         text_freq=i == 0 if text_freq is None else text_freq,
+                         label_freq=(i == 0 if label_freq is None
+                                     else label_freq),
                          color=colors[np.mod(i, n_colors)], **kwargs)
 
         # Decorate and finish.

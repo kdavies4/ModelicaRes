@@ -6,7 +6,7 @@
 # This file has been modified from version 0.6d of control.freqplot (license
 # below):
 # 1.  Added label and axes arguments to bode_plot()
-# 2.  Added label, mark, show_axes, text_freq and ax arguments to nyquist_plot()
+# 2.  Added label, mark, show_axes, label_freq and ax arguments to nyquist_plot()
 # 3.  Updated the docstrings
 # 4.  The default_frequency_range function is imported from the freqplot
 #     submodule of the installed control package.
@@ -72,7 +72,7 @@ from modelicares.texunit import number_label
 
 #pylint: disable=C0103, R0913, R0914
 
-def bode_plot(sys, omega=None, dB=False, Hz=False, deg=True, label=None,
+def bode_plot(sys, omega=None, dB=True, Hz=True, deg=True, label=None,
               axes=None, *args, **kwargs):
     r"""Create a Bode plot for a system.
 
@@ -84,11 +84,11 @@ def bode_plot(sys, omega=None, dB=False, Hz=False, deg=True, label=None,
 
     - *dB*: If *True*, plot the magnitude in dB
 
-    - *Hz*: If *True*, plot the frequency in Hz
+    - *Hz*: If *True*, plot the frequency in Hz (otherwise, rad/s)
 
          Regardless, *omega* must be provided in rad/s.
 
-    - *deg*: If *True*, plot the phase in degrees (else radians)
+    - *deg*: If *True*, plot the phase in degrees (otherwise, radians)
 
     - *label*: Label for the legend, if added
 
@@ -168,7 +168,7 @@ def bode_plot(sys, omega=None, dB=False, Hz=False, deg=True, label=None,
 
 
 def nyquist_plot(sys, omega=None, label=None, mark=False, show_axes=True,
-                 skip=0, text_freq=True, ax=None, *args, **kwargs):
+                 skip=0, label_freq=True, ax=None, *args, **kwargs):
     r"""Create a Nyquist plot for a system.
 
     **Arguments:**
@@ -183,11 +183,11 @@ def nyquist_plot(sys, omega=None, label=None, mark=False, show_axes=True,
 
     - *show_axes*: *True*, if the axes should be shown
 
-    - *skip*: Label every nth frequency on the plot (int)
+    - *skip*: Mark every nth frequency on the plot with a dot (int)
 
-    - *text_freq*: If *True*, if the frequency labels should include text
+         If *skip* is 0 or *None*, then the frequencies are not marked.
 
-         Otherwise, just dots are used.
+    - *label_freq*: If *True*, if the marked frequencies should be labeled
 
     - *ax*: Axes to plot into
 
@@ -274,7 +274,7 @@ def nyquist_plot(sys, omega=None, label=None, mark=False, show_axes=True,
 
             # Apply the text.
             # Use a space before the text to prevent overlap with the data.
-            if text_freq:
+            if label_freq:
                 ax.text(xpt, ypt,
                         ' ' + str(int(np.round(freq/1000**pow1000, 0))) +
                         ' ' + prefix + 'Hz')
