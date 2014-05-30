@@ -15,12 +15,11 @@ virtualenv:
 
 # We'll install as many packages as possible via pip, but some require apt-get.
 before_install:
-  - sudo apt-get update -qq
-  - sudo pip install numpy
-  - sudo apt-get install python-scipy
-  - sudo pip install matplotlib pandas control
-  - sudo apt-get -q install python-pyside python-qt4
-#  - sudo apt-get -q libwxgtk2.8-0 python-wxtools
+  - sudo apt-get update
+  - sudo apt-get install python-numpy python-scipy python-matplotlib
+  - sudo pip install pandas control
+  - sudo apt-get install python-qt4 # python-pyside python-guidata 
+#  - sudo apt-get libwxgtk2.8-0 python-wxtools
 
 install:
   - python setup.py build && sudo python setup.py install
