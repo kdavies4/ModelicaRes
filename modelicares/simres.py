@@ -1459,6 +1459,19 @@ class SimRes(object):
         else:
             return _VarList(entries(names))
 
+    def __cmp__(self, other):
+        """Return a negative integer if *self* < *other*, zero if
+        *self* == *other*, or a positive integer if *self* > *other*.
+
+        This is used for sorting in :class:`ResList`.
+        """
+        try:
+            return cmp(self.fname, other.fname)
+        except AttributeError:
+            name = self.__class__.__name__
+            raise AttributeError("A %s can only be compared with another %s."
+                                 % (name, name))
+
     def __contains__(self, name):
         """Return *True* if a variable is present in the simulation results.
 

@@ -17,8 +17,8 @@ virtualenv:
 before_install:
   - sudo apt-get update
   - sudo apt-get install python-numpy python-scipy python-matplotlib
-  - sudo pip install pandas control
-  - sudo apt-get install python-qt4 # python-pyside python-guidata 
+  - sudo pip install pandas control six
+  - sudo apt-get install python-qt4 # python-pyside python-guidata
 #  - sudo apt-get libwxgtk2.8-0 python-wxtools
 
 install:

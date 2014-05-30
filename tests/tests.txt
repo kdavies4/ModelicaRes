@@ -28,7 +28,7 @@
 
 # Loading various file formats
 >>> sims = SimResList('tests')
->>> sims.sort(key=lambda sim: sim.fname)
+>>> sims.sort()
 >>> print(sims) # doctest: +ELLIPSIS
 List of simulation results (SimRes instances) from the following files
 in the .../tests directory:

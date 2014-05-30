@@ -6,15 +6,17 @@ The releases are numbered according to the `Semantic Versioning Specification
 
 v0.12.0_ (2014-x-xx) -- Updates:
 
+   - :meth:`sort` now correctly sorts :class:`~modelicares.simres.SimResList`
+     and :class:`~modelicares.linres.LinResList` by absolute file path.
    - Improved the generation of defaults for the Bode and Nyquist plots.
-   - Fixed an issue with slicing a :class:`~modelicaras.simres.SimResList`.
-   - Removed :meth:`~modelicaras.util.pow10`.  It is not used internally and
+   - Fixed an issue with slicing a :class:`~modelicares.simres.SimResList`.
+   - Removed :meth:`~modelicares.util.pow10`.  It is not used internally and
      probably is not very helpful externally.
    - Change the default value of *Roman* in
      :meth:`~modelicares.texunit.quantity_str` to *False*.
    - Renamed and/or reordered the arguments of
-     :meth:`~modelicaras.util.setup_subplots`, and
-     :meth:`~modelicaras.exps.modelica_str` for clarity and simplicity.
+     :meth:`~modelicares.util.setup_subplots`, and
+     :meth:`~modelicares.exps.modelica_str` for clarity and simplicity.
    - Supported Qt_ via several installations: PyQt4_, guidata_, and PySide_.
      PySide_ is no longer required, but if no Qt_ installation is available,
      then file dialogs are not available in :meth:`~modelicares.util.save` or
