@@ -1,0 +1,91 @@
+# -*- coding: utf-8 -*-
+# Additional tests besides those in the ModelicaRes documentation.
+
+.. testsetup::
+   >>> decimals = 8
+
+   >>> import numpy as np
+   >>> np.set_printoptions(precision=decimals)
+
+   >>> # Don't use np.round; it's stupid.
+   >>> builtin_round = round
+   >>> def round(value):
+   ...     try:
+   ...         return [round(v) for v in value]
+   ...     except TypeError:
+   ...         return builtin_round(value, decimals)
+
+   >>> from glob import glob
+   >>> from modelicares import *
+
+# Tests on modelicares.exps
+# -------------------------
+>>> modelica_str(False)
+'false'
+
+# Tests on modelicares.simres
+# ---------------------------
+
+# Loading various file formats
+>>> sims = SimResList('tests')
+>>> sims.sort()
+>>> print(sims) # doctest: +ELLIPSIS
+List of simulation results (SimRes instances) from the following files
+in the .../tests directory:
+   DoublePendulum_Dymola-2012-SaveAs.mat
+   DoublePendulum_Dymola-2014FD01-ExportAsPlotted.mat
+   DoublePendulum_Dymola-2014FD01.mat
+   DoublePendulum_Dymola-7.4.mat
+   DoublePendulum_OpenModelica-1.8.mat
+
+# SimRes methods
+>>> sim = SimRes('examples/ChuaCircuit.mat')
+>>> round(sim['Ro.R'].value())
+0.0125
+>>> sim['L.v'].value() # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+Traceback (most recent call last):
+...
+ValueError: The variable is not a constant.  Use values() instead of value().
+>>> round(sim(['C1.v', 'L.v']).FV())
+[2.42098355, -0.25352862]
+>>> round(sim['C1.v'].IV())
+4.0
+>>> round(sim['L.v'].max())
+0.77344114
+>>> round(sim['L.v'].mean())
+0.01473382
+>>> round(sim['L.v'].mean_rectified())
+0.29067177
+>>> round(sim['L.v'].min())
+-0.9450165
+>>> round(sim['L.v'].RMS())
+0.36637381
+>>> round(sim['L.v'].RMS_AC())
+0.3808113
+>>> sim['L.v'].array(t=(0, 10)) # doctest: +NORMALIZE_WHITESPACE
+array([[  0.        ,   0.        ],
+       [  5.        ,   0.10923497],
+       [ 10.        ,   0.21083504]], dtype=float32)
+>>> sim['L.v'].times(t=(0, 20))
+array([  0.,   5.,  10.,  15.,  20.], dtype=float32)
+>>> sim['L.v'].values(t=(0, 20)) # doctest: +NORMALIZE_WHITESPACE
+array([ 0.        ,  0.10923497,  0.21083504,  0.30462351,  0.39040083], dtype=float32)
+>>> sim['L.vv'].values() # doctest: +ELLIPSIS
+Traceback (most recent call last):
+...
+LookupError: L.vv is not a valid variable name.
+<BLANKLINE>
+Did you mean one of these?
+       L.v
+       L.p.v
+       L.n.v
+>>> round(sim['L.v'].values(t=[0, 2000]))
+[0.0, 0.15459341]
+
+# Other SimRes attributes
+>>> sim['G.T_heatPort'].unit
+'K'
+>>> sim['G.T_heatPort'].displayUnit
+'degC'
+>>> sim['G.T_heatPort'].description
+u'Temperature of HeatPort'
