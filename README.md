@@ -9,10 +9,12 @@ is possible to
 - auto-generate simulation scripts,
 - browse data,
 - perform custom calculations,
+- filter and sort groups of results,
 - produce various plots and diagrams, and
 - export data to various formats via [pandas].
 
 ![Plot of Chua circuit with varying parameters](doc/_static/ChuaCircuit-small.png)
+![ ](doc/_static/hspace.png)
 ![Sankey diagram of three tanks example](doc/_static/ThreeTanks-small.png)
 
 The figures are generated via [matplotlib], which offers a rich set of plotting
@@ -107,7 +109,7 @@ suggestions, please
 [SciPy]: http://www.scipy.org/index.html
 [Qt]: http://qt-project.org/
 [PyQt4]: http://www.riverbankcomputing.co.uk/software/pyqt/
-[quidata]: https://code.google.com/p/guidata/
+[guidata]: https://code.google.com/p/guidata/
 [PySide]: http://qt-project.org/wiki/pyside
 [pip]: https://pypi.python.org/pypi/pip
 [awesim]: https://github.com/saroele/awesim

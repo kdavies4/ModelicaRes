@@ -1,3 +1,5 @@
+TODO update this:
+
 These files can be copied or linked to .git/hooks to do some checks while
 using git for version control.
 
@@ -13,7 +15,8 @@ Python code, regardless of the branch.
 Copy *pre-commit* and *post-checkout* to *.git/hooks/*.
 
 Add to *.git/config*:
-[alias]
-	diff-matplotlibrc = !bash `git rev-parse --show-toplevel`/hooks/diff-matplotlibrc.sh
-	doc = !bash `git rev-parse --show-toplevel`/hooks/doc.sh
-	release = !bash `git rev-parse --show-toplevel`/hooks/release.sh
+
+    [alias]
+	    diff-matplotlibrc = !bash `git rev-parse --show-toplevel`/hooks/diff-matplotlibrc.sh
+	    doc = !bash `git rev-parse --show-toplevel`/hooks/doc.sh
+	    release = !bash `git rev-parse --show-toplevel`/hooks/release.sh

@@ -4,9 +4,9 @@
 # Get a list of the tests.
 if [ "$1" == "--travis" ]; then
     # Currently, Travis CI seems to use an old version of scipy which doesn't
-    # properly support Unicode.  So skip the Unicode tests and some others for 
+    # properly support Unicode.  So skip the Unicode tests and some others for
     # now:
-    module_tests=`find modelicares -name "*.py" ! -name _freqplot.py ! -name simres.py ! -name linres.py ! -name util.py ! -name _gui.py! -name util.py ! -name _res.py`
+    module_tests=`find modelicares -name "*.py" ! -name _freqplot.py ! -name simres.py ! -name linres.py ! -name util.py ! -name _gui.py ! -name _res.py ! -name __init__.py ! -name doe.py ! -path _io`
     tests="tests/tests-travis.txt $module_tests"
 else
     module_tests=`find modelicares -name "*.py"`
@@ -25,5 +25,4 @@ for f in $tests; do
 done
 
 echo "All tests passed, but simres.SimRes.browse(), the bin/loadres script, "
-echo "and the IPython notebooks (examples/tutorial.ipynb and "
-echo "examples/advanced.ipynb) must be tested manually."
+echo "and the IPython notebooks (examples/*.ipynb) must be tested manually."

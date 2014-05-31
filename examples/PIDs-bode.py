@@ -1,12 +1,21 @@
 #!/usr/bin/python
 
-import numpy as np
-from os.path import join, dirname
-from modelicares import LinResList, read_params
+from modelicares import LinResList
 
-lins = LinResList('PID/*/*.mat')
-labels = ["Ti=%g" % read_params('Ti', join(dirname(lin.fname), 'dsin.txt'))
-          for lin in lins]
-lins.bode(title="Bode plot of Modelica.Blocks.Continuous.PID",
-          omega=2*np.pi*np.logspace(-2, 3), labels=labels,
-          leg_kwargs=dict(loc='lower right'))
+results = ['PID.mat', 'PID/1/dslin.mat', 'PID/2/dslin.mat']
+labels = ["Td = 0.1 s", "Td = 1 s", "Td = 10 s"]
+lins = LinResList(*results)
+lins.bode(title="Bode plot of Modelica.Blocks.Continuous.PID\n"
+                "with varying differential time constant",
+          labels=labels)
+# It's necessary to provide the differential time constants because they're not
+# recorded in the files.  However, if each result is accompanied with a
+# dsin-style parameter file, we can use read_params(), e.g.:
+#from os.path import join, dirname
+#from modelicares import LinResList, read_params
+#lins = LinResList('PID/*/*.mat')
+#labels = ["Td=%g" % read_params('Td', join(dirname(lin.fname), 'dsin.txt'))
+#          for lin in lins]
+#lins.bode(title="Bode plot of Modelica.Blocks.Continuous.PID\n"
+#                "with varying differential time constant",
+#          labels=labels)

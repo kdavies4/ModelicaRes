@@ -25,7 +25,7 @@ packages = []
 
 # List or generator of simulations to run
 experiments = gen_experiments(['Modelica.Blocks.Continuous.PID'],
-                              params=dict(Td=[0.01, 1]))
+                              params=dict(Td=[1, 10]))
 
 # End customize----------------------------------------------------------------
 

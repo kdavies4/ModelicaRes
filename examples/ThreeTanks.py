@@ -2,7 +2,7 @@
 from modelicares import SimRes
 
 sim = SimRes('ThreeTanks.mat')
-sim.sankey(title="Sankey Diagrams of Modelica.Fluid.Examples.Tanks.ThreeTanks",
+sim.sankey(title="Sankey diagrams of Modelica.Fluid.Examples.Tanks.ThreeTanks",
            times=[0, 50, 100, 150], n_rows=2, format='%.1f ',
            names=['tank1.ports[1].m_flow', 'tank2.ports[1].m_flow',
                   'tank3.ports[1].m_flow'],

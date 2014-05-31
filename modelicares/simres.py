@@ -1663,18 +1663,10 @@ class SimResList(ResList):
     <https://docs.python.org/2/reference/datamodel.html#object.__reversed__>`_,
     = or `__setitem__
     <https://docs.python.org/2/reference/datamodel.html#object.__setitem__>`_,
-    and :meth:`__sizeof__`).  Note that :meth:`len` returns the number of
-    simulations, not the number of variables like it does for :class:`SimRes`.
-
-    The comparison methods
-    (`< <https://docs.python.org/2/reference/datamodel.html#object.__lt__>`_,
-    `<= <https://docs.python.org/2/reference/datamodel.html#object.__le__>`_,
-    `== <https://docs.python.org/2/reference/datamodel.html#object.__eq__>`_,
-    `!= <https://docs.python.org/2/reference/datamodel.html#object.__ne__>`_,
-    `>= <https://docs.python.org/2/reference/datamodel.html#object.__ge__>`_,
-    `> <https://docs.python.org/2/reference/datamodel.html#object.__gt__>`_),
-    and :meth:`sort`, which relies on them, use the full filenames (with
-    absolute path) for comparison.
+    :meth:`__sizeof__`, and :meth:`sort`).  By default, the :meth:`sort` method
+    orders the list of simulations by the full path of the result files.  Note
+    that :meth:`len` returns the number of simulations, not the number of
+    variables like it does for :class:`SimRes`.
 
     **Overloaded standard methods:**
 

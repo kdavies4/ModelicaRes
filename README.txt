@@ -11,6 +11,7 @@ to
 - auto-generate simulation scripts,
 - browse data,
 - perform custom calculations,
+- filter and sort groups of results,
 - produce various plots and diagrams, and
 - export data to various formats via pandas_.
 
@@ -111,7 +112,7 @@ See also
 .. _SciPy: http://www.scipy.org/index.html
 .. _Qt: http://qt-project.org/
 .. _PyQt4: http://www.riverbankcomputing.co.uk/software/pyqt/
-.. _quidata: https://code.google.com/p/guidata/
+.. _guidata: https://code.google.com/p/guidata/
 .. _PySide: http://qt-project.org/wiki/pyside
 .. _pip: https://pypi.python.org/pypi/pip
 .. _awesim: https://github.com/saroele/awesim

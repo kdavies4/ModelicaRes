@@ -11,6 +11,7 @@ to
 - auto-generate simulation scripts,
 - browse data,
 - perform custom calculations,
+- filter and sort groups of results,
 - produce various plots and diagrams, and
 - export data to various formats via pandas_.
 
@@ -24,19 +25,22 @@ and matrix functions from NumPy_.
    :scale: 45 %
    :alt: Variable browser
 
-.. image:: _static/PIDs-nyquist.png
-   :scale: 45 %
-   :alt: Nyquist plot of PID with varying differential time constant
-
-|
-
 .. image:: _static/ChuaCircuit.png
    :scale: 45 %
    :alt: Plot of Chua circuit
 
+|
+
 .. image:: _static/ThreeTanks.png
    :scale: 45 %
    :alt: Sankey digarams of three tanks model
+
+.. image:: _static/hspace.png
+   :scale: 250 %
+
+.. image:: _static/PIDs-bode.png
+   :scale: 45 %
+   :alt: Bode plot of PID with varying differential time constant
 
 Please see the tutorial, which is available as an `IPython notebook
 <https://github.com/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb>`_
@@ -148,7 +152,7 @@ suggestions, please `share them
 .. _SciPy: http://www.scipy.org/index.html
 .. _Qt: http://qt-project.org/
 .. _PyQt4: http://www.riverbankcomputing.co.uk/software/pyqt/
-.. _quidata: https://code.google.com/p/guidata/
+.. _guidata: https://code.google.com/p/guidata/
 .. _PySide: http://qt-project.org/wiki/pyside
 .. _wxPython: http://www.wxpython.org
 .. _pip: https://pypi.python.org/pypi/pip

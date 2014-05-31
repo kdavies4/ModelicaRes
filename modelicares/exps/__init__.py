@@ -293,8 +293,8 @@ def read_params(names, fname='dsin.txt'):
     .. code-block:: python
 
        >>> from modelicares import read_params
-       >>> read_params(['L.L', 'C1.C'], 'examples/dsin.txt')
-       [18.0, 10.0]
+       >>> read_params(['Td', 'Ti'], 'examples/dsin.txt')
+       [0.1, 0.5]
     """
     # Aliases for some regular subexpressions
     u = r'\d+' # Unsigned integer
@@ -470,10 +470,10 @@ def write_params(params, fname='dsin.txt'):
     .. code-block:: python
 
        >>> from modelicares import write_params
-       >>> write_params({'L.L': 10, 'C1.C': 15}, 'examples/dsin.txt')
+       >>> write_params({'Td': 1, 'Ti': 5}, 'examples/dsin.txt')
 
     .. testcleanup::
-       >>> write_params({'L.L': 18, 'C1.C': 10}, 'examples/dsin.txt')
+       >>> write_params({'Td': 0.1, 'Ti': 0.5}, 'examples/dsin.txt')
 
     This updates the appropriate lines in *examples/dsin.txt*:
 
@@ -742,7 +742,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
             # Create an abbreviated name for the model.
             models.append(model[model.rfind('.')+1:])
 
-            # Write to the Modelica script.
+            # Write to the Dymola script.
             mos.write('// Experiment %i\n' % i)
             if model:
                 params = ParamDict(util.flatten_dict(params))

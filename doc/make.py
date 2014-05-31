@@ -126,7 +126,7 @@ def static():
     import matplotlib.pyplot as plt
 
     from os.path import join, dirname
-    from modelicares import SimRes, SimResList, LinResList, read_params
+    from modelicares import SimRes, SimResList, LinResList
 
     # Options
     indir = "../examples" # Directory with the mat files.
@@ -136,8 +136,9 @@ def static():
     kwargs = dict(bbox_inches='tight', format='png') # Other savefig() options
 
     # ThreeTanks
+    # ----------
     sim = SimRes(join(indir, 'ThreeTanks.mat'))
-    sim.sankey(title="Sankey Diagrams of Modelica.Fluid.Examples.Tanks.ThreeTanks",
+    sim.sankey(title="Sankey diagrams of Modelica.Fluid.Examples.Tanks.ThreeTanks",
                times=[0, 50, 100, 150], n_rows=2, format='%.1f ',
                names=['tank1.ports[1].m_flow', 'tank2.ports[1].m_flow',
                       'tank3.ports[1].m_flow'],
@@ -150,33 +151,37 @@ def static():
     plt.close()
 
     # ChuaCircuit
+    # -----------
     sim = SimRes(join(indir, 'ChuaCircuit.mat'))
-    sim.plot(ynames1='L.i', ylabel1="Current",
-             ynames2='L.der(i)', ylabel2="Derivative of current",
-             title="Chua circuit")
+    ax, __ = sim.plot(ynames1='L.v', ylabel1="Voltage",
+                      xname='L.i', xlabel="Current",
+                      title="Modelica.Electrical.Analog.Examples.ChuaCircuit\n"
+                            "Current through and voltage across the inductor")
+    # Mark the start and stop points.
+    def mark(time, text):
+        i = sim['L.i'].values(time)
+        v = sim['L.v'].values(time)
+        plt.plot(i, v, 'bo')
+        ax.annotate(text, xy=(i, v), xytext=(0, -4), ha='center', va='top',
+                    textcoords='offset points')
+    mark(0, "Start")
+    mark(2500, "Stop")
+    # Save and close.
     plt.savefig(join(outdir, 'ChuaCircuit.png'), dpi=dpi, **kwargs)
-    plt.close()
-
-    # ChuaCircuits
-    sims = SimResList(join(indir, 'ChuaCircuit/*/*.mat'))
-    sims.reverse()
-    sims.plot(title="Chua circuit",
-              suffixes=['L.L = %.0f H' % sim['L.L'].IV()
-                        for sim in sims], # Read legend parameters.
-              ynames1='L.i', ylabel1="Current", leg1_kwargs=dict(loc='upper right'))
     plt.savefig(join(outdir, 'ChuaCircuit-small.png'), dpi=dpi_small, **kwargs)
     plt.close()
 
-    # PIDs-nyquist
-    lins = LinResList(join(indir, 'PID/*/*.mat'))
-    labels = ["Td=%g" % read_params('Td', join(dirname(lin.fname), 'dsin.txt'))
-              for lin in lins]
-    lins.nyquist(title="Nyquist plot of Modelica.Blocks.Continuous.PID",
-                 textFreq=True, omega=2*np.pi*np.logspace(-1, 3, 81), labelFreq=20,
-                 labels=labels)
-    plt.savefig(join(outdir, 'PIDs-nyquist.png'), dpi=dpi, **kwargs)
+    # PIDs-bode
+    # ---------
+    results = ['examples/PID.mat', 'examples/PID/1/dslin.mat',
+               'examples/PID/2/dslin.mat']
+    labels = ["Td = 0.1 s", "Td = 1 s", "Td = 10 s"]
+    lins = LinResList(*results)
+    lins.bode(title="Bode plot of Modelica.Blocks.Continuous.PID\n"
+                    "with varying differential time constant",
+              labels=labels)
+    plt.savefig(join(outdir, 'PIDs-bode.png'), dpi=dpi, **kwargs)
     plt.close()
-
 
 def _make_dirs():
     build_dirs = ['build', 'build/doctrees', 'build/html', '_static',

@@ -12,7 +12,7 @@ double experiment(7,1)
        1                   # StopTime     Time at which integration stops
        0                   # Increment    Communication step size, if > 0
      500                   # nInterval    Number of communication intervals, if > 0
-   1.000000000000000E-04   # Tolerance    Relative precision of signals for
+ 1.0000000000000000E-004   # Tolerance    Relative precision of signals for
                            #              simulation, linearization and trimming
        0                   # MaxFixedStep Maximum step size of fixed step size
                            #              integrators, if > 0.0
@@ -70,10 +70,10 @@ double method(27,1)
        0                   # hmax     Maximum absolute stepsize, if > 0
        0                   # hmin     Minimum absolute stepsize, if > 0 (use with care!)
        0                   # h0       Stepsize to be attempted on first step, if > 0
-   2.000000000000000E-14   # teps     Bound to check, if 2 equal time instants
-   1.000000000000000E-10   # eveps    Hysteresis epsilon at event points
+ 2.0000000000000000E-014   # teps     Bound to check, if 2 equal time instants
+ 1.0000000000000000E-010   # eveps    Hysteresis epsilon at event points
       20                   # eviter   Maximum number of event iterations
-   1.000000000000000E-06   # delaym   Minimum time increment in delay buffers
+ 9.9999999999999995E-007   # delaym   Minimum time increment in delay buffers
        1                   # fexcep   0/1 floating exception crashes/stops dymosim
        1                   # tscale   clock-time = tscale*simulation-time, if grid = 5
                            #          > 1: simulation too slow
@@ -102,87 +102,102 @@ int settings(13,1)
 
 
 #    Names of initial variables
-char initialName(39,14)
-L.v
-L.i
-L.der(i)
-L.L
-Ro.R
-Ro.T_ref
-Ro.alpha
-Ro.v
-Ro.n.v
-Ro.useHeatPort
-Ro.T
-Ro.LossPower
-Ro.R_actual
-G.G
-G.T_ref
-G.alpha
-G.v
-G.i
-G.useHeatPort
-G.T
-G.LossPower
-G.G_actual
-C1.v
-C1.der(v)
-C1.p.i
-C1.n.v
-C1.C
-C2.v
-C2.der(v)
-C2.p.i
-C2.n.v
-C2.C
-Nr.p.i
-Nr.n.v
-Nr.Ga
-Nr.Gb
-Nr.Ve
-Gnd.p.v
-Gnd.p.i
+char initialName(31,10)
+u
+y
+k
+Ti
+Td
+Nd
+initType
+xi_start
+xd_start
+y_start
+P.k
+P.y
+I.k
+I.initType
+I.y_start
+I.y
+I.der(y)
+D.k
+D.T
+D.initType
+D.x_start
+D.y_start
+D.y
+D.x
+D.der(x)
+D.zeroGain
+Gain.k
+Gain.u
+Add.k1
+Add.k2
+Add.k3
 
-double initialValue(39,6)
-  0       0                  0       0                  6  256   # L.v
- -1       0                  0       0                  2  280   # L.i
-  0       0                  0       0                  3  256   # L.der(i)
- -1      18                  0       0                  1  280   # L.L
- -1   1.250000000000000E-02  0       0                  1  280   # Ro.R
- -1   3.001500000000000E+02  0  1.000000000000000E+100  1  280   # Ro.T_ref
- -1       0                  0       0                  1  280   # Ro.alpha
-  0       0                  0       0                  6  256   # Ro.v
-  0       0                  0       0                  6  260   # Ro.n.v
-  0       0                  0       0                  6  769   # Ro.useHeatPort
-  0   2.881500000000000E+02  0  1.000000000000000E+100  6  256   # Ro.T
-  0       0                  0       0                  6  256   # Ro.LossPower
-  0       0                  0       0                  6  256   # Ro.R_actual
- -1   5.649999999999999E-01  0       0                  1  280   # G.G
- -1   3.001500000000000E+02  0  1.000000000000000E+100  1  280   # G.T_ref
- -1       0                  0       0                  1  280   # G.alpha
-  0       0                  0       0                  6  256   # G.v
-  0       0                  0       0                  6  256   # G.i
-  0       0                  0       0                  6  769   # G.useHeatPort
-  0   2.881500000000000E+02  0  1.000000000000000E+100  6  256   # G.T
-  0       0                  0       0                  6  256   # G.LossPower
-  0       0                  0       0                  6  256   # G.G_actual
- -1       4                  0       0                  2  280   # C1.v
-  0       0                  0       0                  3  256   # C1.der(v)
-  0       0                  0       0                  6  388   # C1.p.i
-  0       0                  0       0                  6  260   # C1.n.v
- -1      10                  0  1.000000000000000E+100  1  280   # C1.C
- -1       0                  0       0                  2  280   # C2.v
-  0       0                  0       0                  3  256   # C2.der(v)
-  0       0                  0       0                  6  388   # C2.p.i
-  0       0                  0       0                  6  260   # C2.n.v
- -1     100                  0  1.000000000000000E+100  1  280   # C2.C
-  0       0                  0       0                  6  388   # Nr.p.i
-  0       0                  0       0                  6  260   # Nr.n.v
- -1  -7.575760000000000E-01 -1  1.000000000000000E+100  1  280   # Nr.Ga
- -1  -4.090910000000000E-01 -1  1.000000000000000E+100  1  280   # Nr.Gb
- -1       1                  0       0                  1  280   # Nr.Ve
-  0       0                  0       0                  6  260   # Gnd.p.v
-  0       0                  0       0                  6  388   # Gnd.p.i
+double initialValue(31,6)
+ -1       0                       0                       0                
+  5   256   # u
+  0       0                       0                       0                
+  4   256   # y
+ -1       1                       0                       0                
+  1   280   # k
+ -1 0.5 9.9999999999999997E-061 1.0000000000000000E+100
+  1   280   # Ti
+ -1      0.1                      0                 1.0000000000000000E+100
+  1   280   # Td
+ -1      10                 9.9999999999999997E-061 1.0000000000000000E+100
+  1   280   # Nd
+  0       5                       1                       5                
+  6   258   # initType
+ -1       0                       0                       0                
+  1   280   # xi_start
+ -1       0                       0                       0                
+  1   280   # xd_start
+ -1       0                       0                       0                
+  1   280   # y_start
+ -1       1                       0                       0                
+  1   280   # P.k
+  0       0                       0                       0                
+  6   256   # P.y
+  0       0                       0                       0                
+  6   256   # I.k
+  0       3                       1                       4                
+  6   258   # I.initType
+  0       0                       0                       0                
+  6   256   # I.y_start
+ -1       0                       0                       0                
+  2   272   # I.y
+  0       0                       0                       0                
+  3   256   # I.der(y)
+  0       0                       0                       0                
+  6   256   # D.k
+  0 9.9999999999999997E-061 9.9999999999999997E-061 1.0000000000000000E+100
+  6   256   # D.T
+  0       1                       1                       4                
+  6   258   # D.initType
+  0       0                       0                       0                
+  6   256   # D.x_start
+ -1       0                       0                       0                
+  1   280   # D.y_start
+  0       0                       0                       0                
+  6   256   # D.y
+ -1       0                       0                       0                
+  2   272   # D.x
+  0       0                       0                       0                
+  3   256   # D.der(x)
+  0       0                       0                       0                
+  6  1281   # D.zeroGain
+  0       0                       0                       0                
+  6   256   # Gain.k
+  0       0                       0                       0                
+  6   256   # Gain.u
+ -1       1                       0                       0                
+  1   280   # Add.k1
+ -1       1                       0                       0                
+  1   280   # Add.k2
+ -1       1                       0                       0                
+  1   280   # Add.k3
 
 
 # Matrix with 6 columns defining the initial value calculation
@@ -233,44 +248,36 @@ double initialValue(39,6)
 #   nominal value (and maybe minimum and maximum values given in 
 #   column 3 and 4). If these values are zero, scale(i)=1 is used).
 #
-char initialDescription(39,95)
-Voltage drop between the two pins (= p.v - n.v) [V]
-Current flowing from pin p to pin n [A]
-der(Current flowing from pin p to pin n) [A/s]
-Inductance [H]
-Resistance at temperature T_ref [Ohm]
-Reference temperature [K|degC]
-Temperature coefficient of resistance (R_actual = R*(1 + alpha*(T_heatPort - T_ref)) [1/K]
-Voltage drop between the two pins (= p.v - n.v) [V]
-Potential at the pin [V]
-=true, if HeatPort is enabled
-Fixed device temperature if useHeatPort = false [K|degC]
-Loss power leaving component via HeatPort [W]
-Actual resistance = R*(1 + alpha*(T_heatPort - T_ref)) [Ohm]
-Conductance at temperature T_ref [S]
-Reference temperature [K|degC]
-Temperature coefficient of conductance (G_actual = G_ref/(1 + alpha*(T_heatPort - T_ref)) [1/K]
-Voltage drop between the two pins (= p.v - n.v) [V]
-Current flowing from pin p to pin n [A]
-=true, if HeatPort is enabled
-Fixed device temperature if useHeatPort = false [K|degC]
-Loss power leaving component via HeatPort [W]
-Actual conductance = G_ref/(1 + alpha*(T_heatPort - T_ref)) [S]
-Voltage drop between the two pins (= p.v - n.v) [V]
-der(Voltage drop between the two pins (= p.v - n.v)) [V/s]
-Current flowing into the pin [A]
-Potential at the pin [V]
-Capacitance [F]
-Voltage drop between the two pins (= p.v - n.v) [V]
-der(Voltage drop between the two pins (= p.v - n.v)) [V/s]
-Current flowing into the pin [A]
-Potential at the pin [V]
-Capacitance [F]
-Current flowing into the pin [A]
-Potential at the pin [V]
-Conductance in inner voltage range [S]
-Conductance in outer voltage range [S]
-Inner voltage range limit [V]
-Potential at the pin [V]
-Current flowing into the pin [A]
+char initialDescription(31,88)
+Connector of Real input signal [:#(prefix=input)]
+Connector of Real output signal
+Gain
+Time Constant of Integrator [s]
+Time Constant of Derivative block [s]
+The higher Nd, the more ideal the derivative block
+Type of initialization [:#(type=Integer)]
+Initial or guess value value for integrator output (= integrator state)
+Initial or guess value for state of derivative block
+Initial value of output
+Gain value multiplied with input signal
+Output signal connector
+Integrator gain [s-1]
+Type of initialization (InitialState and InitialOutput are identical) [:#(type=Integer)]
+Initial or guess value of output (= state)
+Connector of Real output signal
+der(Connector of Real output signal)
+Gains [s]
+Time constants (T>0 required; T=0 is ideal derivative block) [s]
+Type of initialization [:#(type=Integer)]
+Initial or guess value of state
+Initial value of output (= state)
+Connector of Real output signal
+State of block
+der(State of block)
+[:#(type=Boolean)]
+Gain value multiplied with input signal
+Input signal connector
+Gain of upper input
+Gain of middle input
+Gain of lower input
 
