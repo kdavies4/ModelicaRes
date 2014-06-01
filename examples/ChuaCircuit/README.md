@@ -5,7 +5,7 @@ results.  The results are generated here, but only the \*.mat files are included
 in the distribution.
 
 The examples in
-[modelicares.exps.write_script](http://kdavies4.github.io/ModelicaRes/exps.html#modelicares.exps.write_script) also generate Dymola scripts here.
+[modelicares.exps.write_script](http://kdavies4.github.io/ModelicaRes/exps.html#modelicares.exps.write_script)() also generate Dymola scripts here.
 
 
 [Modelica Standard Library]: https://github.com/modelica/ModelicaStandardLibrary

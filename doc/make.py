@@ -11,23 +11,70 @@ import sys
 from glob import glob
 from collections import namedtuple
 
+# Getch classes based on
+# http://code.activestate.com/recipes/134892-getch-like-unbuffered-character-reading-from-stdin/,
+# accessed 5/31/14
+class _Getch:
+    """Get a single character from the standard input.
+    """
+    def __init__(self):
+        try:
+            self.impl = _GetchWindows()
+        except ImportError:
+            self.impl = _GetchUnix()
+
+    def __call__(self): return self.impl()
+
+class _GetchUnix:
+    def __init__(self):
+        import tty, sys
+
+    def __call__(self):
+        import sys, tty, termios
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+
+class _GetchWindows:
+    def __init__(self):
+        import msvcrt
+
+    def __call__(self):
+        import msvcrt
+        return msvcrt.getch()
+
+getch = _Getch()
+
+def build():
+    """Make the HTML documentation.
+    """
+    OPTIONS = '' # sphinx-build options
+
+    sys.stdout.write("Do you want to rebuild the static images (y/n)? ")
+    if getch().lower() == 'y':
+        static()
+
+    make_dirs()
+    if os.system('sphinx-build %s -b html -d build/doctrees . build/html'
+                 % OPTIONS):
+        raise SystemExit("The HTML build failed.")
+
+    sys.stdout.write("Do you want to spellcheck the HTML documentation (y/n)? ")
+    if getch().lower() == 'y':
+        spellcheck()
 
 def clean():
     """Clean the built documentation.
     """
     shutil.rmtree('build', ignore_errors=True)
 
-def html():
-    """Make the HTML documentation.
-    """
-    _make_dirs()
-    options = ''
-    if os.system('sphinx-build %s -b html -d build/doctrees . build/html' % options):
-        raise SystemExit("The HTML build failed.")
-    os.system('python sitemap_gen.py --config="sitemap_conf.xml"')
-
-def publish():
-    """Publish the documentation to the GitHub webpage.
+def release():
+    """Publish the documentation to the webpage.
     """
     # TODO: finish this; move sitemap notification here.
 
@@ -35,6 +82,7 @@ def publish():
     os.system('git stash save "Work in progress while updating gh-pages"')
     os.system('git checkout gh-pages')
 
+    Rebase the *gh-pages* branch to squash extra commits.
 
     # Copy the documentation to the project's root folder.
     for f in glob('*.html') + glob('*.inv'):
@@ -64,6 +112,8 @@ def publish():
     rpl -q "+ '_sources/' " "" javascripts/searchtools.js
     git add *.html
 
+    os.system('python sitemap_gen.py --config="sitemap_conf.xml"')
+
     # Finish.
     git commit -am "Updated documentation"
 
@@ -80,6 +130,27 @@ def publish():
     it in the base folder of the *gh-pages* branch and push to origin again
     (``git push origin gh-pages``).  Update it in Google Webmaster tools
     (https://www.google.com/webmasters/tools/sitemap-list?hl=en&siteUrl=http%3A%2F%2Fkdavies4.github.com%2FFCSys%2F#MAIN_TAB=1&CARD_TAB=-1).""")
+
+def make_dirs():
+    build_dirs = ['build', 'build/doctrees', 'build/html', '_static',
+                  '_templates']
+    for d in build_dirs:
+        try:
+            os.mkdir(d)
+        except OSError:
+            pass
+
+    # Create a link to the examples folder.
+    if not os.path.isdir('examples'):
+        example_dir = '../examples'
+        if not os.path.isdir(example_dir):
+            raise IOError("Could not find the examples folder.")
+        try:
+            os.symlink(example_dir, 'examples')
+        except AttributeError: # Symlinks aren't available in Windows.
+            raise AttributeError('Create a doc/examples shortcut that points '
+                                 'to the examples folder in the base '
+                                 'directory.')
 
 def spellcheck():
     """Spellcheck the HTML docs.
@@ -183,37 +254,13 @@ def static():
     plt.savefig(join(outdir, 'PIDs-bode.png'), dpi=dpi, **kwargs)
     plt.close()
 
-def _make_dirs():
-    build_dirs = ['build', 'build/doctrees', 'build/html', '_static',
-                  '_templates']
-    for d in build_dirs:
-        try:
-            os.mkdir(d)
-        except OSError:
-            pass
-
-    # Create a link to the examples folder.
-    if not os.path.isdir('examples'):
-        example_dir = '../examples'
-        if not os.path.isdir(example_dir):
-            raise IOError("Could not find the examples folder.")
-        try:
-            os.symlink(example_dir, 'examples')
-        except AttributeError:
-            raise AttributeError('Create a doc/examples shortcut that points '
-                                 'to the examples folder in the base '
-                                 'directory.')
-
 F = namedtuple("F", ['f', 'description'])
-funcs = {'clean'      : F(clean,      "Remove all built documentation."),
-         'html'       : F(html,       "Make the HTML documentation."),
-         'publish'    : F(publish,    "Publish the built HTML to GitHub."),
-         'spellcheck' : F(spellcheck, "Spellcheck the built HTML."),
-         'static'     : F(static,     "Create static images for the "
-                                      "documentation and the base README.md."),
+funcs = {'clean'      : F(clean,   "Remove the built documentation."),
+         'build'      : F(build,   "Build the HTML documentation."),
+         'release'    : F(release, "Publish the documentation to the webpage."),
         }
 
-def _funcs_str():
+def funcs_str():
     """Return a string listing the valid functions and their descriptions.
     """
     return "\n".join(["  %s: %s" % (arg.ljust(10), function.description)
@@ -223,10 +270,10 @@ def _funcs_str():
 # Main
 if len(sys.argv) != 2:
     raise SystemExit("Exactly one argument is required; valid args are\n"
-                     + _funcs_str())
+                     + funcs_str())
 arg = sys.argv[1]
 try:
     funcs[arg].f()
 except KeyError:
     raise SystemExit("Do not know how to handle %s; valid args are\n%s"
-                     % (arg, _funcs_str()))
+                     % (arg, funcs_str()))

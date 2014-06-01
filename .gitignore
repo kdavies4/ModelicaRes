@@ -1,7 +1,3 @@
-# Images
-#*.png
-#*.pdf
-
 # Compiled files
 *.pyc
 build/
@@ -9,18 +5,10 @@ build/
 # Generated files
 dist/
 /examples/*/*/*
-/examples/*.pdf
-/examples/*.png
-/examples/ChuaCircuit-voltages.csv
-/examples/*.mpg
-/doc/_images/math/*
 /tests/*.pdf
 MANIFEST
-ModelicaRes.egg-info
-.fuse*
 *.mos
 doc/examples
-modelicares/examples
 
 # Backup files
 .ipynb_checkpoints

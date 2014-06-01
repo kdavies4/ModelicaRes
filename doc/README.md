@@ -4,10 +4,8 @@ Documentation for ModelicaRes
 This is the top-level build directory for ModelicaRes documention.  All of the
 documentation is written using [Sphinx], a [Python] documentation system based
 on [reST].  This folder contains:
-  - [make.py](make.py) - Script to build, spellcheck, and publish the HTML docs
+  - [make.py](make.py) - Script to clean, build, and release the HTML docs
   - [conf.py](conf.py) - The [Sphinx] configuration
-  - [sitemap_gen.py](sitemap_gen.py) - Script to generate a sitemap for a web
-    server
   - [index.rst](index.rst) - The top-level source document
   - [loadres.rst](loadres.rst) - Documentation for the **loadres** script
   - other \*.rst files - Placeholders to automatically generate the documentation

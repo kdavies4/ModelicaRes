@@ -18,5 +18,5 @@ Add to *.git/config*:
 
     [alias]
 	    diff-matplotlibrc = !bash `git rev-parse --show-toplevel`/hooks/diff-matplotlibrc.sh
+	    dist = !bash `git rev-parse --show-toplevel`/hooks/dist.sh
 	    doc = !bash `git rev-parse --show-toplevel`/hooks/doc.sh
-	    release = !bash `git rev-parse --show-toplevel`/hooks/release.sh

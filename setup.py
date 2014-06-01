@@ -15,8 +15,15 @@ from distutils.core import setup
 #    except ImportError:
 #        from distutils.core import setup
 
+def get_version(fname):
+    """Return the version number from *fname*.
+    """
+    import re
+    return re.search('__version__ *= *["\'](.*)["\']',
+                     open(fname).read()).group(1)
+
 setup(name='ModelicaRes',
-      version="0.11.1",
+      version=get_version('modelicares/__init__.py'),
       description='Utilities to set up and analyze Modelica simulation experiments',
       long_description=open('README.txt').read(),
       author='Kevin Davies',
@@ -41,8 +48,8 @@ setup(name='ModelicaRes',
       keywords=['Modelica', 'plot', 'results', 'simulation', 'experiment',
                 'Dymola', 'matplotlib', 'pandas'],
       provides=['modelicares'],
-      install_requires=['numpy', 'scipy>=0.10.0', 'matplotlib>=1.3.1', 'pandas',
-                        'control', 'six'],
+      #install_requires=['numpy', 'scipy>=0.10.0', 'matplotlib>=1.3.1', 'pandas',
+      #                  'control', 'six'],
       requires=['numpy', 'scipy (>=0.10.0)', 'matplotlib (>=1.3.1)', 'pandas',
                 'control', 'six'],
       platforms='any',
