@@ -104,8 +104,8 @@
             
   <div class="section" id="module-modelicares.linres">
 <span id="modelicares-linres"></span><h1><a class="reference internal" href="#module-modelicares.linres" title="modelicares.linres"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.linres</span></tt></a><a class="headerlink" href="#module-modelicares.linres" title="Permalink to this headline">¶</a></h1>
-<p>This submodule contains two classes to help load, analyze, and plot results
-from <a class="reference external" href="http://www.modelica.org/">Modelica</a> linearizations:</p>
+<p>This submodule contains classes to help load, analyze, and plot results from
+<a class="reference external" href="http://www.modelica.org/">Modelica</a> linearizations:</p>
 <ul class="simple">
 <li><a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> - Class to load, contain, and analyze results from a <a class="reference external" href="http://www.modelica.org/">Modelica</a>
 linearization</li>
@@ -115,24 +115,44 @@ linearization</li>
 <dl class="class">
 <dt id="modelicares.linres.LinRes">
 <em class="property">class </em><tt class="descclassname">modelicares.linres.</tt><tt class="descname">LinRes</tt><big>(</big><em>fname='dslin.mat'</em>, <em>tool=None</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinRes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">modelicares._res.Res</span></tt></p>
 <p>Class for <a class="reference external" href="http://www.modelica.org/">Modelica</a>-based linearization results and methods to analyze
 those results</p>
-<p>This class contains two user-accessible methods:</p>
-<ul class="simple">
-<li><a class="reference internal" href="#modelicares.linres.LinRes.bode" title="modelicares.linres.LinRes.bode"><tt class="xref py py-meth docutils literal"><span class="pre">bode()</span></tt></a> - Create a Bode plot of the system&#8217;s response</li>
-<li><a class="reference internal" href="#modelicares.linres.LinRes.fbase" title="modelicares.linres.LinRes.fbase"><tt class="xref py py-meth docutils literal"><span class="pre">fbase()</span></tt></a> - Return the base filename from which the data was loaded,
-without the directory or file extension</li>
-<li><a class="reference internal" href="#modelicares.linres.LinRes.nyquist" title="modelicares.linres.LinRes.nyquist"><tt class="xref py py-meth docutils literal"><span class="pre">nyquist()</span></tt></a> - Create a Nyquist plot of the system&#8217;s response</li>
-<li><a class="reference internal" href="#modelicares.linres.LinRes.to_tf" title="modelicares.linres.LinRes.to_tf"><tt class="xref py py-meth docutils literal"><span class="pre">to_tf()</span></tt></a> - Return a transfer function given input and output names</li>
-</ul>
-<p>Attributes:</p>
+<p><strong>Initialization arguments:</strong></p>
 <ul>
-<li><p class="first"><em>fname</em> - filename from which the data was loaded, with the directory and
-file extension</p>
+<li><p class="first"><em>fname</em>: Name of the file (including the directory if necessary)</p>
+<blockquote>
+<div><p>The file must contain four matrices:  <em>Aclass</em> (specifies the class
+name, which must be &#8220;AlinearSystem&#8221;), <em>nx</em>, <em>xuyName</em>, and <em>ABCD</em>.</p>
+</div></blockquote>
 </li>
-<li><p class="first"><em>tool</em> - String indicating the function used to load the results (named
-after the corresponding linearization tool)</p>
+<li><p class="first"><em>tool</em>: String indicating the linearization tool that created the file
+and thus the function to be used to load it</p>
+<blockquote>
+<div><p>By default, the available functions are tried in order until one
+works (or none do).</p>
+</div></blockquote>
+</li>
+</ul>
+<p><strong>Methods:</strong></p>
+<ul class="simple">
+<li><a class="reference internal" href="#modelicares.linres.LinRes.bode" title="modelicares.linres.LinRes.bode"><tt class="xref py py-meth docutils literal"><span class="pre">bode()</span></tt></a> - Create a Bode plot of the system&#8217;s response.</li>
+<li><tt class="xref py py-meth docutils literal"><span class="pre">fbase()</span></tt> - Return the base filename from which the data was loaded,
+without the directory or file extension.</li>
+<li><a class="reference internal" href="#modelicares.linres.LinRes.nyquist" title="modelicares.linres.LinRes.nyquist"><tt class="xref py py-meth docutils literal"><span class="pre">nyquist()</span></tt></a> - Create a Nyquist plot of the system&#8217;s response.</li>
+<li><a class="reference internal" href="#modelicares.linres.LinRes.to_siso" title="modelicares.linres.LinRes.to_siso"><tt class="xref py py-meth docutils literal"><span class="pre">to_siso()</span></tt></a> - Return a SISO state-space system given input and output
+names.</li>
+<li><a class="reference internal" href="#modelicares.linres.LinRes.to_tf" title="modelicares.linres.LinRes.to_tf"><tt class="xref py py-meth docutils literal"><span class="pre">to_tf()</span></tt></a> - Return a transfer function given input and output names.</li>
+</ul>
+<p><strong>Properties:</strong></p>
+<ul>
+<li><p class="first"><em>basename</em> - Base filename from which the variables were loaded, without
+the directory or extension</p>
+</li>
+<li><p class="first"><em>dirname</em> - Directory from which the variables were loaded</p>
+</li>
+<li><p class="first"><em>fname</em> - Filename from which the variables were loaded, with absolute
+path</p>
 </li>
 <li><p class="first"><em>sys</em> - State-space system as an instance of <tt class="xref py py-class docutils literal"><span class="pre">control.StateSpace</span></tt></p>
 <blockquote>
@@ -155,7 +175,17 @@ after the corresponding linearization tool)</p>
 </ul>
 </div></blockquote>
 </li>
+<li><p class="first"><em>tool</em> - String indicating the function used to load the results (named
+after the corresponding <a class="reference external" href="http://www.modelica.org/">Modelica</a> tool)</p>
+</li>
 </ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">LinRes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lin</span> <span class="o">=</span> <span class="n">LinRes</span><span class="p">(</span><span class="s">&#39;examples/PID.mat&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">lin</span><span class="p">)</span> 
+<span class="go">Modelica linearization results from .../examples/PID.mat</span>
+</pre></div>
+</div>
 <dl class="method">
 <dt id="modelicares.linres.LinRes.bode">
 <tt class="descname">bode</tt><big>(</big><em>axes=None, pairs=None, label='bode', title=None, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'], styles=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)], **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinRes.bode" title="Permalink to this definition">¶</a></dt>
@@ -170,22 +200,24 @@ MATLAB<sup>®</sup>, which creates an array of subplots.</p>
 figure.</p>
 </div></blockquote>
 </li>
-<li><p class="first"><em>pairs</em>: List of (input index, output index) tuples of each transfer
-function to be evaluated</p>
+<li><p class="first"><em>pairs</em>: List of (input name or index, output name or index) tuples of
+each transfer function to be evaluated</p>
 <blockquote>
-<div><p>If not provided, all of the transfer functions will be plotted.</p>
+<div><p>By default, all of the transfer functions will be plotted.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>label</em>: Label for the figure (ignored if <em>axes</em> is provided)</p>
 <blockquote>
-<div><p>This will be used as the base filename if the figure is saved.</p>
+<div><p>This is used as the base filename if the figure is saved using
+<a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> or
+<a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a>.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>title</em>: Title for the figure</p>
 <blockquote>
-<div><p>If <em>title</em> is <em>None</em> (default), then the title will be &#8220;Bode Plot
-of <em>fbase</em>&#8221;, where <em>fbase</em> is the base filename of the data.  Use
-&#8216;&#8217; for no title.</p>
+<div><p>If <em>title</em> is <em>None</em> (default), then the title will be &#8220;Bode plot
+of fbase&#8221;, where fbase is the base filename of the data.  Use &#8216;&#8217;
+for no title.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>colors</em>: Color or list of colors that will be used sequentially</p>
@@ -200,16 +232,37 @@ of <em>fbase</em>&#8221;, where <em>fbase</em> is the base filename of the data.
 <li><p class="first"><em>styles</em>: Line/dash style or list of line/dash styles that will be
 used sequentially</p>
 <blockquote>
-<div><p>Each style is a string representing a linestyle (e.g., &#8220;&#8211;&#8221;) or a
-tuple of on/off lengths representing dashes.  Use &#8220;&#8221; for no line
-and &#8220;-&#8221; for a solid line.</p>
+<div><p>Each style is a string representing a linestyle (e.g., &#8216;&#8211;&#8217;) or a
+tuple of on/off lengths representing dashes.  Use &#8216;&#8217; for no line
+or &#8216;-&#8216; for a solid line.</p>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference external" href="http://matplotlib.sourceforge.net/api/collections_api.html">http://matplotlib.sourceforge.net/api/collections_api.html</a></p>
 </div>
 </div></blockquote>
 </li>
-<li><p class="first"><em>**kwargs</em>: Additional arguments for <tt class="xref py py-meth docutils literal"><span class="pre">control.freqplot.bode()</span></tt></p>
+<li><p class="first"><em>**kwargs</em>: Additional plotting arguments:</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><em>freqs</em>: List or frequencies or tuple of (min, max) frequencies
+over which to plot the system response.</p>
+<blockquote>
+<div><p>If <em>freqs</em> is <em>None</em>, then an appropriate range will be
+determined automatically.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><em>in_Hz</em>: If <em>True</em> (default), the frequencies (<em>freqs</em>) are in
+Hz and should be plotted in Hz (otherwise, rad/s)</p>
+</li>
+<li><p class="first"><em>in_dB</em>: If <em>True</em> (default), plot the magnitude in dB</p>
+</li>
+<li><p class="first"><em>in_deg</em>: If <em>True</em> (default), plot the phase in degrees
+(otherwise, radians)</p>
+</li>
+</ul>
+<p>Other keyword arguments are passed to
+<tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt>.</p>
+</div></blockquote>
 </li>
 </ul>
 <p><strong>Returns:</strong></p>
@@ -217,17 +270,10 @@ and &#8220;-&#8221; for a solid line.</p>
 <li><em>axes</em>: Tuple (pair) of axes for the magnitude and phase plots</li>
 </ol>
 <p><strong>Example:</strong></p>
-<p>(<a class="reference external" href="./examples/PID-bode.py">Source code</a>, <a class="reference external" href="./examples/PID-bode.png">png</a>, <a class="reference external" href="./examples/PID-bode.hires.png">hires.png</a>, <a class="reference external" href="./examples/PID-bode.pdf">pdf</a>)</p>
+<p>(<a class="reference external" href="./examples2/PID-bode.py">Source code</a>, <a class="reference external" href="./examples2/PID-bode.png">png</a>, <a class="reference external" href="./examples2/PID-bode.hires.png">hires.png</a>, <a class="reference external" href="./examples2/PID-bode.pdf">pdf</a>)</p>
 <div class="figure">
 <img alt="Bode plot of PID" src="images/PID-bode.png" />
 </div>
-</dd></dl>
-
-<dl class="method">
-<dt id="modelicares.linres.LinRes.fbase">
-<tt class="descname">fbase</tt><big>(</big><big>)</big><a class="headerlink" href="#modelicares.linres.LinRes.fbase" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the base filename from which the data was loaded, without the
-directory or file extension.</p>
 </dd></dl>
 
 <dl class="method">
@@ -243,22 +289,24 @@ than MATLAB<sup>®</sup>, which creates an array of subplots.</p>
 <div><p>If <em>ax</em> is not provided, then axes will be created in a new figure.</p>
 </div></blockquote>
 </li>
-<li><p class="first"><em>pairs</em>: List of (input index, output index) tuples of each transfer
-function to be evaluated</p>
+<li><p class="first"><em>pairs</em>: List of (input name or index, output name or index) tuples of
+each transfer function to be evaluated</p>
 <blockquote>
-<div><p>If not provided, all of the transfer functions will be plotted.</p>
+<div><p>By default, all of the transfer functions will be plotted.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>label</em>: Label for the figure (ignored if ax is provided)</p>
 <blockquote>
-<div><p>This will be used as the base filename if the figure is saved.</p>
+<div><p>This is used as the base filename if the figure is saved using
+<a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> or
+<a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a>.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>title</em>: Title for the figure</p>
 <blockquote>
 <div><p>If <em>title</em> is <em>None</em> (default), then the title will be &#8220;Nyquist
-Plot of <em>fbase</em>&#8221;, where <em>fbase</em> is the base filename of the data.
-Use &#8216;&#8217; for no title.</p>
+plot of fbase&#8221;, where fbase is the base filename of the data.  Use
+&#8216;&#8217; for no title.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>xlabel</em>: x-axis label</p>
@@ -274,8 +322,35 @@ Use &#8216;&#8217; for no title.</p>
 </div>
 </div></blockquote>
 </li>
-<li><p class="first"><em>**kwargs</em>: Additional arguments for
-<tt class="xref py py-meth docutils literal"><span class="pre">control.freqplot.nyquist()</span></tt></p>
+<li><p class="first"><em>**kwargs</em>: Additional plotting arguments:</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><em>freqs</em>: List or frequencies or tuple of (min, max) frequencies
+over which to plot the system response.</p>
+<blockquote>
+<div><p>If <em>freqs</em> is <em>None</em>, then an appropriate range will be
+determined automatically.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><em>in_Hz</em>: If <em>True</em> (default), the frequencies (<em>freqs</em>) are in
+Hz and should be plotted in Hz (otherwise, rad/s)</p>
+</li>
+<li><p class="first"><em>mark</em>: <em>True</em>, if the -1 point should be marked on the plot</p>
+</li>
+<li><p class="first"><em>show_axes</em>: <em>True</em>, if the axes should be shown</p>
+</li>
+<li><p class="first"><em>skip</em>: Mark every nth frequency on the plot with a dot</p>
+<blockquote>
+<div><p>If <em>skip</em> is 0 or <em>None</em>, then the frequencies are not marked.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><em>label_freq</em>: If <em>True</em>, if the marked frequencies should be
+labeled</p>
+</li>
+</ul>
+<p>Other keyword arguments are passed to
+<tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt>.</p>
+</div></blockquote>
 </li>
 </ul>
 <p><strong>Returns:</strong></p>
@@ -283,9 +358,43 @@ Use &#8216;&#8217; for no title.</p>
 <li><em>ax</em>: Axes of the Nyquist plot</li>
 </ol>
 <p><strong>Example:</strong></p>
-<p>(<a class="reference external" href="./examples/PID-nyquist.py">Source code</a>, <a class="reference external" href="./examples/PID-nyquist.png">png</a>, <a class="reference external" href="./examples/PID-nyquist.hires.png">hires.png</a>, <a class="reference external" href="./examples/PID-nyquist.pdf">pdf</a>)</p>
+<p>(<a class="reference external" href="./examples2/PID-nyquist.py">Source code</a>, <a class="reference external" href="./examples2/PID-nyquist.png">png</a>, <a class="reference external" href="./examples2/PID-nyquist.hires.png">hires.png</a>, <a class="reference external" href="./examples2/PID-nyquist.pdf">pdf</a>)</p>
 <div class="figure">
 <img alt="Nyquist plot of PID" src="images/PID-nyquist.png" />
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="modelicares.linres.LinRes.to_siso">
+<tt class="descname">to_siso</tt><big>(</big><em>iu=None</em>, <em>iy=None</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinRes.to_siso" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a SISO system given input and output indices.</p>
+<p><strong>Arguments:</strong></p>
+<ul>
+<li><p class="first"><em>iu</em>: Index or name of the input</p>
+<blockquote>
+<div><p>This must be specified unless the system has only one input.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><em>iy</em>: Index or name of the output</p>
+<blockquote>
+<div><p>This must be specified unless the system has only one output.</p>
+</div></blockquote>
+</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">LinRes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lin</span> <span class="o">=</span> <span class="n">LinRes</span><span class="p">(</span><span class="s">&#39;examples/PID.mat&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lin</span><span class="o">.</span><span class="n">to_siso</span><span class="p">()</span>
+<span class="go">A = [[   0.    0.]</span>
+<span class="go"> [   0. -100.]]</span>
+
+<span class="go">B = [[   2.]</span>
+<span class="go"> [ 100.]]</span>
+
+<span class="go">C = [[  1. -10.]]</span>
+
+<span class="go">D = [[ 11.]]</span>
+</pre></div>
 </div>
 </dd></dl>
 
@@ -322,6 +431,28 @@ Use &#8216;&#8217; for no title.</p>
 <em class="property">class </em><tt class="descclassname">modelicares.linres.</tt><tt class="descname">LinResList</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinResList" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">modelicares._res.ResList</span></tt></p>
 <p>Specialized list of linearization results</p>
+<p><strong>Initialization signatures:</strong></p>
+<ul>
+<li><p class="first"><a class="reference internal" href="#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a>(): Returns an empty linearization list</p>
+</li>
+<li><p class="first"><a class="reference internal" href="#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a>(<em>lins</em>), where lins is a list of <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>
+instances:  Casts the list into a <a class="reference internal" href="#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a></p>
+</li>
+<li><p class="first"><a class="reference internal" href="#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a>(<em>filespec</em>), where <em>filespec</em> is a filename or
+directory, possibly with wildcards a la <a class="reference external" href="https://docs.python.org/2/library/glob.html">glob</a>:  Returns a
+<a class="reference internal" href="#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a> of <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instances loaded from the
+matching or contained files</p>
+<blockquote>
+<div><p>The filename or directory must include the absolute path or be
+resolved to the current directory.</p>
+<p>An error is only raised if no files can be loaded.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><a class="reference internal" href="#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a>(<em>filespec1</em>, <em>filespec2, ...): Loads all files
+matching or contained by *filespec1</em>, <em>filespec2</em>, etc. as above.</p>
+</li>
+</ul>
+<p><strong>Built-in methods:</strong></p>
 <p>The entries are <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instances, but linearizations can be
 specified via filename when initializing or appending the list.  The list
 has all of the methods of a standard <a class="reference external" href="http://www.python.org">Python</a> list (e.g.,
@@ -344,60 +475,65 @@ has all of the methods of a standard <a class="reference external" href="http://
 <tt class="xref py py-meth docutils literal"><span class="pre">reverse()</span></tt>,
 <tt class="xref py py-meth docutils literal"><span class="pre">reversed()</span></tt> or <a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__reversed__">__reversed__</a>,
 = or <a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__setitem__">__setitem__</a>,
-and <tt class="xref py py-meth docutils literal"><span class="pre">__sizeof__()</span></tt>).</p>
-<p>The comparison methods
-(<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__lt__">&lt;</a>,
-<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__le__">&lt;=</a>,
-<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__eq__">==</a>,
-<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__ne__">!=</a>,
-<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__ge__">&gt;=</a>,
-<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__gt__">&gt;</a>),
-and <tt class="xref py py-meth docutils literal"><span class="pre">sort()</span></tt>, which relies on them, use the full filenames (with
-absolute path) for comparison.</p>
-<p>The following method is overloaded for convenience:</p>
+<tt class="xref py py-meth docutils literal"><span class="pre">__sizeof__()</span></tt>, and <tt class="xref py py-meth docutils literal"><span class="pre">sort()</span></tt>).  By default, the <tt class="xref py py-meth docutils literal"><span class="pre">sort()</span></tt> method
+orders the list of linearizations by the full path of the result files.</p>
+<p><strong>Overloaded methods:</strong></p>
 <ul class="simple">
 <li><a class="reference internal" href="#modelicares.linres.LinResList.append" title="modelicares.linres.LinResList.append"><tt class="xref py py-meth docutils literal"><span class="pre">append()</span></tt></a> - Add linearization(s) to the end of the list of
 linearizations (accepts a <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instance, directory, or
 filename).</li>
 </ul>
-<p>The following methods are added to those in the standard <a class="reference external" href="http://www.python.org">Python</a> list:</p>
+<p><strong>Additional methods:</strong></p>
 <ul class="simple">
-<li><tt class="xref py py-meth docutils literal"><span class="pre">basedir()</span></tt> - Return the highest common directory that the result files
-share.</li>
 <li><a class="reference internal" href="#modelicares.linres.LinResList.bode" title="modelicares.linres.LinResList.bode"><tt class="xref py py-meth docutils literal"><span class="pre">bode()</span></tt></a> - Plot the linearizations onto a single Bode diagram.</li>
-<li><tt class="xref py py-meth docutils literal"><span class="pre">fnames()</span></tt> - Return a list of filenames from which the results were
-loaded.</li>
 <li><a class="reference internal" href="#modelicares.linres.LinResList.nyquist" title="modelicares.linres.LinResList.nyquist"><tt class="xref py py-meth docutils literal"><span class="pre">nyquist()</span></tt></a> - Plot the linearizations onto a single Bode diagram.</li>
 </ul>
+<p><strong>Properties:</strong></p>
+<ul class="simple">
+<li><em>basedir</em> - Highest common directory that the result files share</li>
+<li>Also, the properties of <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> (<em>basename</em>, <em>dirname</em>, <em>fname</em>,
+<em>sys</em>, and <em>tool</em>) can be retrieved as a list across all of the
+linearizations; see the example below.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">LinResList</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lins</span> <span class="o">=</span> <span class="n">LinResList</span><span class="p">(</span><span class="s">&#39;examples/PID/*/&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lins</span><span class="o">.</span><span class="n">dirname</span> 
+<span class="go">[&#39;.../examples/PID/1&#39;, &#39;.../examples/PID/2&#39;]</span>
+</pre></div>
+</div>
 <dl class="method">
 <dt id="modelicares.linres.LinResList.append">
 <tt class="descname">append</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinResList.append" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a linearization to the end of the list of linearizations.</p>
+<dd><p>Add linearization(s) to the end of the list of linearizations.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><p class="first"><em>item</em>: <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instance or a file specification</p>
 <blockquote>
 <div><p>The file specification may be a filename or directory, possibly
-with wildcards a la <a class="reference external" href="https://docs.python.org/2/library/glob.html">glob</a>, where linearization
-results can be loaded by <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>.  The filename or
-directory must include the absolute path or be resolved to the
-current directory.  An error is only raised if no files can be
-loaded.</p>
+with wildcards a la <a class="reference external" href="https://docs.python.org/2/library/glob.html">glob</a>, where
+linearization results can be loaded by <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>.  The
+filename or directory must include the absolute path or be resolved
+to the current directory.  An error is only raised if no files can
+be loaded.</p>
 </div></blockquote>
 </li>
 </ul>
 <blockquote>
-<div>Unlike the <a class="reference external" href="https://docs.python.org/2/tutorial/datastructures.html">append</a> method of a
+<div><p>Unlike the <a class="reference external" href="https://docs.python.org/2/tutorial/datastructures.html">append</a> method of a
 standard <a class="reference external" href="http://www.python.org">Python</a> list, this method may add more than one item.  If
 <em>item</em> is a directory or a wildcarded filename, it may match multiple
-valid files.</div></blockquote>
+valid files.</p>
+<p>Linearization results will be appended to the list even if they are
+already included.</p>
+</div></blockquote>
 <p><strong>Example:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">modelicares</span> <span class="kn">import</span> <span class="n">LinResList</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lins</span> <span class="o">=</span> <span class="n">LinResList</span><span class="p">(</span><span class="s">&#39;examples/PID/*/*.mat&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lins</span> <span class="o">=</span> <span class="n">LinResList</span><span class="p">(</span><span class="s">&#39;examples/PID/*/&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">lins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;examples/PID.mat&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">print</span><span class="p">(</span><span class="n">lins</span><span class="p">)</span> 
 <span class="go">List of linearization results (LinRes instances) from the following files</span>
-<span class="go">in the .../ModelicaRes/examples directory:</span>
+<span class="go">in the .../examples directory:</span>
 <span class="go">   PID/1/dslin.mat</span>
 <span class="go">   PID/2/dslin.mat</span>
 <span class="go">   PID.mat</span>
@@ -407,7 +543,7 @@ valid files.</div></blockquote>
 
 <dl class="method">
 <dt id="modelicares.linres.LinResList.bode">
-<tt class="descname">bode</tt><big>(</big><em>axes=None, pair=(0, 0), label='bode', title='Bode plot', labels='', colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'], styles=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)], leg_kwargs={}, **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinResList.bode" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">bode</tt><big>(</big><em>axes=None, pair=(0, 0), label='bode', title='Bode plot', labels=None, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'], styles=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)], leg_kwargs={}, **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinResList.bode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the linearizations onto a single Bode diagram.</p>
 <p>This method calls <a class="reference internal" href="#modelicares.linres.LinRes.bode" title="modelicares.linres.LinRes.bode"><tt class="xref py py-meth docutils literal"><span class="pre">LinRes.bode()</span></tt></a> from the included instances
 of <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>.</p>
@@ -415,18 +551,21 @@ of <a class="reference internal" href="#modelicares.linres.LinRes" title="modeli
 <ul>
 <li><p class="first"><em>axes</em>: Tuple (pair) of axes for the magnitude and phase plots</p>
 <blockquote>
-<div><p>If <em>axes</em> is not provided, then axes will be created in a new figure.</p>
+<div><p>If <em>axes</em> is not provided, then axes will be created in a new
+figure.</p>
 </div></blockquote>
 </li>
-<li><p class="first"><em>pair</em>: Tuple of (input index, output index) for the transfer function
-to be chosen from each system (applied to all)</p>
+<li><p class="first"><em>pair</em>: Tuple of (input name or index, output name or index) for the
+transfer function to be chosen from each system (applied to all)</p>
 <blockquote>
 <div><p>This is ignored if the system is SISO.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>label</em>: Label for the figure (ignored if axes is provided)</p>
 <blockquote>
-<div><p>This will be used as the base filename if the figure is saved.</p>
+<div><p>This is used as the base filename if the figure is saved using
+<a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> or
+<a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a>.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>title</em>: Title for the figure</p>
@@ -449,9 +588,9 @@ empty string (&#8216;&#8217;), then the base filenames will be used.</p>
 <li><p class="first"><em>styles</em>: Line/dash style or list of line/dash styles that will be
 used sequentially</p>
 <blockquote>
-<div><p>Each style is a string representing a linestyle (e.g., &#8220;&#8211;&#8221;) or a
-tuple of on/off lengths representing dashes.  Use &#8220;&#8221; for no line
-and &#8220;-&#8221; for a solid line.</p>
+<div><p>Each style is a string representing a linestyle (e.g., &#8216;&#8211;&#8217;) or a
+tuple of on/off lengths representing dashes.  Use &#8216;&#8217; for no line
+and &#8216;-&#8216; for a solid line.</p>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference external" href="http://matplotlib.sourceforge.net/api/collections_api.html">http://matplotlib.sourceforge.net/api/collections_api.html</a></p>
@@ -464,7 +603,28 @@ and &#8220;-&#8221; for a solid line.</p>
 <div><p>If <em>leg_kwargs</em> is <em>None</em>, then no legend will be shown.</p>
 </div></blockquote>
 </li>
-<li><p class="first"><em>**kwargs</em>: Additional arguments for <tt class="xref py py-meth docutils literal"><span class="pre">control.freqplot.bode()</span></tt></p>
+<li><p class="first"><em>**kwargs</em>: Additional plotting arguments:</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><em>freqs</em>: List or frequencies or tuple of (min, max) frequencies
+over which to plot the system response.</p>
+<blockquote>
+<div><p>If <em>freqs</em> is <em>None</em>, then an appropriate range will be
+determined automatically.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><em>in_Hz</em>: If <em>True</em> (default), the frequencies (<em>freqs</em>) are in
+Hz and should be plotted in Hz (otherwise, rad/s)</p>
+</li>
+<li><p class="first"><em>in_dB</em>: If <em>True</em> (default), plot the magnitude in dB</p>
+</li>
+<li><p class="first"><em>in_deg</em>: If <em>True</em> (default), plot the phase in degrees
+(otherwise, radians)</p>
+</li>
+</ul>
+<p>Other keyword arguments are passed to
+<tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt>.</p>
+</div></blockquote>
 </li>
 </ul>
 <p><strong>Returns:</strong></p>
@@ -472,15 +632,15 @@ and &#8220;-&#8221; for a solid line.</p>
 <li><em>axes</em>: Tuple (pair) of axes for the magnitude and phase plots</li>
 </ol>
 <p><strong>Example:</strong></p>
-<p>(<a class="reference external" href="./examples/PIDs-bode.py">Source code</a>, <a class="reference external" href="./examples/PIDs-bode.png">png</a>, <a class="reference external" href="./examples/PIDs-bode.hires.png">hires.png</a>, <a class="reference external" href="./examples/PIDs-bode.pdf">pdf</a>)</p>
+<p>(<a class="reference external" href="./examples2/PIDs-bode.py">Source code</a>, <a class="reference external" href="./examples2/PIDs-bode.png">png</a>, <a class="reference external" href="./examples2/PIDs-bode.hires.png">hires.png</a>, <a class="reference external" href="./examples2/PIDs-bode.pdf">pdf</a>)</p>
 <div class="figure">
-<img alt="Bode plot of PID with varying parameters" src="images/PIDs-bode.png" />
+<img alt="Bode plot of PID with varying parameters" src="images/PIDs-bode1.png" />
 </div>
 </dd></dl>
 
 <dl class="method">
 <dt id="modelicares.linres.LinResList.nyquist">
-<tt class="descname">nyquist</tt><big>(</big><em>ax=None, pair=(0, 0), label='nyquist', title='Nyquist plot', xlabel='Real axis', ylabel='Imaginary axis', labels='', colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'], leg_kwargs={}, **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinResList.nyquist" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">nyquist</tt><big>(</big><em>ax=None, pair=(0, 0), label='nyquist', title='Nyquist plot', xlabel='Real axis', ylabel='Imaginary axis', labels=None, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'], leg_kwargs={}, **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinResList.nyquist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the linearizations onto a single Nyquist diagram.</p>
 <p>This method calls <tt class="xref py py-meth docutils literal"><span class="pre">linres.LinRes.nyquist()</span></tt> from the included
 instances of <tt class="xref py py-class docutils literal"><span class="pre">linres.LinRes</span></tt>.</p>
@@ -491,15 +651,17 @@ instances of <tt class="xref py py-class docutils literal"><span class="pre">lin
 <div><p>If <em>ax</em> is not provided, then axes will be created in a new figure.</p>
 </div></blockquote>
 </li>
-<li><p class="first"><em>pair</em>: Tuple of (input index, output index) for the transfer function
-to be chosen from each system (applied to all)</p>
+<li><p class="first"><em>pair</em>: Tuple of (input name or index, output name or index) for the
+transfer function to be chosen from each system (applied to all)</p>
 <blockquote>
 <div><p>This is ignored if the system is SISO.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>label</em>: Label for the figure (ignored if axes is provided)</p>
 <blockquote>
-<div><p>This will be used as the base filename if the figure is saved.</p>
+<div><p>This is used as the base filename if the figure is saved using
+<a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> or
+<a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a>.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>title</em>: Title for the figure</p>
@@ -531,10 +693,34 @@ empty string (&#8216;&#8217;), then the base filenames will be used.</p>
 <div><p>If <em>leg_kwargs</em> is <em>None</em>, then no legend will be shown.</p>
 </div></blockquote>
 </li>
-<li><p class="first"><em>**kwargs</em>: Additional arguments for <tt class="xref py py-meth docutils literal"><span class="pre">control.freqplot.nyquist()</span></tt></p>
+<li><p class="first"><em>**kwargs</em>: Additional plotting arguments:</p>
 <blockquote>
-<div><p>If <em>textFreq</em> is not specified, then only the frequency points of the
-first system will have text labels.</p>
+<div><ul>
+<li><p class="first"><em>freqs</em>: List or frequencies or tuple of (min, max) frequencies
+over which to plot the system response.</p>
+<blockquote>
+<div><p>If <em>freqs</em> is <em>None</em>, then an appropriate range will be
+determined automatically.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><em>in_Hz</em>: If <em>True</em> (default), the frequencies (<em>freqs</em>) are in
+Hz and should be plotted in Hz (otherwise, rad/s)</p>
+</li>
+<li><p class="first"><em>mark</em>: <em>True</em>, if the -1 point should be marked on the plot</p>
+</li>
+<li><p class="first"><em>show_axes</em>: <em>True</em>, if the axes should be shown</p>
+</li>
+<li><p class="first"><em>skip</em>: Mark every nth frequency on the plot with a dot</p>
+<blockquote>
+<div><p>If <em>skip</em> is 0 or <em>None</em>, then the frequencies are not marked.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><em>label_freq</em>: If <em>True</em>, if the marked frequencies should be
+labeled</p>
+</li>
+</ul>
+<p>Other keyword arguments are passed to
+<tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt>.</p>
 </div></blockquote>
 </li>
 </ul>
@@ -545,9 +731,9 @@ first system will have text labels.</p>
 </ol>
 </div></blockquote>
 <p><strong>Example:</strong></p>
-<p>(<a class="reference external" href="./examples/PIDs-nyquist.py">Source code</a>, <a class="reference external" href="./examples/PIDs-nyquist.png">png</a>, <a class="reference external" href="./examples/PIDs-nyquist.hires.png">hires.png</a>, <a class="reference external" href="./examples/PIDs-nyquist.pdf">pdf</a>)</p>
+<p>(<a class="reference external" href="./examples2/PIDs-nyquist.py">Source code</a>, <a class="reference external" href="./examples2/PIDs-nyquist.png">png</a>, <a class="reference external" href="./examples2/PIDs-nyquist.hires.png">hires.png</a>, <a class="reference external" href="./examples2/PIDs-nyquist.pdf">pdf</a>)</p>
 <div class="figure">
-<img alt="Nyquist plot of PID with varying parameters" src="images/PIDs-nyquist1.png" />
+<img alt="Nyquist plot of PID with varying parameters" src="images/PIDs-nyquist.png" />
 </div>
 </dd></dl>
 
@@ -581,7 +767,7 @@ first system will have text labels.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on May 21, 2014.
+      Last updated on Jun 02, 2014.
     </div>
   </body>
 </html>

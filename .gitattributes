@@ -2,35 +2,3 @@
 
 # Set default behavior, in case users don't have core.autocrlf set.
 * text=auto
-
-# Explicitly declare text files we want to always be normalized (crlf => lf) and
-# converted to native line endings on checkout.
-#*.sh text
-#*.py text
-
-# Declare files that will always have CRLF line endings on checkout.
-#*.txt text eol=crlf
-
-# Denote all files that are truly binary and should not be modified.
-#*.png binary
-#*.pyc binary
-
-# Keep the development files on the development branch.
-00-* merge=ours
-.*.pws merge=ours
-modelicares/examples merge=ours
-doc/Makefile merge=ours
-doc/README.md merge=ours
-doc/conf.py merge=ours
-doc/examples merge=ours
-doc/make.py merge=ours
-doc/_templates merge=ours
-doc/*.rst merge=ours
-doc/sphinxext merge=ours
-README.rst merge=ours
-.travis.yml merge=ours
-MANIFEST.in merge=ours
-examples/*.png merge=ours
-exernal merge=ours
-.gitignore merge=ours
-00-make-gh-pages.sh merge=ours

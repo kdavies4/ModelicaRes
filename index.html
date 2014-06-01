@@ -108,6 +108,7 @@ to</p>
 <li>auto-generate simulation scripts,</li>
 <li>browse data,</li>
 <li>perform custom calculations,</li>
+<li>filter and sort groups of results,</li>
 <li>produce various plots and diagrams, and</li>
 <li>export data to various formats via <a class="reference external" href="http://pandas.pydata.org">pandas</a>.</li>
 </ul>
@@ -117,12 +118,13 @@ some figures, like xy plots, Bode and Nyquist plots, and Sankey diagrams.
 ModelicaRes can be scripted or used in an interactive <a class="reference external" href="http://www.python.org">Python</a> session with math
 and matrix functions from <a class="reference external" href="http://numpy.scipy.org">NumPy</a>.</p>
 <a class="reference internal image-reference" href="images/browse.png"><img alt="Variable browser" src="images/browse.png" style="width: 371.7px; height: 182.25px;" /></a>
-<a class="reference internal image-reference" href="images/PIDs-nyquist.png"><img alt="Nyquist plot of PID with varying differential time constant" src="images/PIDs-nyquist.png" style="width: 224.1px; height: 192.6px;" /></a>
+<a class="reference internal image-reference" href="images/ChuaCircuit.png"><img alt="Plot of Chua circuit" src="images/ChuaCircuit.png" style="width: 292.95px; height: 202.95px;" /></a>
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<a class="reference internal image-reference" href="images/ChuaCircuit.png"><img alt="Plot of Chua circuit" src="images/ChuaCircuit.png" style="width: 317.25px; height: 193.5px;" /></a>
 <a class="reference internal image-reference" href="images/ThreeTanks.png"><img alt="Sankey digarams of three tanks model" src="images/ThreeTanks.png" style="width: 303.3px; height: 196.2px;" /></a>
+<a class="reference internal image-reference" href="images/hspace.png"><img alt="images/hspace.png" src="images/hspace.png" style="width: 62.5px; height: 2.5px;" /></a>
+<a class="reference internal image-reference" href="images/PIDs-bode.png"><img alt="Bode plot of PID with varying differential time constant" src="images/PIDs-bode.png" style="width: 299.25px; height: 206.55px;" /></a>
 <p>Please see the tutorial, which is available as an <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb">IPython notebook</a>
 or online as a <a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb">static page</a>.
 The links below and in the sidebar provide the full documentation and many
@@ -173,12 +175,9 @@ the right.  Run the following command from the base folder:</p>
 </div>
 <p>Some of the required packages may not install automatically.</p>
 <ul class="simple">
-<li>The <a class="reference external" href="http://www.scipy.org/index.html">SciPy</a> stack, including <a class="reference external" href="http://www.matplotlib.org">matplotlib</a> and <a class="reference external" href="http://pandas.pydata.org">pandas</a>, can be installed
-according to the instructions at <a class="reference external" href="http://www.scipy.org/install.html">http://www.scipy.org/install.html</a>.</li>
-<li><a class="reference external" href="http://www.riverbankcomputing.co.uk/software/pyqt">PyQt4</a> can be downloaded from
-<a class="reference external" href="http://www.riverbankcomputing.co.uk/software/pyqt/download">http://www.riverbankcomputing.co.uk/software/pyqt/download</a>.</li>
-<li><a class="reference external" href="http://www.wxpython.org">wxPython</a> can be downloaded from <a class="reference external" href="http://www.wxpython.org/download.php">http://www.wxpython.org/download.php</a>.
-However, it is only required for the <a class="reference external" href="simres.html#modelicares.simres.SimRes.browse">variable browser</a>.</li>
+<li><a class="reference external" href="http://www.scipy.org/index.html">SciPy</a> can be installed according to the instructions at
+<a class="reference external" href="http://www.scipy.org/install.html">http://www.scipy.org/install.html</a>.</li>
+<li>The GUIs require <a class="reference external" href="http://qt-project.org/">Qt</a>, which can be installed via <a class="reference external" href="http://www.riverbankcomputing.co.uk/software/pyqt/">PyQt4</a>, <a class="reference external" href="https://code.google.com/p/guidata/">guidata</a>, or <a class="reference external" href="http://qt-project.org/wiki/pyside">PySide</a>.</li>
 </ul>
 <p>The <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/release/matplotlibrc">matplotlibrc file</a> has some
 recommended revisions to <a class="reference external" href="http://www.matplotlib.org">matplotlib</a>&#8216;s defaults.  To use it, copy it to the
@@ -193,7 +192,8 @@ working directory or <a class="reference external" href="http://www.matplotlib.o
 <li>Jason Heeris (<a class="reference external" href="http://www.mail-archive.com/matplotlib-users&#64;lists.sourceforge.net/msg14433.html">efficient base-10 logarithm</a>),</li>
 </ul>
 <p>Suggestions and bug fixes have been provided by Arnout Aertgeerts, Kevin Bandy,
-Thomas Beutlich, Martin Sjölund, Mike Tiller, and Michael Wetter.</p>
+Thomas Beutlich, Moritz Lauster, Martin Sjölund, Mike Tiller, and Michael
+Wetter.</p>
 <p><strong>License terms and development</strong></p>
 <p>ModelicaRes is published under a <a class="reference external" href="license.html">BSD-compatible license</a>.  The
 development site is <a class="reference external" href="https://github.com/kdavies4/ModelicaRes">https://github.com/kdavies4/ModelicaRes</a>.  Please share any
@@ -235,7 +235,7 @@ suggestions, please <a class="reference external" href="https://github.com/kdavi
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on May 21, 2014.
+      Last updated on Jun 02, 2014.
     </div>
   </body>
 </html>

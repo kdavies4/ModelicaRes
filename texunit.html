@@ -148,8 +148,8 @@ For example,</p>
 </div>
 </div></blockquote>
 </li>
-<li><p class="first"><em>roman</em>: <em>True</em>, if the units should be typeset in Roman text (rather
-than italics)</p>
+<li><p class="first"><em>roman</em>: <em>True</em>, if the units should be typeset in Roman (rather than
+italics)</p>
 </li>
 </ul>
 <p><strong>Examples:</strong></p>
@@ -168,8 +168,8 @@ than italics)</p>
 
 <dl class="function">
 <dt id="modelicares.texunit.quantity_str">
-<tt class="descclassname">modelicares.texunit.</tt><tt class="descname">quantity_str</tt><big>(</big><em>number</em>, <em>unit=''</em>, <em>format='%G'</em>, <em>times='\\</em>, <em>'</em>, <em>roman=False</em><big>)</big><a class="headerlink" href="#modelicares.texunit.quantity_str" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate text to write a quantity as a number times a unit.</p>
+<tt class="descclassname">modelicares.texunit.</tt><tt class="descname">quantity_str</tt><big>(</big><em>number</em>, <em>unit=''</em>, <em>use_si=True</em>, <em>format='%g'</em>, <em>times='\\</em>, <em>'</em>, <em>roman=True</em><big>)</big><a class="headerlink" href="#modelicares.texunit.quantity_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a string to write a quantity as a number times a unit.</p>
 <p>If an exponent is present, then either a LaTeX-formatted exponential or a
 System International (SI) prefix is applied.</p>
 <p><strong>Arguments:</strong></p>
@@ -181,12 +181,13 @@ System International (SI) prefix is applied.</p>
 <div><p><em>unit</em> uses extended <a class="reference external" href="http://www.modelica.org/">Modelica</a> notation.  See <a class="reference internal" href="#modelicares.texunit.unit2tex" title="modelicares.texunit.unit2tex"><tt class="xref py py-meth docutils literal"><span class="pre">unit2tex()</span></tt></a>.</p>
 </div></blockquote>
 </li>
+<li><p class="first"><em>use_si</em>: <em>True</em>, if SI prefixes should be used</p>
+</li>
 <li><p class="first"><em>format</em>: Modified <a class="reference external" href="http://www.python.org/">Python</a> number formatting string</p>
 <blockquote>
-<div><p>If LaTeX-formatted exponentials should be applied, then then use an
+<div><p>If LaTeX-formatted exponentials should be applied, then use an
 uppercase exponential formatter (&#8216;E&#8217; or &#8216;G&#8217;).  A lowercase exponential
-formatter (&#8216;e&#8217; or &#8216;g&#8217;) will result in a System International (SI)
-prefix, if applicable.</p>
+formatter (&#8216;e&#8217; or &#8216;g&#8217;) will result in a SI prefix, if applicable.</p>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference external" href="http://docs.python.org/release/2.5.2/lib/typesseq-strings.html">http://docs.python.org/release/2.5.2/lib/typesseq-strings.html</a>
@@ -202,18 +203,18 @@ the significand and the exponent is always indicated by
 &#8220;<img class="math" src="images/math/c69691d64985442217922c8d34e835a9dea60178.png" alt="\times"/>&#8221;.</p>
 </div></blockquote>
 </li>
-<li><p class="first"><em>roman</em>: <em>True</em>, if the units should be typeset in Roman text (rather
-than italics)</p>
+<li><p class="first"><em>roman</em>: <em>True</em>, if the units should be typeset in Roman (rather than
+italics)</p>
 </li>
 </ul>
 <p><strong>Examples:</strong></p>
 <blockquote>
-<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quantity_str</span><span class="p">(</span><span class="mf">1.2345e-3</span><span class="p">,</span> <span class="s">&#39;m&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.3e</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">roman</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div><div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quantity_str</span><span class="p">(</span><span class="mf">1.2345e-3</span><span class="p">,</span> <span class="s">&#39;m&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.3f</span><span class="s">&#39;</span><span class="p">)</span>
 <span class="go">&#39;1.234$\\,\\mathrm{mm}$&#39;</span>
 </pre></div>
 </div>
 <p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: <img class="math" src="images/math/f8b195efbaf0ffe5542a3a829afb50cb85e233ca.png" alt="1.234\mathrm{\,mm}"/></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quantity_str</span><span class="p">(</span><span class="mf">1.2345e-3</span><span class="p">,</span> <span class="s">&#39;m&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.3E</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">roman</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quantity_str</span><span class="p">(</span><span class="mf">1.2345e-3</span><span class="p">,</span> <span class="s">&#39;m&#39;</span><span class="p">,</span> <span class="n">use_si</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.3e</span><span class="s">&#39;</span><span class="p">)</span>
 <span class="go">&#39;1.234$\\times10^{-3}$$\\,\\mathrm{m}$&#39;</span>
 </pre></div>
 </div>
@@ -223,7 +224,7 @@ than italics)</p>
 </pre></div>
 </div>
 <p>in <a class="reference external" href="http://www.latex-project.org/">LaTeX</a>: <img class="math" src="images/math/516b366d05af4b384d90cc84ae867097a80e0ebf.png" alt="1.2345\times10^{6}"/></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quantity_str</span><span class="p">(</span><span class="mf">1e3</span><span class="p">,</span> <span class="s">&#39;\Omega&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.1e</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">roman</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">quantity_str</span><span class="p">(</span><span class="mf">1e3</span><span class="p">,</span> <span class="s">&#39;\Omega&#39;</span><span class="p">,</span> <span class="n">format</span><span class="o">=</span><span class="s">&#39;</span><span class="si">%.1f</span><span class="s">&#39;</span><span class="p">)</span>
 <span class="go">&#39;1.0$\\,\\mathrm{k\\Omega}$&#39;</span>
 </pre></div>
 </div>
@@ -255,8 +256,8 @@ follow the significand (e.g., no carat (&#8216;^&#8217;)).</p>
 units.  The default is 3/18 quad space.</p>
 </div></blockquote>
 </li>
-<li><p class="first"><em>roman</em>: <em>True</em>, if the units should be typeset in Roman text (rather
-than italics)</p>
+<li><p class="first"><em>roman</em>: <em>True</em>, if the units should be typeset in Roman (rather than
+italics)</p>
 </li>
 </ul>
 <p><strong>Example:</strong></p>
@@ -297,7 +298,7 @@ than italics)</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on May 21, 2014.
+      Last updated on Jun 02, 2014.
     </div>
   </body>
 </html>
