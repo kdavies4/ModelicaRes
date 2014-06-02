@@ -23,7 +23,6 @@ import numpy as np
 
 from control.matlab import ss
 from functools import wraps
-from glob import glob
 from matplotlib.cbook import iterable
 from scipy.signal import ss2tf
 from six import string_types
@@ -37,7 +36,7 @@ from modelicares._io.dymola import loadlin as dymola
 LOADERS = [('dymola', dymola)] # LinRes tries these in order.
 # All of the keys should be in lowercase.
 
-#pylint: disable=C0103, C0325, R0913, R0914, W0102, W0142
+#pylint: disable=C0103, C0302, C0325, R0913, R0914, W0102, W0142
 
 def _from_names(func):
     """Return a method that accepts names or indices to identify system inputs
@@ -46,7 +45,7 @@ def _from_names(func):
     I.e., a decorator to accept names or indices to identify inputs and outputs
     """
     @wraps(func)
-    def wrapped(cls, iu=None, iy=None):
+    def wrapped(self, iu=None, iy=None):
         """Method that accepts names or indices to identify system inputs and
         outputs
 
@@ -62,31 +61,31 @@ def _from_names(func):
         """
         # Get the input index.
         if iu is None:
-            if len(cls.sys.input_names) == 1:
+            if len(self.sys.input_names) == 1:
                 iu = 0
             else:
                 raise IndexError("iu must be specified since this is a MI "
                                  "system.")
         elif not isinstance(iu, int):
             try:
-                iu = cls.sys.input_names.index(iu)
+                iu = self.sys.input_names.index(iu)
             except ValueError:
                 raise ValueError('The input "%s" is invalid.' % iu)
 
         # Get the output index.
         if iy is None:
-            if len(cls.sys.output_names) == 1:
+            if len(self.sys.output_names) == 1:
                 iy = 0
             else:
                 raise IndexError("iy must be specified since this is a MO "
                                  "system.")
         elif not isinstance(iy, int):
             try:
-                iy = cls.sys.output_names.index(iy)
+                iy = self.sys.output_names.index(iy)
             except ValueError:
                 raise ValueError('The output "%s" is invalid.' % iy)
 
-        return func(cls, iu, iy)
+        return func(self, iu, iy)
 
     return wrapped
 

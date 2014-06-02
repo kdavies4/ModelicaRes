@@ -33,7 +33,6 @@ from abc import abstractmethod
 from collections import namedtuple
 from difflib import get_close_matches
 from functools import wraps
-from glob import glob
 from itertools import cycle
 from matplotlib import rcParams
 from matplotlib.cbook import iterable
@@ -47,8 +46,7 @@ from modelicares import util
 from modelicares._res import Res, ResList
 from modelicares.texunit import unit2tex, number_label
 
-#pylint: disable=C0103, C0302, E0213, R0904, R0912, R0913, R0914, R0915, W0102,
-#pylint: disable=W0142
+#pylint: disable=C0103, C0302, E0213, R0912, R0913, R0914, R0915, W0102, W0142
 
 
 def _apply_function(func):
@@ -90,22 +88,58 @@ def _select(func):
     I.e., a decorator to use time-based indexing to select values
     """
     @wraps(func)
-    def wrapped(cls, t=None, *args, **kwargs):
+    def wrapped(self, t=None, *args, **kwargs):
         """Function that uses time-based indexing to return values
 
         If *t* is *None* (default), then all values are returned (i.e., pass
         through or identity).
         """
+        def get_slice(t):
+            """Return a slice that indexes the variable.
+
+            Argument *t* is a tuple with one of the following forms:
+
+              - (*stop*,): All samples up to *stop* are included.
+
+                   Be sure to include the comma to distinguish this from a
+                   float.
+
+              - (*start*, *stop*): All samples between *start* and *stop* are
+                included.
+
+              - (*start*, *stop*, *skip*): Every *skip*th sample between *start*
+                and *stop* is included.
+            """
+            # Retrieve the start time, stop time, and number of samples to skip.
+            try:
+                (t1, t2, skip) = t
+            except ValueError:
+                skip = None
+                try:
+                    (t1, t2) = t
+                except ValueError:
+                    t1 = None
+                    (t2,) = t
+            assert t1 is None or t2 is None or t1 <= t2, (
+                "The lower time limit must be less than or equal to the upper "
+                "time limit.")
+
+            # Determine the corresponding indices and return them in a tuple.
+            times = self.times()
+            i1 = None if t1 is None else util.get_indices(times, t1)[1]
+            i2 = None if t2 is None else util.get_indices(times, t2)[0] + 1
+            return slice(i1, i2, skip)
+
         if t is None:
             # Return all values.
-            return func(cls, *args, **kwargs)
+            return func(self, *args, **kwargs)
         elif isinstance(t, tuple):
             # Apply a slice with optional start time, stop time, and number
             # of samples to skip.
-            return func(cls, *args, **kwargs)[cls._slice(t)]
+            return func(self, *args, **kwargs)[get_slice(t)]
         else:
             # Interpolate at single time or list of times.
-            function_at_ = interp1d(cls.times(), func(cls, *args, **kwargs))
+            function_at_ = interp1d(self.times(), func(self, *args, **kwargs))
             # For some reason, this wraps single values as arrays, so need to
             # cast back to float.
             try:
@@ -338,42 +372,6 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         """
         pass
 
-    def _slice(self, t):
-        """Return a slice that indexes the variable.
-
-        Argument *t* is a tuple with one of the following forms:
-
-          - (*stop*,): All samples up to *stop* are included.
-
-               Be sure to include the comma to distinguish this from a
-               float.
-
-          - (*start*, *stop*): All samples between *start* and *stop* are
-            included.
-
-          - (*start*, *stop*, *skip*): Every *skip*th sample between *start* and
-            *stop* is included.
-        """
-        # Retrieve the start time, stop time, and the number of samples to skip.
-        try:
-            (t1, t2, skip) = t
-        except ValueError:
-            skip = None
-            try:
-                (t1, t2) = t
-            except ValueError:
-                t1 = None
-                (t2,) = t
-        assert t1 is None or t2 is None or t1 <= t2, (
-            "The lower time limit must be less than or equal to the upper time "
-            "limit.")
-
-        # Determine the corresponding indices and return them in a tuple.
-        times = self.times()
-        i1 = None if t1 is None else util.get_indices(times, t1)[1]
-        i2 = None if t2 is None else util.get_indices(times, t2)[0] + 1
-        return slice(i1, i2, skip)
-
 
 class _VarDict(dict):
     """Specialized dictionary for simulation variables (instances of
@@ -563,42 +561,6 @@ class SimRes(Res):
         # Remember the tool and filename.
         self.tool = tool
         super(SimRes, self).__init__(fname)
-
-    def _acceptlists(f):
-        """Return a function that accepts an optionally nested list of variable
-        names, given a function that accepts a single variable name.
-        """
-        @wraps(f)
-        def wrapped(self, names, *args, **kwargs):
-            """Traverse lists recursively until the argument is a single
-            variable name, then pass it to the original function and return the
-            result upwards.
-            """
-            if isinstance(names, string_types):
-                return f(self, names, *args, **kwargs)
-            else:
-                return [wrapped(self, name, *args, **kwargs) for name in names]
-
-        return wrapped
-
-    def _fromname(func):
-        """Return a method that accepts the name of variable, given a method
-        that accepts the variable itself.
-        """
-        @wraps(func)
-        def wrapped(self, name, *args, **kwargs):
-            """Look up the variable and pass it to the original method."""
-            try:
-                return func(self._variables[name], *args, **kwargs)
-            except TypeError:
-                if isinstance(name, list):
-                    raise TypeError("To access a list of variables, use the "
-                                    "call method (parentheses instead of "
-                                    "brackets).")
-                else:
-                    raise
-
-        return wrapped
 
     # TODO: Remove the "_" prefix and add this to the list once it's finished.
     def _bar(self, names, times=[0], width=0.6, n_rows=1,
@@ -1297,7 +1259,6 @@ class SimRes(Res):
         return value.  The result of the corresponding attribute in this class
         is a list of the results of the attribute of each variable.  The
         attributes in this class accept the same call signature.
-        :meth:`arrays` in this class corresponds to :meth:`Variable.array`.
 
         **Arguments**:
 
@@ -1367,20 +1328,16 @@ class SimRes(Res):
         """
         return name in self._variables
 
-    @_fromname
-    def __getitem__(variable):
+    def __getitem__(self, name):
         """Access a variable by name.
 
-        The return value can be used to retrieve information about the variable.
-        It has the following methods:
+        This method returns an instance of :class:`Variable`, which has the
+        following methos to retrieve information about the variable:
 
         - :meth:`~Variable.array` - Return an array of times and values for the
           variable.
 
         - :meth:`~Variable.FV` - Return the final value of the variable.
-
-        - :meth:`~Variable.is_constant` - Return *True* if the variable does not
-          change over time.
 
         - :meth:`~Variable.IV` - Return the final value of the variable.
 
@@ -1430,7 +1387,14 @@ class SimRes(Res):
            >>> sim['L.v'].values(t=(10,25)) # doctest: +NORMALIZE_WHITESPACE
            array([ 0.2108,  0.3046,  0.3904,  0.468 ], dtype=float32)
         """
-        return variable
+        try:
+            return self._variables[name]
+        except TypeError:
+            if isinstance(name, list):
+                raise TypeError("To access a list of variables, use the call "
+                                "method (parentheses instead of brackets).")
+            else:
+                raise
 
     def __len__(self):
         """Return the number of variables in the simulation.
@@ -1573,7 +1537,7 @@ class SimResList(ResList):
        ['.../examples/ChuaCircuit/1', '.../examples/ChuaCircuit/2']
     """
 
-    # TODO: Add browse method to plot any common variable across all simulations.
+    # TODO: Add browse method to plot common variables across all simulations.
 
     def __init__(self, *args):
         """Initialize as a list of :class:`SimRes` instances, loading files as
@@ -1780,7 +1744,7 @@ class SimResList(ResList):
             # Slice the simulation list and cast it as a SimResList.
             return self.__class__(list.__getitem__(self, i))
         elif isinstance(i, string_types):
-            # Return a list containing the variable from each of the simulations.
+            # Return a list containing the variable from each simulation.
             return _VarList([sim[i] for sim in self])
         else:
             # Return a single simulation (SimRes instance).
