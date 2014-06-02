@@ -1774,13 +1774,11 @@ class SimResList(ResList):
                     + self[0].fname)
         else:
             basedir = self.basedir
-            start = len(basedir) + 1
-            short_fnames = [fname[start:] for fname in self.fname]
             string = ("List of simulation results (SimRes instances) from the "
                       "following files")
             string += ("\nin the %s directory:\n   "
                        % basedir if basedir else ":\n   ")
-            string += "\n   ".join(short_fnames)
+            string += "\n   ".join(self.fnames)
             return string
 
     def plot(self, *args, **kwargs):
@@ -1802,8 +1800,10 @@ class SimResList(ResList):
         - *suffixes*: Suffix or list of suffixes for the legends (see
           :meth:`simres.SimRes.plot`)
 
-             If *suffixes* is *None*, then no suffix will be used.  If it is an
-             empty string (''), then the base filenames will be used.
+             Use '' for no suffix.  If *suffixes* is *None*, the *label*
+             property of the simulations will be used.  If the simulations do
+             not have *label* properties, then the base filenames will be used
+             with enough of the path to distinguish the files.
 
         - *color*: Single entry, list, or :class:`itertools.cycle` of colors
           to be used sequentially
@@ -1832,7 +1832,7 @@ class SimResList(ResList):
            :alt: plot of a Chua circuit with different inductances
         """
         # Get the local arguments.
-        suffixes = kwargs.pop('suffixes', '')
+        suffixes = kwargs.pop('suffixes', None)
         color = kwargs.pop('color', ['b', 'g', 'r', 'c', 'm', 'y', 'k'])
         dashes = kwargs.pop('dashes', [(None, None), (3, 3), (1, 1),
                                        (3, 2, 1, 2)])
@@ -1851,10 +1851,12 @@ class SimResList(ResList):
         kwargs['dashes'] = dashes
 
         # Process the suffixes input.
-        if suffixes == '':
-            start = len(self.basedir)
-            suffixes = [sim.fname[start:].lstrip(os.sep) for sim in self]
-        elif suffixes is None:
+        if suffixes is None:
+            try:
+                suffixes = self.label
+            except AttributeError:
+                suffixes = self.fnames
+        elif suffixes == '':
             suffixes = ['']*len(self)
 
         # Generate the plots.

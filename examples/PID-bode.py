@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# Example of LinRes.bode()
 
 from modelicares import LinRes
 

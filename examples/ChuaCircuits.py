@@ -1,9 +1,15 @@
 #!/usr/bin/python
+# Example of SimResList.plot()
 
 from modelicares import SimResList
 
-sims = SimResList('ChuaCircuit/*/*.mat')
-sims.plot(title="Chua circuit",
-          suffixes=['L.L = %.0f H' % sim['L.L'].IV()
-                    for sim in sims], # Read legend parameters.
-          ynames1='L.i', ylabel1="Current", leg1_kwargs=dict(loc='upper right'))
+sims = SimResList('ChuaCircuit.mat', 'ChuaCircuit/*/')
+
+# Create labels.
+label = lambda L: 'w/ L.L = {L} {U}'.format(L=L.value(), U=L.unit)
+for sim in sims:
+    sim.label = label(sim['L.L'])
+
+# Create the plot
+sims.plot('L.i', ylabel1="Voltage",
+          title="Chua circuit\nwith varying inductance")

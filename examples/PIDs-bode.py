@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# Example of LinResList.bode()
 
 from os.path import join
 from modelicares import LinResList, read_params

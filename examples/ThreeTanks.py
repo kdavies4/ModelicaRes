@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# Example of SimRes.sankey()
+
 from modelicares import SimRes
 
 sim = SimRes('ThreeTanks.mat')

@@ -1,9 +1,5 @@
 #!/usr/bin/python
-"""Demo of loading a CSV file using base.load_csv
-"""
-__author__ = "Kevin Davies"
-__version__ = "2011-05-31"
-__email__ = "kdavies4@gmail.com"
+# Example of loading a CSV file using util.load_csv()
 
 import os
 from modelicares import load_csv

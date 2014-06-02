@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# Example of util.setup_subplots()
 
 from modelicares import util
 

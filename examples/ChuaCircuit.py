@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# Example of SimRes.plot()
 
 from modelicares import SimRes
 

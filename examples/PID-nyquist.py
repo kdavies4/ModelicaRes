@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# Example of LinRes.nyquist()
 
 from modelicares import LinRes
 

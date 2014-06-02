@@ -117,6 +117,15 @@ class ResList(list):
         fnames = [fname.rpartition(os.sep)[0] for fname in self.fname]
         return os.path.commonprefix(fnames).rstrip(os.sep)
 
+    @property
+    def fnames(self):
+        """Filenames of the result files, resolved to *basedir*
+
+        The get the absolute paths of the result files, use *fname* (singular).
+        """
+        start = len(self.basedir) + 1
+        return [res.fname[start:] for res in self]
+
     @assert_sametype
     def extend(self, other):
         """Extend the list by appending elements from an iterable of Modelica_

@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/pythont
+# Example of LinResList.nyquist()
 
 from os.path import join, dirname
 from modelicares import LinResList, read_params

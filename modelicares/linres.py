@@ -747,31 +747,32 @@ class LinResList(ResList):
                     + self[0].fname)
         else:
             basedir = self.basedir
-            start = len(basedir) + 1
-            short_fnames = [fname[start:] for fname in self.fname]
             string = ("List of linearization results (LinRes instances) from "
                       "the following files")
             string += ("\nin the %s directory:\n   "
                        % basedir if basedir else ":\n   ")
-            string += "\n   ".join(short_fnames)
+            string += "\n   ".join(self.fnames)
             return string
 
     def _get_labels(self, labels):
         """Create labels for the legend of a Bode or Nyquist plot.
 
         If *labels* is *None*, then no label will be used.  If it is an empty
-        string (''), then the base filenames will be used.
+        string (''), then the filenames will be used (resolved to the
+        *basedir*).
         """
-        if labels == None:
-            labels = ['']*len(self)
+        if labels is None:
+            try:
+                labels = self.label
+            except AttributeError:
+                labels = self.fnames
         elif labels == '':
-            start = len(self.basedir)
-            labels = [lin.fname[start:].lstrip(os.sep) for lin in self]
+            labels = ['']*len(self)
 
         return labels
 
     def bode(self, axes=None, pair=(0, 0), label='bode', title="Bode plot",
-             labels='', colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
+             labels=None, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
              styles=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)], leg_kwargs={},
              **kwargs):
         r"""Plot the linearizations onto a single Bode diagram.
@@ -900,7 +901,7 @@ class LinResList(ResList):
 
     def nyquist(self, ax=None, pair=(0, 0), label='nyquist',
                 title="Nyquist plot", xlabel="Real axis",
-                ylabel="Imaginary axis", labels='',
+                ylabel="Imaginary axis", labels=None,
                 colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'],
                 leg_kwargs={}, **kwargs):
         r"""Plot the linearizations onto a single Nyquist diagram.

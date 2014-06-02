@@ -19,7 +19,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 
 import re
 
-from modelicares.util import si_prefix
+from modelicares.util import si_prefix, get_pow1000
 
 #pylint: disable=C0103, W0622
 
@@ -95,7 +95,8 @@ def number_label(quantity="", unit=None, times=r'\,', per=r'\,/\,',
     else:
         return quantity
 
-def quantity_str(number, unit='', format='%G', times=r'\,', roman=True):
+def quantity_str(number, unit='', use_si=True, format='%g', times=r'\,',
+                 roman=True):
     r"""Generate a string to write a quantity as a number times a unit.
 
     If an exponent is present, then either a LaTeX-formatted exponential or a
@@ -108,6 +109,8 @@ def quantity_str(number, unit='', format='%G', times=r'\,', roman=True):
     - *unit*: String specifying the unit
 
          *unit* uses extended Modelica_ notation.  See :meth:`unit2tex`.
+
+    - *use_si*: *True*, if SI prefixes should be used
 
     - *format*: Modified Python_ number formatting string
 
@@ -131,12 +134,12 @@ def quantity_str(number, unit='', format='%G', times=r'\,', roman=True):
 
     **Examples:**
 
-       >>> quantity_str(1.2345e-3, 'm', format='%.3e')
+       >>> quantity_str(1.2345e-3, 'm', format='%.3f')
        '1.234$\\,\\mathrm{mm}$'
 
        in LaTeX_: :math:`1.234\mathrm{\,mm}`
 
-       >>> quantity_str(1.2345e-3, 'm', format='%.3E')
+       >>> quantity_str(1.2345e-3, 'm', use_si=False, format='%.3e')
        '1.234$\\times10^{-3}$$\\,\\mathrm{m}$'
 
        in LaTeX_: :math:`1.234\times10^{-3}\,\mathrm{m}`
@@ -146,7 +149,7 @@ def quantity_str(number, unit='', format='%G', times=r'\,', roman=True):
 
        in LaTeX_: :math:`1.2345\times10^{6}`
 
-       >>> quantity_str(1e3, '\Omega', format='%.1e')
+       >>> quantity_str(1e3, '\Omega', format='%.1f')
        '1.0$\\,\\mathrm{k\\Omega}$'
 
        in LaTeX_: :math:`1.0\,\mathrm{k\Omega}`
@@ -154,41 +157,27 @@ def quantity_str(number, unit='', format='%G', times=r'\,', roman=True):
 
     .. _Python: http://www.python.org/
     """
-
-    # Apply engineering notation and SI prefixes.
-    if 'E' in format:
-        use_SI = False
-        format = format.replace('E', 'e')
-    elif 'G' in format:
-        use_SI = False
-        format = format.replace('G', 'g')
-    else:
-        use_SI = True
+    # Factor out powers of 1000 if SI prefixes will be used.
+    if use_si and unit:
+        pow1000 = max(min(get_pow1000(number), 8), -8)
+        number /= 1000**pow1000
+        unit = si_prefix(pow1000) + unit
 
     # Format the number as a string.
     numstr = format % number
+    numstr = numstr.replace('E', 'e')
 
-    # Use LaTeX formatting or SI prefixes if an exponent is present.
-    try: # to format the exponent in LaTeX.
+    # Use LaTeX formatting for scientific notation.
+    try:
         significand, exponent = numstr.split('e')
     except ValueError:
-        pass # since no exponent.
+        pass # No exponent
     else:
-        if use_SI:
-            e = int(exponent)
-            if e >= 0:
-                pow1000 = int(e/3) # The int casting is necessary in Python3.
-            else:
-                pow1000 = -int((1 - e)/3)
-            pow1000 = max(min(pow1000, 8), -8) # Apply limits of SI prefixes.
-            unit = si_prefix(pow1000) + unit
-            format = format.replace('e', 'f').replace('g', 'f')
-            numstr = format % (number/1000**pow1000)
-        else: # Use LaTeX formatting.
-            exponent = str(int(exponent))
-            numstr = significand + r'$\times10^{' + exponent + '}$'
+        numstr = significand + r'$\times10^{%i}$' % int(exponent)
+
+    # Return the number with the unit.
     if unit:
-        return numstr + r'$\,' + unit2tex(unit, times, roman) + '$'
+        return numstr + r'$' + times + unit2tex(unit, times, roman) + '$'
     else:
         return numstr
 

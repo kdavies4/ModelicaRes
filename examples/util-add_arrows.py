@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# Example of util.add_arrows()
 
 import numpy as np
 import matplotlib.pyplot as plt
