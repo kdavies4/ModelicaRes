@@ -23,8 +23,8 @@ classes from its submodules.  These are:
 
 - Supporting classes and functions (:mod:`~modelicares.util` submodule):
   :meth:`~util.add_arrows`, :meth:`~util.add_hlines`, :meth:`~util.add_vlines`,
-  :class:`~util.ArrowLine`, :meth:`~util.closeall`, :meth:`~util.fglob`,
-  :meth:`~util.figure`, :meth:`~util.load_csv`, :meth:`~util.save`,
+  :class:`~util.ArrowLine`, :meth:`~util.closeall`, :meth:`~util.figure`,
+  :meth:`~util.load_csv`, :meth:`~util.multiglob`, :meth:`~util.save`,
   :meth:`~util.saveall`, and :meth:`~util.setup_subplots`
 
 A function is also provided:
@@ -46,8 +46,8 @@ __version__ = "0.11.1"
 from modelicares.simres import SimRes, SimResList
 from modelicares.linres import LinRes, LinResList
 from modelicares.util import (add_arrows, add_hlines, add_vlines, ArrowLine,
-                              closeall, fglob, figure, load_csv, save, saveall,
-                              setup_subplots)
+                              closeall, multiglob, figure, load_csv, save,
+                              saveall, setup_subplots)
 from modelicares.exps import (doe, Experiment, gen_experiments, modelica_str,
                               ParamDict, read_params, write_params,
                               write_script)
@@ -92,10 +92,8 @@ def load(*args):
        [15.0, 21.0]
     """
 
-    # Get a unique list of matching filenames.
-    fnames = set()
-    for arg in args:
-        fnames = fnames.union(util.fglob(arg))
+    # Get the set of matching filenames.
+    fnames = util.multiglob(args)
 
     # Load the files and append each result onto the appropriate list.
     sims = SimResList()

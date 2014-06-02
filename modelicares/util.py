@@ -4,7 +4,11 @@
 
 **Classes:**
 
-- :class:`ArrowLine` - A matplotlib subclass to draw an arrowhead on a line
+- :class:`ArrowLine` - A `matplotlib <http://www.matplotlib.org>`_ subclass to
+  draw an arrowhead on a line
+
+- :class:`CallList` - List that when called returns a list of the results from
+  calling its elements
 
 **Functions:**
 
@@ -16,6 +20,8 @@
 
 - :meth:`add_vlines` - Add vertical lines to a set of axes with optional
   labels.
+
+- :meth:`basename` - Return the base filename from *fname*.
 
 - :meth:`cast_sametype` - Decorator to cast the output of a method as an
   instance of the containing class
@@ -33,8 +39,6 @@
 
 - :meth:`flatten_list` - Flatten a nested list.
 
-- :meth:`fglob` - Return a list of filenames that match a pathname pattern.
-
 - :meth:`figure` - Create a figure and set its label.
 
 - :meth:`get_indices` - Return the pair of indices that bound a target value in
@@ -47,10 +51,16 @@
 
 - :meth:`match` - Reduce a list of strings to those that match a pattern.
 
+- :meth:`multiglob` - Return a set of filenames that match sets of pathnames
+  and extensions.
+
 - :meth:`plot` - Plot 1D scalar data as points and/or line segments in 2D
   Cartesian coordinates.
 
 - :meth:`quiver` - Plot 2D vector data as arrows in 2D Cartesian coordinates.
+
+- :meth:`replace` - Perform a list of replacements on the text in a list of
+  files.
 
 - :meth:`save` - Save the current figures as images in a format or list of
   formats.
@@ -69,6 +79,9 @@
 - :meth:`si_prefix` - Return the SI prefix for a power of 1000.
 
 - :meth:`tree` - Return a tree of strings as a nested dictionary.
+
+- :meth:`yes` - Ask a yes/no question and return *True* if the answer is 'Y'
+  or 'y'.
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
@@ -77,6 +90,8 @@ __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
 import os
+import re
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -271,10 +286,21 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
 
 
 class CallList(list):
-    """TODO: doc
+    """List that when called returns a list of the results from calling its
+    elements.
+
+    **Example:**
+
+    .. code-block:: python
+
+       >>> from modelicares import util
+       >>> f = lambda x: lambda y: x*y
+       >>> l = util.CallList([f(2), f(3)])
+       >>> l(5)
+       [10, 15]
     """
     def __call__(self, *args, **kwargs):
-        """TODO: doc
+        """Return a list of the results from calling the elements of the list.
         """
         return [item(*args, **kwargs) for item in self]
 
@@ -372,18 +398,20 @@ def figure(label='', *args, **kwargs):
     return fig
 
 def basename(fname):
-    """TODO doc, add to function list"""
+    """Return the base filename from *fname*.
+
+    Unlike :meth:`os.path.basename`, this function strips the file extension."""
     return os.path.splitext(os.path.basename(fname))[0]
 
-def fglob(path, extensions={'*.mat'}):
-    """Return a list of filenames that match a pathname pattern.
+def multiglob(pathnames, extensions={'*.mat'}):
+    """Return a set of filenames that match a pathname pattern.
 
     Unlike Python's :meth:`glob.glob` function, this function runs an additional
     expansion on matches that are directories.
 
     **Arguments:**
 
-    - *path*: String used to match files or folders
+    - *pathnames*: String or set of strings used to match files or folders
 
          This may contain Unix shell-style patterns:
 
@@ -396,27 +424,30 @@ def fglob(path, extensions={'*.mat'}):
          [!seq]         Matches any char not in seq
          ============   ============================
 
-   - *extensions*: Set of filename patterns that should be used to match files
-     in any directories generated from *path*
+   - *extensions*: Filename pattern or set of patterns that should be used to
+     match files in any directories generated from *pathnames*
 
-        These patterns may also use the patterns above.
+        These may also use the shell-style patterns above.
 
     **Example:**
 
+    .. code-block:: python
+
        >>> from modelicares import *
-       >>> fglob("examples/ChuaCircuit/*/") # doctest: +SKIP
+       >>> multiglob("examples/ChuaCircuit/*/") # doctest: +SKIP
        ['examples/ChuaCircuit/1/dsres.mat', 'examples/ChuaCircuit/2/dsres.mat']
     """
     # Since order is arbitrary, the doctest is skipped here and included in
     # tests/tests.txt instead.
-    fnames = []
-    items = glob(path)
-    for item in items:
-        if os.path.isdir(item):
-            for ext in extensions:
-                fnames.extend(glob(os.path.join(item, ext)))
-        else:
-            fnames.append(item)
+    fnames = set()
+    for pathname in flatten_list(pathnames):
+        items = glob(pathname)
+        for item in items:
+            if os.path.isdir(item):
+                for ext in set(extensions):
+                    fnames = fnames.union(glob(os.path.join(item, ext)))
+            else:
+                fnames.add(item)
     return fnames
 
 
@@ -433,6 +464,8 @@ def flatten_dict(d, parent_key='', separator='.'):
       names
 
     **Example:**
+
+    .. code-block:: python
 
        >>> from modelicares import *
        >>> flatten_dict(dict(a=1, b=dict(c=2, d='hello')))
@@ -463,6 +496,8 @@ def flatten_list(l, ltypes=(list, tuple)):
     - *ltypes*: Tuple (not list) of accepted indexable types
 
     **Example:**
+
+    .. code-block:: python
 
        >>> from modelicares import *
        >>> flatten_list([1, [2, 3, [4]]])
@@ -574,6 +609,8 @@ def get_indices(x, target):
 
     **Example:**
 
+    .. code-block:: python
+
        >>> from modelicares import *
        >>> get_indices([0, 1, 2], 1.6)
        (1, 2)
@@ -602,6 +639,8 @@ def get_pow1000(num):
     within the range [1, 1000).
 
     **Example:**
+
+    .. code-block:: python
 
        >>> get_pow1000(1e5)
        1
@@ -700,6 +739,8 @@ def match(strings, pattern=None, re=False):
 
     **Arguments:**
 
+    - *strings*: List of strings
+
     - *pattern*: Case-sensitive string used for matching
 
       - If *re* is *False* (next argument), then the pattern follows the
@@ -735,6 +776,8 @@ def match(strings, pattern=None, re=False):
     - *re*: *True* to use regular expressions (*False* to use shell style)
 
     **Example:**
+
+    .. code-block:: python
 
        >>> from modelicares.util import match
        >>> match(['apple', 'orange', 'banana'], '*e')
@@ -903,6 +946,49 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
     return p
 
 
+def replace(fnames, rpls):
+    r"""Perform a list of replacements on the text in a list of files.
+
+    **Arguments:**
+
+    - *fnames*: Filename or list of filenames
+
+    - *rpl*: List of replacements to make
+
+         Each entry is a tuple of (*src*, *dest*), where *dest* is a string that
+         will replace the *src* string.  Each string can use Python's :mod:re
+         expressions; see https://docs.python.org/2/library/re.html for details.
+
+    **Example:**
+
+    .. code-block:: python
+
+       >>> from modelicares import util
+
+       >>> fname = 'temp.txt'
+       >>> open(fname, 'w').write("apple orange banana")
+       >>> util.replace([fname], [('ba(.*)', r'ba\1\1')])
+       >>> print(open(fname, 'r').read())
+       apple orange banananana
+
+    .. testsetup::
+       >>> os.remove(fname)
+    """
+
+    # Compile the regular expressions.
+    for i, (old, new) in enumerate(rpls):
+        rpls[i] = (re.compile(old), new)
+
+    # Read each file and make the replacements.
+    for fname in flatten_list(fnames):
+        with open(fname, 'r+') as f:
+            text = f.read()
+            for (old, new) in rpls:
+                text = old.sub(new, text)
+            f.seek(0)
+            f.write(text)
+
+
 def save(formats=['pdf', 'png'], fname=None, fig=None):
     """Save a figure in an image format or list of formats.
 
@@ -947,7 +1033,6 @@ def save(formats=['pdf', 'png'], fname=None, fig=None):
        Saved examples/temp.png
 
     .. testsetup::
-       >>> import os
        >>> os.remove("examples/temp.pdf")
        >>> os.remove("examples/temp.png")
 
@@ -978,7 +1063,7 @@ def save(formats=['pdf', 'png'], fname=None, fig=None):
         os.makedirs(directory)
 
     # Save in the desired formats.
-    for fmt in list(formats):
+    for fmt in flatten_list(formats):
         full_name = fname + '.' + fmt
         fig.savefig(full_name)
         print("Saved " + full_name)
@@ -1017,7 +1102,6 @@ def saveall(formats=['pdf', 'png']):
        Saved examples/temp.png
 
     .. testsetup::
-       >>> import os
        >>> os.remove("examples/temp.pdf")
        >>> os.remove("examples/temp.png")
     """
@@ -1311,10 +1395,10 @@ def si_prefix(pow1000):
                          "the SI prefixes (1e-24 to 1e24)." % 3*pow1000)
 
 
-def tree(strings, delimiter='.'):
+def tree(strings, separator='.'):
     """Return a tree of strings as a nested dictionary.
 
-    The levels of hierarchy in each string are marked with *delimiter*.
+    The levels of hierarchy in each string are marked with *separator*.
     The keys in the dictionary are the sub-branch names.  The value at the
     end of each branch is the full string.
 
@@ -1322,9 +1406,11 @@ def tree(strings, delimiter='.'):
 
     - *strings*: List of strings
 
-    - *delimiter*: String that marks a level of hierarchy
+    - *separator*: String that marks a level of hierarchy
 
     **Example:**
+
+    .. code-block:: python
 
        >>> from modelicares.util import tree
        >>> tree(['a.b.c', 'd.e', 'd.f'])
@@ -1338,7 +1424,7 @@ def tree(strings, delimiter='.'):
     root = {}
     for string in strings:
         branch = root
-        elements = string.split(delimiter)
+        elements = string.split(separator)
         for element in elements[:-1]:
             if not element in branch:
                 branch[element] = {}
@@ -1350,10 +1436,32 @@ def tree(strings, delimiter='.'):
 # From http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html,
 # accessed 2010/11/2012
 class ArrowLine(Line2D):
-    """A matplotlib_ subclass to draw an arrowhead on a line
+    """A `matplotlib <http://www.matplotlib.org>`_ subclass to draw an arrowhead
+    on a line
 
+    **Arguments:**
 
-    .. _matplotlib: http://www.matplotlib.org
+    - *arrow* (='-'): Type of arrow ('<' | '-' | '>')
+
+    - *arrowsize* (=2*4): Size of arrow
+
+    - *arrowedgecolor* (='b'): Color of arrow edge
+
+    - *arrowfacecolor* (='b'): Color of arrow face
+
+    - *arrowedgewidth* (=4): Width of arrow edge
+
+    - *arrowheadwidth* (=\ *arrowsize*): Width of arrow head
+
+    - *arrowheadlength* (=\ *arrowsize*): Length of arrow head
+
+    - *\*args*, *\*\*kwargs*: Additional arguments for
+      :class:`matplotlib.lines.Line2D`
+
+    **Example:**
+
+    .. plot:: examples/util-ArrowLine.py
+       :alt: example of ArrowLine()
     """
     __author__ = "Jason Grout"
     __copyright__ = "Copyright (C) 2008"
@@ -1367,31 +1475,9 @@ class ArrowLine(Line2D):
                        [Path.MOVETO, Path.LINETO, Path.LINETO, Path.CLOSEPOLY])
 
     def __init__(self, *args, **kwargs):
-        r"""Initialize the line and arrow.
+        """Initialize the line and arrow.
 
-        **Arguments:**
-
-        - *arrow* (='-'): Type of arrow ('<' | '-' | '>')
-
-        - *arrowsize* (=2*4): Size of arrow
-
-        - *arrowedgecolor* (='b'): Color of arrow edge
-
-        - *arrowfacecolor* (='b'): Color of arrow face
-
-        - *arrowedgewidth* (=4): Width of arrow edge
-
-        - *arrowheadwidth* (=\ *arrowsize*): Width of arrow head
-
-        - *arrowheadlength* (=\ *arrowsize*): Length of arrow head
-
-        - *\*args*, *\*\*kwargs*: Additional arguments for
-          :class:`matplotlib.lines.Line2D`
-
-        **Example:**
-
-        .. plot:: examples/util-ArrowLine.py
-           :alt: example of ArrowLine()
+        See the top-level class documentation.
         """
         self._arrow = kwargs.pop('arrow', '-')
         self._arrowsize = kwargs.pop('arrowsize', 2*4)
@@ -1458,6 +1544,63 @@ class ArrowLine(Line2D):
             rgb_face = colorConverter.to_rgb(facecolor)
         return rgb_face
 
+# Getch classes based on
+# http://code.activestate.com/recipes/134892-getch-like-unbuffered-character-reading-from-stdin/,
+# accessed 5/31/14
+class _Getch:
+    """Get a single character from the standard input.
+    """
+    def __init__(self):
+        try:
+            self.impl = _GetchWindows()
+        except ImportError:
+            self.impl = _GetchUnix()
+
+    def __call__(self): return self.impl()
+
+class _GetchUnix:
+    def __init__(self):
+        import tty, sys
+
+    def __call__(self):
+        import sys, tty, termios
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+
+class _GetchWindows:
+    def __init__(self):
+        import msvcrt
+
+    def __call__(self):
+        import msvcrt
+        return msvcrt.getch()
+
+def yes(question):
+    """Ask a yes/no question and return *True* if the answer is 'Y' or 'y'.
+
+    **Arguments:**
+
+    - *question*: String representing the question to the user
+
+    **Example:**
+
+    .. code-block:: python
+
+       >>> from modelicares import util
+       >>> if util.yes("Do you want to print hello (y/n)?"): # doctest: +SKIP
+       ...     print("hello")
+    """
+    getch = _Getch()
+    sys.stdout.write(question + ' ')
+    answer = getch().lower() == 'y'
+    print('')
+    return answer
 
 if __name__ == "__main__":
     # Test the contents of this file.

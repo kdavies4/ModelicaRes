@@ -16,5 +16,4 @@ lins.sort(key=lambda lin: lin.label)
 
 # and finally plot:
 lins.bode(title="Bode plot of Modelica.Blocks.Continuous.PID\n"
-                "with varying differential time constant",
-          labels=lins.label)
+                "with varying differential time constant")

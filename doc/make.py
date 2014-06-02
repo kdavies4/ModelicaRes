@@ -1,142 +1,131 @@
 #!/usr/bin/env python
-# Build the html documentation for ModelicaRes.
-#
-# This file has been copied and modified from matplotlib v1.2.
-# Kevin Davies, 9/17/2012
+# Clean, build, and release the HTML documentation for ModelicaRes.
 
 import os
 import shutil
 import sys
+import sh
 
+from sh import git, python, sphinx_build
 from glob import glob
 from collections import namedtuple
 
-# Getch classes based on
-# http://code.activestate.com/recipes/134892-getch-like-unbuffered-character-reading-from-stdin/,
-# accessed 5/31/14
-class _Getch:
-    """Get a single character from the standard input.
-    """
-    def __init__(self):
-        try:
-            self.impl = _GetchWindows()
-        except ImportError:
-            self.impl = _GetchUnix()
+from modelicares import util
 
-    def __call__(self): return self.impl()
-
-class _GetchUnix:
-    def __init__(self):
-        import tty, sys
-
-    def __call__(self):
-        import sys, tty, termios
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
-        try:
-            tty.setraw(sys.stdin.fileno())
-            ch = sys.stdin.read(1)
-        finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-        return ch
-
-class _GetchWindows:
-    def __init__(self):
-        import msvcrt
-
-    def __call__(self):
-        import msvcrt
-        return msvcrt.getch()
-
-getch = _Getch()
+BUILD_DIR = 'build/html'
 
 def build():
     """Make the HTML documentation.
     """
-    OPTIONS = '' # sphinx-build options
-
-    sys.stdout.write("Do you want to rebuild the static images (y/n)? ")
-    if getch().lower() == 'y':
+    if util.yes("Do you want to rebuild the static images (y/n)?"):
         static()
 
     make_dirs()
-    if os.system('sphinx-build %s -b html -d build/doctrees . build/html'
-                 % OPTIONS):
-        raise SystemExit("The HTML build failed.")
+    sphinx = sphinx_build.bake(b='html', d='build/doctrees')
+    print(sphinx('.', BUILD_DIR))
 
-    sys.stdout.write("Do you want to spellcheck the HTML documentation (y/n)? ")
-    if getch().lower() == 'y':
+    if util.yes("Do you want to spellcheck the HTML documentation (y/n)?"):
         spellcheck()
 
 def clean():
-    """Clean the built documentation.
+    """Remove the built documentation.
     """
     shutil.rmtree('build', ignore_errors=True)
 
 def release():
     """Publish the documentation to the webpage.
     """
-    # TODO: finish this; move sitemap notification here.
+    # Save the current state.
+    branch = git('rev-parse', '--abbrev-ref', 'HEAD').stdout.rstrip()
+    git.stash('save', "Work in progress while updating gh-pages branch")
 
-    #branch = current branch
-    os.system('git stash save "Work in progress while updating gh-pages"')
-    os.system('git checkout gh-pages')
+    # Check out the gh-pages branch.
+    git.checkout('gh-pages')
 
-    Rebase the *gh-pages* branch to squash extra commits.
+    # Remove the existing files in the base folder.
+    EXTENSIONS = ['*.html', '*.inv']
+    fnames = util.multiglob('..', EXTENSIONS)
+    for fname in fnames:
+        os.remove(fname)
 
-    # Copy the documentation to the project's root folder.
-    for f in glob('*.html') + glob('*.inv'):
-        os.remove(f)
-    for f in glob('build/html/*.html') + glob('*.inv'):
-        os.copy(f, os.path.split(f))
-    """"TODO:
-    cp -f doc/build/html/*.html ./
-    cp -f doc/build/html/*.inv ./
-    git add *.inv
-    cp -f doc/ModelicaRes.pdf ./
-    # The PDF is built on the source branch, not here.
+    # Copy the new files to the base folder.
+    fnames = util.multiglob(BUILD_DIR, EXTENSIONS)
+    for fname in fnames:
+        shutil.copy(fname, '..')
 
-    # Rename the folders.
+    # Track the new files.
+    fnames = util.multiglob('..', EXTENSIONS)
+    git.add(*fnames)
+
+    # Copy but rename the folders referenced in the HTML files.
     # Github only recognizes images, stylesheets, and javascripts as folders.
-    # Images
-    rm -r images/*
-    mv -f doc/_images/* images
-    rpl _images images *.html
-    git add images
-    rm javascripts/*
-    cp doc/build/html/_static/* javascripts
-    rpl _static javascripts *.html
-    git add javascripts
-    cp -f doc/build/html/_sources/* ./
-    git add *.rst
-    rpl -q "+ '_sources/' " "" javascripts/searchtools.js
-    git add *.html
+    FOLDERS = [('_images', 'images'),
+               ('_static', 'javascripts'),
+              ]
+    for i, (src, dst) in enumerate(FOLDERS):
+        dst = os.path.join('..', dst)
+        # Remove the existing folder.
+        shutil.rmtree(dst, ignore_errors=True)
+        # Copy the new folder.
+        shutil.copytree(os.path.join(BUILD_DIR, src), dst)
+        # Track the new folder.
+        git.add(dst)
+    # Update the HTML files to reference the new folder names.
+    html_fnames = glob(os.path.join('..', '*.html'))
+    util.replace(html_fnames, FOLDERS)
 
-    os.system('python sitemap_gen.py --config="sitemap_conf.xml"')
+    # Copy and rename the examples folder.
+    src = os.path.join(BUILD_DIR, 'examples')
+    dst = '../examples2'
+    # Remove the existing folder.
+    shutil.rmtree(dst, ignore_errors=True)
+    # Copy the new files.
+    os.mkdir(dst)
+    for fname in os.listdir(src):
+        shutil.copy(os.path.join(src, fname), os.path.join(dst, fname))
+    # Track the new folder.
+    git.add(dst)
+    # Update the HTML files to reference the new folder names.
+    util.replace(html_fnames, [('"\./examples/', '"./examples2/')])
 
-    # Finish.
-    git commit -am "Updated documentation"
+    # Copy but rename the files referenced by searchtools.js.
+    src = os.path.join(BUILD_DIR, '_sources')
+    for fname in os.listdir(src):
+        shutil.copy(os.path.join(src, fname), '..')
+    util.replace("../javascripts/searchtools.js", [("\+ '_sources/' ", '')])
+    git.add(sh.glob('../*.txt'))
+    # Not sure why this isn't already added:
+    git.add("../javascripts/searchtools.js")
 
+    # Update the sitemap.
+    print(python('sitemap_gen.py', config="sitemap_conf.xml"))
+
+    # Commit the changes.
+    try:
+        git.commit('-a', m="Rebuilt documentation")
+    except sh.ErrorReturnCode_1:
+        pass # No changes to commit
 
     # If desired, push the changes to origin.
-    push = raw_input("The gh-pages branch has been updated and is currently "
-                     "checked out.  Do you want to push the changes to origin?")
-    if push.lower() in ['y', 'yes']:
-       os.system('git push origin gh-pages')
-    git checkout branch
-    git stash pop
-    """
-    print("""If Optional: Update the sitemap using http://www.xml-sitemaps.com/.  Put
-    it in the base folder of the *gh-pages* branch and push to origin again
-    (``git push origin gh-pages``).  Update it in Google Webmaster tools
-    (https://www.google.com/webmasters/tools/sitemap-list?hl=en&siteUrl=http%3A%2F%2Fkdavies4.github.com%2FFCSys%2F#MAIN_TAB=1&CARD_TAB=-1).""")
+    print("The gh-pages branch has been updated and is currently checked out.")
+    if util.yes("Do you want to rebase it and push the changes to "
+                "origin (y/n)?"):
+        git.rebase('-i', 'origin/gh-pages')
+        git.push.origin('gh-pages')
+
+    # Return to the original state.
+    git.checkout(branch)
+    try:
+        git.stash.pop()
+    except sh.ErrorReturnCode_1:
+        pass # No stash was necessary in the first place.
+    print("Now back on " + branch)
 
 def make_dirs():
-    build_dirs = ['build', 'build/doctrees', 'build/html', '_static',
-                  '_templates']
-    for d in build_dirs:
+    BUILD_DIRS = ['build/doctrees', 'build/html']
+    for d in BUILD_DIRS:
         try:
-            os.mkdir(d)
+            os.makedirs(d)
         except OSError:
             pass
 
@@ -156,38 +145,32 @@ def spellcheck():
     """Spellcheck the HTML docs.
     """
     # Options
-    wordfile = '.modelicares.pws' # Name of custom word file
-    extrafile = '.modelica.pws' # Name of extra word file
-    html_files = glob('build/html/*.html') # Names of the HTML files
+    WORDFILE = os.path.abspath('.modelicares.pws') # Name of custom word file
+    EXTRAFILE = os.path.abspath('.modelica.pws') # Name of extra word file
+    HTML_FILES = glob('build/html/*.html') # Names of the HTML files
 
     print("If there are misspellings, fix them in the Python or ReST "
           "source---not just in the HTML files.")
-
 
     # Remove unused words from the custom word file.
     def read(fname):
         with open(fname, 'r') as f:
             return f.read()
-    html = "".join(map(read, html_files))
-    with open(wordfile, 'r') as f:
+    html = "".join(map(read, HTML_FILES))
+    with open(WORDFILE, 'r') as f:
         head = f.readline()
         lines = f.readlines()
-    with open(wordfile, 'w') as f:
+    with open(WORDFILE, 'w') as f:
         f.write(head)
         for line in lines:
             if html.find(line.rstrip('\n').rstrip('\r')) != -1:
                 f.write(line)
 
     # Check the spelling.
-    wordfile = os.path.abspath('.modelicares.pws')
-    extrafile = os.path.abspath('.modelica.pws')
-    for page in html_files:
-        if os.system('aspell --dont-backup --extra-dicts={extrafile} '
-                     '--personal={wordfile} -c {page}'.format(extrafile=extrafile,
-                                                              wordfile=wordfile,
-                                                              page=page)):
+    for page in HTML_FILES:
+        if os.system('aspell --dont-backup --personal={1} --extra-dicts={0} '
+                     '-c {2}'.format(WORDFILE, EXTRAFILE, page)):
             raise SystemError("aspell (http://aspell.net/) must be installed.")
-
 
 def static():
     """Create static images for the HTML documentation and the base README.md.
@@ -196,8 +179,9 @@ def static():
     import numpy as np
     import matplotlib.pyplot as plt
 
-    from os.path import join, dirname
-    from modelicares import SimRes, SimResList, LinResList
+    from modelicares import SimRes, SimResList, LinResList, read_params
+
+    join = os.path.join
 
     # Options
     indir = "../examples" # Directory with the mat files.
@@ -244,19 +228,20 @@ def static():
 
     # PIDs-bode
     # ---------
-    results = ['examples/PID.mat', 'examples/PID/1/dslin.mat',
-               'examples/PID/2/dslin.mat']
-    labels = ["Td = 0.1 s", "Td = 1 s", "Td = 10 s"]
-    lins = LinResList(*results)
+    lins = LinResList(join(indir, 'PID.mat'), join(indir, 'PID/*/'))
+    for lin in lins:
+        lin.label = "Td = %g s" % read_params('Td', join(lin.dirname,
+                                                         'dsin.txt'))
+    lins.sort(key=lambda lin: lin.label)
     lins.bode(title="Bode plot of Modelica.Blocks.Continuous.PID\n"
-                    "with varying differential time constant",
-              labels=labels)
+                    "with varying differential time constant")
     plt.savefig(join(outdir, 'PIDs-bode.png'), dpi=dpi, **kwargs)
     plt.close()
 
+
 F = namedtuple("F", ['f', 'description'])
 funcs = {'clean'      : F(clean,   "Remove the built documentation."),
-         'build'      : F(build,   "Build the HTML documentation."),
+         'build'      : F(build,   "Make the HTML documentation."),
          'release'    : F(release, "Publish the documentation to the webpage."),
         }
 

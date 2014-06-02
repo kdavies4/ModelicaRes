@@ -11,5 +11,5 @@ for sim in sims:
     sim.label = label(sim['L.L'])
 
 # Create the plot
-sims.plot('L.i', ylabel1="Voltage",
+sims.plot('L.i', ylabel1="Voltage", leg1_kwargs=dict(loc='upper right'),
           title="Chua circuit\nwith varying inductance")

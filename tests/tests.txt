@@ -21,7 +21,7 @@
 # Tests on modelicares.util
 # -------------------------
 >>> from modelicares import *
->>> fnames = fglob("examples/ChuaCircuit/*/")
+>>> fnames = list(multiglob("examples/ChuaCircuit/*/"))
 >>> fnames.sort()
 >>> fnames
 ['examples/ChuaCircuit/1/dsres.mat', 'examples/ChuaCircuit/2/dsres.mat']

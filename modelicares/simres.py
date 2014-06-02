@@ -931,7 +931,7 @@ class SimRes(Res):
         # Note:  ynames1 is the first argument (besides self) so that plot()
         # can be called with simply a variable name.
 
-        def ystrings(ynames, ylabel, legends, f):
+        def ystrings(ynames, ylabel, legends, funcs):
             """Generate a y-axis label and set of legend entries.
             """
             if ynames:
@@ -946,7 +946,7 @@ class SimRes(Res):
                               " Please check it and provide ylabel1 or ylabel2"
                               " if necessary.")
                 if legends == []:
-                    legends = ynames + list(f)
+                    legends = ynames + list(funcs)
                 if incl_prefix:
                     legends = [self.fbase + ': ' + leg for leg in legends]
                 if suffix:
@@ -965,7 +965,7 @@ class SimRes(Res):
                             legends[i] = number_label(legends[i], unit)
                     else:
                         legends = [number_label(entry, unit) for entry, unit in
-                                   zip(ynames, units)] + list(f)
+                                   zip(ynames, units)] + list(funcs)
 
             return ylabel, legends
 
@@ -1332,7 +1332,7 @@ class SimRes(Res):
         """Access a variable by name.
 
         This method returns an instance of :class:`Variable`, which has the
-        following methos to retrieve information about the variable:
+        following methods to retrieve information about the variable:
 
         - :meth:`~Variable.array` - Return an array of times and values for the
           variable.
@@ -1433,12 +1433,12 @@ class SimResList(ResList):
 
     **Initialization signatures:**
 
-    - :class:`SimResList`(): Returns an empty simulation list
+    - :class:`SimResList`\(): Returns an empty simulation list
 
-    - :class:`SimResList`(*sims*), where sims is a list of :class:`SimRes`
+    - :class:`SimResList`\(*sims*), where sims is a list of :class:`SimRes`
       instances:  Casts the list into a :class:`SimResList`
 
-    - :class:`SimResList`(*filespec*), where *filespec* is a filename or
+    - :class:`SimResList`\(*filespec*), where *filespec* is a filename or
       directory, possibly with wildcards a la `glob
       <https://docs.python.org/2/library/glob.html>`_:  Returns a
       :class:`SimResList` of :class:`SimRes` instances loaded from the
@@ -1449,7 +1449,7 @@ class SimResList(ResList):
 
          An error is only raised if no files can be loaded.
 
-    - :class:`SimResList`(*filespec1*, *filespec2, ...): Loads all files
+    - :class:`SimResList`\(*filespec1*, *filespec2*, ...): Loads all files
       matching or contained by *filespec1*, *filespec2*, etc. as above.
 
     **Built-in methods**
@@ -1525,7 +1525,7 @@ class SimResList(ResList):
 
     - Also, the properties of :class:`SimRes` (*basename*, *dirname*, *fname*,
       *n_constants*, and *tool*) can be retrieve as a list across all of the
-      linearizations.  Please see the example below.
+      linearizations; see the example below.
 
     **Example:**
 
@@ -1547,28 +1547,29 @@ class SimResList(ResList):
         """
         if not args:
             super(SimResList, self).__init__([])
-        elif isinstance(args[0], string_types):
-            # The arguments are filenames or directories.
 
-            # Get a set of matching filenames.
-            fnames = set()
-            for arg in args:
-                assert isinstance(arg, string_types), (
+        elif isinstance(args[0], string_types): # Filenames or directories
+            try:
+                fnames = util.multiglob(args)
+            except TypeError:
+                raise TypeError(
                     "The simulation list can only be initialized by "
                     "providing a list of SimRes instances or a series of "
                     "arguments, each of which is a filename or directory.")
-                fnames = fnames.union(util.fglob(arg))
-
-            # Load simulations from the filenames.
             list.__init__(self, _get_sims(fnames))
 
-        elif len(args) == 1:
-            # The argument is a list or iterable of SimRes instances.
+        elif len(args) == 1: # List or iterable of SimRes instances
             sims = list(args[0])
             for sim in sims:
                 assert isinstance(sim, SimRes), ("All entries in the list must "
                                                  "be SimRes instances.")
             list.__init__(self, sims)
+
+        else:
+            raise TypeError(
+                "The simulation list can only be initialized by "
+                "providing a list of SimRes instances or a series of "
+                "arguments, each of which is a filename or directory.")
 
     def append(self, item):
         """Add simulation(s) to the end of the list of simulations.
@@ -1614,7 +1615,7 @@ class SimResList(ResList):
             assert isinstance(item, string_types), (
                 "The simulation list can ony be appended by providing a SimRes "
                 "instance, filename, or directory.")
-            fnames = util.fglob(item)
+            fnames = util.multiglob(item)
             self.extend(SimResList(_get_sims(fnames)))
 
     def names(self, pattern=None, re=False, constants_only=False):

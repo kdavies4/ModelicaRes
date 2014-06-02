@@ -553,12 +553,12 @@ class LinResList(ResList):
 
     **Initialization signatures:**
 
-    - :class:`LinResList`(): Returns an empty linearization list
+    - :class:`LinResList`\(): Returns an empty linearization list
 
-    - :class:`LinResList`(*lins*), where lins is a list of :class:`LinRes`
+    - :class:`LinResList`\(*lins*), where lins is a list of :class:`LinRes`
       instances:  Casts the list into a :class:`LinResList`
 
-    - :class:`LinResList`(*filespec*), where *filespec* is a filename or
+    - :class:`LinResList`\(*filespec*), where *filespec* is a filename or
       directory, possibly with wildcards a la `glob
       <https://docs.python.org/2/library/glob.html>`_:  Returns a
       :class:`LinResList` of :class:`LinRes` instances loaded from the
@@ -569,7 +569,7 @@ class LinResList(ResList):
 
          An error is only raised if no files can be loaded.
 
-    - :class:`LinResList`(*filespec1*, *filespec2, ...): Loads all files
+    - :class:`LinResList`\(*filespec1*, *filespec2*, ...): Loads all files
       matching or contained by *filespec1*, *filespec2*, etc. as above.
 
     **Built-in methods:**
@@ -630,7 +630,7 @@ class LinResList(ResList):
 
     - Also, the properties of :class:`LinRes` (*basename*, *dirname*, *fname*,
       *sys*, and *tool*) can be retrieved as a list across all of the
-      linearizations.  Please see the example below.
+      linearizations; see the example below.
 
     **Example:**
 
@@ -653,28 +653,29 @@ class LinResList(ResList):
         """
         if not args:
             super(LinResList, self).__init__([])
-        elif isinstance(args[0], string_types):
-            # The arguments are filenames or directories.
 
-            # Get a unique list of matching filenames.
-            fnames = set()
-            for arg in args:
-                assert isinstance(arg, string_types), (
+        elif isinstance(args[0], string_types): # Filenames or directories
+            try:
+                fnames = util.multiglob(args)
+            except TypeError:
+                raise TypeError(
                     "The linearization list can only be initialized by "
                     "providing a list of LinRes instances or a series of "
                     "arguments, each of which is a filename or directory.")
-                fnames = fnames.union(util.fglob(arg))
-
-            # Load linearizations from the filenames.
             list.__init__(self, _get_lins(fnames))
 
-        elif len(args) == 1:
-            # The argument is a list or iterable of LinRes instances.
+        elif len(args) == 1: # List or iterable of LinRes instances
             lins = list(args[0])
             for lin in lins:
                 assert isinstance(lin, LinRes), ("All entries in the list must "
                                                  "be LinRes instances.")
             list.__init__(self, lins)
+
+        else:
+            raise TypeError(
+                "The linearization list can only be initialized by "
+                "providing a list of LinRes instances or a series of "
+                "arguments, each of which is a filename or directory.")
 
     def append(self, item):
         """Add linearization(s) to the end of the list of linearizations.
@@ -720,7 +721,7 @@ class LinResList(ResList):
             assert isinstance(item, string_types), (
                 "The linearization list can only be appended by providing a "
                 "LinRes instance, filename, or directory.")
-            fnames = util.fglob(item)
+            fnames = util.multiglob(item)
             self.extend(LinResList(_get_lins(fnames)))
 
     def __str__(self):
