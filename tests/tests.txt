@@ -18,6 +18,14 @@
    >>> from glob import glob
    >>> from modelicares import *
 
+# Tests on modelicares.util
+# -------------------------
+>>> from modelicares import *
+>>> fnames = fglob("examples/ChuaCircuit/*/")
+>>> fnames.sort()
+>>> fnames
+['examples/ChuaCircuit/1/dsres.mat', 'examples/ChuaCircuit/2/dsres.mat']
+
 # Tests on modelicares.exps
 # -------------------------
 >>> modelica_str(False)
@@ -25,19 +33,6 @@
 
 # Tests on modelicares.simres
 # ---------------------------
-
-# Loading various file formats
->>> sims = SimResList('tests')
->>> sims.sort()
->>> print(sims) # doctest: +ELLIPSIS
-List of simulation results (SimRes instances) from the following files
-in the .../tests directory:
-   DoublePendulum_Dymola-2012-SaveAs.mat
-   DoublePendulum_Dymola-2014FD01-ExportAsPlotted.mat
-   DoublePendulum_Dymola-2014FD01.mat
-   DoublePendulum_Dymola-7.4.mat
-   DoublePendulum_OpenModelica-1.8.mat
-   unicode.mat
 
 # SimRes methods
 >>> sim = SimRes('examples/ChuaCircuit.mat')
@@ -82,6 +77,8 @@ Did you mean one of these?
        L.n.v
 >>> round(sim['L.v'].values(t=[0, 2000]))
 [0.0, 0.15459341]
+>>> sim.n_constants
+23
 
 # Other SimRes attributes
 >>> sim['G.T_heatPort'].unit
@@ -90,6 +87,11 @@ Did you mean one of these?
 'degC'
 >>> sim['G.T_heatPort'].description
 u'Temperature of HeatPort'
+>>> sim = SimRes('examples/ChuaCircuit/1/dsres.mat')
+>>> sim['Nr.Ga'].description
+u''
+>>> sim['Nr.Ga'].unit
+'S'
 >>> sim = SimRes('tests/unicode.mat')
 >>> 'ΔΘ'.decode('utf8') == sim['DeltaTheta'].description
 True
@@ -98,3 +100,18 @@ True
 (<matplotlib.axes.AxesSubplot object at 0x...>, None)
 >>> save(['pdf'])
 Saved tests/unicode.pdf
+
+# SimResList methods
+
+# Loading various file formats
+>>> sims = SimResList('tests')
+>>> sims.sort()
+>>> print(sims) # doctest: +ELLIPSIS
+List of simulation results (SimRes instances) from the following files
+in the .../tests directory:
+   DoublePendulum_Dymola-2012-SaveAs.mat
+   DoublePendulum_Dymola-2014FD01-ExportAsPlotted.mat
+   DoublePendulum_Dymola-2014FD01.mat
+   DoublePendulum_Dymola-7.4.mat
+   DoublePendulum_OpenModelica-1.8.mat
+   unicode.mat

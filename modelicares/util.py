@@ -33,6 +33,8 @@
 
 - :meth:`flatten_list` - Flatten a nested list.
 
+- :meth:`fglob` - Return a list of filenames that match a pathname pattern.
+
 - :meth:`figure` - Create a figure and set its label.
 
 - :meth:`get_indices` - Return the pair of indices that bound a target value in
@@ -82,6 +84,7 @@ from collections import MutableMapping
 from decimal import Decimal
 from fnmatch import fnmatchcase
 from functools import wraps
+from glob import glob
 from itertools import cycle
 from math import floor
 from matplotlib import rcParams
@@ -267,6 +270,15 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
                 horizontalalignment='center', verticalalignment='center')
 
 
+class CallList(list):
+    """TODO: doc
+    """
+    def __call__(self, *args, **kwargs):
+        """TODO: doc
+        """
+        return [item(*args, **kwargs) for item in self]
+
+
 def cast_sametype(func):
     """Decorator to cast the output of a method as an instance of the
     containing class.
@@ -358,6 +370,54 @@ def figure(label='', *args, **kwargs):
     # Note:  As of matplotlib 1.2, matplotlib.pyplot.figure(label=label) isn't
     # supported directly.
     return fig
+
+def basename(fname):
+    """TODO doc, add to function list"""
+    return os.path.splitext(os.path.basename(fname))[0]
+
+def fglob(path, extensions={'*.mat'}):
+    """Return a list of filenames that match a pathname pattern.
+
+    Unlike Python's :meth:`glob.glob` function, this function runs an additional
+    expansion on matches that are directories.
+
+    **Arguments:**
+
+    - *path*: String used to match files or folders
+
+         This may contain Unix shell-style patterns:
+
+         ============   ============================
+         Character(s)   Role
+         ============   ============================
+         \*             Matches everything
+         ?              Matches any single character
+         [seq]          Matches any character in seq
+         [!seq]         Matches any char not in seq
+         ============   ============================
+
+   - *extensions*: Set of filename patterns that should be used to match files
+     in any directories generated from *path*
+
+        These patterns may also use the patterns above.
+
+    **Example:**
+
+       >>> from modelicares import *
+       >>> fglob("examples/ChuaCircuit/*/") # doctest: +SKIP
+       ['examples/ChuaCircuit/1/dsres.mat', 'examples/ChuaCircuit/2/dsres.mat']
+    """
+    # Since order is arbitrary, the doctest is skipped here and included in
+    # tests/tests.txt instead.
+    fnames = []
+    items = glob(path)
+    for item in items:
+        if os.path.isdir(item):
+            for ext in extensions:
+                fnames.extend(glob(os.path.join(item, ext)))
+        else:
+            fnames.append(item)
+    return fnames
 
 
 def flatten_dict(d, parent_key='', separator='.'):

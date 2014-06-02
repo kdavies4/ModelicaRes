@@ -6,6 +6,25 @@ The releases are numbered according to the `Semantic Versioning Specification
 
 v0.12.0_ (2014-x-xx) -- Updates:
 
+   - :meth:`~modelicares.simres._VarList.arrays` is now available as
+     :meth:`~modelicares.simres._VarList.array` instead.
+   - :meth:`~modelicares.simres.SimRes.n_constants`,
+     :meth:`~modelicares.simres.SimRes.fbase`,
+     :meth:`~modelicares.simres.SimResList.basedir`
+     :meth:`~modelicares.linres.LinRes.fbase`, and
+     :meth:`~modelicares.simres.SimResList.basedir` are now properties instead
+     of methods.
+   - Added *dirname* as a property to :class:`~modelicares.simres.SimRes` and
+     :class:`~modelicares.linres.LinRes`.
+   - *basename*, *dirname*, *fname*, *n_constants*, *sys*, and *tool* are now
+     properties of :class:`~modelicares.simres.SimResList` and
+     :class:`~modelicares.linres.LinResList` (as applicable) which give lists of
+     the corresponding properties across all of the simulations or
+     linearizations in those lists.
+   - Deleted :meth:`~modelicares.simres.SimResList.fnames`.  Use the *fname*
+     property of :class:`~modelicares.simres.SimResList` instead.
+   - :meth:`~modelicares.simres.Variable.is_constant` is now a property instead
+     of a method.
    - :meth:`sort` now correctly sorts :class:`~modelicares.simres.SimResList`
      and :class:`~modelicares.linres.LinResList` by absolute file path.
    - Improved the generation of defaults for the Bode and Nyquist plots.

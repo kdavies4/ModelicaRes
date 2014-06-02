@@ -30,7 +30,7 @@ from six import string_types
 
 from modelicares import util
 from modelicares._freqplot import bode_plot, nyquist_plot
-from modelicares._res import ResList
+from modelicares._res import Res, ResList
 
 # File loading functions
 from modelicares._io.dymola import loadlin as dymola
@@ -91,7 +91,7 @@ def _from_names(func):
     return wrapped
 
 
-class LinRes(object):
+class LinRes(Res):
     """Class for Modelica_-based linearization results and methods to analyze
     those results
 
@@ -122,13 +122,15 @@ class LinRes(object):
 
     - :meth:`to_tf` - Return a transfer function given input and output names.
 
-    **Attributes:**
+    **Properties:**
 
-    - *fname* - Filename from which the data was loaded, with the directory and
-      file extension
+    - *basename* - Base filename from which the variables were loaded, without
+      the directory or extension
 
-    - *tool* - String indicating the function used to load the results (named
-      after the corresponding Modelica_ tool)
+    - *dirname* - Directory from which the variables were loaded
+
+    - *fname* - Filename from which the variables were loaded, with absolute
+      path
 
     - *sys* - State-space system as an instance of :class:`control.StateSpace`
 
@@ -146,6 +148,9 @@ class LinRes(object):
          - *input_names*: List of names of the inputs (*u*)
 
          - *output_names*: List of names of the outputs (*y*)
+
+    - *tool* - String indicating the function used to load the results (named
+      after the corresponding Modelica_ tool)
 
     **Example:**
 
@@ -194,22 +199,7 @@ class LinRes(object):
         self.tool = tool
         self.fname = os.path.abspath(fname)
 
-
-    def fbase(self):
-        """Return the base filename from which the data was loaded, without the
-        directory or file extension.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import LinRes
-           >>> lin = LinRes('examples/PID.mat')
-           >>> lin.fbase()
-           'PID'
-        """
-        return os.path.splitext(os.path.split(self.fname)[1])[0]
-
+    # Why this doesn't work if moved to the base class (_res.Res)?
     def __cmp__(self, other):
         """Return a negative integer if *self* < *other*, zero if
         *self* == *other*, or a positive integer if *self* > *other*.
@@ -222,22 +212,6 @@ class LinRes(object):
             name = self.__class__.__name__
             raise AttributeError("A %s can only be compared with another %s."
                                  % (name, name))
-
-    def __repr__(self):
-        """Return a formal description of the :class:`LinRes` instance.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from modelicares import LinRes
-           >>> lin = LinRes('examples/PID.mat')
-           >>> lin # doctest: +ELLIPSIS
-           LinRes('.../examples/PID.mat')
-        """
-        return "%s('%s')" % (self.__class__.__name__, self.fname)
-        # Note:  The class name is indirectly inquired so that this method will
-        # still be valid if the class is extended.
 
     def __str__(self):
         """Return an informal description of the :class:`LinRes` instance.
@@ -399,7 +373,7 @@ class LinRes(object):
 
         # Create a title if necessary.
         if title is None:
-            title = "Bode plot of %s" % self.fbase()
+            title = "Bode plot of %s" % self.fbase
 
         # Set up the color(s) and line style(s).
         if not iterable(colors):
@@ -525,7 +499,7 @@ class LinRes(object):
 
         # Create a title if necessary.
         if title is None:
-            title = "Nyquist plot of %s" % self.fbase()
+            title = "Nyquist plot of %s" % self.fbase
 
         # Set up the color(s).
         if not iterable(colors):
@@ -552,7 +526,7 @@ class LinRes(object):
         if len(pairs) > 1:
             ax.legend()
         ax.set_title(title)
-        if xlabel: # Without this check, xlabel=None will give a label of "None".
+        if xlabel: # Without this check, xlabel=None will give label of "None".
             ax.set_xlabel(xlabel)
         if ylabel: # Same purpose
             ax.set_ylabel(ylabel)
@@ -647,27 +621,26 @@ class LinResList(ResList):
 
     **Additional methods:**
 
-    - :meth:`basedir` - Return the highest common directory that the result
-      files share.
-
     - :meth:`bode` - Plot the linearizations onto a single Bode diagram.
 
-    - :meth:`fnames` - Return a list of filenames from which the results were
-      loaded.
-
     - :meth:`nyquist` - Plot the linearizations onto a single Bode diagram.
+
+    **Properties:**
+
+    - *basedir* - Highest common directory that the result files share
+
+    - Also, the properties of :class:`LinRes` (*basename*, *dirname*, *fname*,
+      *sys*, and *tool*) can be retrieved as a list across all of the
+      linearizations.  Please see the example below.
 
     **Example:**
 
     .. code-block:: python
 
        >>> from modelicares import LinResList
-       >>> lins = LinResList('examples/PID/*/*.mat')
-       >>> print(lins) # doctest: +ELLIPSIS
-       List of linearization results (LinRes instances) from the following files
-       in the .../examples/PID directory:
-          1/dslin.mat
-          2/dslin.mat
+       >>> lins = LinResList('examples/PID/*/')
+       >>> lins.dirname # doctest: +ELLIPSIS
+       ['.../examples/PID/1', '.../examples/PID/2']
 
 
     .. _Python: http://www.python.org
@@ -679,16 +652,9 @@ class LinResList(ResList):
 
         See the top-level class documentation.
         """
-
         if not args:
             super(LinResList, self).__init__([])
-        elif len(args) == 1 and isinstance(args[0], list):
-            # The argument is a list of LinRes instances.
-            for lin in args[0]:
-                assert isinstance(lin, LinRes), ("All entries in the list must "
-                                                 "be LinRes instances.")
-            list.__init__(self, args[0])
-        else:
+        elif isinstance(args[0], string_types):
             # The arguments are filenames or directories.
 
             # Get a unique list of matching filenames.
@@ -698,18 +664,21 @@ class LinResList(ResList):
                     "The linearization list can only be initialized by "
                     "providing a list of LinRes instances or a series of "
                     "arguments, each of which is a filename or directory.")
-                if os.path.isdir(arg):
-                    fnames = fnames.union(set(glob(os.path.join(arg, '*.mat'))))
-                elif '*' in arg or '?' in arg or '[' in arg:
-                    fnames = fnames.union(set(glob(arg)))
-                else:
-                    fnames.add(arg)
+                fnames = fnames.union(util.fglob(arg))
 
             # Load linearizations from the filenames.
             list.__init__(self, _get_lins(fnames))
 
+        elif len(args) == 1:
+            # The argument is a list or iterable of LinRes instances.
+            lins = list(args[0])
+            for lin in lins:
+                assert isinstance(lin, LinRes), ("All entries in the list must "
+                                                 "be LinRes instances.")
+            list.__init__(self, lins)
+
     def append(self, item):
-        """Add a linearization to the end of the list of linearizations.
+        """Add linearization(s) to the end of the list of linearizations.
 
         **Arguments:**
 
@@ -729,12 +698,15 @@ class LinResList(ResList):
          *item* is a directory or a wildcarded filename, it may match multiple
          valid files.
 
+         Linearization results will be appended to the list even if they are
+         already included.
+
         **Example:**
 
         .. code-block:: python
 
            >>> from modelicares import LinResList
-           >>> lins = LinResList('examples/PID/*/*.mat')
+           >>> lins = LinResList('examples/PID/*/')
            >>> lins.append('examples/PID.mat')
            >>> print(lins) # doctest: +ELLIPSIS
            List of linearization results (LinRes instances) from the following files
@@ -749,16 +721,7 @@ class LinResList(ResList):
             assert isinstance(item, string_types), (
                 "The linearization list can only be appended by providing a "
                 "LinRes instance, filename, or directory.")
-
-            # Get the matching filenames.
-            if os.path.isdir(item):
-                fnames = glob(os.path.join(item, '*.mat'))
-            elif '*' in item or '?' in item or '[' in item:
-                fnames = glob(item)
-            else:
-                fnames = [item]
-
-            # Load linearizations from the filenames.
+            fnames = util.fglob(item)
             self.extend(LinResList(_get_lins(fnames)))
 
     def __str__(self):
@@ -771,7 +734,7 @@ class LinResList(ResList):
         .. code-block:: python
 
            >>> from modelicares import LinResList
-           >>> lins = LinResList('examples/PID/*/*.mat')
+           >>> lins = LinResList('examples/PID/*/')
            >>> print(lins) # doctest: +ELLIPSIS
            List of linearization results (LinRes instances) from the following files
            in the .../examples/PID directory:
@@ -784,9 +747,9 @@ class LinResList(ResList):
             return ("List of linearization results (LinRes instance) from\n"
                     + self[0].fname)
         else:
-            basedir = self.basedir()
+            basedir = self.basedir
             start = len(basedir) + 1
-            short_fnames = [fname[start:] for fname in self.fnames()]
+            short_fnames = [fname[start:] for fname in self.fname]
             string = ("List of linearization results (LinRes instances) from "
                       "the following files")
             string += ("\nin the %s directory:\n   "
@@ -803,7 +766,7 @@ class LinResList(ResList):
         if labels == None:
             labels = ['']*len(self)
         elif labels == '':
-            start = len(self.basedir())
+            start = len(self.basedir)
             labels = [lin.fname[start:].lstrip(os.sep) for lin in self]
 
         return labels

@@ -12,10 +12,10 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 
 import os
 from functools import wraps
-from modelicares.util import cast_sametype
+from modelicares.util import cast_sametype, basename
 
 
-def check_sametype(func):
+def assert_sametype(func):
     """Decorator that checks that an argument to a method is also an instance of
     the containing class
     """
@@ -29,6 +29,34 @@ def check_sametype(func):
         return func(self, other)
 
     return wrapped
+
+class Res(object):
+    """Base class for a Modelica_ result
+    """
+
+    def __init__(self, fname):
+        self.fname = os.path.abspath(fname)
+
+    def __repr__(self):
+        """Return a formal description of an instance of this class.
+        """
+        return "{Class}('{fname}')".format(Class=self.__class__.__name__,
+                                           fname=self.fname)
+        # Note:  The class name is inquired so that this method will still be
+        # correct if the class is extended.
+
+    @property
+    def dirname(self):
+        """Directory from which the variables were loaded
+        """
+        return os.path.dirname(self.fname)
+
+    @property
+    def fbase(self):
+        """Base filename from which the variables were loaded, without the
+        directory or file extension
+        """
+        return basename(self.fname)
 
 class ResList(list):
     """Base class for a list of Modelica_ results
@@ -48,6 +76,12 @@ class ResList(list):
         """
         return super(ResList, self).__getslice__(i, j)
 
+    def __getattr__(self, attr):
+        """If this class does not have attribute *attr*, return a list of
+        that attribute from the entries in an instance of this class.
+        """
+        return [getattr(res, attr) for res in self]
+
     def __getitem__(self, i):
         """x.__getitem__(y) <==> x[y]
         """
@@ -64,7 +98,7 @@ class ResList(list):
         return list.__mul__(self, n)
 
     @cast_sametype
-    @check_sametype
+    @assert_sametype
     def __radd__(self, value):
         """Return value+self.
         """
@@ -76,23 +110,14 @@ class ResList(list):
         """
         return list.__rmul__(self, n)
 
-    def fnames(self):
-        """Return a list of filenames from which the results were loaded.
-
-        There are no arguments.
-        """
-        return [sim.fname for sim in self]
-
+    @property
     def basedir(self):
-        """Return the highest common directory that the result files share.
-
-        There are no arguments.
+        """Highest common directory that the result files share
         """
-        basedir = os.path.commonprefix([os.path.dirname(fname)
-                                        for fname in self.fnames()])
-        return basedir.rstrip(os.sep)
+        fnames = [fname.rpartition(os.sep)[0] for fname in self.fname]
+        return os.path.commonprefix(fnames).rstrip(os.sep)
 
-    @check_sametype
+    @assert_sametype
     def extend(self, other):
         """Extend the list by appending elements from an iterable of Modelica_
         results (:class:`SimRes` or :class:`LinRes` instances, as applicable).
@@ -100,7 +125,7 @@ class ResList(list):
         list.extend(self, other)
         return self
 
-    @check_sametype
+    @assert_sametype
     def __iadd__(self, value):
         """Implement self+=value.
         """

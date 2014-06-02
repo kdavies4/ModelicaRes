@@ -236,7 +236,7 @@ def loadsim(fname, constants_only=False):
         description = chars_to_str(description).rstrip(']')
         displayUnit = ''
         try:
-            description, unit = description.rsplit(' [', 1)
+            description, unit = description.rsplit('[', 1)
         except ValueError:
             unit = ''
         else:
@@ -244,6 +244,8 @@ def loadsim(fname, constants_only=False):
                 unit, displayUnit = unit.rsplit('|', 1)
             except ValueError:
                 pass # (displayUnit = '')
+        finally:
+            description = description.rstrip(' ')
 
         # Dymola uses utf-8 for descriptions.
         return description.decode('utf-8'), unit, displayUnit
