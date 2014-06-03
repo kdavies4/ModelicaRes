@@ -8,13 +8,13 @@
     
     <title>Search &mdash; Analyze Modelica results in Python</title>
     
-    <link rel="stylesheet" href="javascripts/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="javascripts/custom.css" type="text/css" />
     <link rel="stylesheet" href="javascripts/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.11.1',
+        VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -26,14 +26,11 @@
     <script type="text/javascript" src="javascripts/copybutton.js"></script>
     <script type="text/javascript" src="javascripts/analytics.js"></script>
     <script type="text/javascript" src="javascripts/searchtools.js"></script>
-    <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Analyze Modelica results in Python"
-          href="javascripts/opensearch.xml"/>
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
     <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
-    <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
-    <meta name="author" content="Kevin L. Davies">
+    <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment, Modelica plot, analysis, sort, filter, browse, script, data, diagram, export">
+    <meta name="author" content="Kevin Davies">
  
 
   </head>
@@ -47,36 +44,9 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="index.html">
-              <img class="logo" src="javascripts/logo.gif" alt="Logo"/>
-            </a></p>
-<h3><a href="index.html">Table of Contents</a></h3>
-<ul>
-<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial (IPython notebook)</a></li>
-<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics (ditto)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
-</ul>
-<h3>Download</h3>
-  <ul>
-    <li><a itemprop="downloadUrl"
-           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
-           rel="nofollow">Latest version (v0.11.1)</a></li>
-    <li><a href="changelog.html">Change log</a></li>
-  </ul>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -103,6 +73,33 @@
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="javascripts/logo.gif" alt="Logo"/>
+            </a></p>
+<h3><a href="index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+<h3>Download</h3>
+  <ul>
+    <li><a itemprop="downloadUrl"
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
+           rel="nofollow">Latest version (v0.11.1)</a></li>
+    <li><a href="changelog.html">Change log</a></li>
+  </ul>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
     <div class="related">
@@ -114,13 +111,13 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
       </ul>
     </div>
   
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jun 02, 2014.
+      Last updated on Jun 04, 2014.
     </div>
   <script type="text/javascript" src="searchindex.js"></script>
 

@@ -8,13 +8,13 @@
     
     <title>ModelicaRes &mdash; Analyze Modelica results in Python</title>
     
-    <link rel="stylesheet" href="javascripts/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="javascripts/custom.css" type="text/css" />
     <link rel="stylesheet" href="javascripts/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.11.1',
+        VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,15 +25,12 @@
     <script type="text/javascript" src="javascripts/doctools.js"></script>
     <script type="text/javascript" src="javascripts/copybutton.js"></script>
     <script type="text/javascript" src="javascripts/analytics.js"></script>
-    <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Analyze Modelica results in Python"
-          href="javascripts/opensearch.xml"/>
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
     <link rel="top" title="Analyze Modelica results in Python" href="#" />
     <link rel="next" title="loadres script" href="loadres.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
-    <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
-    <meta name="author" content="Kevin L. Davies">
+    <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment, Modelica plot, analysis, sort, filter, browse, script, data, diagram, export">
+    <meta name="author" content="Kevin Davies">
  
 
   </head>
@@ -50,48 +47,9 @@
         <li class="right" >
           <a href="loadres.html" title="loadres script"
              accesskey="N">next</a> |</li>
-        <li><a href="#">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
+        <li><a href="#">ModelicaRes Documentation</a> &raquo;</li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="#">
-              <img class="logo" src="javascripts/logo.gif" alt="Logo"/>
-            </a></p>
-<h3><a href="#">Table of Contents</a></h3>
-<ul>
-<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial (IPython notebook)</a></li>
-<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics (ditto)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
-</ul>
-
-<div id="searchbox" style="display: none" role="search">
-  <h3><a href="search.html">Search</a></h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
-  <ul>
-    <li><a itemprop="downloadUrl"
-           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
-           rel="nofollow">Latest version (v0.11.1)</a></li>
-    <li><a href="changelog.html">Change log</a></li>
-  </ul>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -101,9 +59,8 @@
   <div class="section" id="modelicares">
 <h1>ModelicaRes<a class="headerlink" href="#modelicares" title="Permalink to this headline">¶</a></h1>
 <p><strong>Python utilities to set up and analyze Modelica simulation experiments</strong></p>
-<p>ModelicaRes is a free, open-source tool to conveniently manage <a class="reference external" href="http://www.modelica.org">Modelica</a>
-simulations, interpret results, and create publishable figures.  It is possible
-to</p>
+<p>ModelicaRes is a free, open-source tool to manage <a class="reference external" href="http://www.modelica.org">Modelica</a> simulations,
+interpret results, and create publishable figures.  It is possible to</p>
 <ul class="simple">
 <li>auto-generate simulation scripts,</li>
 <li>browse data,</li>
@@ -122,17 +79,20 @@ and matrix functions from <a class="reference external" href="http://numpy.scipy
 <div class="line-block">
 <div class="line"><br /></div>
 </div>
-<a class="reference internal image-reference" href="images/ThreeTanks.png"><img alt="Sankey digarams of three tanks model" src="images/ThreeTanks.png" style="width: 303.3px; height: 196.2px;" /></a>
+<a class="reference internal image-reference" href="images/ThreeTanks.png"><img alt="Sankey diagrams of three tanks model" src="images/ThreeTanks.png" style="width: 303.3px; height: 196.2px;" /></a>
 <a class="reference internal image-reference" href="images/hspace.png"><img alt="images/hspace.png" src="images/hspace.png" style="width: 62.5px; height: 2.5px;" /></a>
 <a class="reference internal image-reference" href="images/PIDs-bode.png"><img alt="Bode plot of PID with varying differential time constant" src="images/PIDs-bode.png" style="width: 299.25px; height: 206.55px;" /></a>
-<p>Please see the tutorial, which is available as an <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb">IPython notebook</a>
-or online as a <a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb">static page</a>.
+<p>Currently, ModelicaRes only loads Dymola/<a class="reference external" href="https://www.openmodelica.org/">OpenModelica</a>-formatted results
+(*.mat), but the loading functions are modular so that other formats can be
+added easily.</p>
+<p>Please see the tutorial, which is available as an <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">IPython notebook</a>
+or online as a <a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">static page</a>.
 The links below and in the sidebar provide the full documentation and many
 more examples.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial (IPython notebook)</a></li>
-<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics (ditto)</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
@@ -179,9 +139,9 @@ the right.  Run the following command from the base folder:</p>
 <a class="reference external" href="http://www.scipy.org/install.html">http://www.scipy.org/install.html</a>.</li>
 <li>The GUIs require <a class="reference external" href="http://qt-project.org/">Qt</a>, which can be installed via <a class="reference external" href="http://www.riverbankcomputing.co.uk/software/pyqt/">PyQt4</a>, <a class="reference external" href="https://code.google.com/p/guidata/">guidata</a>, or <a class="reference external" href="http://qt-project.org/wiki/pyside">PySide</a>.</li>
 </ul>
-<p>The <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/release/matplotlibrc">matplotlibrc file</a> has some
-recommended revisions to <a class="reference external" href="http://www.matplotlib.org">matplotlib</a>&#8216;s defaults.  To use it, copy it to the
-working directory or <a class="reference external" href="http://www.matplotlib.org">matplotlib</a>&#8216;s configuration directory.  See
+<p>The <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/master/examples/matplotlibrc">matplotlibrc file</a>
+has some recommended revisions to <a class="reference external" href="http://www.matplotlib.org">matplotlib</a>&#8216;s defaults.  To use it, copy it to
+the working directory or <a class="reference external" href="http://www.matplotlib.org">matplotlib</a>&#8216;s configuration directory.  See
 <a class="reference external" href="http://matplotlib.org/users/customizing.html">http://matplotlib.org/users/customizing.html</a> for details.</p>
 <p><strong>Credits</strong></p>
 <p>The main author is Kevin Davies.  Code has been included from:</p>
@@ -195,10 +155,11 @@ working directory or <a class="reference external" href="http://www.matplotlib.o
 Thomas Beutlich, Moritz Lauster, Martin Sjölund, Mike Tiller, and Michael
 Wetter.</p>
 <p><strong>License terms and development</strong></p>
-<p>ModelicaRes is published under a <a class="reference external" href="license.html">BSD-compatible license</a>.  The
-development site is <a class="reference external" href="https://github.com/kdavies4/ModelicaRes">https://github.com/kdavies4/ModelicaRes</a>.  Please share any
-modifications you make (preferably as a pull request to the <tt class="docutils literal"><span class="pre">master</span></tt> branch at
-that site) in order to help others.  If you find a bug, please <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/issues/new">report it</a>.  If you have
+<p>ModelicaRes is published under a <a class="reference external" href="license.html">BSD-compatible license</a>.
+Please share any modifications you make (preferably as a pull request to the
+<tt class="docutils literal"><span class="pre">master</span></tt> branch of the <a class="reference external" href="https://github.com/kdavies4/ModelicaRes">GitHub repository</a>) in order to help others.
+There are useful development scripts in the <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/master/hooks/">hooks folder</a>.  If you find a
+bug, please <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/issues/new">report it</a>.  If you have
 suggestions, please <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/wiki/Suggestions">share them</a>.</p>
 <p><strong>See also</strong></p>
 <ul class="simple">
@@ -216,6 +177,45 @@ suggestions, please <a class="reference external" href="https://github.com/kdavi
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="javascripts/logo.gif" alt="Logo"/>
+            </a></p>
+<h3><a href="#">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3><a href="search.html">Search</a></h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
+  <ul>
+    <li><a itemprop="downloadUrl"
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
+           rel="nofollow">Latest version (v0.11.1)</a></li>
+    <li><a href="changelog.html">Change log</a></li>
+  </ul>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
     <div class="related">
@@ -230,12 +230,12 @@ suggestions, please <a class="reference external" href="https://github.com/kdavi
         <li class="right" >
           <a href="loadres.html" title="loadres script"
              >next</a> |</li>
-        <li><a href="#">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
+        <li><a href="#">ModelicaRes Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jun 02, 2014.
+      Last updated on Jun 04, 2014.
     </div>
   </body>
 </html>

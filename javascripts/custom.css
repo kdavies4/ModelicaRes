@@ -1,0 +1,25 @@
+@import url("default.css");
+
+div.sphinxsidebar {
+    top: 15px;
+    width: 230px;
+    font-size: 100%;
+    min-height: 1000px;
+    line-height: 120%;
+}
+
+div.sphinxsidebar #searchbox input[type="text"] {
+    width: 160px;
+}
+
+div.sphinxsidebar #searchbox input[type="submit"] {
+    width: 40px;
+}
+
+img {
+    margin: 10px;
+}
+
+div.body {
+    min-height:600px; /* Be sure there's room for the sidebar. */
+}

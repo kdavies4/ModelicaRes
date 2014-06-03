@@ -8,13 +8,13 @@
     
     <title>Change log &mdash; Analyze Modelica results in Python</title>
     
-    <link rel="stylesheet" href="javascripts/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="javascripts/custom.css" type="text/css" />
     <link rel="stylesheet" href="javascripts/pygments.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.11.1',
+        VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,14 +25,11 @@
     <script type="text/javascript" src="javascripts/doctools.js"></script>
     <script type="text/javascript" src="javascripts/copybutton.js"></script>
     <script type="text/javascript" src="javascripts/analytics.js"></script>
-    <link rel="search" type="application/opensearchdescription+xml"
-          title="Search within Analyze Modelica results in Python"
-          href="javascripts/opensearch.xml"/>
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
     <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
-    <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment">
-    <meta name="author" content="Kevin L. Davies">
+    <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment, Modelica plot, analysis, sort, filter, browse, script, data, diagram, export">
+    <meta name="author" content="Kevin Davies">
  
 
   </head>
@@ -46,48 +43,9 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
       </ul>
-    </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-            <p class="logo"><a href="index.html">
-              <img class="logo" src="javascripts/logo.gif" alt="Logo"/>
-            </a></p>
-<h3><a href="index.html">Table of Contents</a></h3>
-<ul>
-<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial (IPython notebook)</a></li>
-<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics (ditto)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
-</ul>
-
-<div id="searchbox" style="display: none" role="search">
-  <h3><a href="search.html">Search</a></h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
-  <ul>
-    <li><a itemprop="downloadUrl"
-           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
-           rel="nofollow">Latest version (v0.11.1)</a></li>
-    <li><a href="changelog.html">Change log</a></li>
-  </ul>
-        </div>
-      </div>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
@@ -100,6 +58,9 @@
 <p><a href="#id2"><span class="problematic" id="id3">v0.12.0_</span></a> (2014-x-xx) &#8211; Updates:</p>
 <blockquote>
 <div><ul class="simple">
+<li>Fixed issues with <a class="reference external" href="http://en.wikipedia.org/wiki/Unicode">Unicode</a> in Python 3.</li>
+<li>Fixed sorting and ordering of <a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> and
+<a class="reference internal" href="linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instances in Python 3.</li>
 <li><tt class="xref py py-meth docutils literal"><span class="pre">arrays()</span></tt> is now available as
 <tt class="xref py py-meth docutils literal"><span class="pre">array()</span></tt> instead.</li>
 <li><a class="reference internal" href="simres.html#modelicares.simres.SimRes.n_constants" title="modelicares.simres.SimRes.n_constants"><tt class="xref py py-meth docutils literal"><span class="pre">n_constants()</span></tt></a>,
@@ -130,7 +91,7 @@ probably is not very helpful externally.</li>
 <li>Renamed and/or reordered the arguments of
 <a class="reference internal" href="util.html#modelicares.util.setup_subplots" title="modelicares.util.setup_subplots"><tt class="xref py py-meth docutils literal"><span class="pre">setup_subplots()</span></tt></a>, and
 <a class="reference internal" href="exps.html#modelicares.exps.modelica_str" title="modelicares.exps.modelica_str"><tt class="xref py py-meth docutils literal"><span class="pre">modelica_str()</span></tt></a> for clarity and simplicity.</li>
-<li>Supported <a class="reference external" href="http://qt-project.org/">Qt</a> via several installations: <a class="reference external" href="http://www.riverbankcomputing.co.uk/software/pyqt/">PyQt4</a>, <a href="#id4"><span class="problematic" id="id5">guidata_</span></a>, and <a class="reference external" href="http://qt-project.org/wiki/pyside">PySide</a>.
+<li>Supported <a class="reference external" href="http://qt-project.org/">Qt</a> via several installations: <a class="reference external" href="http://www.riverbankcomputing.co.uk/software/pyqt/">PyQt4</a>, <a class="reference external" href="https://code.google.com/p/guidata/">guidata</a>, and <a class="reference external" href="http://qt-project.org/wiki/pyside">PySide</a>.
 <a class="reference external" href="http://qt-project.org/wiki/pyside">PySide</a> is no longer required, but if no <a class="reference external" href="http://qt-project.org/">Qt</a> installation is available,
 then file dialogs are not available in <a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> or
 the <a class="reference external" href="loadres.html">loadres</a> script.</li>
@@ -434,6 +395,45 @@ time.</li>
           </div>
         </div>
       </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="javascripts/logo.gif" alt="Logo"/>
+            </a></p>
+<h3><a href="index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3><a href="search.html">Search</a></h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
+  <ul>
+    <li><a itemprop="downloadUrl"
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
+           rel="nofollow">Latest version (v0.11.1)</a></li>
+    <li><a href="changelog.html">Change log</a></li>
+  </ul>
+        </div>
+      </div>
       <div class="clearer"></div>
     </div>
     <div class="related">
@@ -445,12 +445,12 @@ time.</li>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.11.1 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jun 02, 2014.
+      Last updated on Jun 04, 2014.
     </div>
   </body>
 </html>
