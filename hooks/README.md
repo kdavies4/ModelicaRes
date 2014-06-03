@@ -8,6 +8,8 @@ The [post-checkout script](post-checkout) removes byte-compiled Python files
 (*.pyc) when switching branches.  Since the source may change when upon
 checkout, the *.pyc files should be recompiled to prevent confusion.
 
+Other scripts ([code.sh](code.sh), [doc.sh](doc.sh), and
+[diff-matplotlibrc.sh](diff-matplotlibrc.sh)) are linked to [git] via aliases.
 
 #### Installation
 
@@ -40,7 +42,7 @@ To release/publish the documentation to the [GitHub webpage]\:
 
 ##### For source code:
 
-To clean the setup (alias to `setup.py clean`):
+To clean/remove the built code (alias to `setup.py clean`):
 
     git code clean
 
@@ -48,7 +50,7 @@ To build/make a distributable copy:
 
     git code build
 
-To release and upload a version to [PyPI]\:
+To release/upload a version to [PyPI]\:
 
     git code release
 
@@ -59,6 +61,6 @@ To compare the [matplotlibrc](../matplotlibrc) file to the user's configuration:
     git diff-matplotlibrc
 
 
-
+[git]: http://git-scm.com/
 [GitHub webpage]: kdavies4.github.io/ModelicaRes/
 [PyPI]: https://pypi.python.org/pypi/ModelicaRes

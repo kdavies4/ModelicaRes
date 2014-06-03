@@ -1616,9 +1616,9 @@ def yes(question):
     """
     getch = _Getch()
     sys.stdout.write(question + ' ')
-    answer = getch().lower() == 'y'
-    print('')
-    return answer
+    answer = getch()
+    print(answer)
+    return answer.lower() == 'y'
 
 if __name__ == "__main__":
     # Test the contents of this file.
