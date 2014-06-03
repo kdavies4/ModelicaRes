@@ -42,7 +42,7 @@ To release/publish the documentation to the [GitHub webpage]\:
 
 ##### For source code:
 
-To clean/remove the built code (alias to `setup.py clean`):
+To clean/remove the built code (alias to `setup.py clean --all`):
 
     git code clean
 

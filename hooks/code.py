@@ -8,20 +8,18 @@ from collections import namedtuple
 from sh import bash, git, python
 from modelicares import util
 
-setup = python.bake('../setup.py')
+setup = python.bake('setup.py')
 
 def build():
     """Build/make the code.
     """
-
-    # Build and install the package.
-    python('../setup.py', 'build')
-    #sudo python setup.py install # TODO: sudo not possible!
+    setup.build()
+    setup.sdist(formats='gztar,zip')
 
 def clean():
     """Clean/remove the built code.
     """
-    setup.clean()
+    setup.clean('--all')
 
 def release():
     """Release/publish the code.
@@ -46,9 +44,6 @@ def release():
     last_version = git.describe('--tag', abbrev=0).stdout.rstrip()
     version = raw_input("Enter the version number (last was %s): "
                         % last_version)
-
-    # Make a distributable copy.
-    python('setup.py', 'sdist', formats='gztar,zip')
 
     # Use the zip command to change the line endings to Windows format.  TODO: Is there a better way?
     name = python('setup.py', '--fullname').stdout.rstrip()
