@@ -6,6 +6,9 @@ The releases are numbered according to the `Semantic Versioning Specification
 
 v0.12.0_ (2014-x-xx) -- Updates:
 
+   - Fixed issues with Unicode_ in Python 3.
+   - Fixed sorting and ordering of :class:`~modelicares.simres.SimRes` and
+     :class:`~modelicares.linres.LinRes` instances in Python 3.
    - :meth:`~modelicares.simres._VarList.arrays` is now available as
      :meth:`~modelicares.simres._VarList.array` instead.
    - :meth:`~modelicares.simres.SimRes.n_constants`,

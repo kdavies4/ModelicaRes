@@ -13,25 +13,21 @@ def fullfact(*space):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import doe
-
-       >>> settings = doe.fullfact([0, 1], [0, 1], [0, 1, 2])
-       >>> for s in settings:
-       ...     print(s)
-       (0, 0, 0)
-       (0, 0, 1)
-       (0, 0, 2)
-       (0, 1, 0)
-       (0, 1, 1)
-       (0, 1, 2)
-       (1, 0, 0)
-       (1, 0, 1)
-       (1, 0, 2)
-       (1, 1, 0)
-       (1, 1, 1)
-       (1, 1, 2)
+    >>> settings = fullfact([0, 1], [0, 1], [0, 1, 2])
+    >>> for s in settings:
+    ...     print(s)
+    (0, 0, 0)
+    (0, 0, 1)
+    (0, 0, 2)
+    (0, 1, 0)
+    (0, 1, 1)
+    (0, 1, 2)
+    (1, 0, 0)
+    (1, 0, 1)
+    (1, 0, 2)
+    (1, 1, 0)
+    (1, 1, 1)
+    (1, 1, 2)
     """
     return product(*space)
 
@@ -42,16 +38,12 @@ def aslisted(*space):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import doe
-
-       >>> settings = doe.aslisted([0, 1], [0, 1], [0, 1, 2])
-       >>> for s in settings:
-       ...     print(s)
-       (0, 0, 0)
-       (1, 1, 1)
-    """
+    >>> settings = aslisted([0, 1], [0, 1], [0, 1, 2])
+    >>> for s in settings:
+    ...     print(s)
+    (0, 0, 0)
+    (1, 1, 1)
+     """
     return zip(*space)
 
 def ofat(*space):
@@ -62,18 +54,14 @@ def ofat(*space):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import doe
-
-       >>> settings = doe.ofat([0, 1], [0, 1], [0, 1, 2])
-       >>> for s in settings:
-       ...     print(s)
-       (0, 0, 0)
-       (1, 0, 0)
-       (0, 1, 0)
-       (0, 0, 1)
-       (0, 0, 2)
+    >>> settings = ofat([0, 1], [0, 1], [0, 1, 2])
+    >>> for s in settings:
+    ...     print(s)
+    (0, 0, 0)
+    (1, 0, 0)
+    (0, 1, 0)
+    (0, 0, 1)
+    (0, 0, 2)
     """
     baseline = [dimension[0] for dimension in space]
     yield tuple(baseline)

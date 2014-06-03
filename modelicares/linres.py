@@ -153,12 +153,9 @@ class LinRes(Res):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import LinRes
-       >>> lin = LinRes('examples/PID.mat')
-       >>> print(lin) # doctest: +ELLIPSIS
-       Modelica linearization results from .../examples/PID.mat
+    >>> lin = LinRes('examples/PID.mat')
+    >>> print(lin) # doctest: +ELLIPSIS
+    Modelica linearization results from .../examples/PID.mat
     """
 
     def __init__(self, fname='dslin.mat', tool=None):
@@ -198,31 +195,14 @@ class LinRes(Res):
         self.tool = tool
         self.fname = os.path.abspath(fname)
 
-    # Why this doesn't work if moved to the base class (_res.Res)?
-    def __cmp__(self, other):
-        """Return a negative integer if *self* < *other*, zero if
-        *self* == *other*, or a positive integer if *self* > *other*.
-
-        This is used for sorting in :class:`ResList`.
-        """
-        try:
-            return cmp(self.fname, other.fname)
-        except AttributeError:
-            name = self.__class__.__name__
-            raise AttributeError("A %s can only be compared with another %s."
-                                 % (name, name))
-
     def __str__(self):
         """Return an informal description of the :class:`LinRes` instance.
 
         **Example:**
 
-        .. code-block:: python
-
-           >>> from modelicares import LinRes
-           >>> lin = LinRes('examples/PID.mat')
-           >>> print(lin) # doctest: +ELLIPSIS
-           Modelica linearization results from .../examples/PID.mat
+        >>> lin = LinRes('examples/PID.mat')
+        >>> print(lin) # doctest: +ELLIPSIS
+        Modelica linearization results from .../examples/PID.mat
         """
         return "Modelica linearization results from " + self.fname
 
@@ -242,22 +222,18 @@ class LinRes(Res):
 
         **Example:**
 
-        .. code-block:: python
-
-           >>> from modelicares import LinRes
-           >>> lin = LinRes('examples/PID.mat')
-           >>> lin.to_siso()
-           A = [[   0.    0.]
-            [   0. -100.]]
-           <BLANKLINE>
-           B = [[   2.]
-            [ 100.]]
-           <BLANKLINE>
-           C = [[  1. -10.]]
-           <BLANKLINE>
-           D = [[ 11.]]
-           <BLANKLINE>
-
+        >>> lin = LinRes('examples/PID.mat')
+        >>> lin.to_siso()
+        A = [[   0.    0.]
+         [   0. -100.]]
+        <BLANKLINE>
+        B = [[   2.]
+         [ 100.]]
+        <BLANKLINE>
+        C = [[  1. -10.]]
+        <BLANKLINE>
+        D = [[ 11.]]
+        <BLANKLINE>
         """
         return ss(self.sys.A, self.sys.B[:, iu],
                   self.sys.C[iy, :], self.sys.D[iy, iu])
@@ -278,12 +254,9 @@ class LinRes(Res):
 
         **Example:**
 
-        .. code-block:: python
-
-           >>> from modelicares import LinRes
-           >>> lin = LinRes('examples/PID.mat')
-           >>> lin.to_tf()
-           (array([[  11.,  102.,  200.]]), array([   1.,  100.,    0.]))
+        >>> lin = LinRes('examples/PID.mat')
+        >>> lin.to_tf()
+        (array([[  11.,  102.,  200.]]), array([   1.,  100.,    0.]))
         """
         # Return the TF.
         return ss2tf(self.sys.A, self.sys.B,
@@ -634,13 +607,15 @@ class LinResList(ResList):
 
     **Example:**
 
-    .. code-block:: python
+    >>> lins = LinResList('examples/PID/*/')
+    >>> lins.dirname # doctest: +SKIP
+    ['.../examples/PID/1', '.../examples/PID/2']
 
-       >>> from modelicares import LinResList
-       >>> lins = LinResList('examples/PID/*/')
+    .. testcleanup::
+
+       >>> lins.sort()
        >>> lins.dirname # doctest: +ELLIPSIS
        ['.../examples/PID/1', '.../examples/PID/2']
-
 
     .. _Python: http://www.python.org
     """
@@ -703,17 +678,24 @@ class LinResList(ResList):
 
         **Example:**
 
-        .. code-block:: python
+        >>> lins = LinResList('examples/PID/*/')
+        >>> lins.append('examples/PID.mat')
+        >>> print(lins) # doctest: +SKIP
+        List of linearization results (LinRes instances) from the following files
+        in the .../examples directory:
+           PID/1/dslin.mat
+           PID/2/dslin.mat
+           PID.mat
 
-           >>> from modelicares import LinResList
-           >>> lins = LinResList('examples/PID/*/')
-           >>> lins.append('examples/PID.mat')
+        .. testcleanup::
+
+           >>> lins.sort()
            >>> print(lins) # doctest: +ELLIPSIS
            List of linearization results (LinRes instances) from the following files
            in the .../examples directory:
+              PID.mat
               PID/1/dslin.mat
               PID/2/dslin.mat
-              PID.mat
         """
         if isinstance(item, LinRes):
             list.append(self, item)
@@ -731,10 +713,16 @@ class LinResList(ResList):
 
         **Example:**
 
-        .. code-block:: python
+        >>> lins = LinResList('examples/PID/*/')
+        >>> print(lins) # doctest: +SKIP
+        List of linearization results (LinRes instances) from the following files
+        in the .../examples/PID directory:
+           1/dslin.mat
+           2/dslin.mat
 
-           >>> from modelicares import LinResList
-           >>> lins = LinResList('examples/PID/*/')
+        .. testcleanup::
+
+           >>> lins.sort()
            >>> print(lins) # doctest: +ELLIPSIS
            List of linearization results (LinRes instances) from the following files
            in the .../examples/PID directory:

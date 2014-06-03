@@ -3,9 +3,9 @@ ModelicaRes
 
 **Python utilities to set up and analyze Modelica simulation experiments**
 
-ModelicaRes is a free, open-source tool to conveniently manage [Modelica]
-simulations, interpret results, and create publishable figures in [Python].  It
-is possible to
+ModelicaRes is a free, open-source tool to manage [Modelica] simulations,
+interpret results, and create publishable figures in [Python].  It is possible
+to
 - auto-generate simulation scripts,
 - browse data,
 - perform custom calculations,
@@ -23,10 +23,14 @@ label some figures, like xy plots, Bode and Nyquist plots, and Sankey diagrams.
 [odelicaRes can be scripted or used in an interactive [Python] session with math
 and matrix functions from [NumPy].
 
+Currently, ModelicaRes only loads Dymola/[OpenModelica]-formatted results
+(*.mat), but the loading functions are modular so that other formats can be
+added easily.
+
 Please see the tutorial, which is available as an
 [IPython notebook](examples/tutorial.ipynb) or online as a
-[static page](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb).
-For the full documentation and many more examples, see the [main website].
+[static page](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb).  For the full documentation and many more examples,
+see the [main website].
 
 ### Installation
 
@@ -38,11 +42,11 @@ On Linux, it may be necessary to have root privileges:
 
     sudo pip install modelicares
 
-Another way is to download and extract a copy of the package The [main
-website] and the [release branch at GitHub] have copies with built
-documentation and compiled examples.  The copy on the [PyPI page] only has the
-files to install the package, build the documentation, and execute the examples.
-Once you have a copy, run the following command from the base folder:
+Another way is to download and extract a copy of the package.  The [main
+website], the [GitHub repository], and the [PyPI page] have copies which
+include the source code as well as examples and supporting files to build the
+documentation and run tests.  Once you have a copy, run the following command
+from the base folder:
 
     python setup.py install
 
@@ -81,10 +85,9 @@ Wetter.
 
 ModelicaRes is published under a [BSD-compatible license](LICENSE.txt).  Please
 share any modifications you make (preferably as a pull request to the ``master``
-branch of the [GitHub repository](https://github.com/kdavies4/ModelicaRes)) in
-order to help others.  If you find a bug, please
-[report it](https://github.com/kdavies4/ModelicaRes/issues/new).  If you have
-suggestions, please
+branch of the [GitHub repository]) in order to help others.  If you find a bug,
+please [report it](https://github.com/kdavies4/ModelicaRes/issues/new).  If you
+have suggestions, please
 [share them](https://github.com/kdavies4/ModelicaRes/wiki/Suggestions).
 
 ### See also
@@ -100,6 +103,7 @@ suggestions, please
 
 [main website]: http://kdavies4.github.io/ModelicaRes
 [PyPI page]: http://pypi.python.org/pypi/ModelicaRes
+[GitHub repository]: https://github.com/kdavies4/ModelicaRes
 
 [Modelica]: http://www.modelica.org/
 [Python]: http://www.python.org/
@@ -107,6 +111,7 @@ suggestions, please
 [matplotlib]: http://www.matplotlib.org
 [NumPy]: http://numpy.scipy.org/
 [SciPy]: http://www.scipy.org/index.html
+[OpenModelica]: https://www.openmodelica.org/
 [Qt]: http://qt-project.org/
 [PyQt4]: http://www.riverbankcomputing.co.uk/software/pyqt/
 [guidata]: https://code.google.com/p/guidata/

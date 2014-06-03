@@ -4,9 +4,8 @@
 
 **Utilities to set up and analyze Modelica simulation experiments**
 
-ModelicaRes is a free, open-source tool to conveniently manage Modelica_
-simulations, interpret results, and create publishable figures.  It is possible
-to
+ModelicaRes is a free, open-source tool to manage Modelica_ simulations,
+interpret results, and create publishable figures.  It is possible to
 
 - auto-generate simulation scripts,
 - browse data,
@@ -20,6 +19,10 @@ routines.  ModelicaRes includes functions to automatically pre-format and label
 some figures, like xy plots, Bode and Nyquist plots, and Sankey diagrams.
 ModelicaRes can be scripted or used in an interactive Python_ session with math
 and matrix functions from NumPy_.
+
+Currently, ModelicaRes only loads Dymola/OpenModelica_-formatted results
+(\*.mat), but the loading functions are modular so that other formats can be
+added easily.
 
 Please see the tutorial, which is available as an `IPython notebook
 <https://github.com/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_
@@ -39,10 +42,10 @@ On Linux, it may be necessary to have root privileges::
     sudo pip install modelicares
 
 Another way is to download and extract a copy of the package.  The `main
-website`_ and the `release branch at GitHub`_ have copies with built
-documentation and compiled examples.  The copy on the `PyPI page`_ only has the
-files to install the package, build the documentation, and execute the examples.
-Once you have a copy, run the following command from the base folder::
+website`_, the `GitHub repository`_, and the `PyPI page`_ have copies which
+include the source code as well as examples and supporting files to build the
+documentation and run tests.  Once you have a copy, run the following command
+from the base folder::
 
     python setup.py install
 
@@ -100,29 +103,30 @@ See also
 - PySimulator_: elaborate GUI; supports FMI_
 
 
-.. _main website: http://kdavies4.github.io/ModelicaRes
-.. _release branch at GitHub: https://github.com/kdavies4/ModelicaRes
+.. _main website: http://kdavies4.github.io/ModelicaRes/
 .. _PyPI page: http://pypi.python.org/pypi/ModelicaRes
+.. _GitHub repository: https://github.com/kdavies4/ModelicaRes
 
-.. _Modelica: http://www.modelica.org
-.. _Python: http://www.python.org
-.. _pandas: http://pandas.pydata.org
-.. _matplotlib: http://www.matplotlib.org
-.. _NumPy: http://numpy.scipy.org
+.. _Modelica: http://www.modelica.org/
+.. _Python: http://www.python.org/
+.. _pandas: http://pandas.pydata.org/
+.. _matplotlib: http://www.matplotlib.org/
+.. _NumPy: http://numpy.scipy.org/
 .. _SciPy: http://www.scipy.org/index.html
+.. _OpenModelica: https://www.openmodelica.org/
 .. _Qt: http://qt-project.org/
 .. _PyQt4: http://www.riverbankcomputing.co.uk/software/pyqt/
 .. _guidata: https://code.google.com/p/guidata/
 .. _PySide: http://qt-project.org/wiki/pyside
 .. _pip: https://pypi.python.org/pypi/pip
 .. _awesim: https://github.com/saroele/awesim
-.. _BuildingsPy: http://simulationresearch.lbl.gov/modelica/buildingspy
-.. _DyMat: http://www.j-raedler.de/projects/dymat
+.. _BuildingsPy: http://simulationresearch.lbl.gov/modelica/buildingspy/
+.. _DyMat: http://www.j-raedler.de/projects/dymat/
 .. _PyFMI: https://pypi.python.org/pypi/PyFMI
 .. _PySimulator: https://github.com/PySimulator/PySimulator
 .. _Gnuplot: http://www.gnuplot.info
 .. _CSV: http://en.wikipedia.org/wiki/Comma-separated_values
-.. _netCDF: http://www.unidata.ucar.edu/software/netcdf
+.. _netCDF: http://www.unidata.ucar.edu/software/netcdf/
 .. _FMI: https://www.fmi-standard.org
 .. _python-control: http://sourceforge.net/apps/mediawiki/python-control
 .. _ArrowLine class: http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html

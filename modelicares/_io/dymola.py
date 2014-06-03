@@ -37,16 +37,20 @@ The last three errors occur when the file does appear to be from Dymola or
 OpenModelica but something else is wrong.
 """
 
+import sys
+
 from collections import namedtuple
 from itertools import count
 from scipy.io import loadmat
+from scipy.io.matlab.mio_utils import chars_to_strings
 from control.matlab import ss
 
 from modelicares.simres import _VarDict, _select, _apply_function, _swap
 from modelicares.simres import Variable as GenericVariable
 
-
 #pylint: disable=C0103, C0325, R0912, R0914, W0221, W0631
+
+PY2 = sys.version < '3'
 
 # Namedtuple to store the time and value information of each variable
 Samples = namedtuple('Samples', ['times', 'values', 'negated'])
@@ -139,20 +143,37 @@ class Variable(GenericVariable):
         # Keep it updated there.
         return self.samples.times
 
+def get_strings_no_decode(str_arr):
+    """Return a list of strings from a character array.
 
-def chars_to_str(str_arr):
-    """Convert a string array to a string.
-
-    Remove trailing whitespace and null characters.  Encode to ascii using
-    latin-1, since that's how SciPy decodes the mat file.  Per the `Modelica
-    Specification`_, Dymola only uses Unicode_ for variable descriptions.
-
-
-    .. _Modelica Specification: https://www.modelica.org/documents
-    .. _Unicode: http://en.wikipedia.org/wiki/Unicode
+    Strip the whitespace from the right and return it to the character set it
+    was saved in.
     """
-    return ''.join(str_arr).rstrip().rstrip('\x00').encode('latin-1')
+    return [line.rstrip(' \0').encode('latin-1')
+            for line in chars_to_strings(str_arr)]
+    # The encode part undoes scipy.io.loadmat's decoding.
 
+def get_strings(str_arr):
+    """Return a list of strings from a character array.
+
+    Strip the whitespace from the right and recode it as utf-8.
+    """
+    return [line.rstrip(' \0').encode('latin-1').decode('utf-8')
+            for line in chars_to_strings(str_arr)]
+    # Modelica encodes using utf-8 but scipy.io.loadmat decodes using latin-1,
+    # thus the encode ... decode part.
+
+if PY2:
+    # For most strings (those besides the description), Unicode is not
+    # necessary.  Unicode support is less integrated in Python 2; Unicode
+    # strings are a special case that are represented by u'...' (which is
+    # distracting in the examples).  Therefore, in Python 2, we'll only use
+    # Unicode for the description strings.  In Python 3, literal strings are
+    # Unicode by default
+    # (http://stackoverflow.com/questions/6812031/how-to-make-unicode-string-with-python3),
+    # and we need to leave the strings decoded because encoded strings are bytes
+    # objects.
+    get_strings = get_strings_no_decode
 
 def read(fname, constants_only=False):
     r"""Read variables from a MATLAB\ :sup:`®` file with Dymola\ :sup:`®` or
@@ -195,7 +216,7 @@ def read(fname, constants_only=False):
                         'result file.  The "Aclass" variable is '
                         'missing.'.format(f=fname))
 
-    return mat, [chars_to_str(line) for line in Aclass]
+    return mat, get_strings(Aclass)
 
 
 def loadsim(fname, constants_only=False):
@@ -219,13 +240,9 @@ def loadsim(fname, constants_only=False):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares._io.dymola import loadsim
-
-       >>> variables = loadsim('examples/ChuaCircuit.mat')
-       >>> variables['L.v'].unit
-       'V'
+    >>> variables = loadsim('examples/ChuaCircuit.mat')
+    >>> variables['L.v'].unit
+    'V'
     """
     # This does the task of mfiles/traj/tload.m from the Dymola installation.
 
@@ -233,7 +250,7 @@ def loadsim(fname, constants_only=False):
         """Parse the variable description string into description, unit, and
         displayUnit.
         """
-        description = chars_to_str(description).rstrip(']')
+        description = description.rstrip(']')
         displayUnit = ''
         try:
             description, unit = description.rsplit('[', 1)
@@ -244,22 +261,23 @@ def loadsim(fname, constants_only=False):
                 unit, displayUnit = unit.rsplit('|', 1)
             except ValueError:
                 pass # (displayUnit = '')
-        finally:
-            description = description.rstrip(' ')
+        description = description.rstrip()
+        if PY2:
+            description = description.decode('utf-8')
 
-        # Dymola uses utf-8 for descriptions.
-        return description.decode('utf-8'), unit, displayUnit
+        return description, unit, displayUnit
 
     # Load the file.
     mat, Aclass = read(fname, constants_only)
 
     # Check the type of results.
     if Aclass[0] == 'AlinearSystem':
-        raise AssertionError('"%s" is a linearization result.  Use LinRes '
-                             'instead.' % fname)
+        raise AssertionError(fname + ' is a linearization result.  Use LinRes '
+                             'instead.')
     else:
-        assert Aclass[0] == 'Atrajectory', ('File "%s" is not a simulation '
-                                            'or linearization result.' % fname)
+
+        assert Aclass[0] == 'Atrajectory', (fname + ' is not a simulation or '
+                                            'linearization result.')
 
     # Determine if the data is transposed.
     try:
@@ -276,47 +294,49 @@ def loadsim(fname, constants_only=False):
     version = Aclass[1]
 
     # Process the name, description, parts of dataInfo, and data_i variables.
-    # This section has been optimized for loading speed.  All time and value
-    # data remains linked to the memory location where it is loaded by scipy.
-    # The negated variable is carried through so that copies are not necessary.
-    # If changes are made to this code, be sure to compare the performance
-    # (e.g., using timeit in IPython).
+    # This section has been optimized for speed.  All time and value data
+    # remains linked to the memory location where it is loaded by scipy.  The
+    # negated variable is carried through so that copies are not necessary.  If
+    # changes are made to this code, be sure to compare the performance (e.g.,
+    # using %timeit in IPython).
     if version == '1.0':
         data = mat['data'].T if transposed else mat['data']
         times = data[:, 0]
-        names = [chars_to_str(line)
-                 for line in (mat['names'].T if transposed else mat['names'])]
-        variables = {name: Variable(Samples(times, data[:, i], False),
-                                    '', '', '')
-                     for i, name in enumerate(names)}
-        variables = _VarDict(variables)
+        names = get_strings(mat['names'].T if transposed else mat['names'])
+        variables = _VarDict({name: Variable(Samples(times, data[:, i], False),
+                                             '', '', '')
+                              for i, name in enumerate(names)})
     else:
         assert version == '1.1', ('The version of the Dymola/OpenModelica '
                                   'result file ({v}) is not '
                                   'supported.'.format(v=version))
+        names = get_strings(mat['name'].T if transposed else mat['name'])
+        descriptions = get_strings(mat['description'].T if transposed else
+                                       mat['description'])
         dataInfo = mat['dataInfo'] if transposed else mat['dataInfo'].T
-        description = mat['description'] if transposed else mat['description'].T
-        names = [chars_to_str(line)
-                 for line in (mat['name'].T if transposed else mat['name'])]
         data_sets = dataInfo[0, :]
+        sign_cols = dataInfo[1, :]
         variables = _VarDict()
-        for current_data_set in count(1):
+        for i in count(1):
             try:
-                data = (mat['data_%i' % current_data_set].T if transposed else
-                        mat['data_%i' % current_data_set])
+                data = (mat['data_%i' % i].T if transposed else
+                        mat['data_%i' % i])
             except KeyError:
                 break # There are no more "data_i" variables.
             else:
-                if data.shape[1] > 1: # It's possible that a data set is empty.
+                if data.shape[1] > 1: # In case the data set is empty.
                     times = data[:, 0]
-                    for i, (data_set, name) in enumerate(zip(data_sets, names)):
-                        if data_set == current_data_set:
-                            sign_col = dataInfo[1, i]
-                            variables[name] = \
+                    variables.update({name:
                                       Variable(Samples(times,
-                                                       data[:, abs(sign_col)-1],
+                                                       data[:,
+                                                            abs(sign_col) - 1],
                                                        sign_col < 0),
-                                               *parse(description[:, i]))
+                                               *parse(description))
+                                      for (name, description, data_set,
+                                           sign_col)
+                                      in zip(names, descriptions, data_sets,
+                                             sign_cols)
+                                      if data_set == i})
 
         # Time is from the last data set.
         variables['Time'] = Variable(Samples(times, times, False),
@@ -353,13 +373,9 @@ def loadlin(fname):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares._io.dymola import loadlin
-
-       >>> sys = loadlin('examples/PID.mat')
-       >>> sys.state_names
-       ['I.y', 'D.x']
+    >>> sys = loadlin('examples/PID.mat')
+    >>> sys.state_names
+    ['I.y', 'D.x']
     """
     # This does the task of mfiles/traj/tloadlin.m in the Dymola installation.
 
@@ -368,11 +384,11 @@ def loadlin(fname):
 
     # Check the type of results.
     if Aclass[0] == 'Atrajectory':
-        raise AssertionError('"%s" is a simulation result.  Use SimRes '
-                             'instead.' % fname)
+        raise AssertionError(fname + ' is a simulation result.  Use SimRes '
+                             'instead.')
     else:
-        assert Aclass[0] == 'AlinearSystem', ('File "%s" is not a simulation or'
-                                              ' linearization result.' % fname)
+        assert Aclass[0] == 'AlinearSystem', (fname + ' is not a simulation or'
+                                              ' linearization result.')
 
     # Determine the number of states, inputs, and outputs.
     ABCD = mat['ABCD']
@@ -389,10 +405,9 @@ def loadlin(fname):
 
     # Extract the variable names.
     xuyName = mat['xuyName']
-    sys.state_names = [chars_to_str(xuyName[i]) for i in range(nx)]
-    sys.input_names = [chars_to_str(xuyName[i]) for i in range(nx, nx+nu)]
-    sys.output_names = [chars_to_str(xuyName[i]) for i in range(nx+nu,
-                                                                nx+nu+ny)]
+    sys.state_names = get_strings(xuyName[:nx])
+    sys.input_names = get_strings(xuyName[nx:nx + nu])
+    sys.output_names = get_strings(xuyName[nx+nu:])
 
     return sys
 

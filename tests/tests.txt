@@ -1,71 +1,81 @@
 # -*- coding: utf-8 -*-
-# Additional tests besides those in the ModelicaRes documentation.
+# Additional tests besides those in the ModelicaRes documentation
 
 .. testsetup::
+
    >>> decimals = 8
 
    >>> import numpy as np
    >>> np.set_printoptions(precision=decimals)
 
-   >>> # Don't use np.round; it's stupid.
-   >>> builtin_round = round
+   # Don't use np.round or built-in round; they're inconsistent in the
+   # number of decimal places between versions of Python and even the floats
+   # they're passed.
    >>> def round(value):
+   ...     fmt = '%' + '.%if' % decimals
    ...     try:
    ...         return [round(v) for v in value]
    ...     except TypeError:
-   ...         return builtin_round(value, decimals)
+   ...         return float(fmt % value)
 
-   >>> from glob import glob
    >>> from modelicares import *
 
-# Tests on modelicares.util
-# -------------------------
->>> from modelicares import *
->>> fnames = list(multiglob("examples/ChuaCircuit/*/"))
->>> fnames.sort()
->>> fnames
-['examples/ChuaCircuit/1/dsres.mat', 'examples/ChuaCircuit/2/dsres.mat']
 
 # Tests on modelicares.exps
 # -------------------------
+
 >>> modelica_str(False)
 'false'
 
-# Tests on modelicares.simres
-# ---------------------------
 
-# SimRes methods
+# modelicares.simres.SimRes methods
+# ---------------------------------
+
 >>> sim = SimRes('examples/ChuaCircuit.mat')
+
 >>> round(sim['Ro.R'].value())
 0.0125
+
 >>> sim['L.v'].value() # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
 Traceback (most recent call last):
 ...
 ValueError: The variable is not a constant.  Use values() instead of value().
+
 >>> round(sim(['C1.v', 'L.v']).FV())
 [2.42098355, -0.25352862]
+
 >>> round(sim['C1.v'].IV())
 4.0
+
 >>> round(sim['L.v'].max())
 0.77344114
+
 >>> round(sim['L.v'].mean())
 0.01473382
+
 >>> round(sim['L.v'].mean_rectified())
 0.29067177
+
 >>> round(sim['L.v'].min())
 -0.9450165
+
 >>> round(sim['L.v'].RMS())
 0.36637381
+
 >>> round(sim['L.v'].RMS_AC())
 0.3808113
+
 >>> sim['L.v'].array(t=(0, 10)) # doctest: +NORMALIZE_WHITESPACE
 array([[  0.        ,   0.        ],
        [  5.        ,   0.10923497],
        [ 10.        ,   0.21083504]], dtype=float32)
+
 >>> sim['L.v'].times(t=(0, 20))
 array([  0.,   5.,  10.,  15.,  20.], dtype=float32)
+
 >>> sim['L.v'].values(t=(0, 20)) # doctest: +NORMALIZE_WHITESPACE
 array([ 0.        ,  0.10923497,  0.21083504,  0.30462351,  0.39040083], dtype=float32)
+
 >>> sim['L.vv'].values() # doctest: +ELLIPSIS
 Traceback (most recent call last):
 ...
@@ -75,33 +85,66 @@ Did you mean one of these?
        L.v
        L.p.v
        L.n.v
->>> round(sim['L.v'].values(t=[0, 2000]))
-[0.0, 0.15459341]
->>> sim.n_constants
-23
 
-# Other SimRes attributes
+>>> round(sim['L.v'].values(t=[1, 2000]))
+[0.02184699, 0.15459341]
+
+
+# modelicares.simres.SimRes properties
+# ------------------------------------
+
 >>> sim['G.T_heatPort'].unit
 'K'
+
 >>> sim['G.T_heatPort'].displayUnit
 'degC'
->>> sim['G.T_heatPort'].description
-u'Temperature of HeatPort'
+
+>>> sim['G.T_heatPort'].description == 'Temperature of HeatPort'
+True
+
 >>> sim = SimRes('examples/ChuaCircuit/1/dsres.mat')
->>> sim['Nr.Ga'].description
-u''
+>>> sim['Nr.Ga'].description == ''
+True
+
 >>> sim['Nr.Ga'].unit
 'S'
+
 >>> sim = SimRes('tests/unicode.mat')
->>> 'ΔΘ'.decode('utf8') == sim['DeltaTheta'].description
+>>> sim['DeltaTheta'].description == u'\u0394\u0398'
 True
+
 >>> sim.plot('DeltaTheta', title="The y axis label should be $\Delta\Theta$.",
 ...          label='tests/unicode') # doctest: +ELLIPSIS
 (<matplotlib.axes.AxesSubplot object at 0x...>, None)
+
 >>> save(['pdf'])
 Saved tests/unicode.pdf
 
-# SimResList methods
+
+# modelicares.simres.SimResList methods
+# -------------------------------------
+
+>>> sims = SimResList('examples/ChuaCircuit/*/')
+>>> sims.sort()
+
+>>> sims.unique_IVs()['L.L']
+[15.0, 21.0]
+
+>>> sims['L.v'].mean()
+[0.0013353984, 0.023054097]
+
+>>> sims.append('examples/ThreeTanks.mat')
+>>> print(sims) # doctest: +ELLIPSIS
+List of simulation results (SimRes instances) from the following files
+in the .../examples directory:
+   ChuaCircuit/1/dsres.mat
+   ChuaCircuit/2/dsres.mat
+   ThreeTanks.mat
+
+>>> sims = SimResList('examples/*')
+>>> sims.sort()
+>>> sims.unique_names['L.L']
+[True, False]
 
 # Loading various file formats
 >>> sims = SimResList('tests')
@@ -115,3 +158,74 @@ in the .../tests directory:
    DoublePendulum_Dymola-7.4.mat
    DoublePendulum_OpenModelica-1.8.mat
    unicode.mat
+
+
+# modelicares.linres.LinResList methods
+# -------------------------------------
+
+>>> lins = LinResList('examples/PID/*/')
+>>> lins.sort()
+>>> lins.dirname # doctest: +ELLIPSIS
+['.../examples/PID/1', '.../examples/PID/2']
+
+>>> lins.append('examples/PID.mat')
+>>> print(lins) # doctest: +ELLIPSIS
+List of linearization results (LinRes instances) from the following files
+in the .../examples directory:
+   PID/1/dslin.mat
+   PID/2/dslin.mat
+   PID.mat
+
+
+# modelicares.exps
+# ----------------
+
+>>> d = ParamDict({'a': 1, 'b.c': np.array([2, 3]), 'b.d': False,
+...                'b.e': '"hello"', 'b.f': None})
+>>> l = list(str(d)) # (a=1, b(c={2, 3}, e="hello", d=false))
+>>> l.sort()
+>>> l
+[' ', ' ', ' ', ' ', '"', '"', '(', '(', ')', ')', ',', ',', ',', ',', '1', '2', '3', '=', '=', '=', '=', 'a', 'a', 'b', 'c', 'd', 'e', 'e', 'e', 'f', 'h', 'l', 'l', 'l', 'o', 's', '{', '}']
+
+>>> experiments = gen_experiments(
+...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
+...                  {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
+...                  design=doe.ofat)
+>>> sorted([experiment.model + str(sorted(list(str(experiment.params))))
+...         for experiment in experiments])
+["Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '0', '1', '1', '2', '6', '=', '=', 'C', 'C', 'L', 'L']", "Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '0', '2', '2', '8', '=', '=', 'C', 'C', 'L', 'L']", "Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '1', '1', '2', '2', '6', '=', '=', 'C', 'C', 'L', 'L']", "Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '1', '2', '6', '8', '=', '=', 'C', 'C', 'L', 'L']", "Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '1', '2', '8', '8', '=', '=', 'C', 'C', 'L', 'L']"]
+
+>>> experiments = gen_experiments(
+...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
+...                  {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
+...                  design=doe.fullfact)
+>>> sorted([experiment.model + str(sorted(list(str(experiment.params))))
+...         for experiment in experiments])
+["Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '0', '0', '1', '2', '2', '=', '=', 'C', 'C', 'L', 'L']", "Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '0', '1', '1', '2', '6', '=', '=', 'C', 'C', 'L', 'L']", "Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '0', '1', '1', '2', '8', '=', '=', 'C', 'C', 'L', 'L']", "Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '0', '1', '2', '2', '2', '=', '=', 'C', 'C', 'L', 'L']", "Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '0', '2', '2', '8', '=', '=', 'C', 'C', 'L', 'L']", "Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '1', '1', '2', '2', '6', '=', '=', 'C', 'C', 'L', 'L']", "Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '1', '1', '2', '2', '8', '=', '=', 'C', 'C', 'L', 'L']", "Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '1', '2', '6', '8', '=', '=', 'C', 'C', 'L', 'L']", "Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '1', '2', '8', '8', '=', '=', 'C', 'C', 'L', 'L']"]
+
+
+>>> experiments = gen_experiments(
+...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit']*3,
+...                  {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
+...                  design=doe.aslisted)
+>>> sorted([experiment.model + str(sorted(list(str(experiment.params))))
+...         for experiment in experiments])
+["Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '0', '1', '1', '2', '8', '=', '=', 'C', 'C', 'L', 'L']", "Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '0', '1', '2', '2', '2', '=', '=', 'C', 'C', 'L', 'L']", "Modelica.Electrical.Analog.Examples.ChuaCircuit[' ', '(', '(', '(', ')', ')', ')', ',', '0', '1', '2', '6', '8', '=', '=', 'C', 'C', 'L', 'L']"]
+
+>>> models = ['Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis']
+>>> params = dict(axis=dict(motor=dict(i_max=[5, 15],
+...                                    Ra=dict(R=[200, 300]))))
+>>> sorted([experiment.model + str(sorted(list(str(experiment.params))))
+...         for experiment in gen_experiments(models, params)])
+["Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis[' ', '(', '(', '(', '(', ')', ')', ')', ')', ',', '0', '0', '1', '2', '5', '=', '=', 'R', 'R', '_', 'a', 'a', 'a', 'i', 'i', 'm', 'm', 'o', 'o', 'r', 's', 't', 'x', 'x']", "Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis[' ', '(', '(', '(', '(', ')', ')', ')', ')', ',', '0', '0', '1', '3', '5', '=', '=', 'R', 'R', '_', 'a', 'a', 'a', 'i', 'i', 'm', 'm', 'o', 'o', 'r', 's', 't', 'x', 'x']", "Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis[' ', '(', '(', '(', '(', ')', ')', ')', ')', ',', '0', '0', '2', '5', '=', '=', 'R', 'R', '_', 'a', 'a', 'a', 'i', 'i', 'm', 'm', 'o', 'o', 'r', 's', 't', 'x', 'x']", "Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis[' ', '(', '(', '(', '(', ')', ')', ')', ')', ',', '0', '0', '3', '5', '=', '=', 'R', 'R', '_', 'a', 'a', 'a', 'i', 'i', 'm', 'm', 'o', 'o', 'r', 's', 't', 'x', 'x']"]
+
+>>> models = ['Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis']
+>>> params = dict(axis=dict(motor=dict(i_max=[5, 15],
+...                                    Ra=dict(R=[200, 300]))))
+>>> sorted([experiment.model + str(sorted(list(str(experiment.params))))
+...         for experiment in gen_experiments(models, params)])
+["Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis[' ', '(', '(', '(', '(', ')', ')', ')', ')', ',', '0', '0', '1', '2', '5', '=', '=', 'R', 'R', '_', 'a', 'a', 'a', 'i', 'i', 'm', 'm', 'o', 'o', 'r', 's', 't', 'x', 'x']", "Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis[' ', '(', '(', '(', '(', ')', ')', ')', ')', ',', '0', '0', '1', '3', '5', '=', '=', 'R', 'R', '_', 'a', 'a', 'a', 'i', 'i', 'm', 'm', 'o', 'o', 'r', 's', 't', 'x', 'x']", "Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis[' ', '(', '(', '(', '(', ')', ')', ')', ')', ',', '0', '0', '2', '5', '=', '=', 'R', 'R', '_', 'a', 'a', 'a', 'i', 'i', 'm', 'm', 'o', 'o', 'r', 's', 't', 'x', 'x']", "Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis[' ', '(', '(', '(', '(', ')', ')', ')', ')', ',', '0', '0', '3', '5', '=', '=', 'R', 'R', '_', 'a', 'a', 'a', 'i', 'i', 'm', 'm', 'o', 'o', 'r', 's', 't', 'x', 'x']"]
+
+>>> sorted([sorted(list(experiment.params.items()))
+...        for experiment in gen_experiments(models, params)])
+[[('axis.motor.Ra.R', 200), ('axis.motor.i_max', 5)], [('axis.motor.Ra.R', 200), ('axis.motor.i_max', 15)], [('axis.motor.Ra.R', 300), ('axis.motor.i_max', 5)], [('axis.motor.Ra.R', 300), ('axis.motor.i_max', 15)]]

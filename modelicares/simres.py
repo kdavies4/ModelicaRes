@@ -515,12 +515,9 @@ class SimRes(Res):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import SimRes
-       >>> sim = SimRes('examples/ChuaCircuit.mat')
-       >>> print(sim) # doctest: +ELLIPSIS
-       Modelica simulation results from .../examples/ChuaCircuit.mat
+    >>> sim = SimRes('examples/ChuaCircuit.mat')
+    >>> print(sim) # doctest: +ELLIPSIS
+    Modelica simulation results from .../examples/ChuaCircuit.mat
 
 
     .. _Python: http://www.python.org
@@ -687,11 +684,8 @@ class SimRes(Res):
 
         **Example:**
 
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.browse() # doctest: +SKIP
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> sim.browse() # doctest: +SKIP
 
         .. image:: _static/browse.png
            :scale: 80 %
@@ -773,12 +767,16 @@ class SimRes(Res):
 
         .. code-block:: python
 
-           >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
 
            >>> # Names for voltages across all of the components:
-           >>> sim.names('^[^.]*.v$', re=True)
-           ['G.v', 'L.v', 'C2.v', 'Nr.v', 'Ro.v', 'C1.v']
+           >>> sim.names('^[^.]*.v$', re=True) # doctest: +SKIP
+           ['C1.v', 'C2.v', 'G.v', 'L.v', 'Nr.v', 'Ro.v']
+
+        .. testcleanup::
+
+           >>> sorted(sim.names('^[^.]*.v$', re=True))
+           ['C1.v', 'C2.v', 'G.v', 'L.v', 'Nr.v', 'Ro.v']
         """
         # Get a list of all the variables or just the constants.
         if constants_only:
@@ -805,12 +803,14 @@ class SimRes(Res):
 
         **Example:**
 
-        .. code-block:: python
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> sim.nametree('L*v') # doctest: +SKIP
+        {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
 
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim.nametree('L*v') # doctest: +ELLIPSIS
-           {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
+        .. testcleanup::
+
+           >>> sim.nametree('L*v') == {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
+           True
         """
         return util.tree(self.names(pattern, re, constants_only))
 
@@ -826,9 +826,7 @@ class SimRes(Res):
 
         .. code-block:: python
 
-           >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
-
            >>> print("There are %i constants in the %s simulation." %
            ...       (sim.n_constants, sim.fbase))
            There are 23 constants in the ChuaCircuit simulation.
@@ -1186,37 +1184,32 @@ class SimRes(Res):
 
         **Examples:**
 
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> voltages = sim.names('^[^.]*.v$', re=True)
-           >>> sim.to_pandas(voltages) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-                       C1.v / V  C2.v / V   G.v / V   L.v / V  Nr.v / V  Ro.v / V
-           Time / s
-           0.000000    4.000000  0.000000 -4.000000  0.000000  4.000000  0.000000
-           5.000000    3.882738  0.109426 -3.773312  0.109235  3.882738  0.000191
-           ...
-           [514 rows x 6 columns]
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> voltages = sim.names('^[^.]*.v$', re=True)
+        >>> sim.to_pandas(voltages) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+                    C1.v / V  C2.v / V   G.v / V   L.v / V  Nr.v / V  Ro.v / V
+        Time / s
+        0.000000    4.000000  0.000000 -4.000000  0.000000  4.000000  0.000000
+        5.000000    3.882738  0.109426 -3.773312  0.109235  3.882738  0.000191
+        ...
+        [514 rows x 6 columns]
 
         We can relabel columns using the *aliases* argument:
 
-        .. code-block:: python
-
-           >>> sim = SimRes('examples/ThreeTanks.mat')
-           >>> aliases = {'tank1.level': "Tank 1 level",
-           ...            'tank2.level': "Tank 2 level",
-           ...            'tank3.level': "Tank 3 level"}
-           >>> sim.to_pandas(aliases.keys(), aliases) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-                      Tank 1 level / m  Tank 2 level / m  Tank 3 level / m
-           Time / s
-           0.000000           8.000000          3.000000          3.000000
-           0.400000           7.974962          2.990460          3.034578
-           0.800000           7.950003          2.981036          3.068961
-           1.200000           7.925121          2.971729          3.103150
-           1.600000           7.900317          2.962539          3.137144
-           ...
-           [502 rows x 3 columns]
+        >>> sim = SimRes('examples/ThreeTanks.mat')
+        >>> aliases = {'tank1.level': "Tank 1 level",
+        ...            'tank2.level': "Tank 2 level",
+        ...            'tank3.level': "Tank 3 level"}
+        >>> sim.to_pandas(list(aliases), aliases) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
+                   Tank 1 level / m  Tank 2 level / m  Tank 3 level / m
+        Time / s
+        0.000000           8.000000          3.000000          3.000000
+        0.400000           7.974962          2.990460          3.034578
+        0.800000           7.950003          2.981036          3.068961
+        1.200000           7.925121          2.971729          3.103150
+        1.600000           7.900317          2.962539          3.137144
+        ...
+        [502 rows x 3 columns]
         """
         # Simple function to label a variable with its unit:
         label = lambda name, unit: name + ' / ' + unit
@@ -1270,12 +1263,13 @@ class SimRes(Res):
 
         **Example**:
 
-        .. code-block:: python
+        .. testsetup::
 
            >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> sim(['L.v', 'L.i']).unit
-           ['V', 'A']
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> sim(['L.v', 'L.i']).unit
+        ['V', 'A']
         """
         def entries(names):
             """Create a (possibly nested) list of data entries given a (possibly
@@ -1291,20 +1285,6 @@ class SimRes(Res):
         else:
             return _VarList(entries(names))
 
-    # Why this doesn't work if moved to the base class (_res.Res)?
-    def __cmp__(self, other):
-        """Return a negative integer if *self* < *other*, zero if
-        *self* == *other*, or a positive integer if *self* > *other*.
-
-        This is used for sorting in :class:`ResList`.
-        """
-        try:
-            return cmp(self.fname, other.fname)
-        except AttributeError:
-            name = self.__class__.__name__
-            raise AttributeError("A %s can only be compared with another %s."
-                                 % (name, name))
-
     def __contains__(self, name):
         """Return *True* if a variable is present in the simulation results.
 
@@ -1316,7 +1296,6 @@ class SimRes(Res):
 
         .. code-block:: python
 
-           >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
 
            >>> # 'L.v' is a valid variable name:
@@ -1378,7 +1357,6 @@ class SimRes(Res):
 
         .. code-block:: python
 
-           >>> from modelicares import SimRes
            >>> sim = SimRes('examples/ChuaCircuit.mat')
 
            >>> sim['L.v'].unit
@@ -1403,13 +1381,10 @@ class SimRes(Res):
 
         **Example:**
 
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> print("There are %i variables in the %s simulation." %
-           ...       (len(sim), sim.fbase))
-           There are 62 variables in the ChuaCircuit simulation.
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> print("There are %i variables in the %s simulation." %
+        ...       (len(sim), sim.fbase))
+        There are 62 variables in the ChuaCircuit simulation.
         """
         return len(self._variables)
 
@@ -1418,12 +1393,9 @@ class SimRes(Res):
 
         **Example:**
 
-        .. code-block:: python
-
-           >>> from modelicares import SimRes
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-           >>> print(sim) # doctest: +ELLIPSIS
-           Modelica simulation results from ...ChuaCircuit.mat
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> print(sim) # doctest: +ELLIPSIS
+        Modelica simulation results from ...ChuaCircuit.mat
         """
         return "Modelica simulation results from " + self.fname
 
@@ -1529,10 +1501,13 @@ class SimResList(ResList):
 
     **Example:**
 
-    .. code-block:: python
+    >>> sims = SimResList('examples/ChuaCircuit/*/')
+    >>> sims.dirname # doctest: +SKIP
+    ['.../examples/ChuaCircuit/1', '.../examples/ChuaCircuit/2']
 
-       >>> from modelicares import SimResList
-       >>> sims = SimResList('examples/ChuaCircuit/*/')
+    .. testcleanup::
+
+       >>> sims.sort()
        >>> sims.dirname # doctest: +ELLIPSIS
        ['.../examples/ChuaCircuit/1', '.../examples/ChuaCircuit/2']
     """
@@ -1597,11 +1572,18 @@ class SimResList(ResList):
 
         **Example:**
 
-        .. code-block:: python
+        >>> sims = SimResList('examples/ChuaCircuit/*/')
+        >>> sims.append('examples/ThreeTanks.mat')
+        >>> print(sims) # doctest: +SKIP
+        List of simulation results (SimRes instances) from the following files
+        in the .../examples directory:
+           ChuaCircuit/1/dsres.mat
+           ChuaCircuit/2/dsres.mat
+           ThreeTanks.mat
 
-           >>> from modelicares import SimResList
-           >>> sims = SimResList('examples/ChuaCircuit/*/')
-           >>> sims.append('examples/ThreeTanks.mat')
+        .. testcleanup::
+
+           >>> sims.sort()
            >>> print(sims) # doctest: +ELLIPSIS
            List of simulation results (SimRes instances) from the following files
            in the .../examples directory:
@@ -1667,12 +1649,11 @@ class SimResList(ResList):
 
         .. code-block:: python
 
-           >>> from modelicares import SimResList
            >>> sims = SimResList('examples/ChuaCircuit/*/')
 
            >>> # Names for voltages across all of the components:
-           >>> sims.names('^[^.]*.v$', re=True)
-           ['G.v', 'L.v', 'C2.v', 'Nr.v', 'Ro.v', 'C1.v']
+           >>> sorted(sims.names('^[^.]*.v$', re=True))
+           ['C1.v', 'C2.v', 'G.v', 'L.v', 'Nr.v', 'Ro.v']
         """
         sets = [set(sim.names(constants_only=constants_only)) for sim in self]
         return util.match(set.intersection(*sets), pattern, re)
@@ -1692,12 +1673,14 @@ class SimResList(ResList):
 
         **Example:**
 
-        .. code-block:: python
+        >>> sims = SimResList('examples/ChuaCircuit/*/')
+        >>> sims.nametree('L*v') # doctest: +SKIP
+        {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
 
-           >>> from modelicares import SimResList
-           >>> sims = SimResList('examples/ChuaCircuit/*/')
-           >>> sims.nametree('L*v') # doctest: +ELLIPSIS
-           {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
+        .. testcleanup::
+
+           >>> sims.nametree('L*v') == {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
+           True
         """
         return util.tree(self.names(pattern, re, constants_only))
 
@@ -1710,12 +1693,11 @@ class SimResList(ResList):
         the string is the name of a variable that is included in all of the
         simulations in the list.
 
-        .. code-block:: python
+        **Example:**
 
-           >>> from modelicares import SimResList
-           >>> sims = SimResList('examples/ChuaCircuit/*/')
-           >>> 'L.L' in sims
-           True
+        >>> sims = SimResList('examples/ChuaCircuit/*/')
+        >>> 'L.L' in sims
+        True
         """
         if isinstance(item, string_types):
             return all(item in sim for sim in self)
@@ -1734,12 +1716,19 @@ class SimResList(ResList):
 
         **Example:**
 
-        .. code-block:: python
+        .. testsetup::
 
            >>> from modelicares import SimResList
-           >>> sims = SimResList('examples/ChuaCircuit/*/')
-           >>> sims['L.v'].mean()
-           [0.0013353984, 0.023054097]
+
+        >>> sims = SimResList('examples/ChuaCircuit/*/')
+        >>> sims['L.v'].mean() # doctest: +SKIP
+        [0.0013353984, 0.023054097]
+
+        .. testcleanup::
+
+            >>> sims.sort()
+            >>> sims['L.v'].mean()
+            [0.0013353984, 0.023054097]
         """
         if isinstance(i, slice):
             # Slice the simulation list and cast it as a SimResList.
@@ -1758,10 +1747,16 @@ class SimResList(ResList):
 
         **Example:**
 
-        .. code-block:: python
+        >>> sims = SimResList('examples/ChuaCircuit/*/')
+        >>> print(sims) # doctest: +SKIP
+        List of simulation results (SimRes instances) from the following files
+        in the .../examples/ChuaCircuit directory:
+           1/dsres.mat
+           2/dsres.mat
 
-           >>> from modelicares import SimResList
-           >>> sims = SimResList('examples/ChuaCircuit/*/')
+        .. testcleanup::
+
+           >>> sims.sort()
            >>> print(sims) # doctest: +ELLIPSIS
            List of simulation results (SimRes instances) from the following files
            in the .../examples/ChuaCircuit directory:
@@ -1882,10 +1877,22 @@ class SimResList(ResList):
 
         **Example:**
 
-        .. code-block:: python
+        .. testsetup::
 
            >>> from modelicares import SimResList
-           >>> sims = SimResList('examples/ChuaCircuit/*/')
+
+        >>> sims = SimResList('examples/ChuaCircuit/*/')
+        >>> print(sims) # doctest: +SKIP
+        List of simulation results (SimRes instances) from the following files
+        in the .../examples/ChuaCircuit directory:
+           1/dsres.mat
+           2/dsres.mat
+        >>> sims.unique_IVs()['L.L'] # doctest: +SKIP
+        [15.0, 21.0]
+
+        .. testcleanup::
+
+           >>> sims.sort()
            >>> print(sims) # doctest: +ELLIPSIS
            List of simulation results (SimRes instances) from the following files
            in the .../examples/ChuaCircuit directory:
@@ -1909,17 +1916,25 @@ class SimResList(ResList):
 
         **Example:**
 
-        .. code-block:: python
+        >>> sims = SimResList('examples/*')
+        >>> print(sims) # doctest: +SKIP
+        List of simulation results (SimRes instances) from the following files
+        in the .../examples directory:
+           ThreeTanks.mat
+           ChuaCircuit.mat
+        >>> sims.unique_names['L.L'] # doctest: +SKIP
+        [False, True]
 
-           >>> from modelicares import SimResList
-           >>> sims = SimResList('examples/*')
+        .. testcleanup::
+
+           >>> sims.sort()
            >>> print(sims) # doctest: +ELLIPSIS
            List of simulation results (SimRes instances) from the following files
            in the .../examples directory:
-              ThreeTanks.mat
               ChuaCircuit.mat
+              ThreeTanks.mat
            >>> sims.unique_names['L.L']
-           [False, True]
+           [True, False]
         """
         sets = [set(sim.names()) for sim in self]
         all_names = set.union(*sets)

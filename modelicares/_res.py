@@ -30,12 +30,66 @@ def assert_sametype(func):
 
     return wrapped
 
+
+def compare_fnames(func):
+    """Decorator that sends filenames to a comparison function
+    """
+    @wraps(func)
+    def wrapped(self, other):
+        """Method that compares filenames of *self* and *other*
+        """
+        try:
+            return func(self.fname, other.fname)
+        except AttributeError:
+            raise TypeError("A {obj} instance can only be compared with "
+                            "another {obj} "
+                            "instance.".format(obj=self.__class__.__name__))
+
+    return wrapped
+
+
 class Res(object):
     """Base class for a Modelica_ result
     """
 
     def __init__(self, fname):
         self.fname = os.path.abspath(fname)
+
+    @compare_fnames
+    def __eq__(fname1, fname2):
+        """Return self == other.
+        """
+        return fname1 == fname2
+
+    @compare_fnames
+    def _ne__(fname1, fname2):
+        """Return self != other.
+        """
+        return fname1 != fname2
+
+    @compare_fnames
+    def __ge__(fname1, fname2):
+        """Return self >= other.
+        """
+        return fname1 < fname2
+
+    @compare_fnames
+    def __gt__(fname1, fname2):
+        """Return self > other.
+        """
+        return fname1 > fname2
+
+    @compare_fnames
+    def __le__(fname1, fname2):
+        """Return self <= other.
+        """
+        return fname1 <= fname2
+
+    @compare_fnames
+    def __lt__(fname1, fname2):
+        """Return self < other.
+        """
+        return fname1 < fname2
 
     def __repr__(self):
         """Return a formal description of an instance of this class.
@@ -64,7 +118,7 @@ class ResList(list):
 
     @cast_sametype
     def __add__(self, value):
-        """Return self+value.
+        """Return self + value.
         """
         return list.__add__(self, value)
 
@@ -93,20 +147,20 @@ class ResList(list):
 
     @cast_sametype
     def __mul__(self, n):
-        """Return self*n.
+        """Return self * n.
         """
         return list.__mul__(self, n)
 
     @cast_sametype
     @assert_sametype
     def __radd__(self, value):
-        """Return value+self.
+        """Return value + self.
         """
         return value + self
 
     @cast_sametype
     def __rmul__(self, n):
-        """Return n*self.
+        """Return n * self.
         """
         return list.__rmul__(self, n)
 
@@ -136,13 +190,13 @@ class ResList(list):
 
     @assert_sametype
     def __iadd__(self, value):
-        """Implement self+=value.
+        """Implement self += value.
         """
         list.__iadd__(self, value)
         return self
 
     def __imul__(self, n):
-        """Implement self*=n.
+        """Implement self *= n.
         """
         list.__imul__(self, n)
         return self

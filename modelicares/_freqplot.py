@@ -107,11 +107,13 @@ def default_frequency_range(syslist, in_Hz=True):
 
     **Example:**
 
-    .. code-block:: python
+    >>> from control.matlab import ss
 
-       >>> from control.matlab import ss
-       >>> sys = ss("1. -2; 3. -4", "5.; 7", "6. 8", "9.")
-       >>> f = default_frequency_range(sys)
+    >>> sys = ss("1. -2; 3. -4", "5.; 7", "6. 8", "9.")
+    >>> default_frequency_range(sys) # doctest: +ELLIPSIS
+    array([  6.28318531e-03,   7.04984987e-03,   7.91006165e-03,
+             ...
+             6.28318531e+03])
     """
     # Find the list of all poles and zeros in the systems.
     features = np.array([])

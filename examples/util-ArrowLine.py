@@ -1,8 +1,10 @@
 #!/usr/bin/python
 # Example of util.ArrowLine
 
+import matplotlib.pyplot as plt
 from modelicares import util
 
+fig = plt.figure()
 ax = fig.add_subplot(111, autoscale_on=False)
 t = [-1,2]
 s = [0,-1]

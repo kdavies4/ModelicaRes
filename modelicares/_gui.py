@@ -24,7 +24,7 @@ class PreviewPanel(wx.Panel):
     """
     def __init__(self, parent, id_num):
 
-        # Change the matplotlb backend, but remember the original.
+        # Change the matplotlib backend, but remember the original.
         orig_backend = rcParams['backend']
         rcParams['backend'] = 'WXAgg'
 
@@ -78,7 +78,7 @@ class Browser(wx.Frame):
     """Class to browse the variables of a simulation (used in
     :meth:`simres.SimRes.browse`)
 
-    Initialization arguments:
+    **Initialization arguments:**
 
     - *parent*: Parent frame
 
@@ -127,7 +127,8 @@ class Browser(wx.Frame):
         self.Centre()
 
     def OnDragInit(self, event):
-        """Drag the full variable name as text."""
+        """Drag the full variable name as text.
+        """
         text = self.tree.GetItemData(event.GetItem()).GetData() + '\n'
         tdo = wx.TextDataObject(text)
         tds = wx.DropSource(self.tree)
@@ -135,6 +136,7 @@ class Browser(wx.Frame):
         tds.DoDragDrop(True)
 
     def OnSelChanged(self, event):
-        """Update the variable's attributes and plot."""
+        """Update the variable's attributes and plot.
+        """
         name = self.tree.GetItemData(event.GetItem()).GetData()
         self.panel_right.preview(name, self.sim)

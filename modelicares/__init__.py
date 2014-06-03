@@ -78,11 +78,10 @@ def load(*args):
 
     .. code-block:: python
 
-       >>> from modelicares import load
-
        # Get the mean values of the first capacitor's voltage from two runs of
        # the Chua circuit.
        >>> sims, __ = load('examples/ChuaCircuit/*/')
+       >>> sims.sort()
 
        >>> sims['C1.v'].mean()
        [-1.6083468, 0.84736514]
@@ -93,7 +92,7 @@ def load(*args):
     """
 
     # Get the set of matching filenames.
-    fnames = util.multiglob(args)
+    fnames = multiglob(args)
 
     # Load the files and append each result onto the appropriate list.
     sims = SimResList()

@@ -54,7 +54,7 @@ experiments.  Finally, the generator is passed to the :meth:`write_script` or
 
 
 .. _Modelica: http://www.modelica.org/
-.. _Python: http://www.python.org
+.. _Python: http://www.python.org/
 .. _NumPy: http://numpy.scipy.org/
 .. _namedtuple: https://docs.python.org/2/library/collections.html#collections.namedtuple
 """
@@ -89,12 +89,9 @@ class Experiment(namedtuple('Experiment', ['model', 'params', 'args'])):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import Experiment
-       >>> experiment = Experiment('ChuaCircuit', params={'L.L': 18}, args={})
-       >>> experiment.model
-       'ChuaCircuit'
+    >>> experiment = Experiment('ChuaCircuit', params={'L.L': 18}, args={})
+    >>> experiment.model
+    'ChuaCircuit'
     """
     pass
 
@@ -134,87 +131,72 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
 
     **Example 1 (element-wise list of experiments):**
 
-    .. code-block:: python
-
-       >>> from modelicares import gen_experiments
-
-       >>> experiments = gen_experiments(
-       ...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit']*3,
-       ...                  {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
-       ...                  design=doe.aslisted)
-       >>> for experiment in experiments:
-       ...     print(experiment.model + str(experiment.params))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=16))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=18))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=20))
-       >>> # Note that the model name must be repeated in the models argument.
+    >>> experiments = gen_experiments(
+    ...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit']*3,
+    ...                  {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
+    ...                  design=doe.aslisted)
+    >>> for experiment in experiments: # doctest: +SKIP
+    ...     print(experiment.model + str(experiment.params))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=16))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=18))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=20))
+    >>> # Note that the model name must be repeated in the models argument.
 
     **Example 2 (one-factor-at-a-time; first entries are baseline):**
 
-    .. code-block:: python
-
-       >>> from modelicares import gen_experiments
-
-       >>> experiments = gen_experiments(
-       ...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
-       ...                  {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
-       ...                  design=doe.ofat)
-       >>> for experiment in experiments:
-       ...     print(experiment.model + str(experiment.params))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=16))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=18))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=20))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=16))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=16))
+    >>> experiments = gen_experiments(
+    ...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
+    ...                  {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
+    ...                  design=doe.ofat)
+    >>> for experiment in experiments: # doctest: +SKIP
+    ...     print(experiment.model + str(experiment.params))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=16))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=18))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=20))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=16))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=16))
 
     **Example 3 (permutation---full-factorial design of experiments):**
 
-    .. code-block:: python
-
-       >>> from modelicares import gen_experiments
-
-       >>> experiments = gen_experiments(
-       ...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
-       ...                  {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
-       ...                  design=doe.fullfact)
-       >>> for experiment in experiments:
-       ...     print(experiment.model + str(experiment.params))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=16))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=16))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=16))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=18))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=18))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=18))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=20))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=20))
-       Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=20))
+    >>> experiments = gen_experiments(
+    ...                  ['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
+    ...                  {'L.L': [16, 18, 20], 'C2.C': [80, 100, 120]},
+    ...                  design=doe.fullfact)
+    >>> for experiment in experiments: # doctest: +SKIP
+    ...     print(experiment.model + str(experiment.params))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=16))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=16))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=16))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=18))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=18))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=18))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=80), L(L=20))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=100), L(L=20))
+    Modelica.Electrical.Analog.Examples.ChuaCircuit(C2(C=120), L(L=20))
 
     **Example 4 (parameters given in nested form):**
 
-    .. code-block:: python
+    >>> models = ['Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis']
+    >>> params = dict(axis=dict(motor=dict(i_max=[5, 15],
+    ...                                    Ra=dict(R=[200, 300]))))
+    >>> for experiment in gen_experiments(models, params):
+    ...     print(experiment.model + str(experiment.params)) # doctest: +SKIP
+    Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis(axis(motor(i_max=5, Ra(R=200))))
+    Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis(axis(motor(i_max=15, Ra(R=200))))
+    Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis(axis(motor(i_max=5, Ra(R=300))))
+    Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis(axis(motor(i_max=15, Ra(R=300))))
 
-       >>> from modelicares import gen_experiments
+    Note that the underlying representation of the parameters is actually flat:
 
-       >>> models = ['Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis']
-       >>> params = dict(axis=dict(motor=dict(i_max=[5, 15],
-       ...                                    Ra=dict(R=[200, 300]))))
-       >>> for experiment in gen_experiments(models, params):
-       ...     print(experiment.model + str(experiment.params))
-       Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis(axis(motor(i_max=5, Ra(R=200))))
-       Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis(axis(motor(i_max=15, Ra(R=200))))
-       Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis(axis(motor(i_max=5, Ra(R=300))))
-       Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis(axis(motor(i_max=15, Ra(R=300))))
+    >>> for experiment in gen_experiments(models, params): # doctest: +SKIP
+    ...     experiment.params
+    {'axis.motor.Ra.R': 200, 'axis.motor.i_max': 5}
+    {'axis.motor.Ra.R': 200, 'axis.motor.i_max': 15}
+    {'axis.motor.Ra.R': 300, 'axis.motor.i_max': 5}
+    {'axis.motor.Ra.R': 300, 'axis.motor.i_max': 15}
 
-       >>> # Note that the underlying representation of the parameters is
-       >>> # actually flat:
-       >>> for experiment in gen_experiments(models, params):
-       ...     experiment.params
-       {'axis.motor.Ra.R': 200, 'axis.motor.i_max': 5}
-       {'axis.motor.Ra.R': 200, 'axis.motor.i_max': 15}
-       {'axis.motor.Ra.R': 300, 'axis.motor.i_max': 5}
-       {'axis.motor.Ra.R': 300, 'axis.motor.i_max': 15}
-       >>> # Also note that Python dictionaries do not preserve order (and it
-       >>> # is not necessary here).
+    Also note that Python dictionaries do not preserve order (and it is not
+    necessary here).
     """
     params = util.flatten_dict(params)
     i_args = len(params) + 1
@@ -224,7 +206,8 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
                                       args=dict(zip(args.keys(), x[i_args:])))
     try:
         return (experiment(x) for x in
-                design(*([models] + params.values() + args.values())))
+                design(*([models] + list(params.values())
+                         + list(args.values()))))
     except TypeError:
         print("Error in call to gen_experiments(): models and all of the "
               "entries in params and args must be lists.")
@@ -240,25 +223,20 @@ def modelica_str(value):
 
     Booleans:
 
-    .. code-block:: python
-
-       >>> from modelicares import modelica_str
-
-       >>> # Booleans:
-       >>> modelica_str(True)
-       'true'
+    >>> # Booleans:
+    >>> modelica_str(True)
+    'true'
 
     Arrays:
 
     .. code-block:: python
 
-       >>> from numpy import array
-       >>> from modelicares import modelica_str
+       >>> import numpy as np
 
-       >>> modelica_str(array([[1, 2], [3, 4]]))
+       >>> modelica_str(np.array([[1, 2], [3, 4]]))
        '{{1, 2}, {3, 4}}'
 
-       >>> modelica_str(array([[True, True], [False, False]]))
+       >>> modelica_str(np.array([[True, True], [False, False]]))
        '{{true, true}, {false, false}}'
     """
     if isinstance(value, bool):
@@ -290,11 +268,8 @@ def read_params(names, fname='dsin.txt'):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import read_params
-       >>> read_params(['Td', 'Ti'], 'examples/dsin.txt')
-       [0.1, 0.5]
+    >>> read_params(['Td', 'Ti'], 'examples/dsin.txt')
+    [0.1, 0.5]
     """
     # Aliases for some regular subexpressions
     u = r'\d+' # Unsigned integer
@@ -421,8 +396,6 @@ import os
 
 from itertools import count, product
 
-from modelicares import gen_doe
-
 model = 'Modelica.Mechanics.MultiBody.Examples.Systems.RobotR3.oneAxis'
 params = {'axis.motor.i_max': [5, 9, 15],
           'axis.motor.Ra.R': [200, 250, 300]}
@@ -467,12 +440,10 @@ def write_params(params, fname='dsin.txt'):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import write_params
-       >>> write_params({'Td': 1, 'Ti': 5}, 'examples/dsin.txt')
+    >>> write_params({'Td': 1, 'Ti': 5}, 'examples/dsin.txt')
 
     .. testcleanup::
+
        >>> write_params({'Td': 0.1, 'Ti': 0.5}, 'examples/dsin.txt')
 
     This updates the appropriate lines in *examples/dsin.txt*:
@@ -775,49 +746,49 @@ class ParamDict(dict):
     Otherwise, this class is the same as :class:`dict`.  The underlying
     structure is not nested or reformatted---only the informal representation
     (:meth:`ParamDict.__str__`).
+
+    In printing this dictionary (string representation), each key is interpreted
+    as a parameter name (including the full model path in Modelica_ dot
+    notation) and each entry is a parameter value.  The value may be a number
+    (integer or float), Boolean constant (in Python_ format---*True* or *False*,
+    not 'true' or 'false'), string, or NumPy_ arrays of these.  Modelica_
+    strings must be given with double quotes included (e.g., '"hello"').
+    Enumerations may be used as values (e.g., 'Axis.x').  Values may include
+    functions, but the entire value must be expressed as a Python_ string (e.g.,
+    'fill(true, 2, 2)').  Items with a value of *None* are not shown.
+
+    Redeclarations and other prefixes must be included in the key along with the
+    name of the instance (e.g., 'redeclare Region regions[n_x, n_y, n_z]').  The
+    single quotes must be explicitly included for instance names that contain
+    symbols (e.g., "'H+'").
+
+    Note that Python_ dictionaries do not preserve
+    order.
+
+    **Examples:**
+
+    .. code-block:: python
+
+       >>> import numpy as np
+
+       >>> d = ParamDict({'a': 1, 'b.c': np.array([2, 3]), 'b.d': False,
+       ...                'b.e': '"hello"', 'b.f': None})
+       >>> print(d) # doctest: +SKIP
+       (a=1, b(c={2, 3}, e="hello", d=false))
+
+    The formal representation (and the internal structure) is not affected:
+
+    >>> d # doctest: +SKIP
+    {'a': 1, 'b.c': array([2, 3]), 'b.f': None, 'b.e': '"hello"', 'b.d': False}
+
+    An empty dictionary prints as an empty string (not "()"):
+
+    >>> print(ParamDict({}))
+    <BLANKLINE>
     """
     def __str__(self):
         """Map the :class:`ParamDict` instance to a string using tuple-based
         modifiers formatted for Modelica_.
-
-        Each key is interpreted as a parameter name (including the full model
-        path in Modelica_ dot notation) and each entry is a parameter value.
-        The value may be a number (integer or float), Boolean constant (in
-        Python_ format---*True* or *False*, not 'true' or 'false'), string, or
-        NumPy_ arrays of these.  Modelica_ strings must be given with double
-        quotes included (e.g., '"hello"').  Enumerations may be used as values
-        (e.g., 'Axis.x').  Values may include functions, but the entire value
-        must be expressed as a Python_ string (e.g., 'fill(true, 2, 2)').
-        Items with a value of *None* are not shown.
-
-        Redeclarations and other prefixes must be included in the key along
-        with the name of the instance (e.g., 'redeclare Region
-        regions[n_x, n_y, n_z]').  The single quotes must be explicitly
-        included for instance names that contain symbols (e.g., "'H+'").
-
-        Note that Python_ dictionaries do not preserve order.
-
-        **Example:**
-
-        .. code-block:: python
-
-           >>> from numpy import array
-           >>> from modelicares import ParamDict
-
-           >>> d = ParamDict({'a': 1, 'b.c': array([2, 3]), 'b.d': False,
-           ...                'b.e': '"hello"', 'b.f': None})
-           >>> print(d)
-           (a=1, b(c={2, 3}, e="hello", d=false))
-
-           # The formal representation (and the internal structure) is
-           # unaffected:
-           >>> d
-           {'a': 1, 'b.c': array([2, 3]), 'b.f': None, 'b.e': '"hello"', 'b.d': False}
-
-           # An empty dictionary prints as an empty string (not "()"):
-           print(ParamDict({}))
-
-        .. _Python: http://www.python.org/
         """
         def _str(dictionary):
             """Return a string representation of a dictionary in the form of

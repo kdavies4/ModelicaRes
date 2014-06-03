@@ -4,9 +4,8 @@
 
 **Python utilities to set up and analyze Modelica simulation experiments**
 
-ModelicaRes is a free, open-source tool to conveniently manage Modelica_
-simulations, interpret results, and create publishable figures.  It is possible
-to
+ModelicaRes is a free, open-source tool to manage Modelica_ simulations,
+interpret results, and create publishable figures.  It is possible to
 
 - auto-generate simulation scripts,
 - browse data,
@@ -41,6 +40,11 @@ and matrix functions from NumPy_.
 .. image:: _static/PIDs-bode.png
    :scale: 45 %
    :alt: Bode plot of PID with varying differential time constant
+
+
+Currently, ModelicaRes only loads Dymola/OpenModelica_-formatted results
+(\*.mat), but the loading functions are modular so that other formats can be
+added easily.
 
 Please see the tutorial, which is available as an `IPython notebook
 <https://github.com/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb>`_
@@ -142,14 +146,16 @@ suggestions, please `share them
 - PySimulator_: elaborate GUI; supports FMI_
 
 
-.. _main website: http://kdavies4.github.io/ModelicaRes
-.. _PyPI page: http://pypi.python.org/pypi/ModelicaRes
+.. _main website: http://kdavies4.github.io/ModelicaRes/
+.. _PyPI page: http://pypi.python.org/pypi/ModelicaRes/
+
 .. _Modelica: http://www.modelica.org
 .. _Python: http://www.python.org
 .. _pandas: http://pandas.pydata.org
 .. _matplotlib: http://www.matplotlib.org
 .. _NumPy: http://numpy.scipy.org
 .. _SciPy: http://www.scipy.org/index.html
+.. _OpenModelica: https://www.openmodelica.org/
 .. _Qt: http://qt-project.org/
 .. _PyQt4: http://www.riverbankcomputing.co.uk/software/pyqt/
 .. _guidata: https://code.google.com/p/guidata/

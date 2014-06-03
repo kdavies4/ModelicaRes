@@ -4,8 +4,7 @@
 
 **Classes:**
 
-- :class:`ArrowLine` - A `matplotlib <http://www.matplotlib.org>`_ subclass to
-  draw an arrowhead on a line
+- :class:`ArrowLine` - A matplotlib_ subclass to draw an arrowhead on a line
 
 - :class:`CallList` - List that when called returns a list of the results from
   calling its elements
@@ -84,6 +83,9 @@
 
 - :meth:`yes` - Ask a yes/no question and return *True* if the answer is 'Y'
   or 'y'.
+
+
+.. _matplotlib: http://www.matplotlib.org/
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
@@ -294,13 +296,10 @@ class CallList(list):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import util
-       >>> f = lambda x: lambda y: x*y
-       >>> l = util.CallList([f(2), f(3)])
-       >>> l(5)
-       [10, 15]
+    >>> f = lambda x: lambda y: x*y
+    >>> l = CallList([f(2), f(3)])
+    >>> l(5)
+    [10, 15]
     """
     def __call__(self, *args, **kwargs):
         """Return a list of the results from calling the elements of the list.
@@ -341,7 +340,6 @@ def color(ax, c, *args, **kwargs):
 
        >>> import numpy as np
        >>> import matplotlib.pyplot as plt
-       >>> from modelicares import util
 
        >>> x, y = np.meshgrid(np.arange(0, 2*np.pi, 0.2),
        ...                    np.arange(0, 2*np.pi, 0.2))
@@ -349,7 +347,7 @@ def color(ax, c, *args, **kwargs):
 
        >>> fig = plt.figure()
        >>> ax = fig.add_subplot(111)
-       >>> util.color(ax, c) # doctest: +ELLIPSIS
+       >>> color(ax, c) # doctest: +ELLIPSIS
        <matplotlib.image.AxesImage object at 0x...>
     """
     return ax.imshow(c, *args, **kwargs)
@@ -360,10 +358,8 @@ def delayed_exit(message="Exiting...", t=0.5):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import util
-       >>> util.delayed_exit() # doctest: +SKIP
+    >>> delayed_exit() # doctest: +SKIP
+    Exiting...
     """
     print("Exiting...")
     time.sleep(t)
@@ -376,14 +372,11 @@ def expand_path(path):
 
     **Example:**
 
-    .. code-block:: python
+    >>> expand_path('~/Documents') # doctest: +ELLIPSIS
+    '...Documents'
 
-       >>> from modelicares import *
-
-       >>> expand_path('~/Documents') # doctest: +ELLIPSIS
-       '...Documents'
-       >>> # where ... is '/home/user/' on Linux or 'C:\Users\user\' on
-       >>> # Windows (and "user" is the user id).
+    where ... is '/home/user/' on Linux or 'C:\Users\user\' on Windows (and
+    "user" is the user id).
     """
     return os.path.abspath(os.path.expanduser(path))
 
@@ -402,9 +395,15 @@ def figure(label='', *args, **kwargs):
 
     .. code-block:: python
 
+       >>> import matplotlib.pyplot as plt
+
        >>> fig = figure("velocity_vs_time") # doctest: +ELLIPSIS
        >>> plt.getp(fig, 'label')
        'velocity_vs_time'
+
+    .. testcleanup::
+
+       >>> plt.close()
 
     .. Note::  The *label* property is used as the base filename in the
        :meth:`save` and :meth:`saveall` functions.
@@ -449,10 +448,12 @@ def multiglob(pathnames, extensions={'*.mat'}):
 
     **Example:**
 
-    .. code-block:: python
+    >>> multiglob("examples/ChuaCircuit/*/") # doctest: +SKIP
+    ['examples/ChuaCircuit/1/dsres.mat', 'examples/ChuaCircuit/2/dsres.mat']
 
-       >>> from modelicares import *
-       >>> multiglob("examples/ChuaCircuit/*/") # doctest: +SKIP
+    .. testcleanup::
+
+       >>> sorted(multiglob("examples/ChuaCircuit/*/"))
        ['examples/ChuaCircuit/1/dsres.mat', 'examples/ChuaCircuit/2/dsres.mat']
     """
     # Since order is arbitrary, the doctest is skipped here and included in
@@ -483,11 +484,13 @@ def flatten_dict(d, parent_key='', separator='.'):
 
     **Example:**
 
-    .. code-block:: python
+    >>> flatten_dict(dict(a=1, b=dict(c=2, d='hello'))) # doctest: +SKIP
+    {'a': 1, 'b.c': 2, 'b.d': 'hello'}
 
-       >>> from modelicares import *
-       >>> flatten_dict(dict(a=1, b=dict(c=2, d='hello')))
-       {'a': 1, 'b.c': 2, 'b.d': 'hello'}
+    .. testcleanup::
+
+       >>> flatten_dict(dict(a=1, b=dict(c=2, d='hello'))) == {'a': 1, 'b.c': 2, 'b.d': 'hello'}
+       True
     """
     # From
     # http://stackoverflow.com/questions/6027558/flatten-nested-python-dictionaries-compressing-keys,
@@ -515,11 +518,8 @@ def flatten_list(l, ltypes=(list, tuple)):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import *
-       >>> flatten_list([1, [2, 3, [4]]])
-       [1, 2, 3, 4]
+    >>> flatten_list([1, [2, 3, [4]]])
+    [1, 2, 3, 4]
     """
     # Based on
     # http://rightfootin.blogspot.com/2006/09/more-on-python-flatten.html,
@@ -627,11 +627,8 @@ def get_indices(x, target):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import *
-       >>> get_indices([0, 1, 2], 1.6)
-       (1, 2)
+    >>> get_indices([0, 1, 2], 1.6)
+    (1, 2)
     """
     if target <= x[0]:
         return 0, 0
@@ -642,7 +639,7 @@ def get_indices(x, target):
         i_1 = 0
         i_2 = len(x) - 1
         while i_1 < i_2 - 1:
-            i_mid = (i_1 + i_2)/2
+            i_mid = int((i_1 + i_2)/2)
             if x[i_mid] == target:
                 return i_mid, i_mid
             elif x[i_mid] > target:
@@ -658,10 +655,8 @@ def get_pow1000(num):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> get_pow1000(1e5)
-       1
+    >>> get_pow1000(1e5)
+    1
     """
     # Based on an algorithm by Jason Heeris 11/18/2009:
     #     http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html
@@ -701,10 +696,15 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
 
     **Example:**
 
-    >>> from modelicares import *
     >>> data = load_csv("examples/load-csv.csv", header_row=2)
-    >>> print("The keys are: %s" % data.keys())
-    The keys are: ['Price', 'Description', 'Make', 'Model', 'Year']
+    >>> print("The keys are: %s" % list(data)) # doctest: +SKIP
+    The keys are: ['Description', 'Make', 'Model', 'Price', 'Year']
+
+    .. testcleanup::
+
+       >>> sorted(data)
+       ['Description', 'Make', 'Model', 'Price', 'Year']
+
     """
     import csv
 
@@ -795,11 +795,8 @@ def match(strings, pattern=None, re=False):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares.util import match
-       >>> match(['apple', 'orange', 'banana'], '*e')
-       ['apple', 'orange']
+    >>> match(['apple', 'orange', 'banana'], '*e')
+    ['apple', 'orange']
 
 
     .. _Modelica: http://www.modelica.org/
@@ -874,12 +871,8 @@ def plot(y, x=None, ax=None, label=None,
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import util
-
-       >>> util.plot([range(11), range(10, -1, -1)]) # doctest: +ELLIPSIS
-       [[<matplotlib.lines.Line2D object at 0x...>], [<matplotlib.lines.Line2D object at 0x...>]]
+    >>> plot([range(11), range(10, -1, -1)]) # doctest: +ELLIPSIS
+    [[<matplotlib.lines.Line2D object at 0x...>], [<matplotlib.lines.Line2D object at 0x...>]]
     """
     # Create axes if necessary.
     if not ax:
@@ -979,17 +972,16 @@ def replace(fnames, rpls):
 
     **Example:**
 
-    .. code-block:: python
+    >>> fname = 'temp.txt'
+    >>> with open(fname, 'w') as f:
+    ...     __ = f.write("apple orange banana")
+    >>> replace([fname], [('ba(.*)', r'ba\1\1')])
+    >>> with open(fname, 'r') as f:
+    ...     print(f.read())
+    apple orange banananana
 
-       >>> from modelicares import util
+    .. testcleanup::
 
-       >>> fname = 'temp.txt'
-       >>> open(fname, 'w').write("apple orange banana")
-       >>> util.replace([fname], [('ba(.*)', r'ba\1\1')])
-       >>> print(open(fname, 'r').read())
-       apple orange banananana
-
-    .. testsetup::
        >>> os.remove(fname)
     """
 
@@ -1040,7 +1032,6 @@ def save(formats=['pdf', 'png'], fname=None, fig=None):
     .. code-block:: python
 
        >>> import matplotlib.pyplot as plt
-       >>> from modelicares import *
 
        >>> figure('examples/temp') # doctest: +ELLIPSIS
        <matplotlib.figure.Figure object at 0x...>
@@ -1050,9 +1041,11 @@ def save(formats=['pdf', 'png'], fname=None, fig=None):
        Saved examples/temp.pdf
        Saved examples/temp.png
 
-    .. testsetup::
+    .. testcleanup::
+
        >>> os.remove("examples/temp.pdf")
        >>> os.remove("examples/temp.png")
+       >>> plt.close()
 
     .. Note::  The :meth:`figure` function can be used to directly create a
        figure with a label.
@@ -1109,19 +1102,20 @@ def saveall(formats=['pdf', 'png']):
     .. code-block:: python
 
        >>> import matplotlib.pyplot as plt
-       >>> from modelicares import *
 
        >>> figure('examples/temp') # doctest: +ELLIPSIS
        <matplotlib.figure.Figure object at 0x...>
        >>> plt.plot(range(10)) # doctest: +ELLIPSIS
        [<matplotlib.lines.Line2D object at 0x...>]
-       >>> save()
+       >>> saveall() # doctest: +SKIP
        Saved examples/temp.pdf
        Saved examples/temp.png
 
-    .. testsetup::
-       >>> os.remove("examples/temp.pdf")
-       >>> os.remove("examples/temp.png")
+    .. testcleanup::
+
+       >>> os.remove("examples/temp.pdf") # doctest: +SKIP
+       >>> os.remove("examples/temp.png") # doctest: +SKIP
+       >>> plt.close()
     """
 
     # Get the figures.
@@ -1428,12 +1422,13 @@ def tree(strings, separator='.'):
 
     **Example:**
 
-    .. code-block:: python
+    >>> tree(['a.b.c', 'd.e', 'd.f']) # doctest: +SKIP
+    {'a': {'b': {'c': 'a.b.c'}}, 'd': {'e': 'd.e', 'f': 'd.f'}}
 
-       >>> from modelicares.util import tree
-       >>> tree(['a.b.c', 'd.e', 'd.f'])
-       {'a': {'b': {'c': 'a.b.c'}}, 'd': {'e': 'd.e', 'f': 'd.f'}}
+    .. testcleanup::
 
+       >>> tree(['a.b.c', 'd.e', 'd.f']) == {'a': {'b': {'c': 'a.b.c'}}, 'd': {'e': 'd.e', 'f': 'd.f'}}
+       True
     """
     # This function has been copied and modified from DyMat version 0.5
     # (Joerg Raedler,
@@ -1454,8 +1449,7 @@ def tree(strings, separator='.'):
 # From http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html,
 # accessed 2010/11/2012
 class ArrowLine(Line2D):
-    """A `matplotlib <http://www.matplotlib.org>`_ subclass to draw an arrowhead
-    on a line
+    """A matplotlib_ subclass to draw an arrowhead on a line
 
     **Arguments:**
 
@@ -1574,7 +1568,8 @@ class _Getch:
         except ImportError:
             self.impl = _GetchUnix()
 
-    def __call__(self): return self.impl()
+    def __call__(self):
+        return self.impl()
 
 class _GetchUnix:
     def __init__(self):
@@ -1608,11 +1603,8 @@ def yes(question):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import util
-       >>> if util.yes("Do you want to print hello (y/n)?"): # doctest: +SKIP
-       ...     print("hello")
+    >>> if yes("Do you want to print hello (y/n)?"): # doctest: +SKIP
+    ...     print("hello")
     """
     getch = _Getch()
     sys.stdout.write(question + ' ')

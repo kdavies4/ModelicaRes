@@ -13,8 +13,44 @@ setup = python.bake('setup.py')
 def build():
     """Build/make the code.
     """
+    # Run tests.
+    if bash('runtests.sh').exit_code:
+        print("The tests failed.")
+        util.delayed_exit()
+    if setup('check', '-s', '--metadata', '--restructuredtext').exit_code:
+        print("setup.py check failed.")
+        util.delayed_exit()
+
+    # Update the version number.
+    last_version = git.describe('--tag', abbrev=0).stdout.rstrip()
+    version = raw_input("Enter the version number (last was %s): "
+                        % last_version)
+    # TODO: default: lightweight tag; last: only annotated
+
+    # TODO: write version to modelicares/__init__.py
+
+    # TODO: assert version isn't already an annotated tag (i.e., released version)
+
+    # TODO: if version is listed at top of changes:
+    #     update date
+    # else:
+    #     add list at top of changes w/ date and version
+    #     add download link
+
+    # Build the code.
     setup.build()
     setup.sdist(formats='gztar,zip')
+
+    # Use the zip command to change the line endings to Windows format.  TODO: Is there a better way?  Run a script directly or build/* before sdist?
+    name = python('setup.py', '--fullname').stdout.rstrip()
+    #(cd dist
+    os.remove(name + '.zip')
+    sh.tar('-xf', name + '.tar.gz')
+    sh.zip('-rl', name + '.zip', name)
+    shutil.rmtree(name)
+    #)
+
+    # TODO lightweight tag
 
 def clean():
     """Clean/remove the built code.
@@ -25,43 +61,24 @@ def release():
     """Release/publish the code.
     """
 
-    # Confirm to continue.
+    # Rebase, annotate the release tag, and push the tag and master to origin.
     print("Here's a list of the TODO items:")
     print(bash('../TODO.sh'))
     print()
-    if not util.yes("Do you want to continue (y/n)?"):
+    if not util.yes("Do you want to rebase, annotate the release tag, and push "
+                    "the tag and master to origin (y/n)?"):
         util.delayed_exit()
+    git.rebase('-i', 'origin/master')
+    # TODO: Assert the last tag is lightweight, and annotate it.
+    git.push('--tags', 'origin', 'master')
 
-    # Run tests.
-    if bash('runtests.sh').exit_code:
-        print("The tests failed.")
+    # Upload to PyPI.
+    if not util.yes("Do you want to upload it to PyPI (this is permanent!) "
+                    "(y/n)?"):
         util.delayed_exit()
-    if setup('check', '-s', '--metadata', '--restructuredtext').exit_code:
-        print("setup.py check failed.")
-        util.delayed_exit()
+    setup('sdist', 'upload')
 
-    # Get the version number.
-    last_version = git.describe('--tag', abbrev=0).stdout.rstrip()
-    version = raw_input("Enter the version number (last was %s): "
-                        % last_version)
-
-    # Use the zip command to change the line endings to Windows format.  TODO: Is there a better way?
-    name = python('setup.py', '--fullname').stdout.rstrip()
-    #(cd dist
-    os.remove(name + '.zip')
-    sh.tar('-xf', name + '.tar.gz')
-    sh.zip('-rl', name + '.zip', name)
-    shutil.rmtree(name)
-    #)
-
-    # Rebase the release branch at the current master.
-    git.rebase('-i', 'master')
-
-    print("The package has been built as TODO.")
-    if util.yes("Do you want to upload it to PyPI (this is permanent!) (y/n)?"):
-        setup('sdist', 'upload')
-        git.push('--tags', 'origin', 'master')
-
+    # TODO add blank lines to changes.txt, reset version in modelicares/__init__.py
 
 F = namedtuple("F", ['f', 'description'])
 funcs = {'clean'      : F(clean,   "Clean/remove the built code."),
