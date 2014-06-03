@@ -14,7 +14,7 @@ fi
 done
 
 #-------------------------------------------------------------------------------
-# Check for file names with non-ascii characters.
+# Check for file names with non-ASCII characters.
 # From pre-commit.sample
 
 if git rev-parse --verify HEAD >/dev/null 2>&1

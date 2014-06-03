@@ -15,7 +15,7 @@ from modelicares import util
 BUILD_DIR = 'build/html'
 
 def build():
-    """Make the HTML documentation.
+    """Build/make the HTML documentation.
     """
     if util.yes("Do you want to rebuild the static images (y/n)?"):
         static()
@@ -28,12 +28,36 @@ def build():
         spellcheck()
 
 def clean():
-    """Remove the built documentation.
+    """Clean/remove the built documentation.
     """
     shutil.rmtree('build', ignore_errors=True)
 
+def make_dirs():
+    """Create the directories required to build the documentation.
+    """
+
+    # Create regular directories.
+    BUILD_DIRS = ['build/doctrees', 'build/html']
+    for d in BUILD_DIRS:
+        try:
+            os.makedirs(d)
+        except OSError:
+            pass
+
+    # Create a link to the examples folder.
+    if not os.path.isdir('examples'):
+        example_dir = '../examples'
+        if not os.path.isdir(example_dir):
+            raise IOError("Could not find the examples folder.")
+        try:
+            os.symlink(example_dir, 'examples')
+        except AttributeError: # Symlinks aren't available in Windows.
+            raise AttributeError('Create a doc/examples shortcut that points '
+                                 'to the examples folder in the base '
+                                 'directory.')
+
 def release():
-    """Publish the documentation to the webpage.
+    """Release/publish the documentation to the webpage.
     """
     # Save the current state.
     branch = git('rev-parse', '--abbrev-ref', 'HEAD').stdout.rstrip()
@@ -120,26 +144,6 @@ def release():
     except sh.ErrorReturnCode_1:
         pass # No stash was necessary in the first place.
     print("Now back on " + branch)
-
-def make_dirs():
-    BUILD_DIRS = ['build/doctrees', 'build/html']
-    for d in BUILD_DIRS:
-        try:
-            os.makedirs(d)
-        except OSError:
-            pass
-
-    # Create a link to the examples folder.
-    if not os.path.isdir('examples'):
-        example_dir = '../examples'
-        if not os.path.isdir(example_dir):
-            raise IOError("Could not find the examples folder.")
-        try:
-            os.symlink(example_dir, 'examples')
-        except AttributeError: # Symlinks aren't available in Windows.
-            raise AttributeError('Create a doc/examples shortcut that points '
-                                 'to the examples folder in the base '
-                                 'directory.')
 
 def spellcheck():
     """Spellcheck the HTML docs.
@@ -240,9 +244,10 @@ def static():
 
 
 F = namedtuple("F", ['f', 'description'])
-funcs = {'clean'      : F(clean,   "Remove the built documentation."),
-         'build'      : F(build,   "Make the HTML documentation."),
-         'release'    : F(release, "Publish the documentation to the webpage."),
+funcs = {'clean'      : F(clean,   "Clean/remove the built documentation."),
+         'build'      : F(build,   "Build/make the HTML documentation."),
+         'release'    : F(release,
+                          "Release/publish the documentation to the webpage."),
         }
 
 def funcs_str():

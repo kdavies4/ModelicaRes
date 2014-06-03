@@ -32,6 +32,8 @@
 - :meth:`closeall` - Close all open figures (shortcut to the
   :meth:`destroy_all` from :class:`matplotlib._pylab_helpers.Gcf`).
 
+- :meth:`delayed_exit` - Exit with a message and a delay.
+
 - :meth:`expand_path` - Expand a file path by replacing '~' with the user
   directory and make the path absolute.
 
@@ -92,6 +94,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import re
 import sys
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -350,6 +353,21 @@ def color(ax, c, *args, **kwargs):
        <matplotlib.image.AxesImage object at 0x...>
     """
     return ax.imshow(c, *args, **kwargs)
+
+
+def delayed_exit(message="Exiting...", t=0.5):
+    """Exit with a message (*message*) and a delay of *t* seconds.
+
+    **Example:**
+
+    .. code-block:: python
+
+       >>> from modelicares import util
+       >>> util.delayed_exit() # doctest: +SKIP
+    """
+    print("Exiting...")
+    time.sleep(t)
+    exit()
 
 
 def expand_path(path):

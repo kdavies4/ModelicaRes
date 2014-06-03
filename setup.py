@@ -16,7 +16,7 @@ from distutils.core import setup
 #        from distutils.core import setup
 
 def get_version(fname):
-    """Return the version number from *fname*.
+    """Return the version number of file *fname*.
     """
     import re
     return re.search('__version__ *= *["\'](.*)["\']',
@@ -54,6 +54,6 @@ setup(name='ModelicaRes',
                 'control', 'six'],
       platforms='any',
       )
-      # This package may run with scipy as early as 0.7.0.  However, the control
+      # ModelicaRes may run with scipy as early as 0.7.0.  However, the control
       # package seems to need scipy >= 0.10.0 but does not stipulate the
       # version.
