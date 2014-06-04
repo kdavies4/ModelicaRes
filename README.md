@@ -20,7 +20,7 @@ to
 The figures are generated via [matplotlib], which offers a rich set of plotting
 routines.  ModelicaRes includes functions to automatically pre-format and
 label some figures, like xy plots, Bode and Nyquist plots, and Sankey diagrams.
-[odelicaRes can be scripted or used in an interactive [Python] session with math
+ModelicaRes can be scripted or used in an interactive [Python] session with math
 and matrix functions from [NumPy].
 
 Currently, ModelicaRes only loads Dymola/[OpenModelica]-formatted results
@@ -85,9 +85,10 @@ Wetter.
 
 ModelicaRes is published under a [BSD-compatible license](LICENSE.txt).  Please
 share any modifications you make (preferably as a pull request to the ``master``
-branch of the [GitHub repository]) in order to help others.  If you find a bug,
-please [report it](https://github.com/kdavies4/ModelicaRes/issues/new).  If you
-have suggestions, please
+branch of the [GitHub repository]) in order to help others.  There are useful
+development scripts in the [hooks folder](hooks).  If you find a bug, please
+[report it](https://github.com/kdavies4/ModelicaRes/issues/new).  If you have
+suggestions, please
 [share them](https://github.com/kdavies4/ModelicaRes/wiki/Suggestions).
 
 ### See also

@@ -127,10 +127,12 @@ Wetter.
 
 **License terms and development**
 
-ModelicaRes is published under a `BSD-compatible license <license.html>`_.  The
-development site is https://github.com/kdavies4/ModelicaRes.  Please share any
-modifications you make (preferably as a pull request to the ``master`` branch at
-that site) in order to help others.  If you find a bug, please `report it
+ModelicaRes is published under a `BSD-compatible license <license.html>`_.
+Please share any modifications you make (preferably as a pull request to the
+``master`` branch of the `GitHub repository`_) in order to help others.
+There are useful development scripts in the `hooks folder
+<https://github.com/kdavies4/ModelicaRes/blob/master/hooks/>`_.  If you find a
+bug, please `report it
 <https://github.com/kdavies4/ModelicaRes/issues/new>`_.  If you have
 suggestions, please `share them
 <https://github.com/kdavies4/ModelicaRes/wiki/Suggestions>`_.
@@ -148,6 +150,7 @@ suggestions, please `share them
 
 .. _main website: http://kdavies4.github.io/ModelicaRes/
 .. _PyPI page: http://pypi.python.org/pypi/ModelicaRes/
+.. _GitHub repository: https://github.com/kdavies4/ModelicaRes
 
 .. _Modelica: http://www.modelica.org
 .. _Python: http://www.python.org
