@@ -2,7 +2,9 @@ This folder contains scripts that help with the development and distribution of
 ModelicaRes.
 
 The [pre-commit script](pre-commit) prevents commits if there are errors in the
-Python source or there are filenames with non-ASCII characters.
+Python source or there are filenames with non-ASCII characters.  It also adds
+an "UNRELEASED COPY" markdown file in the base folder if there is no version
+marked in [modelicares/__init__.py](../modelicares/__init__.py).
 
 The [post-checkout script](post-checkout) removes byte-compiled Python files
 (*.pyc) when switching branches.  Since the source may change when upon

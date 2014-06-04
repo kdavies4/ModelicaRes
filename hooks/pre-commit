@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------------------
 # Check for errors in the Python code.
 # Based on http://www.sitepoint.com/git-hooks-fun-profit/
-git diff --cached --name-status --diff-filter=ACMR | while read STATUS FILE; do
+git  diff --cached --name-status --diff-filter=ACMR | while read STATUS FILE; do
 if [[ ${FILE: -3} == ".py" ]]; then
     python -m py_compile "$FILE" 1> /dev/null
     if [ $? -ne 0 ]; then
@@ -51,4 +51,30 @@ then
 	echo "  git config hooks.allownonascii true"
 	echo
 	exit 1
+fi
+
+# ------------------------------------------------------------------------------
+# If there isn't a version number in modelicares/__init__.py, add a markdown
+# file in the base folder.
+
+file="UNRELEASED COPY.md"
+
+n_matches=$(grep -c '__version__ *= *None' modelicares/__init__.py)
+
+if [ $n_matches == 1 ]; then
+
+    echo $(date -u +"%Y-%m-%d %H:%M:%SZ") > "$file"
+    echo >> "$file"
+    echo "This is an unreleased copy of ModelicaRes." >> "$file"
+    echo "It may contain additional features, but it may also contain bugs since it was" >> "$file"
+    echo "probably not fully tested." >> "$file"
+    echo >> "$file"
+    echo "For a released copy, please see the " >> "$file"
+    echo "[main project page](http://kdavies4.github.io/ModelicaRes/)," >> "$file"
+    echo "[PyPI](https://pypi.python.org/pypi/ModelicaRes), or the release tags in the" >> "$file"
+    echo "[GitHub repository](https://github.com/kdavies4/ModelicaRes)." >> "$file"
+
+    git add "$file"
+else
+    git rm --ignore-unmatch "$file"
 fi

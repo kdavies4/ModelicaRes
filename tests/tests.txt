@@ -12,11 +12,11 @@
    # number of decimal places between versions of Python and even the floats
    # they're passed.
    >>> def round(value):
-   ...     fmt = '%' + '.%if' % decimals
+   ...     FMT = '%' + '.%if' % decimals
    ...     try:
    ...         return [round(v) for v in value]
    ...     except TypeError:
-   ...         return float(fmt % value)
+   ...         return float(FMT % value)
 
    >>> from modelicares import *
 
@@ -33,7 +33,10 @@
 
 >>> sim = SimRes('examples/ChuaCircuit.mat')
 
->>> round(sim['Ro.R'].value())
+>>> R = SimRes('examples/ChuaCircuit.mat')['Ro.R']
+>>> R.value()
+0.0125
+>>> round(R.value())
 0.0125
 
 >>> sim['L.v'].value() # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
