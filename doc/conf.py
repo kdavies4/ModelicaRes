@@ -14,8 +14,7 @@
 import sys, os
 
 def skip(app, what, name, obj, skip, options):
-    if (name == "__call__" or name == "__contains__" or name == "__getitem__"
-        or name == "__len__"):
+    if name in ["__call__", "__contains__", "__getitem__", "__len__"]:
         return False
     return skip
 
@@ -65,6 +64,8 @@ copyright = '2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georg
 # The short X.Y version.
 import modelicares
 version = modelicares.__version__
+if not version:
+    version = ''
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -78,14 +79,23 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinxdoc'
+#html_theme = 'sphinxdoc'
+html_theme = 'default'
+
+html_theme_options = {
+    'stickysidebar': True,
+    'sidebarbgcolor': '#888888',
+    'sidebartextcolor': 'white',
+    'sidebarlinkcolor': 'white',
+}
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 html_title = "Analyze Modelica results in Python"
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
-html_short_title = project + " v" + version + " Documentation"
+version_str = " v%s" % version if version else ''
+html_short_title = project + version_str + " Documentation"
 
 # The name of an image file (relative to this directory) to place at the top of
 # the sidebar.
@@ -100,6 +110,8 @@ html_favicon = '_static/favicon.ico'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+html_style = 'custom.css'
 
 # List of paths that contain extra files not directly related to the
 # documentation
@@ -125,7 +137,7 @@ html_show_sphinx = False
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
 # base URL from which the finished HTML is served.
-html_use_opensearch = 'False'
+html_use_opensearch = False
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'ModelicaResDoc'

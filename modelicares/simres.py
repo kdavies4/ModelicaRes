@@ -5,11 +5,15 @@
 - :class:`SimRes` - Class to load, analyze, and plot results from a Modelica_
   simulation
 
-- :class:`SimResList` - Specialized list of simulation results (:class:`SimRes`
+- :class:`SimResList` - Special list of simulation results (:class:`SimRes`
   instances)
 
-- :class:`Variable` - Specialized namedtuple_ to represent a variable in a
+- :class:`Variable` - Special namedtuple_ to represent a variable in a
   simulation, with methods to retrieve and perform calculations on its values
+
+- :class:`VarList` - Special list of simulation variables (instances of
+  :class:`Variable`), with attributes to access information from all of the
+  variables at once
 
 
 .. _Modelica: http://www.modelica.org/
@@ -171,13 +175,51 @@ def _swap(func):
 
 class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
                                                  'unit', 'displayUnit'])):
-    """Specialized namedtuple_ to represent a variable in a simulation, with
+    """Special namedtuple_ to represent a variable in a simulation, with
     methods to retrieve and perform calculations on its values
 
-    Instances of this class are returned when indexing a variable name from a
-    simulation result (:class:`SimRes` instance).  Special lists of instances
-    are returned when indexing multiple variables from a simulation result or a
-    single variable from multiple simulations (in a :class:`SimResList`).
+    This class is usually not instantiated directly by the user, but instances
+    are returned when indexing a variable name from a simulation result
+    (:class:`SimRes` instance).
+
+    **Examples:**
+
+    Load a simulation and retrieve a variable (instance of this class):
+
+    >>> sim = SimRes('examples/ChuaCircuit.mat')
+    >>> T = sim['G.T_heatPort']
+
+    Get the variable's description:
+
+    >>> T.description # doctest: +SKIP
+    'Temperature of HeatPort'
+
+    Get the variable's unit:
+
+    >>> T.unit
+    'K'
+
+    Get the variable's display unit:
+
+    >>> T.displayUnit
+    'degC'
+
+    Determine if the variable is constant:
+
+    >>> T.is_constant
+    True
+
+    .. testcleanup::
+
+       >>> T.description == 'Temperature of HeatPort'
+       True
+
+    Besides the properties in the above, there are methods to retrieve times,
+    values, and functions of the times and values (:meth:`array`, :meth:`FV`,
+    :meth:`IV`, :meth:`max`, :meth:`mean`, :meth:`mean_rectified`, :meth:`min`,
+    :meth:`RMS`, :meth:`RMS_AC`, :meth:`times`, :meth:`value`, :meth:`values`).
+    Please see the summary in :meth:`SimRes.__getitem__` or the full
+    descriptions of those methods below.
     """
 
     def array(self, t=None, ft=None, fv=None):
@@ -221,56 +263,165 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         - *fv*: Function that operates on the vector of values (default or
           *None* is identity)
 
+        **Example:**
+
+        Load a simulation and retrieve a variable:
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> C1_v = sim['C1.v']
+
+        Get the recorded times and values between 0 and 10 s as an array:
+
+        >>> C1_v.array(t=(0, 10)) # doctest: +NORMALIZE_WHITESPACE
+        array([[  0.    ,   4.    ],
+               [  5.    ,   3.8827],
+               [ 10.    ,   3.8029]], dtype=float32)
+
 
         .. _slice: https://docs.python.org/2/library/functions.html#slice
         """
         return np.array([self.times(t=t, f=ft), self.values(t=t, f=fv)]).T
 
-    @_apply_function
-    def FV(self):
+    def FV(self, f=None):
         """Return function *f* of the final value of the variable.
+
+        **Example:**
+
+        Load a simulation and retrieve a variable:
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> C1_v = sim['C1.v']
+
+        Get the final value:
+
+        >>> C1_v.FV()
+        2.4209836
         """
-        return self.values()[-1]
+        return f(self.values()[-1]) if f else self.values()[-1]
 
     @property
     def is_constant(self):
         """*True* if the variable does not change over time
+
+        **Example:**
+
+        Load a simulation and retrieve a variable:
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> C1_v = sim['C1.v']
+
+        Determine if the variable is constant:
+
+        >>> C1_v.is_constant
+        False
         """
         values = self.values()
         return np.array_equal(values[:-1], values[1:])
 
-    @_apply_function
-    def IV(self):
+    def IV(self, f=None):
         """Return function *f* of the initial value of the variable.
+
+        **Example:**
+
+        Load a simulation and retrieve a variable:
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> C1_v = sim['C1.v']
+
+        Get the initial value:
+
+        >>> C1_v.IV()
+        4.0
         """
-        return self.values()[0]
+        return f(self.values()[0]) if f else self.values()[0]
 
     def max(self, f=None):
         """Return the maximum value of function *f* of the variable.
+
+        **Example:**
+
+        Load a simulation and retrieve a variable:
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> C1_v = sim['C1.v']
+
+        Get the maximum value:
+
+        >>> C1_v.max()
+        4.5046349
         """
         return np.max(self.values(f=f))
 
     def mean(self, f=None):
-        """Return the time-averaged mean value of function *f* of the variable.
+        """Return the time-averaged arithmetic mean value of function *f* of the
+        variable.
+
+        **Example:**
+
+        Load a simulation and retrieve a variable:
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> C1_v = sim['C1.v']
+
+        Get the mean value:
+
+        >>> C1_v.mean()
+        0.76859528
         """
         t = self.times()
         return integral(self.values(f=f), t)/(t[-1] - t[0])
 
     def mean_rectified(self, f=None):
-        """Return the time-averaged rectified mean value of function *f* of the
-        variable.
+        """Return the time-averaged rectified arithmetic mean value of function
+        *f* of the variable.
+
+        **Example:**
+
+        Load a simulation and retrieve a variable:
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> C1_v = sim['C1.v']
+
+        Get the rectified mean value:
+
+        >>> C1_v.mean_rectified()
+        2.2870927
         """
         t = self.times()
         return integral(np.abs(self.values(f=f)), t)/(t[-1] - t[0])
 
     def min(self, f=None):
         """Return the minimum value of function *f* of the variable.
+
+        **Example:**
+
+        Load a simulation and retrieve a variable:
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> C1_v = sim['C1.v']
+
+        Get the minimum value:
+
+        >>> C1_v.min()
+        -3.8189442
         """
         return np.min(self.values(f=f))
 
     def RMS(self, f=None):
         """Return the time-averaged root mean square value of function *f* of
         the variable.
+
+        **Example:**
+
+        Load a simulation and retrieve a variable:
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> C1_v = sim['C1.v']
+
+        Get the root mean square value:
+
+        >>> C1_v.RMS()
+        2.4569478
         """
         t = self.times()
         return np.sqrt(integral(self.values(f=f)**2, t)/(t[-1] - t[0]))
@@ -278,6 +429,18 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
     def RMS_AC(self, f=None):
         """Return the time-averaged AC-coupled root mean square value of
         function *f* of the variable.
+
+        **Example:**
+
+        Load a simulation and retrieve a variable:
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> C1_v = sim['C1.v']
+
+        Get the AC-coupled root mean square value:
+
+        >>> C1_v.RMS_AC()
+        3.1022301
         """
         t = self.times()
         mean = self.mean(f=f)
@@ -316,11 +479,22 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
 
         - *f*: Function that operates on the vector of recorded times (default
           or *None* is identity)
+
+        **Example:**
+
+        Load a simulation and retrieve a variable:
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> C1_v = sim['C1.v']
+
+        Get the recorded times between 0 and 20 s:
+
+        >>> C1_v.times(t=(0, 20))
+        array([  0.,   5.,  10.,  15.,  20.], dtype=float32)
         """
         pass
 
-    @_apply_function
-    def value(self):
+    def value(self, f=None):
         """Return function *f* of the value of a constant variable.
 
         This method raises a **ValueError** if the variable is time-varying.
@@ -329,10 +503,22 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
 
         - *f*: Function that operates on the value (default or *None* is
           identity)
+
+        **Example:**
+
+        Load a simulation and retrieve a constant variable:
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> Ro_R = sim['Ro.R']
+
+        Get the value of the variable:
+
+        >>> Ro_R.value()
+        0.0125
         """
         values = self.values()
         if np.array_equal(values[:-1], values[1:]):
-            return values[0]
+            return f(values[0]) if f else values[0]
         else:
             raise ValueError("The variable is not a constant.  Use values() "
                              "instead of value().")
@@ -370,12 +556,29 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
 
         - *f*: Function that operates on the vector of values (default or *None*
           is identity)
+
+        **Examples:**
+
+        Load a simulation and retrieve a variable.
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> C1_v = sim['C1.v']
+
+        Get the recorded values between 0 and 20 s:
+
+        >>> C1_v.values(t=(0, 20)) # doctest: +NORMALIZE_WHITESPACE
+        array([ 4.    ,  3.8827,  3.8029,  3.756 ,  3.7374], dtype=float32)
+
+        Get the interpolated values at 2.5 and 17.5 s:
+
+        >>> C1_v.values(t=[2.5, 17.5])
+        [3.941368936561048, 3.7467045785160735]
         """
         pass
 
 
 class _VarDict(dict):
-    """Specialized dictionary for simulation variables (instances of
+    """Special dictionary for simulation variables (instances of
     :class:`Variable`)
     """
 
@@ -398,12 +601,40 @@ class _VarDict(dict):
                                         + close_matches)
             raise LookupError(msg)
 
-class _VarList(list):
-    """Specialized list of simulation variables (instances of
-    :class:`Variable`), with attributes to access information from all of the
-    variables at once
+class VarList(list):
+    """Special list of simulation variables (instances of :class:`Variable`),
+    allowing access to information from all of the variables at once
 
-    The list may be nested.
+    The properties and methods of this class are the same as :class:`Variable`,
+    except that they return lists.  Each entry in the list is the result of
+    accessing or calling the corresponding property or method of each simulation
+    result.
+
+    This class is typically not instantiated directly by the user, but instances
+    are returned when indexing multiple variables from a simulation result
+    (:meth:`SimRes.__call__` method of a :class:`SimRes` instance) or a single
+    variable from multiple simulations (:meth:`SimResList.__getitem__` method of
+    a :class:`SimResList`).  In the case of indexing multiple variables from a
+    simulation result, this list may be nested.
+
+    **Examples:**
+
+    .. testsetup::
+
+       >>> from modelicares import SimRes, SimResList
+
+    Multiple variables from a simulation:
+
+    >>> sim = SimRes('examples/ChuaCircuit.mat')
+    >>> voltages = sim(['C1.v', 'L.v'])
+    >>> voltages.FV()
+    [2.4209836, -0.25352862]
+
+    Single variable from multiple simulations:
+
+    >>> sims = SimResList('examples/ChuaCircuit/*/')
+    >>> sims['C1.v'].mean()
+    [-1.6083468, 0.84736514]
     """
 
     def _listmethod(func):
@@ -459,7 +690,7 @@ class SimRes(Res):
          By default, the available functions are tried in order until one
          works (or none do).
 
-    **Methods using built-in Python_ operators and syntax:**
+    **Methods using built-in Python operators and syntax:**
 
     - :meth:`__call__` - Access a list of variables by their names (invoked as
       ``sim(<list of variable names>)``).
@@ -483,9 +714,6 @@ class SimRes(Res):
 
     - :meth:`browse` - Launch a variable browser.
 
-    - :meth:`fbase` - Return the base filename from which the results were
-      loaded, without the directory or file extension.
-
     - :meth:`names` - Return a list of variable names, optionally filtered by
       pattern matching.
 
@@ -506,6 +734,9 @@ class SimRes(Res):
 
     - *dirname* - Directory from which the variables were loaded
 
+    - *fbase* - Base filename from which the results were loaded, without the
+      directory or file extension.
+
     - *fname* - Filename from which the variables were loaded, with absolute
       path
 
@@ -521,7 +752,7 @@ class SimRes(Res):
     Modelica simulation results from .../examples/ChuaCircuit.mat
 
 
-    .. _Python: http://www.python.org
+    .. _Python: http://www.python.org/
     .. _pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
 
@@ -1023,7 +1254,7 @@ class SimRes(Res):
             y1times = (yvars1.times() + [all_times]*len(f1)
                        if xname == 'Time' else x)
             if ynames2:
-                # Use solid lines for primary axis and dotted lines for
+                # Use solid lines for the primary axis and dotted lines for the
                 # secondary.
                 kwargs['dashes'] = [(None, None)]
                 util.plot(y1, y1times, ax1, label=legends1, **kwargs)
@@ -1249,10 +1480,10 @@ class SimRes(Res):
     def __call__(self, names):
         """Access a list of variables by their names.
 
-        See :meth:`__getitem__` for the attributes that can be accessed via the
-        return value.  The result of the corresponding attribute in this class
-        is a list of the results of the attribute of each variable.  The
-        attributes in this class accept the same call signature.
+        This method returns :class:`VarList`, give access to retrieve properties
+        and call methods on all of the variables at once.  Please see
+        :class:`Variable` or :meth:`__getitem__` for more information about the
+        the accessible attributes.
 
         **Arguments**:
 
@@ -1284,7 +1515,7 @@ class SimRes(Res):
         if isinstance(names, string_types):
             return self._variables[names]
         else:
-            return _VarList(entries(names))
+            return VarList(entries(names))
 
     def __contains__(self, name):
         """Return *True* if a variable is present in the simulation results.
@@ -1311,7 +1542,7 @@ class SimRes(Res):
     def __getitem__(self, name):
         """Access a variable by name.
 
-        This method returns an instance of :class:`Variable`, which has the
+        This method returns a :class:`Variable` instance, which has the
         following methods to retrieve information about the variable:
 
         - :meth:`~Variable.array` - Return an array of times and values for the
@@ -1348,11 +1579,11 @@ class SimRes(Res):
 
         - *description* - The Modelica_ variable's description string
 
-        - *is_constant* - *True*, if the variable does not change over time
-
         - *unit* - The Modelica_ variable's *unit* attribute
 
         - *displayUnit* - The Modelica_ variable's *displayUnit* attribute
+
+        - *is_constant* - *True*, if the variable does not change over time
 
         **Examples:**
 
@@ -1402,7 +1633,7 @@ class SimRes(Res):
 
 
 class SimResList(ResList):
-    r"""Specialized list of simulation results (:class:`SimRes` instances)
+    r"""Special list of simulation results (:class:`SimRes` instances)
 
     **Initialization signatures:**
 
@@ -1686,18 +1917,26 @@ class SimResList(ResList):
         return util.tree(self.names(pattern, re, constants_only))
 
     def __contains__(self, item):
-        """Return item in self.
+        """Return *True* if a variable is present in all of the simulation
+        results or a simulation is present in the list of simulations.
 
-        This method is overloaded.  If *item* is a :class:`SimRes` instance,
-        then this method returns *True* if the instance is in the list of
-        simulation results.  If *item* is a string, then it returns *True* if
-        the string is the name of a variable that is included in all of the
-        simulations in the list.
+        This method is overloaded---*item* can be a string representing a
+        variable name or a :class:`SimRes` instance.
 
         **Example:**
 
+        First, load some simulations:
+
         >>> sims = SimResList('examples/ChuaCircuit/*/')
+
+        Now check if a variable is in all of the simulations:
+
         >>> 'L.L' in sims
+        True
+
+        or if a simulation in the list:
+
+        >>> sims[0] in sims
         True
         """
         if isinstance(item, string_types):
@@ -1706,14 +1945,14 @@ class SimResList(ResList):
             return list.__contains__(self, item)
 
     def __getitem__(self, i):
-        """x.__getitem__(i) <==> x[i]
+        """Return a list of results of a variable across all of the simulations
+        or a simulation from the list of simulations.
 
         This method is overloaded beyond the standard indexing and slicing.  If
-        the index (*i*) is a variable name (string), then a specialized list is
+        the index (*i*) is a variable name (string), then a :class:`VarList` is
         returned with references to the corresponding variable in each of the
-        simulations.  That list can be queried for the attributes listed in
-        :meth:`SimRes.__getitem__`.  The same call signature applies here except
-        that :meth:`arrays` in this class corresponds to :meth:`Variable.array`.
+        simulations.  That list can be used to access the attributes listed in
+        :meth:`SimRes.__getitem__` and described further in :class:`Variable`.
 
         **Example:**
 
@@ -1736,7 +1975,7 @@ class SimResList(ResList):
             return self.__class__(list.__getitem__(self, i))
         elif isinstance(i, string_types):
             # Return a list containing the variable from each simulation.
-            return _VarList([sim[i] for sim in self])
+            return VarList([sim[i] for sim in self])
         else:
             # Return a single simulation (SimRes instance).
             return list.__getitem__(self, i)
@@ -1911,7 +2150,8 @@ class SimResList(ResList):
 
     @property
     def unique_names(self):
-        """Dictionary of variable names that are not in all of the simulations.
+        """Dictionary of variable names that are not in all of the simulations
+
         Each key is a variable name and each value is a Boolean list indicating
         if the associated variable appears in each of the simulations.
 

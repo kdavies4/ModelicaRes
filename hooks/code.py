@@ -22,7 +22,7 @@ def build():
         util.delayed_exit()
 
     # Update the version number.
-    last_version = git.describe('--tag', abbrev=0).stdout.rstrip()
+    last_version = git.describe('--tags', abbrev=0).stdout.rstrip()
     version = raw_input("Enter the version number (last was %s): "
                         % last_version)
     # TODO: default: lightweight tag; last: only annotated

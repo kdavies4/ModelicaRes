@@ -4,6 +4,8 @@
 See README.md for instructions.
 """
 
+import re
+
 from glob import glob
 
 from distutils.core import setup
@@ -18,17 +20,24 @@ from distutils.core import setup
 def get_version(fname):
     """Return the version number of file *fname*.
     """
-    import re
     with open(fname) as f:
-        return re.search('__version__ *= *["\'](.*)["\']', f.read()).group(1)
+        try:
+            return re.search('__version__ *= *["\'](.*)["\']',
+                             f.read()).group(1)
+        except AttributeError:
+            return
+
+version = get_version('modelicares/__init__.py')
 
 setup(name='ModelicaRes',
-      version=get_version('modelicares/__init__.py'),
+      version=version if version else 'x.x.x',
       description='Utilities to set up and analyze Modelica simulation experiments',
       long_description=open('README.rst').read(),
       author='Kevin Davies',
       author_email='kdavies4@gmail.com',
       url='http://kdavies4.github.io/ModelicaRes/',
+      download_url=('https://github.com/kdavies4/ModelicaRes/archive/v%s.zip'
+                    % version if version else ''),
       packages=['modelicares', 'modelicares.exps', 'modelicares._io'],
       scripts=glob('bin/*'),
       classifiers=['Development Status :: 4 - Beta',

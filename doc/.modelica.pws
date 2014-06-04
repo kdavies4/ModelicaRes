@@ -1,4 +1,5 @@
-personal_ws-1.1 en 142 
+personal_ws-1.1 en 147 
+VarList
 ndims
 asin
 cosh
@@ -31,10 +32,10 @@ VerticalCylinder
 UnderLine
 createPlot
 preserveAspectRatio
+texlive
 Dymola
 MWorks
 div
-texlive
 actualStream
 cos
 dsres
@@ -67,13 +68,14 @@ dymolalg
 rowLimits
 AssertionLevel
 info
-sinh
 stdout
+sinh
 Sjölund
 descriptionLabel
 defaultComponentName
 ceil
 nbsp
+inductances
 reinit
 fillPattern
 smoothOrder
@@ -127,7 +129,9 @@ JModelica
 noBorder
 bottomTitleType
 arrowheadwidth
+Usersuser
 iconTransformation
+GitHub
 elseif
 ModelicaExternalC
 atan
@@ -137,6 +141,7 @@ dsin
 arrowheadlength
 arrowfacecolor
 InlineNoEvent
+heatPort
 executeCall
 coordinateSystem
 lineThickness

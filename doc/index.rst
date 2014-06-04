@@ -32,7 +32,7 @@ and matrix functions from NumPy_.
 
 .. image:: _static/ThreeTanks.png
    :scale: 45 %
-   :alt: Sankey digarams of three tanks model
+   :alt: Sankey diagrams of three tanks model
 
 .. image:: _static/hspace.png
    :scale: 250 %
@@ -55,8 +55,8 @@ more examples.
 
 .. toctree::
 
-  Tutorial (IPython notebook) <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>
-  Advanced topics (ditto) <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb>
+  Tutorial <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>
+  Advanced topics <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb>
   loadres
   modelicares
   simres
