@@ -3,4 +3,4 @@
 #
 # This requires Meld (http://meldmerge.org/).
 
-meld ~/.config/matplotlib/matplotlibrc matplotlibrc
+meld ~/.config/matplotlib/matplotlibrc examples/matplotlibrc

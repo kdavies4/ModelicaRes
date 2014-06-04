@@ -60,7 +60,7 @@ Some of the required packages may not install automatically.
 - The GUIs require [Qt], which can be installed via [PyQt4], [guidata], or
   [PySide].
 
-The [matplotlibrc](matplotlibrc) file has some recommended revisions to
+The [matplotlibrc file](examples/matplotlibrc) has some recommended revisions to
 [matplotlib]'s defaults.  To use it, copy it to the working directory or
 [matplotlib]'s configuration directory.  See
 http://matplotlib.org/users/customizing.html for details.

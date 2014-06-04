@@ -59,9 +59,10 @@ Some of the required packages may not install automatically.
   http://www.scipy.org/install.html.
 - The GUIs require Qt_, which can be installed via PyQt4_, guidata_, or PySide_.
 
-The *matplotlibrc* file in the base folder has some recommended revisions to
-matplotlib_'s defaults.  To use it, copy it to the working directory or
-matplotlib_'s configuration directory.  See
+The `matplotlibrc file
+<https://github.com/kdavies4/ModelicaRes/blob/master/examples/matplotlibrc>`_
+file has some recommended revisions to matplotlib_'s defaults.  To use it, copy
+it to the working directory or matplotlib_'s configuration directory.  See
 http://matplotlib.org/users/customizing.html for details.
 
 Credits

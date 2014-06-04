@@ -47,9 +47,9 @@ Currently, ModelicaRes only loads Dymola/OpenModelica_-formatted results
 added easily.
 
 Please see the tutorial, which is available as an `IPython notebook
-<https://github.com/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb>`_
+<https://github.com/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_
 or online as a `static page
-<http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb>`_.
+<http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_.
 The links below and in the sidebar provide the full documentation and many
 more examples.
 
@@ -106,9 +106,9 @@ Some of the required packages may not install automatically.
 - The GUIs require Qt_, which can be installed via PyQt4_, guidata_, or PySide_.
 
 The `matplotlibrc file
-<https://github.com/kdavies4/ModelicaRes/blob/release/matplotlibrc>`_ has some
-recommended revisions to matplotlib_'s defaults.  To use it, copy it to the
-working directory or matplotlib_'s configuration directory.  See
+<https://github.com/kdavies4/ModelicaRes/blob/master/examples/matplotlibrc>`_
+has some recommended revisions to matplotlib_'s defaults.  To use it, copy it to
+the working directory or matplotlib_'s configuration directory.  See
 http://matplotlib.org/users/customizing.html for details.
 
 **Credits**
