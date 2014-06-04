@@ -6,7 +6,8 @@ Modelica_ results.
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
-__copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
+__copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
+                 "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
 

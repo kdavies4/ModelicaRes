@@ -36,6 +36,12 @@ Errors are raised under the following conditions:
 The last three errors occur when the file does appear to be from Dymola or
 OpenModelica but something else is wrong.
 """
+__author__ = "Kevin Davies"
+__email__ = "kdavies4@gmail.com"
+__copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
+                 "Institute, and Georgia Tech Research Corporation")
+__license__ = "BSD-compatible (see LICENSE.txt)"
+
 
 import sys
 

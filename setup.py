@@ -19,13 +19,13 @@ def get_version(fname):
     """Return the version number of file *fname*.
     """
     import re
-    return re.search('__version__ *= *["\'](.*)["\']',
-                     open(fname).read()).group(1)
+    with open(fname) as f:
+        return re.search('__version__ *= *["\'](.*)["\']', f.read()).group(1)
 
 setup(name='ModelicaRes',
       version=get_version('modelicares/__init__.py'),
       description='Utilities to set up and analyze Modelica simulation experiments',
-      long_description=open('README.txt').read(),
+      long_description=open('README.rst').read(),
       author='Kevin Davies',
       author_email='kdavies4@gmail.com',
       url='http://kdavies4.github.io/ModelicaRes/',
