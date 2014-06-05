@@ -1,4 +1,4 @@
-personal_ws-1.1 en 151 
+personal_ws-1.1 en 153 
 VarList
 ndims
 asin
@@ -22,6 +22,7 @@ fe
 sin
 MapleSim
 legendHorizontal
+eea
 operator
 SystemModeler
 displayUnit
@@ -63,6 +64,7 @@ ensureSimulated
 stopTime
 input
 dest
+freqplot
 ensureTranslated
 elsewhen
 Mathematica

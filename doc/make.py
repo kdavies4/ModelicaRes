@@ -5,7 +5,7 @@ import os
 import shutil
 import sys
 
-from sh import git, python, sphinx_build, ErrorReturnCode_1
+from sh import git, python, sphinx_build, ErrorReturnCode_1, ErrorReturnCode_128
 from glob import glob
 from collections import namedtuple
 from modelicares import util
@@ -21,13 +21,18 @@ def build():
         static()
 
     # Update the download link.
-    lastversion = git.describe('--tag', abbrev=0).stdout.rstrip()
-    date = git.log('-1', lastversion, date='short', format='%ad').stdout[8:18]
-    rpls = [('(ModelicaRes)-.+(\.tar)', r'\1-%s\2' % lastversion[1:]),
-            ('(Latest version<br>\().+(\)</a>)', r'\1%s, %s\2' % (lastversion,
-                                                                  date)),
-           ]
-    util.replace('_templates/download.html', rpls)
+    try:
+        lastversion = git.describe('--tags').stdout.rstrip()
+    except ErrorReturnCode_128:
+        pass # No tags recorded; leave download link as is
+    else:
+        date = git.log('-1', lastversion,
+                       date='short', format='%ad').stdout[8:18]
+        rpls = [('(ModelicaRes)-.+(\.tar)', r'\1-%s\2' % lastversion[1:]),
+                ('(Latest version<br>\().+(\)</a>)',
+                 r'\1%s, %s\2' % (lastversion, date)),
+               ]
+        util.replace('_templates/download.html', rpls)
 
     # Build the documentation.
     make_dirs()
@@ -75,7 +80,10 @@ def release():
     git.stash('save', "Work in progress while updating gh-pages branch")
 
     # Check out the gh-pages branch.
-    git.checkout('gh-pages')
+    try:
+        git.checkout('gh-pages')
+    except ErrorReturnCode_128: # Create the branch if necessary.
+        git.checkout('-b', 'gh-pages')
 
     # Remove the existing files in the base folder.
     EXTENSIONS = ['*.html', '*.inv']

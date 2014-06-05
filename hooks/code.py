@@ -6,6 +6,7 @@ import os
 import sh
 import shutil
 
+from time import strftime
 from collections import namedtuple
 from docutils.core import publish_string
 from sh import bash, git, python, rm
@@ -42,10 +43,17 @@ def build():
     lastversion = git.describe('--tags', abbrev=0).stdout.rstrip()[1:]
     version = raw_input("Enter the version number (last was %s): "
                         % lastversion)
+    # In modelicares/__init__.py:
     set_version("'%s'" % version)
-
-    # TODO: Update date and version in top line of CHANGES.txt.
-    # TODO: Add a download link in CHANGES.txt.
+    # In CHANGES.txt:
+    date = strftime('%Y-%-m-%-d')
+    rpls = [('vx\.x\.x_ \(YYYY-MM-DD\)( -- Updates:)',
+             r'v{v}_ ({d})\1'.format(v=version, d=date)),
+            ('v%s_ \(.+\)( -- Updates:)' % version,
+             r'v{v}_ ({d})\1'.format(v=version, d=date)),
+            ('(.. _)vx\.x\.x(.+)vx\.x\.x(\.zip)',
+             r'\1v{v}\2v{v}\3'.format(v=version))]
+    util.replace('CHANGES.txt', rpls)
 
     # Build, install, and test the code.
     setup.build()
@@ -53,16 +61,8 @@ def build():
     os.system('sudo python3 setup.py install')
     print(bash('runtests.sh'))
 
-    # Create a tarball (*.tar.gz).
-    setup.sdist(formats='gztar')
-
-    # From the tarball, create a zip version (*.zip) with Windows line endings.
-    name = python('setup.py', '--fullname').stdout.rstrip()
-    FOLDER = 'dist'
-    path = os.path.join(FOLDER, name)
-    sh.tar('-xf', path + '.tar.gz', '-C', FOLDER)
-    sh.zip('-rl', path + '.zip', path)
-    shutil.rmtree(path)
+    # Create a tarball and zip (*.tar.gz and *.zip).
+    setup.sdist(formats='gztar,zip')
 
     # Tag the version (will prompt for message).
     git.tag('-af', 'v' + version)
@@ -85,25 +85,26 @@ def release():
                     "to origin (y/n)?"):
         util.delayed_exit()
     git.rebase('-i', 'origin/master')
-    #git.push('--tags', 'origin', 'master')
+    git.push('--tags', 'origin', 'master')
 
     # Upload to PyPI.
     if not util.yes("Do you want to upload to PyPI (this is permanent!) "
                     "(y/n)?"):
         util.delayed_exit()
-    #setup.sdist.upload(formats='gztar,zip')
+    setup.sdist.upload(formats='gztar,zip')
 
-    # Reset the version number and start a new list in CHANGES.txt.
+    # Reset the version number.
+    # In modelicares/__init__.py:
     set_version('None')
-    # TODO Add blank lines to CHANGES.txt.
+    # In CHANGES.txt:
+    newheading = 'vx.x.x_ (YYYY-MM-DD) -- Updates:'
+    newlink = '.. _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip'
+    rpls = [('(<http://semver.org>`_\.)',
+             r'\1\n\n' + newheading),
+            (r'\n(\nv[0-9]+\.[0-9]+\.[0-9]+_)',
+             newlink + r'\n\1')]
+    util.replace('CHANGES.txt', rpls)
 
-    #with open('CHANGES.txt', 'r+') as f:
-
-        # TODO use re, rewrite whole file
-        #f.write("vx.x.x_ (YYYY-MM-DD) -- Updates:")
-        #f.write("")
-        #f.write("   -")
-    #".. _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip"
 
 F = namedtuple("F", ['f', 'description'])
 funcs = {'clean'      : F(clean,   "Clean/remove the built code."),

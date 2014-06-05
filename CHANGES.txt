@@ -4,19 +4,19 @@ Change log
 The releases are numbered according to the `Semantic Versioning Specification
 <http://semver.org>`_.
 
-v0.12.0_ (2014-x-xx) -- Updates:
+v0.12.0_ (2014-6-5) -- Updates:
 
    - Fixed issues with Unicode_ in Python 3.
    - Fixed sorting and ordering of :class:`~modelicares.simres.SimRes` and
      :class:`~modelicares.linres.LinRes` instances in Python 3.
    - :meth:`~modelicares.simres._VarList.arrays` is now available as
-     :meth:`~modelicares.simres._VarList.array` instead.
-   - :meth:`~modelicares.simres.SimRes.n_constants`,
-     :meth:`~modelicares.simres.SimRes.fbase`,
-     :meth:`~modelicares.simres.SimResList.basedir`
-     :meth:`~modelicares.linres.LinRes.fbase`, and
-     :meth:`~modelicares.simres.SimResList.basedir` are now properties instead
-     of methods.
+     :meth:`~modelicares.simres.Variable.array` instead.
+   - *fbase* is now a property instead of a method of
+     :class:`~modelicares.simres.SimRes` and
+     :class:`~modelicares.linres.LinRes`.  Likewise, *n_constants* is now a
+     property of :class:`~modelicares.simres.SimRes` and *basedir* is a property
+     of :class:`~modelicares.simres.SimResList` and
+     :class:`~modelicares.linres.LinResList`.
    - Added *dirname* as a property to :class:`~modelicares.simres.SimRes` and
      :class:`~modelicares.linres.LinRes`.
    - *basename*, *dirname*, *fname*, *n_constants*, *sys*, and *tool* are now
@@ -27,7 +27,7 @@ v0.12.0_ (2014-x-xx) -- Updates:
    - Deleted :meth:`~modelicares.simres.SimResList.fnames`.  Use the *fname*
      property of :class:`~modelicares.simres.SimResList` instead.
    - :meth:`~modelicares.simres.Variable.is_constant` is now a property instead
-     of a method.
+     of a method of :class:`~modelicares.simres.Variable`.
    - :meth:`sort` now correctly sorts :class:`~modelicares.simres.SimResList`
      and :class:`~modelicares.linres.LinResList` by absolute file path.
    - Improved the generation of defaults for the Bode and Nyquist plots.
@@ -287,6 +287,7 @@ v0.2_ (2012-11-20) -- Updates:
 v0.1_ (2012-11-8) -- Initial release
 
 
+.. _v0.12.0: https://github.com/kdavies4/ModelicaRes/archive/v0.12.0.zip
 .. _v0.11.1: https://github.com/kdavies4/ModelicaRes/archive/v0.11.1.zip
 .. _v0.11.0: https://github.com/kdavies4/ModelicaRes/archive/v0.11.0.zip
 .. _v0.10.0: https://github.com/kdavies4/ModelicaRes/archive/v0.10.0.zip

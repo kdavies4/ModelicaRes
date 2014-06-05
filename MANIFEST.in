@@ -1,7 +1,8 @@
 include MANIFEST.in
 iinclude matplotlibrc
 include *.md
-include *.rst
+include *.txt
+include *.sh
 
 # Files to build the documentation
 include doc/*.md
@@ -27,13 +28,6 @@ include examples/PID/*.py
 include examples/PID/*/*.mat
 include examples/PID/*/dsin.txt
 
-# Development and release files and scripts
-include hooks/*
-include *.sh
-include .gitattributes
-include .gitignore
-
 # Test scripts and data files
 include tests/*
 exclude tests/*.pdf
-include .travis.yml
