@@ -998,6 +998,7 @@ def replace(fnames, rpls):
                 text = old.sub(new, text)
             f.seek(0)
             f.write(text)
+            f.truncate()
 
 
 def save(formats=['pdf', 'png'], fname=None, fig=None):

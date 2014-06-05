@@ -23,15 +23,6 @@ def setup(app):
     app.add_javascript('copybutton.js')
     app.add_javascript('analytics.js')
 
-    # KLD 7/7/13: Doesn't work:
-    # Copy the example images (will lag by one build loop).
-    #for f in glob('../examples/*.png'):
-    #    print '------------------%s--to %s-------' (%f, os.path.join('_static', os.path.basename(f)))
-    #    copyfile(f, os.path.join('_static', os.path.basename(f)))
-    #for f in glob('../examples/*.pdf'):
-    #    print '------------------%s--to %s-------' (%f, os.path.join('_static', os.path.basename(f)))
-    #    copyfile(f, os.path.join('_static', os.path.basename(f)))
-
 # -- General configuration -----------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
@@ -79,7 +70,6 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#html_theme = 'sphinxdoc'
 html_theme = 'default'
 
 html_theme_options = {
@@ -110,7 +100,6 @@ html_favicon = '_static/favicon.ico'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-
 html_style = 'custom.css'
 
 # List of paths that contain extra files not directly related to the

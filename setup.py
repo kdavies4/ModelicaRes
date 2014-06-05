@@ -8,21 +8,20 @@ import re
 
 from glob import glob
 
-from distutils.core import setup
-#try:
-#    from setuptools import setup
-#except ImportError:
-#    try:
-#        from setuptools.core import setup
-#    except ImportError:
-#        from distutils.core import setup
+try:
+    from setuptools import setup
+except ImportError:
+    try:
+        from setuptools.core import setup
+    except ImportError:
+        from distutils.core import setup
 
 def get_version(fname):
     """Return the version number of file *fname*.
     """
     with open(fname) as f:
         try:
-            return re.search('__version__ *= *["\'](.*)["\']',
+            return re.search('__version__ *= *["'"'"'](.*)["'"'"']',
                              f.read()).group(1)
         except AttributeError:
             return
@@ -32,7 +31,7 @@ version = get_version('modelicares/__init__.py')
 setup(name='ModelicaRes',
       version=version if version else 'x.x.x',
       description='Utilities to set up and analyze Modelica simulation experiments',
-      long_description=open('README.rst').read(),
+      long_description=open('README.txt').read(),
       author='Kevin Davies',
       author_email='kdavies4@gmail.com',
       url='http://kdavies4.github.io/ModelicaRes/',

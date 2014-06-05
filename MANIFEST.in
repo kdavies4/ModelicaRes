@@ -1,7 +1,7 @@
 include MANIFEST.in
 iinclude matplotlibrc
 include *.md
-include *.txt
+include *.rst
 
 # Files to build the documentation
 include doc/*.md

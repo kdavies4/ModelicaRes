@@ -4,10 +4,8 @@
 import os
 import shutil
 import sys
-import sh
-#import webbrowser
 
-from sh import git, python, sphinx_build
+from sh import git, python, sphinx_build, ErrorReturnCode_1
 from glob import glob
 from collections import namedtuple
 from modelicares import util
@@ -125,27 +123,16 @@ def release():
     # Update the HTML files to reference the new folder names.
     util.replace(html_fnames, [('"\./examples/', '"./examples2/')])
 
-    # Copy but rename the files referenced by searchtools.js.
-    #src = os.path.join(BUILD_DIR, '_sources')
-    #for fname in os.listdir(src):
-    #    shutil.copy(os.path.join(src, fname), '..')
-    #util.replace("../javascripts/searchtools.js", [("\+ '_sources/' ", '')])
-    #git.add(sh.glob('../*.txt'))
-    # Not sure why this isn't already added:
-    #git.add("../javascripts/searchtools.js")
-
     # Update the sitemap.
     print(python('sitemap_gen.py', config="sitemap_conf.xml"))
 
     # Commit the changes.
     try:
         git.commit('-a', m="Rebuilt documentation")
-    except sh.ErrorReturnCode_1:
+    except ErrorReturnCode_1:
         pass # No changes to commit
 
     # If desired, push the changes to origin.
-    #webbrowser.open('build/html/index.html')
-    #sh.xdg_open('build/html/index.html')
     print("The gh-pages branch has been updated and is currently checked out.")
     if util.yes("Do you want to rebase it and push the changes to "
                 "origin (y/n)?"):
@@ -156,7 +143,7 @@ def release():
     git.checkout(branch)
     try:
         git.stash.pop()
-    except sh.ErrorReturnCode_1:
+    except ErrorReturnCode_1:
         pass # No stash was necessary in the first place.
     print("Now back on " + branch)
 

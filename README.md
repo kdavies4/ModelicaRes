@@ -68,8 +68,8 @@ http://matplotlib.org/users/customizing.html for details.
 ### Credits
 
 The main author is Kevin Davies.  Code has been included from:
-- Richard Murray
-  ([python-control](http://sourceforge.net/apps/mediawiki/python-control)),
+- Richard Murray (`control.freqplot`, part of
+  [python-control](http://sourceforge.net/apps/mediawiki/python-control)),
 - Joerg Raedler (method to expand a [Modelica] variable tree---from [DyMat]),
 - Jason Grout
   ([ArrowLine](http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html)

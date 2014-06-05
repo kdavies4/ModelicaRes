@@ -633,8 +633,15 @@ class VarList(list):
     Single variable from multiple simulations:
 
     >>> sims = SimResList('examples/ChuaCircuit/*/')
-    >>> sims['C1.v'].mean()
+    >>> sims['C1.v'].mean() # doctest: +SKIP
     [-1.6083468, 0.84736514]
+
+    .. testcleanup:
+
+       >>> sims.sort()
+       >>> sims['C1.v'].mean()
+       [-1.6083468, 0.84736514]
+
     """
 
     def _listmethod(func):

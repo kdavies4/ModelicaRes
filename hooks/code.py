@@ -2,83 +2,108 @@
 # Script to clean, build, and release the ModelicaRes code.
 
 import sys
+import os
 import sh
+import shutil
 
 from collections import namedtuple
-from sh import bash, git, python
+from docutils.core import publish_string
+from sh import bash, git, python, rm
 from modelicares import util
 
 setup = python.bake('setup.py')
 
+def set_version(version, fname='modelicares/__init__.py'):
+    """Update the version in a file.
+    """
+    util.replace(fname, [('(__version__) *= *.+', r"\1 = %s" % version)])
+
 def build():
     """Build/make the code.
+
     """
-    # Run tests.
-    if bash('runtests.sh').exit_code:
-        print("The tests failed.")
+
+    # Check that README.txt is a valid ReST file (otherwise, the PyPI page will
+    # not show correctly).
+    README = 'README.txt'
+    ERROR_START = 'Docutils System Messages\n'
+    with open(README, 'r') as rstfile:
+        parsed = publish_string(rstfile.read())
+    if ERROR_START in parsed:
+        print("Errors in " + README)
         util.delayed_exit()
-    if setup('check', '-s', '--metadata', '--restructuredtext').exit_code:
-        print("setup.py check failed.")
+
+    # Run other setup tests.
+    if setup.check('-rms').exit_code:
+        print("The setup.py check failed.")
         util.delayed_exit()
 
     # Update the version number.
-    last_version = git.describe('--tags', abbrev=0).stdout.rstrip()
+    lastversion = git.describe('--tags', abbrev=0).stdout.rstrip()[1:]
     version = raw_input("Enter the version number (last was %s): "
-                        % last_version)
-    # TODO: default: lightweight tag; last: only annotated
+                        % lastversion)
+    set_version("'%s'" % version)
 
-    # TODO: write version to modelicares/__init__.py
+    # TODO: Update date and version in top line of CHANGES.txt.
+    # TODO: Add a download link in CHANGES.txt.
 
-    # TODO: assert version isn't already an annotated tag (i.e., released version)
-
-    # TODO: if version is listed at top of changes:
-    #     update date
-    # else:
-    #     add list at top of changes w/ date and version
-    #     add download link
-
-    # Build the code.
+    # Build, install, and test the code.
     setup.build()
-    setup.sdist(formats='gztar,zip')
+    os.system('sudo python setup.py install')
+    os.system('sudo python3 setup.py install')
+    print(bash('runtests.sh'))
 
-    # Use the zip command to change the line endings to Windows format.  TODO: Is there a better way?  Run a script directly or build/* before sdist?
+    # Create a tarball (*.tar.gz).
+    setup.sdist(formats='gztar')
+
+    # From the tarball, create a zip version (*.zip) with Windows line endings.
     name = python('setup.py', '--fullname').stdout.rstrip()
-    #(cd dist
-    os.remove(name + '.zip')
-    sh.tar('-xf', name + '.tar.gz')
-    sh.zip('-rl', name + '.zip', name)
-    shutil.rmtree(name)
-    #)
+    FOLDER = 'dist'
+    path = os.path.join(FOLDER, name)
+    sh.tar('-xf', path + '.tar.gz', '-C', FOLDER)
+    sh.zip('-rl', path + '.zip', path)
+    shutil.rmtree(path)
 
-    # TODO lightweight tag
+    # Tag the version (will prompt for message).
+    git.tag('-af', 'v' + version)
 
 def clean():
     """Clean/remove the built code.
     """
     setup.clean('--all')
+    rm('-rf', "ModelicaRes.egg-info")
 
 def release():
     """Release/publish the code.
     """
 
-    # Rebase, annotate the release tag, and push the tag and master to origin.
-    print("Here's a list of the TODO items:")
-    print(bash('../TODO.sh'))
+    # Rebase and push the master with tags to origin.
+    print("Here are the remaining TODO items:")
+    print(bash('TODO.sh'))
     print()
-    if not util.yes("Do you want to rebase, annotate the release tag, and push "
-                    "the tag and master to origin (y/n)?"):
+    if not util.yes("Do you still want to rebase and push the master with tags "
+                    "to origin (y/n)?"):
         util.delayed_exit()
     git.rebase('-i', 'origin/master')
-    # TODO: Assert the last tag is lightweight, and annotate it.
-    git.push('--tags', 'origin', 'master')
+    #git.push('--tags', 'origin', 'master')
 
     # Upload to PyPI.
-    if not util.yes("Do you want to upload it to PyPI (this is permanent!) "
+    if not util.yes("Do you want to upload to PyPI (this is permanent!) "
                     "(y/n)?"):
         util.delayed_exit()
-    setup('sdist', 'upload')
+    #setup.sdist.upload(formats='gztar,zip')
 
-    # TODO add blank lines to changes.txt, reset version in modelicares/__init__.py
+    # Reset the version number and start a new list in CHANGES.txt.
+    set_version('None')
+    # TODO Add blank lines to CHANGES.txt.
+
+    #with open('CHANGES.txt', 'r+') as f:
+
+        # TODO use re, rewrite whole file
+        #f.write("vx.x.x_ (YYYY-MM-DD) -- Updates:")
+        #f.write("")
+        #f.write("   -")
+    #".. _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip"
 
 F = namedtuple("F", ['f', 'description'])
 funcs = {'clean'      : F(clean,   "Clean/remove the built code."),

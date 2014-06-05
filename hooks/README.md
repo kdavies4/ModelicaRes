@@ -24,12 +24,28 @@ Add to *.git/config*:
 	    diff-matplotlibrc = !bash `git rev-parse --show-toplevel`/hooks/diff-matplotlibrc.sh
 	    doc = !bash `git rev-parse --show-toplevel`/hooks/doc.sh
 	    code = !bash `git rev-parse --show-toplevel`/hooks/code.sh
+	    build = !bash `git rev-parse --show-toplevel`/hooks/build.sh
+	    release = !bash `git rev-parse --show-toplevel`/hooks/release.sh
 
 #### Usage
 
+##### For source code:
+
+To clean/remove the built code (alias for `setup.py clean --all`):
+
+    git code clean
+
+To build/make a distributable copy and run tests:
+
+    git code build
+
+To release/upload a version to [PyPI]\:
+
+    git code release
+
 ##### For documentation:
 
-To clean/remove the documentation:
+To clean/remove the built documentation:
 
     git doc clean
 
@@ -42,25 +58,30 @@ To release/publish the documentation to the [GitHub webpage]\:
 
     git doc release
 
-##### For source code:
+##### Integrated:
 
-To clean/remove the built code (alias to `setup.py clean --all`):
-
-    git code clean
-
-To build/make a distributable copy:
-
-    git code build
-
-To release/upload a version to [PyPI]\:
-
-    git code release
+To run `git code build` and then `git doc build`, use `git build`.
+To run `git code release` and `git doc release`, use `git release`.
 
 ##### Other:
 
 To compare the [matplotlibrc](../matplotlibrc) file to the user's configuration:
 
     git diff-matplotlibrc
+
+#### Development workflow
+
+All releases and updates are on the `master` branch.  During the build process,
+(`git code build`), releases are tagged  as "v*major*.*minor*.*micro*", where
+*major*, *minor*, and *micro* are the integer parts of the version number.  The unreleased updates have an "UNRELEASED COPY.md" file in the base folder with the
+commit date/time and the author.
+
+The version number is recorded in
+[modelicares/__init__.py](../modelicares/__init__.py).  It is *None* for
+unreleased copies.  When the documentation is built (`git doc build`), the
+download link and text is updated with information from the last tag, which
+corresponds to the last release.
+
 
 
 [git]: http://git-scm.com/

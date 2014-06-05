@@ -30,7 +30,7 @@ NumPy_.
 
 .. image:: _static/ThreeTanks.png
    :scale: 30 %
-   :alt: Sankey digarams of three tanks model
+   :alt: Sankey diagrams of three tanks model
 
 .. image:: _static/PIDs-bode.png
    :scale: 30 %
