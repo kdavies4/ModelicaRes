@@ -13,14 +13,16 @@ to
 - produce various plots and diagrams, and
 - export data to various formats via [pandas].
 
-![Plot of Chua circuit with varying parameters](doc/_static/ChuaCircuit-small.png)
+[![Plot of Chua circuit with varying parameters](doc/_static/ChuaCircuit-small.png)](http://kdavies4.github.io/ModelicaRes/examples2/ChuaCircuit.hires.png)
 ![ ](doc/_static/hspace.png)
-![Sankey diagram of three tanks example](doc/_static/ThreeTanks-small.png)
+[![Sankey diagram of three tanks example](doc/_static/ThreeTanks-small.png)](http://kdavies4.github.io/ModelicaRes/examples2/ThreeTanks.hires.png)
+![ ](doc/_static/hspace.png)
+[![Bode diagram of PID with varying parameters](doc/_static/PIDs-bode-small.png)](http://kdavies4.github.io/ModelicaRes/examples2/PIDs-bode.hires.png)
 
 The figures are generated via [matplotlib], which offers a rich set of plotting
-routines.  ModelicaRes has methods to automatically create and label xy plots,
-Bode and Nyquist plots, and Sankey diagrams.  ModelicaRes can be scripted or
-used in an interactive [Python] session with math and matrix functions from
+routines.  ModelicaRes has methods to create and automatically label [xy plots],
+[Bode] and [Nyquist] plots, and [Sankey diagrams].  ModelicaRes can be scripted
+or used in an interactive [Python] session with math and matrix functions from
 [NumPy].
 
 Currently, ModelicaRes only loads Dymola/[OpenModelica]-formatted results
@@ -65,22 +67,6 @@ The [matplotlibrc file](examples/matplotlibrc) has some recommended revisions to
 [matplotlib]'s configuration directory.  See
 http://matplotlib.org/users/customizing.html for details.
 
-### Credits
-
-The main author is Kevin Davies.  Code has been included from:
-- Richard Murray (`control.freqplot`, part of
-  [python-control](http://sourceforge.net/apps/mediawiki/python-control)),
-- Joerg Raedler (method to expand a [Modelica] variable tree---from [DyMat]),
-- Jason Grout
-  ([ArrowLine](http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html)
-  class), and
-- Jason Heeris
-  ([efficient base-10 logarithm](http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html)).
-
-Suggestions and bug fixes have been provided by Arnout Aertgeerts, Kevin Bandy,
-Thomas Beutlich, Moritz Lauster, Martin Sjölund, Mike Tiller, and Michael
-Wetter.
-
 ### License terms and development
 
 ModelicaRes is published under a [BSD-compatible license](LICENSE.txt).  Please
@@ -105,6 +91,10 @@ suggestions, please
 [main website]: http://kdavies4.github.io/ModelicaRes
 [PyPI page]: http://pypi.python.org/pypi/ModelicaRes
 [GitHub repository]: https://github.com/kdavies4/ModelicaRes
+[xy plots]: http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.plot
+[Bode]: http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.bode
+[Nyquist]: http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.nyquist
+[Sankey diagrams]: http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.sankey
 
 [Modelica]: http://www.modelica.org/
 [Python]: http://www.python.org/

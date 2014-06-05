@@ -22,7 +22,10 @@ def build():
 
     # Update the download link.
     try:
-        lastversion = git.describe('--tags').stdout.rstrip()
+        commit = git('rev-list', '--tags', '--max-count=1').stdout.rstrip()
+        lastversion = git.describe('--tags', commit).stdout.rstrip()
+        # This is simpler but doesn't always return the latest tag:
+        #lastversion = git.describe('--tag', abbrev=0).stdout.rstrip()
     except ErrorReturnCode_128:
         pass # No tags recorded; leave download link as is
     else:
@@ -201,7 +204,7 @@ def static():
     indir = "../examples" # Directory with the mat files.
     outdir = "_static" # Directory where the images should be generated
     dpi = 90 # DPI for the HTML index images
-    dpi_small = 45 # DPI for the README images
+    dpi_small = 30 # DPI for the README images
     kwargs = dict(bbox_inches='tight', format='png') # Other savefig() options
 
     # ThreeTanks
@@ -250,6 +253,7 @@ def static():
     lins.bode(title="Bode plot of Modelica.Blocks.Continuous.PID\n"
                     "with varying differential time constant")
     plt.savefig(join(outdir, 'PIDs-bode.png'), dpi=dpi, **kwargs)
+    plt.savefig(join(outdir, 'PIDs-bode-small.png'), dpi=dpi_small, **kwargs)
     plt.close()
 
 

@@ -112,9 +112,6 @@ class LinRes(Res):
 
     - :meth:`bode` - Create a Bode plot of the system's response.
 
-    - :meth:`fbase` - Return the base filename from which the data was loaded,
-      without the directory or file extension.
-
     - :meth:`nyquist` - Create a Nyquist plot of the system's response.
 
     - :meth:`to_siso` - Return a SISO state-space system given input and output
@@ -124,10 +121,10 @@ class LinRes(Res):
 
     **Properties:**
 
-    - *basename* - Base filename from which the variables were loaded, without
-      the directory or extension
-
     - *dirname* - Directory from which the variables were loaded
+
+    - *fbase* - Base filename from which the variables were loaded, without
+      the directory or extension
 
     - *fname* - Filename from which the variables were loaded, with absolute
       path

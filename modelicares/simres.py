@@ -736,9 +736,6 @@ class SimRes(Res):
 
     **Properties:**
 
-    - *basename* - Base filename from which the variables were loaded, without
-      the directory or extension
-
     - *dirname* - Directory from which the variables were loaded
 
     - *fbase* - Base filename from which the results were loaded, without the
@@ -1734,7 +1731,7 @@ class SimResList(ResList):
     - *unique_names* - Return a dictionary of variable names that are not
       in all of the simulations.
 
-    - Also, the properties of :class:`SimRes` (*basename*, *dirname*, *fname*,
+    - Also, the properties of :class:`SimRes` (*dirname*, *fbase*, *fname*,
       *n_constants*, and *tool*) can be retrieve as a list across all of the
       linearizations; see the example below.
 

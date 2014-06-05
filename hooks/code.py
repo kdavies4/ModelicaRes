@@ -40,7 +40,7 @@ def build():
         util.delayed_exit()
 
     # Update the version number.
-    lastversion = git.describe('--tags', abbrev=0).stdout.rstrip()[1:]
+    lastversion = git.describe('--tag', abbrev=0).stdout.rstrip()[1:]
     version = raw_input("Enter the version number (last was %s): "
                         % lastversion)
     # In modelicares/__init__.py:
@@ -91,7 +91,7 @@ def release():
     if not util.yes("Do you want to upload to PyPI (this is permanent!) "
                     "(y/n)?"):
         util.delayed_exit()
-    setup.sdist.upload(formats='gztar,zip')
+    setup.sdist.upload()
 
     # Reset the version number.
     # In modelicares/__init__.py:

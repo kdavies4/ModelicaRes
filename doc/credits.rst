@@ -3,7 +3,7 @@ Credits
 
 The main author is Kevin Davies.  Code has been included from:
 
-- Richard Murray (:mod:`control.freqplot`, part of python-control_),
+- Richard Murray (:mod:`control.freqplot`---part of python-control_),
 - Joerg Raedler (method to expand a Modelica_ variable tree---from DyMat_),
 - Jason Grout (`ArrowLine class`_), and
 - Jason Heeris (`efficient base-10 logarithm`_).

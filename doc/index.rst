@@ -15,10 +15,10 @@ interpret results, and create publishable figures.  It can be used to
 - export data to various formats via pandas_.
 
 The figures are generated via matplotlib_, which offers a rich set of plotting
-routines.  ModelicaRes has methods to automatically create and label xy plots,
-Bode and Nyquist plots, and Sankey diagrams.  ModelicaRes can be scripted or
-used in an interactive Python_ session with math and matrix functions from
-NumPy_.
+routines.  ModelicaRes has methods to create and automatically label
+`xy plots`_, Bode_ and Nyquist_ plots, and `Sankey diagrams`_.  ModelicaRes can
+be scripted or used in an interactive Python_ session with math and matrix
+functions from NumPy_.
 
 .. image:: _static/browse.png
    :scale: 30 %
@@ -57,8 +57,6 @@ tools to set up and manage simulation experiments.  The
 :mod:`~modelicares.texunit` submodule has functions to translate Modelica_
 *unit* and *displayUnit* strings into LaTeX_-formatted strings.  The last
 submodule, :mod:`~modelicares.util`, has supporting functions and classes.
-
-For a list of changes, please see the `change log <changelog.html>`_.
 
 **Installation**
 
@@ -125,9 +123,14 @@ suggestions, please `share them
   exps
   texunit
   util
+  changelog
 
 .. _main website: http://kdavies4.github.io/ModelicaRes/
 .. _PyPI page: http://pypi.python.org/pypi/ModelicaRes/
+.. _xy plots: http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.plot
+.. _Bode: http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.bode
+.. _Nyquist: http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.nyquist
+.. _Sankey diagrams: http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.sankey
 
 .. _Modelica: http://www.modelica.org
 .. _Python: http://www.python.org
