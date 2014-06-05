@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '',
+        VERSION:     '0.12.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -43,7 +43,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.12.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -55,20 +55,20 @@
   <div class="section" id="change-log">
 <h1>Change log<a class="headerlink" href="#change-log" title="Permalink to this headline">¶</a></h1>
 <p>The releases are numbered according to the <a class="reference external" href="http://semver.org">Semantic Versioning Specification</a>.</p>
-<p><a href="#id2"><span class="problematic" id="id3">v0.12.0_</span></a> (2014-x-xx) &#8211; Updates:</p>
+<p><a class="reference external" href="https://github.com/kdavies4/ModelicaRes/archive/v0.12.0.zip">v0.12.0</a> (2014-6-5) &#8211; Updates:</p>
 <blockquote>
 <div><ul class="simple">
 <li>Fixed issues with <a class="reference external" href="http://en.wikipedia.org/wiki/Unicode">Unicode</a> in Python 3.</li>
 <li>Fixed sorting and ordering of <a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> and
 <a class="reference internal" href="linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instances in Python 3.</li>
 <li><tt class="xref py py-meth docutils literal"><span class="pre">arrays()</span></tt> is now available as
-<tt class="xref py py-meth docutils literal"><span class="pre">array()</span></tt> instead.</li>
-<li><a class="reference internal" href="simres.html#modelicares.simres.SimRes.n_constants" title="modelicares.simres.SimRes.n_constants"><tt class="xref py py-meth docutils literal"><span class="pre">n_constants()</span></tt></a>,
-<tt class="xref py py-meth docutils literal"><span class="pre">fbase()</span></tt>,
-<tt class="xref py py-meth docutils literal"><span class="pre">basedir()</span></tt>
-<tt class="xref py py-meth docutils literal"><span class="pre">fbase()</span></tt>, and
-<tt class="xref py py-meth docutils literal"><span class="pre">basedir()</span></tt> are now properties instead
-of methods.</li>
+<a class="reference internal" href="simres.html#modelicares.simres.Variable.array" title="modelicares.simres.Variable.array"><tt class="xref py py-meth docutils literal"><span class="pre">array()</span></tt></a> instead.</li>
+<li><em>fbase</em> is now a property instead of a method of
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> and
+<a class="reference internal" href="linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>.  Likewise, <em>n_constants</em> is now a
+property of <a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> and <em>basedir</em> is a property
+of <a class="reference internal" href="simres.html#modelicares.simres.SimResList" title="modelicares.simres.SimResList"><tt class="xref py py-class docutils literal"><span class="pre">SimResList</span></tt></a> and
+<a class="reference internal" href="linres.html#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a>.</li>
 <li>Added <em>dirname</em> as a property to <a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> and
 <a class="reference internal" href="linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>.</li>
 <li><em>basename</em>, <em>dirname</em>, <em>fname</em>, <em>n_constants</em>, <em>sys</em>, and <em>tool</em> are now
@@ -79,7 +79,7 @@ linearizations in those lists.</li>
 <li>Deleted <tt class="xref py py-meth docutils literal"><span class="pre">fnames()</span></tt>.  Use the <em>fname</em>
 property of <a class="reference internal" href="simres.html#modelicares.simres.SimResList" title="modelicares.simres.SimResList"><tt class="xref py py-class docutils literal"><span class="pre">SimResList</span></tt></a> instead.</li>
 <li><a class="reference internal" href="simres.html#modelicares.simres.Variable.is_constant" title="modelicares.simres.Variable.is_constant"><tt class="xref py py-meth docutils literal"><span class="pre">is_constant()</span></tt></a> is now a property instead
-of a method.</li>
+of a method of <a class="reference internal" href="simres.html#modelicares.simres.Variable" title="modelicares.simres.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a>.</li>
 <li><tt class="xref py py-meth docutils literal"><span class="pre">sort()</span></tt> now correctly sorts <a class="reference internal" href="simres.html#modelicares.simres.SimResList" title="modelicares.simres.SimResList"><tt class="xref py py-class docutils literal"><span class="pre">SimResList</span></tt></a>
 and <a class="reference internal" href="linres.html#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a> by absolute file path.</li>
 <li>Improved the generation of defaults for the Bode and Nyquist plots.</li>
@@ -402,6 +402,7 @@ time.</li>
             </a></p>
 <h3><a href="index.html">Table of Contents</a></h3>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
@@ -411,7 +412,6 @@ time.</li>
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
@@ -428,8 +428,8 @@ time.</li>
 <script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
   <ul>
     <li><a itemprop="downloadUrl"
-           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
-           rel="nofollow">Latest version (v0.11.1)</a></li>
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.0-33-g56300b9.tar.gz"
+           rel="nofollow">Latest version<br>(v0.11.0-33-g56300b9, 2014-06-05)</a></li>
     <li><a href="changelog.html">Change log</a></li>
   </ul>
         </div>
@@ -445,12 +445,12 @@ time.</li>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.12.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jun 04, 2014.
+      Last updated on Jun 05, 2014.
     </div>
   </body>
 </html>

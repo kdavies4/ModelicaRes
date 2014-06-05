@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '',
+        VERSION:     '0.12.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -28,7 +28,7 @@
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
     <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
     <link rel="next" title="modelicares" href="modelicares.html" />
-    <link rel="prev" title="ModelicaRes" href="index.html" />
+    <link rel="prev" title="Credits" href="credits.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment, Modelica plot, analysis, sort, filter, browse, script, data, diagram, export">
     <meta name="author" content="Kevin Davies">
@@ -49,9 +49,9 @@
           <a href="modelicares.html" title="modelicares"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="ModelicaRes"
+          <a href="credits.html" title="Credits"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.12.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -62,18 +62,18 @@
             
   <div class="section" id="loadres-script">
 <h1><tt class="docutils literal"><span class="pre">loadres</span></tt> script<a class="headerlink" href="#loadres-script" title="Permalink to this headline">¶</a></h1>
-<p>Load results from <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation(s) and/or linearization(s) and provide
-a <a class="reference external" href="http://www.python.org/">Python</a> session to analyze the results.</p>
+<p>Load results from <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation(s) and/or linearization(s) and provide a
+<a class="reference external" href="http://www.python.org/">Python</a> session to analyze the results.</p>
 <p>This script can be executed from the command line.  It accepts as arguments the
 names of result files or directories with result files.  Wildcards can be used.
 If no arguments are given, then the script provides a dialog to choose files or
 a folder.  After loading files, it provides working session of <a class="reference external" href="http://www.ipython.org/">IPython</a> with the results available.  <a class="reference external" href="http://www.scipy.org/PyLab">PyLab</a> is imported
 (<tt class="docutils literal"><span class="pre">from</span> <span class="pre">pylab</span> <span class="pre">import</span> <span class="pre">*</span></tt>) to provide many functions of <a class="reference external" href="http://numpy.scipy.org/">NumPy</a> and <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>
 (e.g., <tt class="xref py py-meth docutils literal"><span class="pre">sin()</span></tt> and <tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt>).  The essential classes and functions of
-<a class="reference external" href="http://kdavies4.github.io/ModelicaRes">ModelicaRes</a> are imported as well (<tt class="docutils literal"><span class="pre">from</span> <span class="pre">modelicares</span> <span class="pre">import</span> <span class="pre">*</span></tt>).</p>
+ModelicaRes are imported as well (<tt class="docutils literal"><span class="pre">from</span> <span class="pre">modelicares</span> <span class="pre">import</span> <span class="pre">*</span></tt>).</p>
 <p><strong>Setup and example:</strong></p>
-<p>Open a command prompt in the <em>examples</em> folder from the <a class="reference external" href="http://kdavies4.github.io/ModelicaRes">ModelicaRes</a>
-distribution and execute the following command:</p>
+<p>Open a command prompt in the <em>examples</em> folder from the ModelicaRes distribution
+and execute the following command:</p>
 <div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>loadres ChuaCircuit.mat PID.mat
 A simulation result has been loaded into sim <span class="o">(</span>a SimRes instance<span class="o">)</span>.
 A linearization result has been loaded into lin <span class="o">(</span>a LinRes instance<span class="o">)</span>.
@@ -99,6 +99,7 @@ or online as a <a class="reference external" href="http://nbviewer.ipython.org/g
             </a></p>
 <h3><a href="index.html">Table of Contents</a></h3>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
 <li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb">Advanced topics</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
@@ -108,7 +109,6 @@ or online as a <a class="reference external" href="http://nbviewer.ipython.org/g
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
@@ -125,8 +125,8 @@ or online as a <a class="reference external" href="http://nbviewer.ipython.org/g
 <script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
   <ul>
     <li><a itemprop="downloadUrl"
-           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.1.tar.gz"
-           rel="nofollow">Latest version (v0.11.1)</a></li>
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.0-33-g56300b9.tar.gz"
+           rel="nofollow">Latest version<br>(v0.11.0-33-g56300b9, 2014-06-05)</a></li>
     <li><a href="changelog.html">Change log</a></li>
   </ul>
         </div>
@@ -146,14 +146,14 @@ or online as a <a class="reference external" href="http://nbviewer.ipython.org/g
           <a href="modelicares.html" title="modelicares"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="ModelicaRes"
+          <a href="credits.html" title="Credits"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.12.0 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jun 04, 2014.
+      Last updated on Jun 05, 2014.
     </div>
   </body>
 </html>
