@@ -1,4 +1,4 @@
-personal_ws-1.1 en 147 
+personal_ws-1.1 en 150 
 VarList
 ndims
 asin
@@ -12,11 +12,13 @@ lineColor
 dymosim
 outerProduct
 acos
+ec
 arrowedgewidth
 textString
 connectorSizing
 defaultPrefixes
 der
+fe
 sin
 MapleSim
 legendHorizontal
@@ -47,6 +49,7 @@ initialScale
 GenerateEvents
 blockquote
 pathnames
+deeadf
 startTime
 HorizontalCylinder
 spatialDistribution

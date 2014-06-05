@@ -5,11 +5,11 @@ import os
 import shutil
 import sys
 import sh
+#import webbrowser
 
 from sh import git, python, sphinx_build
 from glob import glob
 from collections import namedtuple
-
 from modelicares import util
 
 BUILD_DIR = 'build/html'
@@ -113,13 +113,13 @@ def release():
     util.replace(html_fnames, [('"\./examples/', '"./examples2/')])
 
     # Copy but rename the files referenced by searchtools.js.
-    src = os.path.join(BUILD_DIR, '_sources')
-    for fname in os.listdir(src):
-        shutil.copy(os.path.join(src, fname), '..')
-    util.replace("../javascripts/searchtools.js", [("\+ '_sources/' ", '')])
-    git.add(sh.glob('../*.txt'))
+    #src = os.path.join(BUILD_DIR, '_sources')
+    #for fname in os.listdir(src):
+    #    shutil.copy(os.path.join(src, fname), '..')
+    #util.replace("../javascripts/searchtools.js", [("\+ '_sources/' ", '')])
+    #git.add(sh.glob('../*.txt'))
     # Not sure why this isn't already added:
-    git.add("../javascripts/searchtools.js")
+    #git.add("../javascripts/searchtools.js")
 
     # Update the sitemap.
     print(python('sitemap_gen.py', config="sitemap_conf.xml"))
@@ -131,6 +131,8 @@ def release():
         pass # No changes to commit
 
     # If desired, push the changes to origin.
+    #webbrowser.open('build/html/index.html')
+    #sh.xdg_open('build/html/index.html')
     print("The gh-pages branch has been updated and is currently checked out.")
     if util.yes("Do you want to rebase it and push the changes to "
                 "origin (y/n)?"):

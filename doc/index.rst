@@ -5,78 +5,58 @@
 **Python utilities to set up and analyze Modelica simulation experiments**
 
 ModelicaRes is a free, open-source tool to manage Modelica_ simulations,
-interpret results, and create publishable figures.  It is possible to
+interpret results, and create publishable figures.  It can be used to
 
-- auto-generate simulation scripts,
-- browse data,
+- generate simulation scripts,
+- load and browse data,
 - perform custom calculations,
 - filter and sort groups of results,
 - produce various plots and diagrams, and
 - export data to various formats via pandas_.
 
 The figures are generated via matplotlib_, which offers a rich set of plotting
-routines.  ModelicaRes includes functions to automatically pre-format and label
-some figures, like xy plots, Bode and Nyquist plots, and Sankey diagrams.
-ModelicaRes can be scripted or used in an interactive Python_ session with math
-and matrix functions from NumPy_.
+routines.  ModelicaRes has methods to automatically create and label xy plots,
+Bode and Nyquist plots, and Sankey diagrams.  ModelicaRes can be scripted or
+used in an interactive Python_ session with math and matrix functions from
+NumPy_.
 
 .. image:: _static/browse.png
-   :scale: 45 %
+   :scale: 30 %
    :alt: Variable browser
 
 .. image:: _static/ChuaCircuit.png
-   :scale: 45 %
+   :scale: 30 %
    :alt: Plot of Chua circuit
 
-|
-
 .. image:: _static/ThreeTanks.png
-   :scale: 45 %
-   :alt: Sankey diagrams of three tanks model
-
-.. image:: _static/hspace.png
-   :scale: 250 %
+   :scale: 30 %
+   :alt: Sankey digarams of three tanks model
 
 .. image:: _static/PIDs-bode.png
-   :scale: 45 %
+   :scale: 30 %
    :alt: Bode plot of PID with varying differential time constant
-
 
 Currently, ModelicaRes only loads Dymola/OpenModelica_-formatted results
 (\*.mat), but the loading functions are modular so that other formats can be
 added easily.
 
 Please see the tutorial, which is available as an `IPython notebook
-<https://github.com/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_
+<https://github.com/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb>`_
 or online as a `static page
-<http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_.
-The links below and in the sidebar provide the full documentation and many
-more examples.
-
-.. toctree::
-
-  Tutorial <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>
-  Advanced topics <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb>
-  loadres
-  modelicares
-  simres
-  linres
-  exps
-  texunit
-  util
-  glossary
+<http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb>`_.
+The links in the sidebar provide the full documentation and many more examples.
 
 The `loadres script <loadres.html>`_ helps to load simulation and linearization
 results from the command line.  The top-level module, :mod:`modelicares`,
 provides direct access to the most important classes and functions.  Others must
-be accessed through their submodules.  The :mod:`modelicares.simres` submodule
+be accessed through their submodules.  The :mod:`~modelicares.simres` submodule
 has classes to load, analyze, and plot simulation results.  The
-:mod:`modelicares.linres` submodule has a class to load, analyze, and plot
-results from linearizing model(s).  The :mod:`modelicares.exps` submodule has
+:mod:`~modelicares.linres` submodule has a class to load, analyze, and plot
+results from linearizing model(s).  The :mod:`~modelicares.exps` submodule has
 tools to set up and manage simulation experiments.  The
-:mod:`modelicares.texunit` submodule has functions to translate Modelica_ *unit*
-and *displayUnit* strings into LaTeX_-formatted strings.  The last submodule,
-:mod:`modelicares.util`, has general supporting functions and classes.
+:mod:`~modelicares.texunit` submodule has functions to translate Modelica_
+*unit* and *displayUnit* strings into LaTeX_-formatted strings.  The last
+submodule, :mod:`~modelicares.util`, has supporting functions and classes.
 
 For a list of changes, please see the `change log <changelog.html>`_.
 
@@ -106,33 +86,17 @@ Some of the required packages may not install automatically.
 - The GUIs require Qt_, which can be installed via PyQt4_, guidata_, or PySide_.
 
 The `matplotlibrc file
-<https://github.com/kdavies4/ModelicaRes/blob/master/examples/matplotlibrc>`_
-has some recommended revisions to matplotlib_'s defaults.  To use it, copy it to
-the working directory or matplotlib_'s configuration directory.  See
+<https://github.com/kdavies4/ModelicaRes/blob/release/matplotlibrc>`_ has some
+recommended revisions to matplotlib_'s defaults.  To use it, copy it to the
+working directory or matplotlib_'s configuration directory.  See
 http://matplotlib.org/users/customizing.html for details.
-
-**Credits**
-
-The main author is Kevin Davies.  Code has been included from:
-
-- Richard Murray (`python-control`_, `as repackaged
-  <https://pypi.python.org/pypi/control>`_ by James Goppert),
-- Joerg Raedler (method to expand a Modelica_ variable tree---from DyMat_),
-- Jason Grout (`ArrowLine class`_), and
-- Jason Heeris (`efficient base-10 logarithm`_),
-
-Suggestions and bug fixes have been provided by Arnout Aertgeerts, Kevin Bandy,
-Thomas Beutlich, Moritz Lauster, Martin Sjölund, Mike Tiller, and Michael
-Wetter.
 
 **License terms and development**
 
-ModelicaRes is published under a `BSD-compatible license <license.html>`_.
-Please share any modifications you make (preferably as a pull request to the
-``master`` branch of the `GitHub repository`_) in order to help others.
-There are useful development scripts in the `hooks folder
-<https://github.com/kdavies4/ModelicaRes/blob/master/hooks/>`_.  If you find a
-bug, please `report it
+ModelicaRes is published under a `BSD-compatible license <license.html>`_.  The
+development site is https://github.com/kdavies4/ModelicaRes.  Please share any
+modifications you make (preferably as a pull request to the ``master`` branch at
+that site) in order to help others.  If you find a bug, please `report it
 <https://github.com/kdavies4/ModelicaRes/issues/new>`_.  If you have
 suggestions, please `share them
 <https://github.com/kdavies4/ModelicaRes/wiki/Suggestions>`_.
@@ -148,9 +112,22 @@ suggestions, please `share them
 - PySimulator_: elaborate GUI; supports FMI_
 
 
+.. toctree::
+  :hidden:
+
+  credits
+  Tutorial <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>
+  Advanced topics <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb>
+  loadres
+  modelicares
+  simres
+  linres
+  exps
+  texunit
+  util
+
 .. _main website: http://kdavies4.github.io/ModelicaRes/
 .. _PyPI page: http://pypi.python.org/pypi/ModelicaRes/
-.. _GitHub repository: https://github.com/kdavies4/ModelicaRes
 
 .. _Modelica: http://www.modelica.org
 .. _Python: http://www.python.org
@@ -175,6 +152,3 @@ suggestions, please `share them
 .. _CSV: http://en.wikipedia.org/wiki/Comma-separated_values
 .. _netCDF: http://www.unidata.ucar.edu/software/netcdf
 .. _FMI: https://www.fmi-standard.org
-.. _python-control: http://sourceforge.net/apps/mediawiki/python-control
-.. _ArrowLine class: http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html
-.. _efficient base-10 logarithm: http://www.mail-archive.com/matplotlib-users@lists.sourceforge.net/msg14433.html

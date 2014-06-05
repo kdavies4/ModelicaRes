@@ -52,7 +52,7 @@ from modelicares.util import (add_arrows, add_hlines, add_vlines, ArrowLine,
 from modelicares.exps import (doe, Experiment, gen_experiments, modelica_str,
                               ParamDict, read_params, write_params,
                               write_script)
-# TODO: Add run_models and include in the doc list once supported.
+# TODO: Add run_models and include in the doc list once implemented.
 from modelicares.texunit import number_label, quantity_str, unit2tex
 
 

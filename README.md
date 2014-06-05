@@ -4,10 +4,10 @@ ModelicaRes
 **Python utilities to set up and analyze Modelica simulation experiments**
 
 ModelicaRes is a free, open-source tool to manage [Modelica] simulations,
-interpret results, and create publishable figures in [Python].  It is possible
+interpret results, and create publishable figures in [Python].  It can be used
 to
-- auto-generate simulation scripts,
-- browse data,
+- generate simulation scripts,
+- load and browse data,
 - perform custom calculations,
 - filter and sort groups of results,
 - produce various plots and diagrams, and
@@ -18,10 +18,10 @@ to
 ![Sankey diagram of three tanks example](doc/_static/ThreeTanks-small.png)
 
 The figures are generated via [matplotlib], which offers a rich set of plotting
-routines.  ModelicaRes includes functions to automatically pre-format and
-label some figures, like xy plots, Bode and Nyquist plots, and Sankey diagrams.
-ModelicaRes can be scripted or used in an interactive [Python] session with math
-and matrix functions from [NumPy].
+routines.  ModelicaRes has methods to automatically create and label xy plots,
+Bode and Nyquist plots, and Sankey diagrams.  ModelicaRes can be scripted or
+used in an interactive [Python] session with math and matrix functions from
+[NumPy].
 
 Currently, ModelicaRes only loads Dymola/[OpenModelica]-formatted results
 (*.mat), but the loading functions are modular so that other formats can be
