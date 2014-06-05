@@ -17,13 +17,26 @@ BUILD_DIR = 'build/html'
 def build():
     """Build/make the HTML documentation.
     """
+
+    # Rebuild the static images.
     if util.yes("Do you want to rebuild the static images (y/n)?"):
         static()
 
+    # Update the download link.
+    lastversion = git.describe('--tag', abbrev=0).stdout.rstrip()
+    date = git.log('-1', lastversion, date='short', format='%ad').stdout[8:18]
+    rpls = [('(ModelicaRes)-.+(\.tar)', r'\1-%s\2' % lastversion[1:]),
+            ('(Latest version<br>\().+(\)</a>)', r'\1%s, %s\2' % (lastversion,
+                                                                  date)),
+           ]
+    util.replace('_templates/download.html', rpls)
+
+    # Build the documentation.
     make_dirs()
     sphinx = sphinx_build.bake(b='html', d='build/doctrees')
     print(sphinx('.', BUILD_DIR))
 
+    # Spellcheck.
     if util.yes("Do you want to spellcheck the HTML documentation (y/n)?"):
         spellcheck()
 
