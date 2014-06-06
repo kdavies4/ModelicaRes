@@ -1,5 +1,6 @@
 #!/usr/bin/python
-# Script to clean, build, and release the ModelicaRes code.
+"""Script to clean, build, and release the ModelicaRes code.
+"""
 
 # pylint: disable=E0611
 
@@ -25,12 +26,12 @@ def build():
 
     # Check that README.txt is a valid ReST file (otherwise, the PyPI page will
     # not show correctly).
-    README = 'README.txt'
-    ERROR_START = 'Docutils System Messages\n'
-    with open(README, 'r') as rstfile:
+    readme = 'README.txt'
+    error_start = 'Docutils System Messages\n'
+    with open(readme, 'r') as rstfile:
         parsed = publish_string(rstfile.read())
-    if ERROR_START in parsed:
-        print("Errors in " + README)
+    if error_start in parsed:
+        print("Errors in " + readme)
         util.delayed_exit()
 
     # Run other setup tests.
@@ -46,11 +47,11 @@ def build():
     set_version("'%s'" % version)
     # In CHANGES.txt:
     date = strftime('%Y-%-m-%-d')
-    rpls = [('vx\.x\.x_ \(YYYY-MM-DD\)( -- Updates:)',
+    rpls = [(r'vx\.x\.x_ \(YYYY-MM-DD\)( -- Updates:)',
              r'v{v}_ ({d})\1'.format(v=version, d=date)),
-            ('v%s_ \(.+\)( -- Updates:)' % version,
+            (r'v%s_ \(.+\)( -- Updates:)' % version,
              r'v{v}_ ({d})\1'.format(v=version, d=date)),
-            ('(.. _)vx\.x\.x(.+)vx\.x\.x(\.zip)',
+            (r'(.. _)vx\.x\.x(.+)vx\.x\.x(\.zip)',
              r'\1v{v}\2v{v}\3'.format(v=version))]
     util.replace('CHANGES.txt', rpls)
 
@@ -97,34 +98,35 @@ def release():
     set_version('None')
     # In CHANGES.txt:
     newheading = 'vx.x.x_ (YYYY-MM-DD) -- Updates:'
-    newlink = '.. _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip'
-    rpls = [('(<http://semver.org>`_\.)',
+    newlink = ('.. _vx.x.x: '
+               'https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip')
+    rpls = [(r'(<http://semver.org>`_\.)',
              r'\1\n\n' + newheading),
             (r'\n(\nv[0-9]+\.[0-9]+\.[0-9]+_)',
              newlink + r'\n\1')]
     util.replace('CHANGES.txt', rpls)
 
 
-F = namedtuple("F", ['f', 'description'])
-funcs = {'clean'      : F(clean,   "Clean/remove the built code."),
-         'build'      : F(build,   "Build/make the code."),
-         'release'    : F(release, "Release/publish the code."),
-        }
+Action = namedtuple("Action", ['f', 'description'])
+ACTIONS = {'clean'   : Action(clean, "Clean/remove the built code."),
+           'build'   : Action(build, "Build/make the code."),
+           'release' : Action(release, "Release/publish the code."),
+          }
 
 def funcs_str():
     """Return a string listing the valid functions and their descriptions.
     """
     return "\n".join(["  %s: %s" % (arg.ljust(8), function.description)
-                      for (arg, function) in funcs.items()])
+                      for (arg, function) in ACTIONS.items()])
 
 
 # Main
 if len(sys.argv) != 2:
     raise SystemExit("Exactly one argument is required; valid args are\n"
                      + funcs_str())
-arg = sys.argv[1]
+ACTION = sys.argv[1]
 try:
-    funcs[arg].f()
+    ACTIONS[ACTION].f()
 except KeyError:
     raise SystemExit("Do not know how to handle %s; valid args are\n%s"
-                     % (arg, funcs_str()))
+                     % (ACTION, funcs_str()))

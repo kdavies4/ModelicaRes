@@ -22,6 +22,7 @@ Add to *.git/config*:
 
     [alias]
 	    diff-matplotlibrc = !bash `git rev-parse --show-toplevel`/hooks/diff-matplotlibrc.sh
+        pylint = !bash `git rev-parse --show-toplevel`/hooks/pylint.sh
 	    doc = !bash `git rev-parse --show-toplevel`/hooks/doc.sh
 	    code = !bash `git rev-parse --show-toplevel`/hooks/code.sh
 	    build = !bash `git rev-parse --show-toplevel`/hooks/build.sh
@@ -69,11 +70,16 @@ To compare the [matplotlibrc](../matplotlibrc) file to the user's configuration:
 
     git diff-matplotlibrc
 
+To run [pylint](http://www.pylint.org/) on all of the source files:
+
+    git pylint
+
 #### Development workflow
 
 All releases and updates are on the `master` branch.  During the build process,
 (`git code build`), releases are tagged  as "v*major*.*minor*.*micro*", where
-*major*, *minor*, and *micro* are the integer parts of the version number.  The unreleased updates have an "UNRELEASED COPY.md" file in the base folder with the
+*major*, *minor*, and *micro* are the integer parts of the version number.  The
+unreleased updates have an "UNRELEASED COPY.md" file in the base folder with the
 commit date/time and the author.
 
 The version number is recorded in
@@ -81,7 +87,6 @@ The version number is recorded in
 unreleased copies.  When the documentation is built (`git doc build`), the
 download link and text is updated with information from the last tag, which
 corresponds to the last release.
-
 
 
 [git]: http://git-scm.com/

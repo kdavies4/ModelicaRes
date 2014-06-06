@@ -75,7 +75,7 @@ from control.ctrlutil import unwrap
 from modelicares.util import add_hlines, add_vlines
 from modelicares.texunit import quantity_str, number_label
 
-# pylint: disable=C0103, R0913, R0914
+# pylint: disable=C0103, E1101
 
 # Units
 rad = 1
@@ -155,7 +155,8 @@ def require_SISO(func):
     """
     @wraps(func)
     def wrapped(sys, *args, **kwargs):
-
+        """Function that requires that the system is SISO
+        """
         if sys.inputs > 1 or sys.outputs > 1:
             raise NotImplementedError("This function is currently only "
                                       "implemented for SISO systems.")
@@ -169,7 +170,9 @@ def overload_freqs(func):
     """
     @wraps(func)
     def wrapped(sys, freqs=None, in_Hz=True, *args, **kwargs):
-
+        """Decorator that allows frequencies to be specified via (min, max) or
+        default (*None*), as well as a list of frequencies.
+        """
         if freqs is None:
             f = default_frequency_range(sys, in_Hz)
             # TODO: Do something smarter for discrete.
@@ -194,7 +197,8 @@ def via_system(func):
     """
     @wraps(func)
     def wrapped(sys, f, *args, **kwargs):
-
+        """Function that accepts a system.
+        """
         mag, phase, __ = sys.freqresp(f/(rad/s))
         mag = np.squeeze(mag)
         phase = np.squeeze(phase)*rad
@@ -333,6 +337,8 @@ def nyquist_plot(mag, phase, f, in_Hz=True, label=None, mark=False,
        >>> sys = ss("1. -2; 3. -4", "5.; 7", "6. 8", "9.")
        >>> ax = nyquist_plot(sys)
     """
+
+
     # Compute the primary curve.
     x = np.multiply(mag, np.cos(phase))
     y = np.multiply(mag, np.sin(phase))

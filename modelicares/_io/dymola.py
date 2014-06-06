@@ -54,7 +54,7 @@ from control.matlab import ss
 from modelicares.simres import _VarDict, _select, _apply_function, _swap
 from modelicares.simres import Variable as GenericVariable
 
-# pylint: disable=C0103, C0325, R0912, R0914, W0221, W0631
+# pylint: disable=C0103
 
 PY2 = sys.version < '3'
 
@@ -68,6 +68,7 @@ class Variable(GenericVariable):
     """Specialized namedtuple to represent a variable in a model simulated by
     Dymola or OpenModelica
     """
+    # pylint: disable=W0221
 
     @_swap           # We want the times (t) to be the first argument,
     @_apply_function # but for efficiency, it's best to
@@ -250,6 +251,7 @@ def loadsim(fname, constants_only=False):
     >>> variables['L.v'].unit
     'V'
     """
+
     # This does the task of mfiles/traj/tload.m from the Dymola installation.
 
     def parse(description):
@@ -434,6 +436,7 @@ if __name__ == '__main__':
         else:
             raise IOError("Could not find the examples folder.")
         try:
+            # pylint: disable=W0631
             os.symlink(example_dir, 'examples')
         except AttributeError:
             raise AttributeError("This method of testing isn't supported in "

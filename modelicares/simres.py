@@ -51,7 +51,7 @@ from modelicares import util
 from modelicares._res import Res, ResList
 from modelicares.texunit import unit2tex, number_label
 
-# pylint: disable=C0103, C0302, E0213, R0912, R0913, R0914, R0915, W0102, W0142
+# pylint: disable=C0103, E0213, W0102
 
 def _apply_function(func):
     """Return a method that applies a function to its output, given a
@@ -1663,6 +1663,9 @@ class SimResList(ResList):
     - :class:`SimResList`\(*filespec1*, *filespec2*, ...): Loads all files
       matching or contained by *filespec1*, *filespec2*, etc. as above.
 
+         Each file will be opened once at most; duplicate filename matches are
+         ignored.
+
     **Built-in methods**
 
     The list has all of the methods
@@ -2120,7 +2123,7 @@ class SimResList(ResList):
           change over time
 
         - *tolerance*: Maximum variation allowed for values to still be
-          considered the same.
+          considered the same
 
         **Example:**
 

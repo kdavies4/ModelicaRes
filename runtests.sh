@@ -2,15 +2,11 @@
 # Run all of the tests on ModelicaRes.
 
 # Get a list of the tests.
-tests="tests/tests.txt"
-if [ "$1" != "--travis" ]; then
-    module_tests=`find modelicares -name "*.py" ! -name "_gui.py"`
-    tests="$tests $module_tests"
-fi
-# Currently, the embedded doctests all fail on Travis CI (may be due to numpy).
+module_tests=$(find modelicares -name "*.py" ! -name "_gui.py")
+txt_tests=$(find tests -name "*.txt")
 
 # Run the tests.
-for f in $tests; do
+for f in $module_tests $txt_tests; do
     for python in python python3; do
         echo "Testing $f using $python..."
         $python -m doctest $f

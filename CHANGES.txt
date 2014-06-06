@@ -34,7 +34,7 @@ v0.12.0_ (2014-6-5) -- Updates:
    - Fixed an issue with slicing a :class:`~modelicares.simres.SimResList`.
    - Removed :meth:`~modelicares.util.pow10`.  It is not used internally and
      probably is not very helpful externally.
-   - Change the default value of *Roman* in
+   - Change the default value of *roman* in
      :meth:`~modelicares.texunit.quantity_str` to *False*.
    - Renamed and/or reordered the arguments of
      :meth:`~modelicares.util.setup_subplots`, and

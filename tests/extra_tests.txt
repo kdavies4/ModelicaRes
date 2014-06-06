@@ -1,0 +1,29 @@
+>>> from modelicares import *
+
+>>> sim = SimRes('tests/unicode.mat')
+>>> sim['DeltaTheta'].description == u'\u0394\u0398'
+True
+
+>>> sim.plot('DeltaTheta', title="The y axis label should be $\Delta\Theta$.",
+...          label='tests/unicode') # doctest: +ELLIPSIS
+(<matplotlib.axes.AxesSubplot object at 0x...>, None)
+
+>>> save(['pdf'])
+Saved tests/unicode.pdf
+
+
+# modelicares.simres.SimResList methods
+# -------------------------------------
+
+# Loading various file formats
+>>> sims = SimResList('tests')
+>>> sims.sort()
+>>> print(sims) # doctest: +ELLIPSIS
+List of simulation results (SimRes instances) from the following files
+in the .../tests directory:
+   DoublePendulum_Dymola-2012-SaveAs.mat
+   DoublePendulum_Dymola-2014FD01-ExportAsPlotted.mat
+   DoublePendulum_Dymola-2014FD01.mat
+   DoublePendulum_Dymola-7.4.mat
+   DoublePendulum_OpenModelica-1.8.mat
+   unicode.mat

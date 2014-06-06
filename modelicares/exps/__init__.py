@@ -79,7 +79,7 @@ import modelicares.util as util
 
 from modelicares.exps import doe
 
-# pylint: disable=C0103, R0913, R0914, W0102, W0120, W0142, W0631
+# pylint: disable=C0103, W0102
 
 class Experiment(namedtuple('Experiment', ['model', 'params', 'args'])):
     """namedtuple_ to represent a simulation experiment
@@ -330,6 +330,7 @@ def read_params(names, fname='dsin.txt'):
             except AttributeError:
                 pass # Try the next pattern.
         else:
+            # pylint: disable=W0120
             raise AssertionError(
                 "Parameter %s does not exist or is not formatted as expected "
                 "in %s." % (name, fname))
@@ -669,6 +670,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
     In *examples/ChuaCircuit/run-sims2.mos*, there are commands to run and save
     results from twelve simulations.
     """
+
     # Preprocess the arguments.
     if not isinstance(experiments, (list, GeneratorType)):
         experiments = [experiments]
@@ -839,6 +841,7 @@ if __name__ == '__main__':
         else:
             raise IOError("Could not find the examples folder.")
         try:
+            # pylint: disable=W0631
             os.symlink(example_dir, 'examples')
         except AttributeError:
             raise AttributeError("This method of testing isn't supported in "

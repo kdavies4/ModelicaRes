@@ -52,6 +52,7 @@ def compare_fnames(func):
 class Res(object):
     """Base class for a Modelica_ result
     """
+    # pylint: disable=E0213
 
     def __init__(self, fname):
         self.fname = os.path.abspath(fname)

@@ -22,7 +22,7 @@ import re
 
 from modelicares.util import si_prefix, get_pow1000
 
-# pylint: disable=C0103, R0913, W0622
+# pylint: disable=C0103, W0622
 
 # Special replacements for unit strings in tex
 REPLACEMENTS = [(re.compile(replacement[0]), replacement[1])
@@ -115,10 +115,6 @@ def quantity_str(number, unit='', use_si=True, format='%g', times=r'\,',
 
     - *format*: Modified Python_ number formatting string
 
-         If LaTeX-formatted exponentials should be applied, then use an
-         uppercase exponential formatter ('E' or 'G').  A lowercase exponential
-         formatter ('e' or 'g') will result in a SI prefix, if applicable.
-
          .. Seealso::
             http://docs.python.org/release/2.5.2/lib/typesseq-strings.html
             and http://en.wikipedia.org/wiki/SI_prefix
@@ -131,7 +127,7 @@ def quantity_str(number, unit='', use_si=True, format='%g', times=r'\,',
          ":math:`\times`".
 
     - *roman*: *True*, if the units should be typeset in Roman (rather than
-      italics)
+      Italics)
 
     **Examples:**
 

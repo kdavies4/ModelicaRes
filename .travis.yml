@@ -2,28 +2,28 @@ language: python
 
 python:
   - 2.7
-#  - 3.3
-#  - 3.4
+  # - 3.2 # Not yet ready to run in Travis
 
 virtualenv:
   system_site_packages: true
 
-# We'll install as many packages as possible via pip, but some require apt-get.
+# Install as many packages as possible via pip, but some require apt-get.
 before_install:
   - sudo apt-get update
-#  - sudo apt-get install python-numpy python-scipy python-matplotlib
-  - sudo apt-get install python-scipy
-  - pip install numpy matplotlib
-  - pip install pandas control six
-  - sudo apt-get install python-qt4 # python-pyside python-guidata
-#  - sudo apt-get libwxgtk2.8-0 python-wxtools
+  - sudo apt-get install python-scipy # python3-scipy
+  - pip install matplotlib pandas control six
+  # - pip3 install matplotlib pandas control six
+  - sudo apt-get install python-qt4
+  # - sudo apt-get install python3-qt4
 
 install:
   - python setup.py install
+  # - python3 setup.py install
 
 before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
 
 script:
-  - bash runtests.sh --travis
+  - python -m doctest tests/tests.txt
+  # - bash runtests.sh # Not yet ready to run all tests in Travis

@@ -3,7 +3,7 @@
 plot the results
 
 This module provides convenient access to the most important functions and
-classes from its submodules.  These are:
+classes from the submodules.  These are:
 
 - To manage simulation experiments (:mod:`~modelicares.exps` submodule):
   :mod:`~modelicares.exps.doe`, :class:`~exps.Experiment`,
@@ -40,7 +40,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 __version__ = None
 
 
-# pylint: W0611
+# pylint: disable=W0611
 
 # Essential functions and classes
 #

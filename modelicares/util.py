@@ -115,8 +115,7 @@ from matplotlib.lines import Line2D
 from re import compile as re_compile
 from six import string_types
 
-# pylint: disable=C0302, C0103, C0302, C0325, R0904, R0912, R0913, R0914, W0102,
-# pylint: disable=W0141, W0142, W0621
+# pylint: disable=C0103, W0102, W0621
 
 # Load the getSaveFileName function from an available Qt installation.
 try:

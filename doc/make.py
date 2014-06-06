@@ -1,7 +1,8 @@
 #!/usr/bin/env python
-# Clean, build, and release the HTML documentation for ModelicaRes.
+"""Clean, build, and release the HTML documentation for ModelicaRes.
+"""
 
-# pylint: disable=E0611, R0914
+# pylint: disable=E0611
 
 import os
 import shutil
@@ -33,8 +34,8 @@ def build():
     else:
         date = git.log('-1', lastversion,
                        date='short', format='%ad').stdout[8:18]
-        rpls = [('(ModelicaRes)-.+(\.tar)', r'\1-%s\2' % lastversion[1:]),
-                ('(Latest version<br>\().+(\)</a>)',
+        rpls = [(r'(ModelicaRes)-.+(\.tar)', r'\1-%s\2' % lastversion[1:]),
+                (r'(Latest version<br>\().+(\)</a>)',
                  r'\1%s, %s\2' % (lastversion, date)),
                ]
         util.replace('_templates/download.html', rpls)
@@ -58,8 +59,8 @@ def make_dirs():
     """
 
     # Create regular directories.
-    BUILD_DIRS = ['build/doctrees', 'build/html']
-    for d in BUILD_DIRS:
+    build_dirs = ['build/doctrees', 'build/html']
+    for d in build_dirs:
         try:
             os.makedirs(d)
         except OSError:
@@ -91,26 +92,26 @@ def release():
         git.checkout('-b', 'gh-pages')
 
     # Remove the existing files in the base folder.
-    EXTENSIONS = ['*.html', '*.inv']
-    fnames = util.multiglob('..', EXTENSIONS)
+    extensions = ['*.html', '*.inv']
+    fnames = util.multiglob('..', extensions)
     for fname in fnames:
         os.remove(fname)
 
     # Copy the new files to the base folder.
-    fnames = util.multiglob(BUILD_DIR, EXTENSIONS)
+    fnames = util.multiglob(BUILD_DIR, extensions)
     for fname in fnames:
         shutil.copy(fname, '..')
 
     # Track the new files.
-    fnames = util.multiglob('..', EXTENSIONS)
+    fnames = util.multiglob('..', extensions)
     git.add(*fnames)
 
     # Copy but rename the folders referenced in the HTML files.
     # Github only recognizes images, stylesheets, and javascripts as folders.
-    FOLDERS = [('_images', 'images'),
+    folders = [('_images', 'images'),
                ('_static', 'javascripts'),
               ]
-    for (src, dst) in FOLDERS:
+    for (src, dst) in folders:
         dst = os.path.join('..', dst)
         # Remove the existing folder.
         shutil.rmtree(dst, ignore_errors=True)
@@ -120,7 +121,7 @@ def release():
         git.add(dst)
     # Update the HTML files to reference the new folder names.
     html_fnames = glob(os.path.join('..', '*.html'))
-    util.replace(html_fnames, FOLDERS)
+    util.replace(html_fnames, folders)
 
     # Copy and rename the examples folder.
     src = os.path.join(BUILD_DIR, 'examples')
@@ -134,7 +135,7 @@ def release():
     # Track the new folder.
     git.add(dst)
     # Update the HTML files to reference the new folder names.
-    util.replace(html_fnames, [('"\./examples/', '"./examples2/')])
+    util.replace(html_fnames, [(r'"\./examples/', r'"./examples2/')])
 
     # Update the sitemap.
     print(python('sitemap_gen.py', config="sitemap_conf.xml"))
@@ -164,31 +165,32 @@ def spellcheck():
     """Spellcheck the HTML docs.
     """
     # Options
-    WORDFILE = os.path.abspath('.modelicares.pws') # Name of custom word file
-    EXTRAFILE = os.path.abspath('.modelica.pws') # Name of extra word file
-    HTML_FILES = glob('build/html/*.html') # Names of the HTML files
+    wordfile = os.path.abspath('.modelicares.pws') # Name of custom word file
+    extrafile = os.path.abspath('.modelica.pws') # Name of extra word file
+    html_files = glob('build/html/*.html') # Names of the HTML files
 
     print("If there are misspellings, fix them in the Python or ReST "
           "source---not just in the HTML files.")
 
     # Remove unused words from the custom word file.
     def read(fname):
+        """Read all text from a file."""
         with open(fname, 'r') as f:
             return f.read()
-    html = "".join(map(read, HTML_FILES))
-    with open(WORDFILE, 'r') as f:
+    html = "".join(map(read, html_files))
+    with open(wordfile, 'r') as f:
         head = f.readline()
         lines = f.readlines()
-    with open(WORDFILE, 'w') as f:
+    with open(wordfile, 'w') as f:
         f.write(head)
         for line in lines:
             if html.find(line.rstrip('\n').rstrip('\r')) != -1:
                 f.write(line)
 
     # Check the spelling.
-    for page in HTML_FILES:
+    for page in html_files:
         if os.system('aspell --dont-backup --personal={1} --extra-dicts={0} '
-                     '-c {2}'.format(WORDFILE, EXTRAFILE, page)):
+                     '-c {2}'.format(wordfile, extrafile, page)):
             raise SystemError("aspell (http://aspell.net/) must be installed.")
 
 def static():
@@ -209,7 +211,8 @@ def static():
     # ThreeTanks
     # ----------
     sim = SimRes(join(indir, 'ThreeTanks.mat'))
-    sim.sankey(title="Sankey diagrams of Modelica.Fluid.Examples.Tanks.ThreeTanks",
+    sim.sankey(title=("Sankey diagrams of "
+                      "Modelica.Fluid.Examples.Tanks.ThreeTanks"),
                times=[0, 50, 100, 150], n_rows=2, format='%.1f ',
                names=['tank1.ports[1].m_flow', 'tank2.ports[1].m_flow',
                       'tank3.ports[1].m_flow'],
@@ -230,6 +233,8 @@ def static():
                              "Current through and voltage across the inductor"))
     # Mark the start and stop points.
     def mark(time, text):
+        """Mark a frequency point.
+        """
         i = sim['L.i'].values(time)
         v = sim['L.v'].values(time)
         plt.plot(i, v, 'bo')
@@ -256,27 +261,27 @@ def static():
     plt.close()
 
 
-F = namedtuple("F", ['f', 'description'])
-funcs = {'clean'      : F(clean,   "Clean/remove the built documentation."),
-         'build'      : F(build,   "Build/make the HTML documentation."),
-         'release'    : F(release,
-                          "Release/publish the documentation to the webpage."),
+Action = namedtuple("Action", ['f', 'description'])
+ACTIONS = {'clean' : Action(clean, "Clean/remove the built documentation."),
+         'build'   : Action(build, "Build/make the HTML documentation."),
+         'release' : Action(release, "Release/publish the documentation to the "
+                            "webpage."),
         }
 
 def funcs_str():
     """Return a string listing the valid functions and their descriptions.
     """
-    return "\n".join(["  %s: %s" % (arg.ljust(10), function.description)
-                      for (arg, function) in funcs.items()])
+    return "\n".join(["  %s: %s" % (action.ljust(10), function.description)
+                      for (action, function) in ACTIONS.items()])
 
 
 # Main
 if len(sys.argv) != 2:
     raise SystemExit("Exactly one argument is required; valid args are\n"
                      + funcs_str())
-arg = sys.argv[1]
+ACTION = sys.argv[1]
 try:
-    funcs[arg].f()
+    ACTIONS[ACTION].f()
 except KeyError:
     raise SystemExit("Do not know how to handle %s; valid args are\n%s"
-                     % (arg, funcs_str()))
+                     % (ACTION, funcs_str()))

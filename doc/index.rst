@@ -49,7 +49,7 @@ The links in the sidebar provide the full documentation and many more examples.
 The `loadres script <loadres.html>`_ helps to load simulation and linearization
 results from the command line.  The top-level module, :mod:`modelicares`,
 provides direct access to the most important classes and functions.  Others must
-be accessed through their submodules.  The :mod:`~modelicares.simres` submodule
+be accessed through the submodules.  The :mod:`~modelicares.simres` submodule
 has classes to load, analyze, and plot simulation results.  The
 :mod:`~modelicares.linres` submodule has a class to load, analyze, and plot
 results from linearizing model(s).  The :mod:`~modelicares.exps` submodule has
@@ -91,12 +91,13 @@ http://matplotlib.org/users/customizing.html for details.
 
 **License terms and development**
 
-ModelicaRes is published under a `BSD-compatible license <license.html>`_.  The
-development site is https://github.com/kdavies4/ModelicaRes.  Please share any
-modifications you make (preferably as a pull request to the ``master`` branch at
-that site) in order to help others.  If you find a bug, please `report it
-<https://github.com/kdavies4/ModelicaRes/issues/new>`_.  If you have
-suggestions, please `share them
+ModelicaRes is published under a `BSD-compatible license <license.html>`_.
+Please share any modifications you make (preferably as a pull request to the
+``master`` branch of the `GitHub repository`_) in order to help others.  There
+are useful development scripts in the `hooks folder
+<https://github.com/kdavies4/ModelicaRes/blob/master/hooks/>`_.  If you find a
+bug, please `report it <https://github.com/kdavies4/ModelicaRes/issues/new>`_.
+If you have suggestions, please `share them
 <https://github.com/kdavies4/ModelicaRes/wiki/Suggestions>`_.
 
 **See also**

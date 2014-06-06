@@ -77,6 +77,8 @@ development scripts in the [hooks folder](hooks).  If you find a bug, please
 suggestions, please
 [share them](https://github.com/kdavies4/ModelicaRes/wiki/Suggestions).
 
+[![Build Status](https://travis-ci.org/kdavies4/ModelicaRes.svg?branch=travis)](https://travis-ci.org/kdavies4/ModelicaRes)
+![ ](doc/_static/hspace.png)
 [![Code Health](https://landscape.io/github/kdavies4/ModelicaRes/master/landscape.png)](https://landscape.io/github/kdavies4/ModelicaRes/master)
 
 ### See also
