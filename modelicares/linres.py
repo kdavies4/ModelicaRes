@@ -37,7 +37,7 @@ from modelicares._io.dymola import loadlin as dymola
 LOADERS = [('dymola', dymola)] # LinRes tries these in order.
 # All of the keys should be in lowercase.
 
-#pylint: disable=C0103, C0302, C0325, R0913, R0914, W0102, W0142
+# pylint: disable=C0103, C0302, C0325, R0913, R0914, W0102, W0142
 
 def _from_names(func):
     """Return a method that accepts names or indices to identify system inputs

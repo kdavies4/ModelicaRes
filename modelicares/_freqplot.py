@@ -75,7 +75,7 @@ from control.ctrlutil import unwrap
 from modelicares.util import add_hlines, add_vlines
 from modelicares.texunit import quantity_str, number_label
 
-#pylint: disable=C0103, R0913, R0914
+# pylint: disable=C0103, R0913, R0914
 
 # Units
 rad = 1
@@ -370,7 +370,7 @@ def nyquist_plot(mag, phase, f, in_Hz=True, label=None, mark=False,
                                                      roman=False))
 
     # Set the x and y limits the same.
-    #lim = np.max(np.abs(ax.axis()))
-    #ax.axis([-lim, lim, -lim, lim])
+    # lim = np.max(np.abs(ax.axis()))
+    # ax.axis([-lim, lim, -lim, lim])
 
     return ax

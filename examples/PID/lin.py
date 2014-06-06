@@ -31,10 +31,11 @@ experiments = gen_experiments(['Modelica.Blocks.Continuous.PID'],
 
 # Create the script to load the packages, simulate, and save the results.
 write_script(experiments, working_dir=working_dir, packages=packages,
-             fname=fname, command="linearizeModel", results=["dsin.txt",
-             "dymolalg.txt", "dymosim", "dslog.txt", "dslin.mat"])
+             fname=fname, command="linearizeModel",
+             results=["dsin.txt", "dymolalg.txt", "dymosim", "dslog.txt",
+                      "dslin.mat"])
 
 # Ask Dymola to run the script.
 os.system('dymola ' + fname) # For Linux
 # TODO: Add support for Windows.
-#os.system(r'C:\Program files\Dymola\bin\Dymola.exe ' + fname) # For Windows
+# os.system(r'C:\Program files\Dymola\bin\Dymola.exe ' + fname) # For Windows

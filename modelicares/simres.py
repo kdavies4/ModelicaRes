@@ -51,8 +51,7 @@ from modelicares import util
 from modelicares._res import Res, ResList
 from modelicares.texunit import unit2tex, number_label
 
-#pylint: disable=C0103, C0302, E0213, R0912, R0913, R0914, R0915, W0102, W0142
-
+# pylint: disable=C0103, C0302, E0213, R0912, R0913, R0914, R0915, W0102, W0142
 
 def _apply_function(func):
     """Return a method that applies a function to its output, given a
@@ -654,6 +653,7 @@ class VarList(list):
             variable, then pass it to the function and return the result
             upwards.
             """
+            # pylint: disable=E1102
             return util.CallList([func(variable, attr)
                                   if isinstance(variable, Variable) else
                                   wrapped(variable, attr)
@@ -759,6 +759,8 @@ class SimRes(Res):
     .. _Python: http://www.python.org/
     .. _pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
+
+    # pylint: disable=R0921
 
     def __init__(self, fname='dsres.mat', constants_only=False, tool=None):
         """Upon initialization, load Modelica_ simulation results from a file.
@@ -938,6 +940,7 @@ class SimRes(Res):
 
         def do_work():
             """Launch the broswer."""
+            # pylint: disable=E1101
             app = wx.GetApp()
             if app is None:
                 app = wx.App()
@@ -947,10 +950,10 @@ class SimRes(Res):
             app.MainLoop()
 
         # TODO: Fix multithreading so that the browser can run in the background.
-        #import threading
-        #thread = threading.Thread(target=_do_work)
-        #thread.setDaemon(True)
-        #thread.start()
+        # import threading
+        # thread = threading.Thread(target=_do_work)
+        # thread.setDaemon(True)
+        # thread.start()
 
         do_work()
 

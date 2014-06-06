@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # Clean, build, and release the HTML documentation for ModelicaRes.
 
+# pylint: disable=E0611, R0914
+
 import os
 import shutil
 import sys
@@ -25,7 +27,7 @@ def build():
         commit = git('rev-list', '--tags', '--max-count=1').stdout.rstrip()
         lastversion = git.describe('--tags', commit).stdout.rstrip()
         # This is simpler but doesn't always return the latest tag:
-        #lastversion = git.describe('--tag', abbrev=0).stdout.rstrip()
+        # lastversion = git.describe('--tag', abbrev=0).stdout.rstrip()
     except ErrorReturnCode_128:
         pass # No tags recorded; leave download link as is
     else:
@@ -108,7 +110,7 @@ def release():
     FOLDERS = [('_images', 'images'),
                ('_static', 'javascripts'),
               ]
-    for i, (src, dst) in enumerate(FOLDERS):
+    for (src, dst) in FOLDERS:
         dst = os.path.join('..', dst)
         # Remove the existing folder.
         shutil.rmtree(dst, ignore_errors=True)
@@ -192,11 +194,8 @@ def spellcheck():
 def static():
     """Create static images for the HTML documentation and the base README.md.
     """
-
-    import numpy as np
     import matplotlib.pyplot as plt
-
-    from modelicares import SimRes, SimResList, LinResList, read_params
+    from modelicares import SimRes, LinResList, read_params
 
     join = os.path.join
 
@@ -227,8 +226,8 @@ def static():
     sim = SimRes(join(indir, 'ChuaCircuit.mat'))
     ax, __ = sim.plot(ynames1='L.v', ylabel1="Voltage",
                       xname='L.i', xlabel="Current",
-                      title="Modelica.Electrical.Analog.Examples.ChuaCircuit\n"
-                            "Current through and voltage across the inductor")
+                      title=("Modelica.Electrical.Analog.Examples.ChuaCircuit\n"
+                             "Current through and voltage across the inductor"))
     # Mark the start and stop points.
     def mark(time, text):
         i = sim['L.i'].values(time)
@@ -250,8 +249,8 @@ def static():
         lin.label = "Td = %g s" % read_params('Td', join(lin.dirname,
                                                          'dsin.txt'))
     lins.sort(key=lambda lin: lin.label)
-    lins.bode(title="Bode plot of Modelica.Blocks.Continuous.PID\n"
-                    "with varying differential time constant")
+    lins.bode(title=("Bode plot of Modelica.Blocks.Continuous.PID\n"
+                     "with varying differential time constant"))
     plt.savefig(join(outdir, 'PIDs-bode.png'), dpi=dpi, **kwargs)
     plt.savefig(join(outdir, 'PIDs-bode-small.png'), dpi=dpi_small, **kwargs)
     plt.close()

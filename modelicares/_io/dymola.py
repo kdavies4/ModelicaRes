@@ -54,7 +54,7 @@ from control.matlab import ss
 from modelicares.simres import _VarDict, _select, _apply_function, _swap
 from modelicares.simres import Variable as GenericVariable
 
-#pylint: disable=C0103, C0325, R0912, R0914, W0221, W0631
+# pylint: disable=C0103, C0325, R0912, R0914, W0221, W0631
 
 PY2 = sys.version < '3'
 
@@ -318,7 +318,7 @@ def loadsim(fname, constants_only=False):
                                   'supported.'.format(v=version))
         names = get_strings(mat['name'].T if transposed else mat['name'])
         descriptions = get_strings(mat['description'].T if transposed else
-                                       mat['description'])
+                                   mat['description'])
         dataInfo = mat['dataInfo'] if transposed else mat['dataInfo'].T
         data_sets = dataInfo[0, :]
         sign_cols = dataInfo[1, :]

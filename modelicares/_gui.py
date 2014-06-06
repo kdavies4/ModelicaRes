@@ -18,7 +18,7 @@ from six import string_types
 from modelicares.texunit import unit2tex
 
 
-#pylint: disable=C0103, E1121, R0904
+# pylint: disable=C0103, E1101, E1121, R0904
 
 class PreviewPanel(wx.Panel):
     """Panel for information about a variable

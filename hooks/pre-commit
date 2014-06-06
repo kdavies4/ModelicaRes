@@ -65,6 +65,7 @@ n_matches=$(grep -c '__version__ *= *None' modelicares/__init__.py)
 if [ $n_matches == 1 ]; then
 
     echo $(date -u +"%Y-%m-%d %H:%M:%SZ") > "$file"
+    echo >> "$file"
     echo $(git config user.name) >> "$file"
     echo >> "$file"
     echo "This is an unreleased copy of ModelicaRes." >> "$file"

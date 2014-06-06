@@ -22,7 +22,7 @@ import re
 
 from modelicares.util import si_prefix, get_pow1000
 
-#pylint: disable=C0103, W0622
+# pylint: disable=C0103, R0913, W0622
 
 # Special replacements for unit strings in tex
 REPLACEMENTS = [(re.compile(replacement[0]), replacement[1])

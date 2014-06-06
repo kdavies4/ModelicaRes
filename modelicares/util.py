@@ -115,8 +115,8 @@ from matplotlib.lines import Line2D
 from re import compile as re_compile
 from six import string_types
 
-#pylint: disable=C0302, C0103, C0302, C0325, R0904, R0912, R0913, R0914, W0102,
-#pylint: disable=W0141, W0142, W0621
+# pylint: disable=C0302, C0103, C0302, C0325, R0904, R0912, R0913, R0914, W0102,
+# pylint: disable=W0141, W0142, W0621
 
 # Load the getSaveFileName function from an available Qt installation.
 try:
@@ -362,7 +362,7 @@ def delayed_exit(message="Exiting...", t=0.5):
     >>> delayed_exit() # doctest: +SKIP
     Exiting...
     """
-    print("Exiting...")
+    print(message)
     time.sleep(t)
     exit()
 
@@ -719,12 +719,12 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
         next(reader)
     keys = next(reader)
     data = dict.fromkeys(keys)
-    #print("The keys are: ")
-    #print(keys)
+    # print("The keys are: ")
+    # print(keys)
 
     # Read the data.
     if first_data_row:
-        for row in range(first_data_row - header_row - 1):
+        for __ in range(first_data_row - header_row - 1):
             next(reader)
     if types:
         for i, (key, column, t) in enumerate(zip(keys, zip(*reader), types)):
@@ -1242,7 +1242,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
     for i in range(n_plots):
         # Create the axes.
         i_col = np.mod(i, n_cols)
-        #i_row = (i - i_col)/n_cols
+        # i_row = (i - i_col)/n_cols
         a = fig.add_subplot(n_rows, n_cols, i+1)
         ax.append(a)
 
@@ -1273,18 +1273,18 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
     # Add the colorbar.
     if ctype:
         if ctype == 'vertical':
-            #fig.subplots_adjust(left=left, bottom=top, right=1-cbar,
-            #                    top=1-top, hspace=hspace, vspace=vspace)
+            # fig.subplots_adjust(left=left, bottom=top, right=1-cbar,
+            #                     top=1-top, hspace=hspace, vspace=vspace)
             cax = fig.add_axes([1 - cbar + cbar_space, bottom,
                                 cbar_width, 1 - bottom - top])
-            #cax.set_ylabel(clabel)
+            # cax.set_ylabel(clabel)
         else:
-            #fig.subplots_adjust(left=left, bottom=cbar, right=1-left,
-            #                    top=1-top, hspace=hspace, vspace=vspace)
+            # fig.subplots_adjust(left=left, bottom=cbar, right=1-left,
+            #                     top=1-top, hspace=hspace, vspace=vspace)
             cax = fig.add_axes([left,
                                 cbar - cbar_space - cbar_width,
                                 1 - left - right, cbar_width])
-            #cax.set_xlabel(clabel)
+            # cax.set_xlabel(clabel)
         cax.set_ylabel(clabel)
         return ax, cax, n_cols
     else:
@@ -1441,7 +1441,7 @@ def tree(strings, separator='.'):
         branch = root
         elements = string.split(separator)
         for element in elements[:-1]:
-            if not element in branch:
+            if element not in branch:
                 branch[element] = {}
             branch = branch[element]
         branch[elements[-1]] = string
@@ -1484,6 +1484,8 @@ class ArrowLine(Line2D):
 
     from matplotlib.path import Path
 
+    # pylint: disable=E1101
+
     arrows = {'>' : '_draw_triangle_arrow'}
     _arrow_path = Path([[0.0, 0.0], [-1.0, 1.0], [-1.0, -1.0], [0.0, 0.0]],
                        [Path.MOVETO, Path.LINETO, Path.LINETO, Path.CLOSEPOLY])
@@ -1505,8 +1507,8 @@ class ArrowLine(Line2D):
     def draw(self, renderer):
         """Draw the line and arrowhead using the passed renderer.
         """
-        #if self._invalid:
-        #    self.recache()
+        # if self._invalid:
+        #     self.recache()
         renderer.open_group('arrowline2d')
         if not self._visible:
             return
@@ -1561,7 +1563,7 @@ class ArrowLine(Line2D):
 # Getch classes based on
 # http://code.activestate.com/recipes/134892-getch-like-unbuffered-character-reading-from-stdin/,
 # accessed 5/31/14
-class _Getch:
+class _Getch(object):
     """Get a single character from the standard input.
     """
     def __init__(self):
@@ -1573,12 +1575,15 @@ class _Getch:
     def __call__(self):
         return self.impl()
 
-class _GetchUnix:
+class _GetchUnix(object):
+
     def __init__(self):
-        import tty, sys
+        # pylint: disable=W0611, W0612
+        import tty
 
     def __call__(self):
-        import sys, tty, termios
+        import tty
+        import termios
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
         try:
@@ -1588,8 +1593,9 @@ class _GetchUnix:
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         return ch
 
-class _GetchWindows:
+class _GetchWindows(object):
     def __init__(self):
+        # pylint: disable=W0611, W0612
         import msvcrt
 
     def __call__(self):

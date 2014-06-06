@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # Example of loading a CSV file using util.load_csv()
 
-import os
 from modelicares import load_csv
 
 if __name__=='__main__':

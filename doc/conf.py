@@ -11,7 +11,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
+# pylint: disable=R0913, W0613
 
 def skip(app, what, name, obj, skip, options):
     if name in ["__call__", "__contains__", "__getitem__", "__len__"]:

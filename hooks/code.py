@@ -1,10 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # Script to clean, build, and release the ModelicaRes code.
+
+# pylint: disable=E0611
 
 import sys
 import os
-import sh
-import shutil
 
 from time import strftime
 from collections import namedtuple
@@ -21,7 +21,6 @@ def set_version(version, fname='modelicares/__init__.py'):
 
 def build():
     """Build/make the code.
-
     """
 
     # Check that README.txt is a valid ReST file (otherwise, the PyPI page will

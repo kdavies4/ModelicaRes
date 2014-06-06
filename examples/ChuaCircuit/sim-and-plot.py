@@ -47,7 +47,7 @@ if run:
     # Ask Dymola to run the script.
     os.system('dymola ' + fname) # For Linux
     # TODO: Add support for Windows.
-    #os.system(r'C:\Program files\Dymola\bin\Dymola.exe ' + fname) # For Windows
+    # os.system(r'C:\Program files\Dymola\bin\Dymola.exe ' + fname) # For Windows
 else:
     models = [experiment.model[experiment.model.rfind('.')+1:]
               for experiment in experiments]

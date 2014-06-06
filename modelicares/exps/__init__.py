@@ -79,7 +79,7 @@ import modelicares.util as util
 
 from modelicares.exps import doe
 
-#pylint: disable=C0103, R0913, R0914, W0102, W0120, W0142, W0631
+# pylint: disable=C0103, R0913, R0914, W0102, W0120, W0142, W0631
 
 class Experiment(namedtuple('Experiment', ['model', 'params', 'args'])):
     """namedtuple_ to represent a simulation experiment
@@ -705,8 +705,8 @@ def write_script(experiments=[(None, {}, {})], packages=[],
         mos.write('\n')
         # Sometimes Dymola opens with an error; simulate any model to clear the
         # error.
-        #mos.write('simulateModel("Modelica.Electrical.Analog.Examples.'
-        #          'ChuaCircuit");\n\n')
+        # mos.write('simulateModel("Modelica.Electrical.Analog.Examples.'
+        #           'ChuaCircuit");\n\n')
 
         # Write commands to run the experiments.
         models = []
@@ -816,7 +816,7 @@ class ParamDict(dict):
             branch = root
             elements = name.split('.')
             for element in elements[:-1]:
-                if not element in branch:
+                if element not in branch:
                     branch[element] = ParamDict()
                 branch = branch[element]
             branch[elements[-1]] = self.__getitem__(name)
