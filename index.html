@@ -70,10 +70,10 @@ interpret results, and create publishable figures.  It can be used to</p>
 <li>export data to various formats via <a class="reference external" href="http://pandas.pydata.org">pandas</a>.</li>
 </ul>
 <p>The figures are generated via <a class="reference external" href="http://www.matplotlib.org">matplotlib</a>, which offers a rich set of plotting
-routines.  ModelicaRes has methods to automatically create and label xy plots,
-Bode and Nyquist plots, and Sankey diagrams.  ModelicaRes can be scripted or
-used in an interactive <a class="reference external" href="http://www.python.org">Python</a> session with math and matrix functions from
-<a class="reference external" href="http://numpy.scipy.org">NumPy</a>.</p>
+routines.  ModelicaRes has methods to create and automatically label
+<a class="reference external" href="http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.plot">xy plots</a>, <a class="reference external" href="http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.bode">Bode</a> and <a class="reference external" href="http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.nyquist">Nyquist</a> plots, and <a class="reference external" href="http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.sankey">Sankey diagrams</a>.  ModelicaRes can
+be scripted or used in an interactive <a class="reference external" href="http://www.python.org">Python</a> session with math and matrix
+functions from <a class="reference external" href="http://numpy.scipy.org">NumPy</a>.</p>
 <a class="reference internal image-reference" href="images/browse.png"><img alt="Variable browser" src="images/browse.png" style="width: 247.8px; height: 121.5px;" /></a>
 <a class="reference internal image-reference" href="images/ChuaCircuit.png"><img alt="Plot of Chua circuit" src="images/ChuaCircuit.png" style="width: 195.3px; height: 135.3px;" /></a>
 <a class="reference internal image-reference" href="images/ThreeTanks.png"><img alt="Sankey diagrams of three tanks model" src="images/ThreeTanks.png" style="width: 202.2px; height: 130.8px;" /></a>
@@ -95,7 +95,6 @@ tools to set up and manage simulation experiments.  The
 <a class="reference internal" href="texunit.html#module-modelicares.texunit" title="modelicares.texunit"><tt class="xref py py-mod docutils literal"><span class="pre">texunit</span></tt></a> submodule has functions to translate <a class="reference external" href="http://www.modelica.org">Modelica</a>
 <em>unit</em> and <em>displayUnit</em> strings into <a class="reference external" href="http://www.latex-project.org">LaTeX</a>-formatted strings.  The last
 submodule, <a class="reference internal" href="util.html#module-modelicares.util" title="modelicares.util"><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt></a>, has supporting functions and classes.</p>
-<p>For a list of changes, please see the <a class="reference external" href="changelog.html">change log</a>.</p>
 <p><strong>Installation</strong></p>
 <p>The easiest way to install ModelicaRes is to use <a class="reference external" href="https://pypi.python.org/pypi/pip">pip</a>:</p>
 <div class="highlight-python"><div class="highlight"><pre>pip install modelicares
@@ -165,6 +164,7 @@ suggestions, please <a class="reference external" href="https://github.com/kdavi
 <li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Change log</a></li>
 </ul>
 
 <div id="searchbox" style="display: none" role="search">
@@ -181,9 +181,8 @@ suggestions, please <a class="reference external" href="https://github.com/kdavi
 <script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
   <ul>
     <li><a itemprop="downloadUrl"
-           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.11.0-33-g56300b9.tar.gz"
-           rel="nofollow">Latest version<br>(v0.11.0-33-g56300b9, 2014-06-05)</a></li>
-    <li><a href="changelog.html">Change log</a></li>
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.12.0.tar.gz"
+           rel="nofollow">Latest version<br>(v0.12.0, 2014-06-05)</a></li>
   </ul>
         </div>
       </div>
