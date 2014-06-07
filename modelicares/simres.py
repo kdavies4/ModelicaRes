@@ -31,6 +31,13 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
+# pylint: disable=C0103, E0611, E1101, R0921, W0102
+
 import os
 import numpy as np
 
@@ -50,8 +57,6 @@ from six import string_types
 from modelicares import util
 from modelicares._res import Res, ResList
 from modelicares.texunit import unit2tex, number_label
-
-# pylint: disable=C0103, E0213, W0102
 
 def _apply_function(func):
     """Return a method that applies a function to its output, given a
@@ -642,6 +647,7 @@ class VarList(list):
        [-1.6083468, 0.84736514]
 
     """
+    # pylint: disable=E0213
 
     def _listmethod(func):
         """Return a method that operates on all of the variables in the list of

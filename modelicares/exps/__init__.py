@@ -79,7 +79,12 @@ import modelicares.util as util
 
 from modelicares.exps import doe
 
-# pylint: disable=C0103, W0102
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
+# pylint: disable=C0103, E1101, W0102
 
 class Experiment(namedtuple('Experiment', ['model', 'params', 'args'])):
     """namedtuple_ to represent a simulation experiment
@@ -280,38 +285,38 @@ def read_params(names, fname='dsin.txt'):
     # Possible regular expressions for a parameter specification (with '%s' for
     # the parameter name)
     patterns = [# Dymola 1- or 2-line parameter specification
-                (r'^\s*%s\s+(%s)\s+%s\s+%s\s+%s\s+%s\s*#\s*%s\s*$'
-                 % (i, f, f, f, u, u, '%s')),
-                # From Dymola:
-                # column 1: Type of initial value
-                #           = -2: special case: for continuing simulation
-                #                               (column 2 = value)
-                #           = -1: fixed value   (column 2 = fixed value)
-                #           =  0: free value, i.e., no restriction
-                #                               (column 2 = initial value)
-                #           >  0: desired value (column 1 = weight for
-                #                                           optimization
-                #                                column 2 = desired value)
-                #                 use weight=1, since automatic scaling usually
-                #                 leads to equally weighted terms
-                # column 2: fixed, free or desired value according to column 1.
-                # column 3: Minimum value (ignored, if Minimum >= Maximum).
-                # column 4: Maximum value (ignored, if Minimum >= Maximum).
-                #           Minimum and maximum restrict the search range in
-                #           initial value calculation. They might also be used
-                #           for scaling.
-                # column 5: Category of variable.
-                #           = 1: parameter.
-                #           = 2: state.
-                #           = 3: state derivative.
-                #           = 4: output.
-                #           = 5: input.
-                #           = 6: auxiliary variable.
-                # column 6: Data type of variable.
-                #           = 0: real.
-                #           = 1: boolean.
-                #           = 2: integer.
-               ]
+        (r'^\s*%s\s+(%s)\s+%s\s+%s\s+%s\s+%s\s*#\s*%s\s*$'
+         % (i, f, f, f, u, u, '%s')),
+        # From Dymola:
+        # column 1: Type of initial value
+        #           = -2: special case: for continuing simulation
+        #                               (column 2 = value)
+        #           = -1: fixed value   (column 2 = fixed value)
+        #           =  0: free value, i.e., no restriction
+        #                               (column 2 = initial value)
+        #           >  0: desired value (column 1 = weight for
+        #                                           optimization
+        #                                column 2 = desired value)
+        #                 use weight=1, since automatic scaling usually
+        #                 leads to equally weighted terms
+        # column 2: fixed, free or desired value according to column 1.
+        # column 3: Minimum value (ignored, if Minimum >= Maximum).
+        # column 4: Maximum value (ignored, if Minimum >= Maximum).
+        #           Minimum and maximum restrict the search range in
+        #           initial value calculation. They might also be used
+        #           for scaling.
+        # column 5: Category of variable.
+        #           = 1: parameter.
+        #           = 2: state.
+        #           = 3: state derivative.
+        #           = 4: output.
+        #           = 5: input.
+        #           = 6: auxiliary variable.
+        # column 6: Data type of variable.
+        #           = 0: real.
+        #           = 1: boolean.
+        #           = 2: integer.
+    ]
     # These are tried in order until there is a match.  The group or pair of
     # parentheses contains the parameter value.
 
@@ -475,12 +480,12 @@ def write_params(params, fname='dsin.txt'):
     # Possible regular expressions for a parameter specification (with '%s' for
     # the parameter name)
     patterns = [# Dymola 1- or 2-line parameter specification
-                (r'(^\s*%s\s+)%s(\s+%s\s+%s\s+%s\s+%s\s*#\s*%s\s*$)'
-                 % (i, f, f, f, u, u, '%s')),
-                r'(^\s*)' + i + r'(\s*#\s*%s)',
-                r'(^\s*)' + f + r'(\s*#\s*%s)',
-                # See read_params() for a description of the columns.
-               ]
+        (r'(^\s*%s\s+)%s(\s+%s\s+%s\s+%s\s+%s\s*#\s*%s\s*$)'
+         % (i, f, f, f, u, u, '%s')),
+        r'(^\s*)' + i + r'(\s*#\s*%s)',
+        r'(^\s*)' + f + r'(\s*#\s*%s)',
+        # See read_params() for a description of the columns.
+    ]
     # These are tried in order until there is a match.  The first group or pair
     # of parentheses contains the text before the parameter value and the
     # second contains the text after it (minus one space on both sides for

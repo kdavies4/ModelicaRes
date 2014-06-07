@@ -22,6 +22,11 @@ import re
 
 from modelicares.util import si_prefix, get_pow1000
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
 # pylint: disable=C0103, W0622
 
 # Special replacements for unit strings in tex

@@ -18,6 +18,12 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
                  "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
+# pylint: disable=C0103, E0611, E1101, W0102
 
 import os
 import numpy as np
@@ -36,8 +42,6 @@ from modelicares._res import Res, ResList
 from modelicares._io.dymola import loadlin as dymola
 LOADERS = [('dymola', dymola)] # LinRes tries these in order.
 # All of the keys should be in lowercase.
-
-# pylint: disable=C0103, W0102
 
 def _from_names(func):
     """Return a method that accepts names or indices to identify system inputs
@@ -191,7 +195,7 @@ class LinRes(Res):
 
         # Remember the tool and filename.
         self.tool = tool
-        self.fname = os.path.abspath(fname)
+        super(LinRes, self).__init__(fname)
 
     def __str__(self):
         """Return an informal description of the :class:`LinRes` instance.

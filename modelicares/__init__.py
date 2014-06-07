@@ -40,6 +40,11 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 __version__ = None
 
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
 # pylint: disable=W0611
 
 # Essential functions and classes

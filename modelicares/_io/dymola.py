@@ -44,6 +44,8 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 
 
 import sys
+PY2 = sys.version < '3'
+del sys
 
 from collections import namedtuple
 from itertools import count
@@ -54,9 +56,13 @@ from control.matlab import ss
 from modelicares.simres import _VarDict, _select, _apply_function, _swap
 from modelicares.simres import Variable as GenericVariable
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
 # pylint: disable=C0103
 
-PY2 = sys.version < '3'
 
 # Namedtuple to store the time and value information of each variable
 Samples = namedtuple('Samples', ['times', 'values', 'negated'])
@@ -386,6 +392,8 @@ def loadlin(fname):
     ['I.y', 'D.x']
     """
     # This does the task of mfiles/traj/tloadlin.m in the Dymola installation.
+
+    # pylint: disable=W0621
 
     # Load the file.
     mat, Aclass = read(fname)

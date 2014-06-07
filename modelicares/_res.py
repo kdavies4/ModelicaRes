@@ -15,6 +15,10 @@ import os
 from functools import wraps
 from modelicares.util import cast_sametype, basename
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, W0141, W0142
+
 
 def assert_sametype(func):
     """Decorator that checks that an argument to a method is also an instance of

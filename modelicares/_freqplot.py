@@ -75,6 +75,11 @@ from control.ctrlutil import unwrap
 from modelicares.util import add_hlines, add_vlines
 from modelicares.texunit import quantity_str, number_label
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
 # pylint: disable=C0103, E1101
 
 # Units
@@ -199,7 +204,7 @@ def via_system(func):
     def wrapped(sys, f, *args, **kwargs):
         """Function that accepts a system.
         """
-        mag, phase, __ = sys.freqresp(f/(rad/s))
+        mag, phase = sys.freqresp(f/(rad/s))[0:2]
         mag = np.squeeze(mag)
         phase = np.squeeze(phase)*rad
 

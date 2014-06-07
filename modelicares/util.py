@@ -94,6 +94,7 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
                  "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
+
 import os
 import re
 import sys
@@ -115,7 +116,12 @@ from matplotlib.lines import Line2D
 from re import compile as re_compile
 from six import string_types
 
-# pylint: disable=C0103, W0102, W0621
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
+# pylint: disable=C0103, E1101, W0102, W0621
 
 # Load the getSaveFileName function from an available Qt installation.
 try:
@@ -421,7 +427,7 @@ def basename(fname):
     return os.path.splitext(os.path.basename(fname))[0]
 
 def multiglob(pathnames, extensions={'*.mat'}):
-    """Return a set of filenames that match a pathname pattern.
+    r"""Return a set of filenames that match a pathname pattern.
 
     Unlike Python's :meth:`glob.glob` function, this function runs an additional
     expansion on matches that are directories.
@@ -723,6 +729,7 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
 
     # Read the data.
     if first_data_row:
+        # pylint: disable=W0612
         for __ in range(first_data_row - header_row - 1):
             next(reader)
     if types:
@@ -1450,7 +1457,7 @@ def tree(strings, separator='.'):
 # From http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html,
 # accessed 2010/11/2012
 class ArrowLine(Line2D):
-    """A matplotlib_ subclass to draw an arrowhead on a line
+    r"""A matplotlib_ subclass to draw an arrowhead on a line
 
     **Arguments:**
 
@@ -1575,7 +1582,8 @@ class _Getch(object):
         return self.impl()
 
 class _GetchUnix(object):
-
+    """Get a single character from the standard input on Unix.
+    """
     def __init__(self):
         # pylint: disable=W0611, W0612
         import tty
@@ -1593,6 +1601,8 @@ class _GetchUnix(object):
         return ch
 
 class _GetchWindows(object):
+    """Get a single character from the standard input on Windows.
+    """
     def __init__(self):
         # pylint: disable=W0611, W0612
         import msvcrt
