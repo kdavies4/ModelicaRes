@@ -1,4 +1,0 @@
-# From https://help.github.com/articles/dealing-with-line-endings, 9/1/12
-
-# Set default behavior, in case users don't have core.autocrlf set.
-* text=auto
