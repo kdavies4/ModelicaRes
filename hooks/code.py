@@ -40,7 +40,10 @@ def build():
         util.delayed_exit()
 
     # Update the version number.
-    lastversion = git.describe('--tag', abbrev=0).stdout.rstrip()[1:]
+    commit = git('rev-list', '--tags', '--max-count=1').stdout.rstrip()
+    lastversion = git.describe('--tags', commit).stdout.rstrip()
+    # This is simpler but doesn't always return the latest tag:
+    # lastversion = git.describe('--tag', abbrev=0).stdout.rstrip()
     version = raw_input("Enter the version number (last was %s): "
                         % lastversion)
     # In modelicares/__init__.py:

@@ -58,7 +58,12 @@ fi
 # file in the base folder.
 
 file="UNRELEASED COPY.md"
-lastversion=$(git describe --abbrev=0 --tags)
+
+# Get the last version.
+commit=$(git rev-list --tags --max-count=1)
+lastversion=$(git describe --tags $commit)
+# This is simpler but doesn't always return the latest tag:
+# lastversion=$(git describe --abbrev=0 --tags)
 
 n_matches=$(grep -c '__version__ *= *None' modelicares/__init__.py)
 

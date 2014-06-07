@@ -1,4 +1,4 @@
-2014-06-07 21:30:37Z
+2014-06-07 21:54:22Z
 
 Kevin Davies
 
@@ -10,4 +10,4 @@ For a released copy, please see the
 [main project page](http://kdavies4.github.io/ModelicaRes/),
 [PyPI](https://pypi.python.org/pypi/ModelicaRes), or the release tags in the
 [GitHub repository](https://github.com/kdavies4/ModelicaRes).
-The last version was v0.11.0.
+The last version was v0.12.0.
