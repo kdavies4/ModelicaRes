@@ -83,7 +83,6 @@ matplotlib
 fahrenheit
 circ
 CallList
-linearizing
 exe
 txt
 searchbox
@@ -243,7 +242,6 @@ StateSpace
 rgb
 exps
 translateModel
-changelog
 basedir
 awesim
 meshgrid

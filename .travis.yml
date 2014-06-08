@@ -2,9 +2,7 @@ language: python
 
 python:
   - '2.7'
-  - '3.2'
-  - '3.3'
-  - '3.4'
+  #- '3.2'
 
 virtualenv:
   system_site_packages: true
@@ -13,7 +11,7 @@ virtualenv:
 before_install:
   - sudo apt-get update
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then sudo apt-get install python-scipy python-qt4; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then sudo apt-get install python3-scipy python3-qt4; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then sudo apt-get install python3-scipy python3-pyqt4; fi
   - pip install matplotlib pandas control six
 
 install:
