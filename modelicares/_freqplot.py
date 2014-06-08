@@ -343,7 +343,6 @@ def nyquist_plot(mag, phase, f, in_Hz=True, label=None, mark=False,
        >>> ax = nyquist_plot(sys)
     """
 
-
     # Compute the primary curve.
     x = np.multiply(mag, np.cos(phase))
     y = np.multiply(mag, np.sin(phase))

@@ -94,7 +94,6 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
                  "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
-
 import os
 import re
 import sys

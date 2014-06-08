@@ -257,7 +257,6 @@ def loadsim(fname, constants_only=False):
     >>> variables['L.v'].unit
     'V'
     """
-
     # This does the task of mfiles/traj/tload.m from the Dymola installation.
 
     def parse(description):

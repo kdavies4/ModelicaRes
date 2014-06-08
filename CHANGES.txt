@@ -242,7 +242,8 @@ v0.6.2_ (2013-7-4) -- Updates:
 
 v0.6.1_ (2013-7-2) -- Updates:
 
-   - Fixed `README.txt <README.txt>`_.
+   - Fixed `README.txt
+     <https://github.com/kdavies4/ModelicaRes/blob/master/README.txt>`_.
 
 v0.6.0_ (2013-7-2) -- Updates:
 
@@ -266,7 +267,7 @@ v0.5.1_ (2013-6-18) -- Updates:
 
 v0.5_ (2013-6-5) -- Updates:
 
-   - Updated `README.txt <README.txt>`_.
+   - Updated README.txt_.
 
 v0.4_ (2012-12-10) -- Updates:
 

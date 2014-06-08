@@ -514,7 +514,7 @@ def write_params(params, fname='dsin.txt'):
 
 
 def write_script(experiments=[(None, {}, {})], packages=[],
-                 working_dir="~/Documents/Modelica", fname="run-sims.mos",
+                 working_dir="~/Documents/Modelica", fname="run_sims.mos",
                  command='simulateModel',
                  results=['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x',
                           'dymolalg.txt']):
@@ -627,10 +627,10 @@ def write_script(experiments=[(None, {}, {})], packages=[],
        ...                         params={},
        ...                         args=dict(stopTime=2500))
        >>> write_script(experiment,
-       ...              fname="examples/ChuaCircuit/run-sims1.mos") # doctest: +ELLIPSIS
+       ...              fname="examples/ChuaCircuit/run_sims1.mos") # doctest: +ELLIPSIS
        (['ChuaCircuit'], '...examples/ChuaCircuit')
 
-    In *examples/ChuaCircuit/run-sims1.mos*:
+    In *examples/ChuaCircuit/run_sims1.mos*:
 
     .. code-block:: modelica
 
@@ -669,10 +669,10 @@ def write_script(experiments=[(None, {}, {})], packages=[],
        ...     params={'L.L': [18, 20],
        ...             'C1.C': [8, 10],
        ...             'C2.C': [80, 100, 120]})
-       >>> write_script(experiments, fname="examples/ChuaCircuit/run-sims2.mos") # doctest: +ELLIPSIS
+       >>> write_script(experiments, fname="examples/ChuaCircuit/run_sims2.mos") # doctest: +ELLIPSIS
        (['ChuaCircuit', ..., 'ChuaCircuit'], '...examples/ChuaCircuit')
 
-    In *examples/ChuaCircuit/run-sims2.mos*, there are commands to run and save
+    In *examples/ChuaCircuit/run_sims2.mos*, there are commands to run and save
     results from twelve simulations.
     """
 

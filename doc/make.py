@@ -2,7 +2,12 @@
 """Clean, build, and release the HTML documentation for ModelicaRes.
 """
 
-# pylint: disable=E0611
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
+# pylint: disable=C0103, E0611, F0401
 
 import os
 import shutil
@@ -227,10 +232,10 @@ def static():
     # ChuaCircuit
     # -----------
     sim = SimRes(join(indir, 'ChuaCircuit.mat'))
-    ax, __ = sim.plot(ynames1='L.v', ylabel1="Voltage",
-                      xname='L.i', xlabel="Current",
-                      title=("Modelica.Electrical.Analog.Examples.ChuaCircuit\n"
-                             "Current through and voltage across the inductor"))
+    ax = sim.plot(ynames1='L.v', ylabel1="Voltage",
+                  xname='L.i', xlabel="Current",
+                  title=("Modelica.Electrical.Analog.Examples.ChuaCircuit\n"
+                         "Current through and voltage across the inductor"))[0]
     # Mark the start and stop points.
     def mark(time, text):
         """Mark a frequency point.
@@ -263,10 +268,10 @@ def static():
 
 Action = namedtuple("Action", ['f', 'description'])
 ACTIONS = {'clean' : Action(clean, "Clean/remove the built documentation."),
-         'build'   : Action(build, "Build/make the HTML documentation."),
-         'release' : Action(release, "Release/publish the documentation to the "
-                            "webpage."),
-        }
+           'build'   : Action(build, "Build/make the HTML documentation."),
+           'release' : Action(release, "Release/publish the documentation to "
+                              "the webpage."),
+          }
 
 def funcs_str():
     """Return a string listing the valid functions and their descriptions.

@@ -11,6 +11,11 @@ All configuration values have a default; values that are commented out serve to
 show the default.
 """
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
 # pylint: disable=C0103
 
 def skip(app, what, name, obj, skip, options):

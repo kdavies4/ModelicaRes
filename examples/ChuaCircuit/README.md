@@ -1,4 +1,4 @@
-This folder contains [sim-and-plot.py](sim-and-plot.py), which generates a
+This folder contains [sim_and_plot.py](sim_and_plot.py), which generates a
 Dymola script to simulate Modelica.Electrical.Analog.Examples.ChuaCircuit from
 the [Modelica Standard Library] with various parameter settings and plots the
 results.  The results are generated here, but only the \*.mat files are included

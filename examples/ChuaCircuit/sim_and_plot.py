@@ -13,51 +13,51 @@ from modelicares import gen_experiments, SimRes, write_script, saveall
 # Begin customize--------------------------------------------------------------
 
 # Run the simulations? (otherwise, just plot)
-run = True
+RUN = True
 
 # Name of the Modelica script (may include the path)
-fname = 'run-sims.mos'
+FNAME = 'run_sims.mos'
 
 # Working directory
-working_dir = '~/Documents/Modelica'
+WORKING_DIR = '~/Documents/Modelica'
 
 # List of Modelica packages that should be preloaded (besides the Modelica
 # Standard Library)
 # Each may be a *.mo file or a path where a package.mo file resides, e.g.,
 # "/opt/dymola/Modelica/Library/VehicleInterfaces 1.1.1".
-packages = []
+PACKAGES = []
 
 # List or generator of simulations to run
-experiments = gen_experiments(
-                    models=['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
-                    params={'L.L': [15, 21]}, # Can use none for default
-                    args=dict(stopTime=[2500]))
+EXPERIMENTS = gen_experiments(
+    models=['Modelica.Electrical.Analog.Examples.ChuaCircuit'],
+    params={'L.L': [15, 21]}, # Can use none for default
+    args=dict(stopTime=[2500]))
 
 # Formats in which to save the figures (e.g., ['pdf', 'eps', 'svg', 'png'])
 # If the figures shouldn't be saved, specify an empty list.
-formats = ['pdf', 'png']
+FORMATS = ['pdf', 'png']
 
 # End customize----------------------------------------------------------------
 
-if run:
+if RUN:
     # Create the script to load the packages, simulate, and save the results.
-    models, results_dir = write_script(experiments, working_dir=working_dir,
-                                       packages=packages, fname=fname)
+    MODELS, RESULTS_DIR = write_script(EXPERIMENTS, working_dir=WORKING_DIR,
+                                       packages=PACKAGES, fname=FNAME)
 
     # Ask Dymola to run the script.
-    os.system('dymola ' + fname) # For Linux
+    os.system('dymola ' + FNAME) # For Linux
     # TODO: Add support for Windows.
-    # os.system(r'C:\Program files\Dymola\bin\Dymola.exe ' + fname) # For Windows
+    # os.system(r'C:\Program files\Dymola\bin\Dymola.exe ' + FNAME) # For Windows
 else:
-    models = [experiment.model[experiment.model.rfind('.')+1:]
-              for experiment in experiments]
-    results_dir = os.path.split(fname)[0]
+    MODELS = [experiment.model[experiment.model.rfind('.')+1:]
+              for experiment in EXPERIMENTS]
+    RESULTS_DIR = os.path.split(FNAME)[0]
 
 # Create plots.
 # Begin customize--------------------------------------------------------------
 
-for i, model in enumerate(models):
-    sim = SimRes(os.path.join(results_dir, str(i + 1), 'dsres.mat'))
+for i, model in enumerate(MODELS):
+    sim = SimRes(os.path.join(RESULTS_DIR, str(i + 1), 'dsres.mat'))
     sim.plot(title="Chua Circuit with L = %.0f %s" % (sim['L.L'].IV(),
                                                       sim['L.L'].unit),
              ynames1=['L.i'], ylabel1='Current',
@@ -67,5 +67,5 @@ for i, model in enumerate(models):
 # End customize----------------------------------------------------------------
 
 # Save the plots.
-saveall(formats)
+saveall(FORMATS)
 plt.show()

@@ -12,30 +12,30 @@ from modelicares import gen_experiments, write_script
 # Begin customize--------------------------------------------------------------
 
 # Name of the Modelica script (may include the path)
-fname = 'run-lins.mos'
+FNAME = 'run_lins.mos'
 
 # Working directory
-working_dir = '~/Documents/Modelica'
+WORKING_DIR = '~/Documents/Modelica'
 
 # List of Modelica packages that should be preloaded (besides the Modelica
 # Standard Library)
 # Each may be a *.mo file or a path where a package.mo file resides, e.g.,
 # "/opt/dymola/Modelica/Library/VehicleInterfaces 1.1.1".
-packages = []
+PACKAGES = []
 
 # List or generator of simulations to run
-experiments = gen_experiments(['Modelica.Blocks.Continuous.PID'],
+EXPERIMENTS = gen_experiments(['Modelica.Blocks.Continuous.PID'],
                               params=dict(Td=[1, 10]))
 
 # End customize----------------------------------------------------------------
 
 # Create the script to load the packages, simulate, and save the results.
-write_script(experiments, working_dir=working_dir, packages=packages,
-             fname=fname, command="linearizeModel",
+write_script(EXPERIMENTS, working_dir=WORKING_DIR, packages=PACKAGES,
+             fname=FNAME, command="linearizeModel",
              results=["dsin.txt", "dymolalg.txt", "dymosim", "dslog.txt",
                       "dslin.mat"])
 
 # Ask Dymola to run the script.
-os.system('dymola ' + fname) # For Linux
+os.system('dymola ' + FNAME) # For Linux
 # TODO: Add support for Windows.
-# os.system(r'C:\Program files\Dymola\bin\Dymola.exe ' + fname) # For Windows
+# os.system(r'C:\Program files\Dymola\bin\Dymola.exe ' + FNAME) # For Windows
