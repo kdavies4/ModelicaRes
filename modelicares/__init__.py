@@ -27,7 +27,7 @@ classes from the submodules.  These are:
   :meth:`~util.load_csv`, :meth:`~util.multiglob`, :meth:`~util.save`,
   :meth:`~util.saveall`, and :meth:`~util.setup_subplots`
 
-A function is also provided:
+There is also a local function:
 
 
 .. _Modelica: http://www.modelica.org/

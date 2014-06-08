@@ -126,7 +126,8 @@ html_last_updated_fmt = '%b %d, %Y'
 html_use_smartypants = True
 
 # Custom sidebar templates, maps document names to template names.
-html_sidebars = {'**': ['globaltoc.html', 'searchbox.html', 'download.html']}
+html_sidebars = {'**': ['info.html', 'source.html', 'links.html',
+                        'searchbox.html', 'download.html']}
 
 # If true, links to the reST sources are added to the pages.
 html_show_sourcelink = False

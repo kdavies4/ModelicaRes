@@ -14,7 +14,10 @@ except ImportError:
     try:
         from setuptools.core import setup
     except ImportError:
-        from distutils.core import setup
+        try:
+            from distutils.core import setup
+        except ImportError:
+            from numpy.distutils.core import setup
 
 def get_version(fname):
     """Return the version number of file *fname*.
@@ -29,7 +32,7 @@ def get_version(fname):
 version = get_version('modelicares/__init__.py')
 
 setup(name='ModelicaRes',
-      version=version if version else 'x.x.x',
+      version=version if version else '0-unreleased_copy',
       description='Utilities to set up and analyze Modelica simulation experiments',
       long_description=open('README.txt').read(),
       author='Kevin Davies',

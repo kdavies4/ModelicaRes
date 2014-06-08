@@ -1,11 +1,9 @@
 ModelicaRes
 -----------
 
-**Python utilities to set up and analyze Modelica simulation experiments**
+**Set up and analyze Modelica simulations in Python**
 
-ModelicaRes is a free, open-source tool to manage [Modelica] simulations,
-interpret results, and create publishable figures in [Python].  It can be used
-to
+ModelicaRes is a free, open-source tool that can be used to
 - generate simulation scripts,
 - load and browse data,
 - perform custom calculations,
@@ -19,11 +17,11 @@ to
 ![ ](doc/_static/hspace.png)
 [![Bode diagram of PID with varying parameters](doc/_static/PIDs-bode-small.png)](http://kdavies4.github.io/ModelicaRes/examples2/PIDs-bode.hires.png)
 
-The figures are generated via [matplotlib], which offers a rich set of plotting
-routines.  ModelicaRes has methods to create and automatically label [xy plots],
-[Bode] and [Nyquist] plots, and [Sankey diagrams].  ModelicaRes can be scripted
-or used in an interactive [Python] session with math and matrix functions from
-[NumPy].
+The figures are generated via [matplotlib], which offers a rich set of
+publication-quality plotting routines.  ModelicaRes has methods to create and
+automatically label [xy plots], [Bode] and [Nyquist] plots, and
+[Sankey diagrams].  ModelicaRes can be scripted or used in an interactive
+[Python] session with math and matrix functions from [NumPy].
 
 Currently, ModelicaRes only loads Dymola/[OpenModelica]-formatted results
 (*.mat), but the loading functions are modular so that other formats can be

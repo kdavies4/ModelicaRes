@@ -443,7 +443,6 @@ if __name__ == '__main__':
         else:
             raise IOError("Could not find the examples folder.")
         try:
-            # pylint: disable=W0631
             os.symlink(example_dir, 'examples')
         except AttributeError:
             raise AttributeError("This method of testing isn't supported in "

@@ -1,5 +1,4 @@
 include MANIFEST.in
-iinclude matplotlibrc
 include *.md
 include *.txt
 include *.sh
@@ -19,6 +18,7 @@ include examples/*.mat
 include examples/*.md
 include examples/*.py
 include examples/dsin.txt
+include examples/matplotlibrc
 include examples/load-csv*
 include examples/ChuaCircuit/*.md
 include examples/ChuaCircuit/*.py

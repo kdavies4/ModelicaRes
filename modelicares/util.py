@@ -262,7 +262,7 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
 
     **Arguments:**
 
-    - *ax*: Axes (matplotlib.axes object)
+    - *ax*: Axes (:class:`matplotlib.axes` object)
 
     - *positions*: Positions (along the x axis)
 
@@ -1025,7 +1025,7 @@ def save(formats=['pdf', 'png'], fname=None, fig=None):
 
     - *fname*: Filename (see above)
 
-    - *fig*: `matplotlib <http://matplotlib.org/api/figure_api.html>`_ figure
+    - *fig*: `matplotlib figure <http://matplotlib.org/api/figure_api.html>`_
       or list of figures to be saved
 
            If *fig* is *None* (default), then the current figure will be saved.

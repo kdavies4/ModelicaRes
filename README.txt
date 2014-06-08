@@ -2,11 +2,9 @@
  ModelicaRes
 #############
 
-**Utilities to set up and analyze Modelica simulation experiments**
+**Set up and analyze Modelica simulations**
 
-ModelicaRes is a free, open-source tool to manage Modelica_ simulations,
-interpret results, and create publishable figures.  It can be used
-to
+ModelicaRes is a free, open-source tool that can be used to
 
 - generate simulation scripts,
 - load and browse data,
@@ -15,11 +13,11 @@ to
 - produce various plots and diagrams, and
 - export data to various formats via pandas_.
 
-The figures are generated via matplotlib_, which offers a rich set of plotting
-routines.  ModelicaRes has methods to create and automatically label xy plots,
-Bode and Nyquist plots, and Sankey diagrams.  ModelicaRes can be scripted or
-used in an interactive Python_ session with math and matrix functions from
-NumPy_.
+The figures are generated via matplotlib_, which offers a rich set of
+publication-quality plotting routines.  ModelicaRes has methods to create and
+automatically label xy plots, Bode and Nyquist plots, and Sankey diagrams.
+ModelicaRes can be scripted or used in an interactive Python_ session with math
+and matrix functions from NumPy_.
 
 The figures are generated via matplotlib_, which offers a rich set of plotting
 routines.  ModelicaRes has methods to create and automatically label

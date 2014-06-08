@@ -2,10 +2,9 @@
   ModelicaRes
 ###############
 
-**Python utilities to set up and analyze Modelica simulation experiments**
+**Set up and analyze Modelica simulations in Python**
 
-ModelicaRes is a free, open-source tool to manage Modelica_ simulations,
-interpret results, and create publishable figures.  It can be used to
+ModelicaRes is a free, open-source tool that can be used to
 
 - generate simulation scripts,
 - load and browse data,
@@ -14,11 +13,11 @@ interpret results, and create publishable figures.  It can be used to
 - produce various plots and diagrams, and
 - export data to various formats via pandas_.
 
-The figures are generated via matplotlib_, which offers a rich set of plotting
-routines.  ModelicaRes has methods to create and automatically label
-`xy plots`_, Bode_ and Nyquist_ plots, and `Sankey diagrams`_.  ModelicaRes can
-be scripted or used in an interactive Python_ session with math and matrix
-functions from NumPy_.
+The figures are generated via matplotlib_, which offers a rich set of
+publication-quality plotting routines.  ModelicaRes has methods to create and
+automatically label `xy plots`_, Bode_ and Nyquist_ plots, and `Sankey
+diagrams`_.  ModelicaRes can be scripted or used in an interactive Python_
+session with math and matrix functions from NumPy_.
 
 .. image:: _static/browse.png
    :scale: 30 %
@@ -45,18 +44,6 @@ Please see the tutorial, which is available as an `IPython notebook
 or online as a `static page
 <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb>`_.
 The links in the sidebar provide the full documentation and many more examples.
-
-The `loadres script <loadres.html>`_ helps to load simulation and linearization
-results from the command line.  The top-level module, :mod:`modelicares`,
-provides direct access to the most important classes and functions.  Others must
-be accessed through the submodules.  The :mod:`~modelicares.simres` submodule
-has classes to load, analyze, and plot simulation results.  The
-:mod:`~modelicares.linres` submodule has a class to load, analyze, and plot
-results from linearizing model(s).  The :mod:`~modelicares.exps` submodule has
-tools to set up and manage simulation experiments.  The
-:mod:`~modelicares.texunit` submodule has functions to translate Modelica_
-*unit* and *displayUnit* strings into LaTeX_-formatted strings.  The last
-submodule, :mod:`~modelicares.util`, has supporting functions and classes.
 
 **Installation**
 
@@ -113,18 +100,9 @@ If you have suggestions, please `share them
 
 .. toctree::
   :hidden:
+  :glob:
 
-  credits
-  Tutorial <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>
-  Advanced topics <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb>
-  loadres
-  modelicares
-  simres
-  linres
-  exps
-  texunit
-  util
-  changelog
+  *res*
 
 .. _main website: http://kdavies4.github.io/ModelicaRes/
 .. _PyPI page: http://pypi.python.org/pypi/ModelicaRes/
@@ -133,26 +111,24 @@ If you have suggestions, please `share them
 .. _Nyquist: http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.nyquist
 .. _Sankey diagrams: http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.sankey
 
-.. _Modelica: http://www.modelica.org
-.. _Python: http://www.python.org
-.. _pandas: http://pandas.pydata.org
-.. _matplotlib: http://www.matplotlib.org
-.. _NumPy: http://numpy.scipy.org
+.. _Modelica: http://www.modelica.org/
+.. _Python: http://www.python.org/
+.. _pandas: http://pandas.pydata.org/
+.. _matplotlib: http://www.matplotlib.org/
+.. _NumPy: http://numpy.scipy.org/
 .. _SciPy: http://www.scipy.org/index.html
 .. _OpenModelica: https://www.openmodelica.org/
 .. _Qt: http://qt-project.org/
 .. _PyQt4: http://www.riverbankcomputing.co.uk/software/pyqt/
 .. _guidata: https://code.google.com/p/guidata/
 .. _PySide: http://qt-project.org/wiki/pyside
-.. _wxPython: http://www.wxpython.org
 .. _pip: https://pypi.python.org/pypi/pip
-.. _LaTeX: http://www.latex-project.org
 .. _awesim: https://github.com/saroele/awesim
-.. _BuildingsPy: http://simulationresearch.lbl.gov/modelica/buildingspy
-.. _DyMat: http://www.j-raedler.de/projects/dymat
+.. _BuildingsPy: http://simulationresearch.lbl.gov/modelica/buildingspy/
+.. _DyMat: http://www.j-raedler.de/projects/dymat/
 .. _PyFMI: https://pypi.python.org/pypi/PyFMI
 .. _PySimulator: https://github.com/PySimulator/PySimulator
 .. _Gnuplot: http://www.gnuplot.info
 .. _CSV: http://en.wikipedia.org/wiki/Comma-separated_values
-.. _netCDF: http://www.unidata.ucar.edu/software/netcdf
+.. _netCDF: http://www.unidata.ucar.edu/software/netcdf/
 .. _FMI: https://www.fmi-standard.org

@@ -158,7 +158,8 @@ v0.9.0_ (2014-3-17) -- Updates:
    - Narrowed the margins in HTML documentation.
    - Explained setup in the loadres_ example.
    - Updated expected example output.
-   - Updated matplotlibrc_.
+   - Updated `matplotlibrc
+     <https://github.com/kdavies4/ModelicaRes/blob/master/examples/matplotlibrc>`_.
 
 v0.8.2_ (2013-10-16) -- Updates:
 
@@ -170,7 +171,7 @@ v0.8.1_ (2013-8-6) -- Updates:
 
 v0.8.0_ (2013-8-6) -- Updates:
 
-   - Updated `matplotlibrc <matplotlibrc>`_ (default formatting).
+   - Updated matplotlibrc_ (default formatting).
    - Added patterns to :meth:`~modelicares.exps.write_params` to match more
      entries in a dsin file.
    - :meth:`~modelicares.exps.write_script` now clears the log between runs.

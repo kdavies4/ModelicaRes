@@ -1,8 +1,10 @@
 language: python
 
 python:
-  - 2.7
-  # - 3.2 # Not yet ready to run in Travis
+  - '2.7'
+  - '3.2'
+  - '3.3'
+  - '3.4'
 
 virtualenv:
   system_site_packages: true
@@ -10,15 +12,12 @@ virtualenv:
 # Install as many packages as possible via pip, but some require apt-get.
 before_install:
   - sudo apt-get update
-  - sudo apt-get install python-scipy # python3-scipy
+  - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then sudo apt-get install python-scipy python-qt4; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then sudo apt-get install python3-scipy python3-qt4; fi
   - pip install matplotlib pandas control six
-  # - pip3 install matplotlib pandas control six
-  - sudo apt-get install python-qt4
-  # - sudo apt-get install python3-qt4
 
 install:
   - python setup.py install
-  # - python3 setup.py install
 
 before_script:
   - export DISPLAY=:99.0
