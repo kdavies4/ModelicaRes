@@ -10,7 +10,6 @@ RMS
 paren
 Beutlich
 clo
-exponentials
 sudo
 xname
 Booleans
@@ -172,7 +171,6 @@ util
 colorbar
 Arnout
 fixedstepsize
-formatter
 outputInterval
 lw
 ok

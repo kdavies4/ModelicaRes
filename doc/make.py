@@ -20,7 +20,7 @@ from modelicares import util
 
 BUILD_DIR = 'build/html'
 
-def build():
+def html():
     """Build/make the HTML documentation.
     """
 
@@ -267,10 +267,11 @@ def static():
 
 
 Action = namedtuple("Action", ['f', 'description'])
-ACTIONS = {'clean' : Action(clean, "Clean/remove the built documentation."),
-           'build'   : Action(build, "Build/make the HTML documentation."),
-           'release' : Action(release, "Release/publish the documentation to "
-                              "the webpage."),
+ACTIONS = {'clean'   : Action(clean, "Clean/remove the built documentation."),
+           'build'   : Action(html, "Build/make the HTML documentation."),
+           'html'    : Action(html, "Build/make the HTML documentation."),
+           'release' : Action(release, ("Release/publish the documentation to "
+                                        "the webpage.")),
           }
 
 def funcs_str():

@@ -78,7 +78,7 @@ Credits
 
 The main author is Kevin Davies.  Code has been included from:
 
-- Richard Murray (**control.freqplot**, part of python-control_),
+- Richard Murray (**control.freqplot**---part of python-control_),
 - Joerg Raedler (method to expand a Modelica_ variable tree---from DyMat_),
 - Jason Grout (`ArrowLine class`_), and
 - Jason Heeris (`efficient base-10 logarithm`_).
@@ -116,6 +116,7 @@ See also
 .. _main website: http://kdavies4.github.io/ModelicaRes/
 .. _PyPI page: http://pypi.python.org/pypi/ModelicaRes
 .. _GitHub repository: https://github.com/kdavies4/ModelicaRes
+
 .. _xy plots: http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.plot
 .. _Bode: http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.bode
 .. _Nyquist: http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.nyquist

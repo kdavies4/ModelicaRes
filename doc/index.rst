@@ -106,6 +106,7 @@ If you have suggestions, please `share them
 
 .. _main website: http://kdavies4.github.io/ModelicaRes/
 .. _PyPI page: http://pypi.python.org/pypi/ModelicaRes/
+.. _GitHub repository: https://github.com/kdavies4/ModelicaRes
 .. _xy plots: http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.plot
 .. _Bode: http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.bode
 .. _Nyquist: http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.nyquist
