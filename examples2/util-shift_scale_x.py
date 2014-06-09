@@ -2,7 +2,6 @@
 # Example of util.shift_scale_x()
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from modelicares import util
 from modelicares.texunit import number_label

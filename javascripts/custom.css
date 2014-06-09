@@ -4,7 +4,6 @@ div.sphinxsidebar {
     top: 15px;
     width: 230px;
     font-size: 100%;
-    min-height: 1000px;
     line-height: 120%;
 }
 
@@ -21,5 +20,5 @@ img {
 }
 
 div.body {
-    min-height:600px; /* Be sure there's room for the sidebar. */
+    min-height:750px; /* Be sure there's room for the sidebar. */
 }

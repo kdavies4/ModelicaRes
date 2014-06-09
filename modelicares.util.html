@@ -27,6 +27,8 @@
     <script type="text/javascript" src="javascripts/analytics.js"></script>
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
     <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
+    <link rel="next" title="modelicares.simres" href="simres.html" />
+    <link rel="prev" title="modelicares.texunit" href="modelicares.texunit.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment, linearization, Modelica plot, analysis, sort, filter, browse, script, data, diagram, export">
     <meta name="author" content="Kevin Davies">
@@ -43,6 +45,12 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="simres.html" title="modelicares.simres"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="modelicares.texunit.html" title="modelicares.texunit"
+             accesskey="P">previous</a> |</li>
         <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -53,60 +61,60 @@
           <div class="body">
             
   <div class="section" id="module-modelicares.util">
-<span id="modelicares-util"></span><h1><a class="reference internal" href="#module-modelicares.util" title="modelicares.util"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.util</span></tt></a><a class="headerlink" href="#module-modelicares.util" title="Permalink to this headline">¶</a></h1>
+<span id="modelicares-util"></span><h1><a class="reference internal" href="util.html#module-modelicares.util" title="modelicares.util"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.util</span></tt></a><a class="headerlink" href="#module-modelicares.util" title="Permalink to this headline">¶</a></h1>
 <p>Classes and functions to help plot and interpret experimental data</p>
 <p><strong>Classes:</strong></p>
 <ul class="simple">
-<li><a class="reference internal" href="#modelicares.util.ArrowLine" title="modelicares.util.ArrowLine"><tt class="xref py py-class docutils literal"><span class="pre">ArrowLine</span></tt></a> - A <a href="#id2"><span class="problematic" id="id3">matplotlib_</span></a> subclass to draw an arrowhead on a line</li>
-<li><a class="reference internal" href="#modelicares.util.CallList" title="modelicares.util.CallList"><tt class="xref py py-class docutils literal"><span class="pre">CallList</span></tt></a> - List that when called returns a list of the results from
+<li><a class="reference internal" href="util.html#modelicares.util.ArrowLine" title="modelicares.util.ArrowLine"><tt class="xref py py-class docutils literal"><span class="pre">ArrowLine</span></tt></a> - A <a href="#id2"><span class="problematic" id="id3">matplotlib_</span></a> subclass to draw an arrowhead on a line</li>
+<li><a class="reference internal" href="util.html#modelicares.util.CallList" title="modelicares.util.CallList"><tt class="xref py py-class docutils literal"><span class="pre">CallList</span></tt></a> - List that when called returns a list of the results from
 calling its elements</li>
 </ul>
 <p><strong>Functions:</strong></p>
 <ul class="simple">
-<li><a class="reference internal" href="#modelicares.util.add_arrows" title="modelicares.util.add_arrows"><tt class="xref py py-meth docutils literal"><span class="pre">add_arrows()</span></tt></a> - Overlay arrows with annotations on top of a pre-plotted
+<li><a class="reference internal" href="util.html#modelicares.util.add_arrows" title="modelicares.util.add_arrows"><tt class="xref py py-meth docutils literal"><span class="pre">add_arrows()</span></tt></a> - Overlay arrows with annotations on top of a pre-plotted
 line.</li>
-<li><a class="reference internal" href="#modelicares.util.add_hlines" title="modelicares.util.add_hlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_hlines()</span></tt></a> - Add horizontal lines to a set of axes with optional
+<li><a class="reference internal" href="util.html#modelicares.util.add_hlines" title="modelicares.util.add_hlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_hlines()</span></tt></a> - Add horizontal lines to a set of axes with optional
 labels.</li>
-<li><a class="reference internal" href="#modelicares.util.add_vlines" title="modelicares.util.add_vlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_vlines()</span></tt></a> - Add vertical lines to a set of axes with optional
+<li><a class="reference internal" href="util.html#modelicares.util.add_vlines" title="modelicares.util.add_vlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_vlines()</span></tt></a> - Add vertical lines to a set of axes with optional
 labels.</li>
-<li><a class="reference internal" href="#modelicares.util.basename" title="modelicares.util.basename"><tt class="xref py py-meth docutils literal"><span class="pre">basename()</span></tt></a> - Return the base filename from <em>fname</em>.</li>
-<li><a class="reference internal" href="#modelicares.util.cast_sametype" title="modelicares.util.cast_sametype"><tt class="xref py py-meth docutils literal"><span class="pre">cast_sametype()</span></tt></a> - Decorator to cast the output of a method as an
+<li><a class="reference internal" href="util.html#modelicares.util.basename" title="modelicares.util.basename"><tt class="xref py py-meth docutils literal"><span class="pre">basename()</span></tt></a> - Return the base filename from <em>fname</em>.</li>
+<li><a class="reference internal" href="util.html#modelicares.util.cast_sametype" title="modelicares.util.cast_sametype"><tt class="xref py py-meth docutils literal"><span class="pre">cast_sametype()</span></tt></a> - Decorator to cast the output of a method as an
 instance of the containing class</li>
-<li><a class="reference internal" href="#modelicares.util.color" title="modelicares.util.color"><tt class="xref py py-meth docutils literal"><span class="pre">color()</span></tt></a> - Plot 2D scalar data on a color axis in 2D Cartesian
+<li><a class="reference internal" href="util.html#modelicares.util.color" title="modelicares.util.color"><tt class="xref py py-meth docutils literal"><span class="pre">color()</span></tt></a> - Plot 2D scalar data on a color axis in 2D Cartesian
 coordinates.</li>
 <li><tt class="xref py py-meth docutils literal"><span class="pre">closeall()</span></tt> - Close all open figures (shortcut to the
 <tt class="xref py py-meth docutils literal"><span class="pre">destroy_all()</span></tt> from <tt class="xref py py-class docutils literal"><span class="pre">matplotlib._pylab_helpers.Gcf</span></tt>).</li>
-<li><a class="reference internal" href="#modelicares.util.delayed_exit" title="modelicares.util.delayed_exit"><tt class="xref py py-meth docutils literal"><span class="pre">delayed_exit()</span></tt></a> - Exit with a message and a delay.</li>
-<li><a class="reference internal" href="#modelicares.util.expand_path" title="modelicares.util.expand_path"><tt class="xref py py-meth docutils literal"><span class="pre">expand_path()</span></tt></a> - Expand a file path by replacing &#8216;~&#8217; with the user
+<li><a class="reference internal" href="util.html#modelicares.util.delayed_exit" title="modelicares.util.delayed_exit"><tt class="xref py py-meth docutils literal"><span class="pre">delayed_exit()</span></tt></a> - Exit with a message and a delay.</li>
+<li><a class="reference internal" href="util.html#modelicares.util.expand_path" title="modelicares.util.expand_path"><tt class="xref py py-meth docutils literal"><span class="pre">expand_path()</span></tt></a> - Expand a file path by replacing &#8216;~&#8217; with the user
 directory and make the path absolute.</li>
-<li><a class="reference internal" href="#modelicares.util.flatten_dict" title="modelicares.util.flatten_dict"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_dict()</span></tt></a> - Flatten a nested dictionary.</li>
-<li><a class="reference internal" href="#modelicares.util.flatten_list" title="modelicares.util.flatten_list"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_list()</span></tt></a> - Flatten a nested list.</li>
-<li><a class="reference internal" href="#modelicares.util.figure" title="modelicares.util.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> - Create a figure and set its label.</li>
-<li><a class="reference internal" href="#modelicares.util.get_indices" title="modelicares.util.get_indices"><tt class="xref py py-meth docutils literal"><span class="pre">get_indices()</span></tt></a> - Return the pair of indices that bound a target value in
+<li><a class="reference internal" href="util.html#modelicares.util.flatten_dict" title="modelicares.util.flatten_dict"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_dict()</span></tt></a> - Flatten a nested dictionary.</li>
+<li><a class="reference internal" href="util.html#modelicares.util.flatten_list" title="modelicares.util.flatten_list"><tt class="xref py py-meth docutils literal"><span class="pre">flatten_list()</span></tt></a> - Flatten a nested list.</li>
+<li><a class="reference internal" href="util.html#modelicares.util.figure" title="modelicares.util.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> - Create a figure and set its label.</li>
+<li><a class="reference internal" href="util.html#modelicares.util.get_indices" title="modelicares.util.get_indices"><tt class="xref py py-meth docutils literal"><span class="pre">get_indices()</span></tt></a> - Return the pair of indices that bound a target value in
 a monotonically increasing vector.</li>
-<li><a class="reference internal" href="#modelicares.util.get_pow1000" title="modelicares.util.get_pow1000"><tt class="xref py py-meth docutils literal"><span class="pre">get_pow1000()</span></tt></a> - Return the exponent of 1000 for which the
+<li><a class="reference internal" href="util.html#modelicares.util.get_pow1000" title="modelicares.util.get_pow1000"><tt class="xref py py-meth docutils literal"><span class="pre">get_pow1000()</span></tt></a> - Return the exponent of 1000 for which the
 significand of a number is within the range [1, 1000).</li>
-<li><a class="reference internal" href="#modelicares.util.load_csv" title="modelicares.util.load_csv"><tt class="xref py py-meth docutils literal"><span class="pre">load_csv()</span></tt></a> - Load a CSV file into a dictionary.</li>
-<li><a class="reference internal" href="#modelicares.util.match" title="modelicares.util.match"><tt class="xref py py-meth docutils literal"><span class="pre">match()</span></tt></a> - Reduce a list of strings to those that match a pattern.</li>
-<li><a class="reference internal" href="#modelicares.util.multiglob" title="modelicares.util.multiglob"><tt class="xref py py-meth docutils literal"><span class="pre">multiglob()</span></tt></a> - Return a set of filenames that match sets of pathnames
+<li><a class="reference internal" href="util.html#modelicares.util.load_csv" title="modelicares.util.load_csv"><tt class="xref py py-meth docutils literal"><span class="pre">load_csv()</span></tt></a> - Load a CSV file into a dictionary.</li>
+<li><a class="reference internal" href="util.html#modelicares.util.match" title="modelicares.util.match"><tt class="xref py py-meth docutils literal"><span class="pre">match()</span></tt></a> - Reduce a list of strings to those that match a pattern.</li>
+<li><a class="reference internal" href="util.html#modelicares.util.multiglob" title="modelicares.util.multiglob"><tt class="xref py py-meth docutils literal"><span class="pre">multiglob()</span></tt></a> - Return a set of filenames that match sets of pathnames
 and extensions.</li>
-<li><a class="reference internal" href="#modelicares.util.plot" title="modelicares.util.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a> - Plot 1D scalar data as points and/or line segments in 2D
+<li><a class="reference internal" href="util.html#modelicares.util.plot" title="modelicares.util.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a> - Plot 1D scalar data as points and/or line segments in 2D
 Cartesian coordinates.</li>
-<li><a class="reference internal" href="#modelicares.util.quiver" title="modelicares.util.quiver"><tt class="xref py py-meth docutils literal"><span class="pre">quiver()</span></tt></a> - Plot 2D vector data as arrows in 2D Cartesian coordinates.</li>
-<li><a class="reference internal" href="#modelicares.util.replace" title="modelicares.util.replace"><tt class="xref py py-meth docutils literal"><span class="pre">replace()</span></tt></a> - Perform a list of replacements on the text in a list of
+<li><a class="reference internal" href="util.html#modelicares.util.quiver" title="modelicares.util.quiver"><tt class="xref py py-meth docutils literal"><span class="pre">quiver()</span></tt></a> - Plot 2D vector data as arrows in 2D Cartesian coordinates.</li>
+<li><a class="reference internal" href="util.html#modelicares.util.replace" title="modelicares.util.replace"><tt class="xref py py-meth docutils literal"><span class="pre">replace()</span></tt></a> - Perform a list of replacements on the text in a list of
 files.</li>
-<li><a class="reference internal" href="#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> - Save the current figures as images in a format or list of
+<li><a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> - Save the current figures as images in a format or list of
 formats.</li>
-<li><a class="reference internal" href="#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> - Save all open figures as images in a format or list of
+<li><a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> - Save all open figures as images in a format or list of
 formats.</li>
-<li><a class="reference internal" href="#modelicares.util.setup_subplots" title="modelicares.util.setup_subplots"><tt class="xref py py-meth docutils literal"><span class="pre">setup_subplots()</span></tt></a> - Create an array of subplots and return their axes.</li>
-<li><a class="reference internal" href="#modelicares.util.shift_scale_x" title="modelicares.util.shift_scale_x"><tt class="xref py py-meth docutils literal"><span class="pre">shift_scale_x()</span></tt></a> - Apply an offset and a factor as necessary to the x
+<li><a class="reference internal" href="util.html#modelicares.util.setup_subplots" title="modelicares.util.setup_subplots"><tt class="xref py py-meth docutils literal"><span class="pre">setup_subplots()</span></tt></a> - Create an array of subplots and return their axes.</li>
+<li><a class="reference internal" href="util.html#modelicares.util.shift_scale_x" title="modelicares.util.shift_scale_x"><tt class="xref py py-meth docutils literal"><span class="pre">shift_scale_x()</span></tt></a> - Apply an offset and a factor as necessary to the x
 axis.</li>
-<li><a class="reference internal" href="#modelicares.util.shift_scale_y" title="modelicares.util.shift_scale_y"><tt class="xref py py-meth docutils literal"><span class="pre">shift_scale_y()</span></tt></a> - Apply an offset and a factor as necessary to the y
+<li><a class="reference internal" href="util.html#modelicares.util.shift_scale_y" title="modelicares.util.shift_scale_y"><tt class="xref py py-meth docutils literal"><span class="pre">shift_scale_y()</span></tt></a> - Apply an offset and a factor as necessary to the y
 axis.</li>
-<li><a class="reference internal" href="#modelicares.util.si_prefix" title="modelicares.util.si_prefix"><tt class="xref py py-meth docutils literal"><span class="pre">si_prefix()</span></tt></a> - Return the SI prefix for a power of 1000.</li>
-<li><a class="reference internal" href="#modelicares.util.tree" title="modelicares.util.tree"><tt class="xref py py-meth docutils literal"><span class="pre">tree()</span></tt></a> - Return a tree of strings as a nested dictionary.</li>
-<li><a class="reference internal" href="#modelicares.util.yes" title="modelicares.util.yes"><tt class="xref py py-meth docutils literal"><span class="pre">yes()</span></tt></a> - Ask a yes/no question and return <em>True</em> if the answer is &#8216;Y&#8217;
+<li><a class="reference internal" href="util.html#modelicares.util.si_prefix" title="modelicares.util.si_prefix"><tt class="xref py py-meth docutils literal"><span class="pre">si_prefix()</span></tt></a> - Return the SI prefix for a power of 1000.</li>
+<li><a class="reference internal" href="util.html#modelicares.util.tree" title="modelicares.util.tree"><tt class="xref py py-meth docutils literal"><span class="pre">tree()</span></tt></a> - Return a tree of strings as a nested dictionary.</li>
+<li><a class="reference internal" href="util.html#modelicares.util.yes" title="modelicares.util.yes"><tt class="xref py py-meth docutils literal"><span class="pre">yes()</span></tt></a> - Ask a yes/no question and return <em>True</em> if the answer is &#8216;Y&#8217;
 or &#8216;y&#8217;.</li>
 </ul>
 <dl class="class">
@@ -293,7 +301,7 @@ the path absolute.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The <em>label</em> property is used as the base filename in the
-<a class="reference internal" href="#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> and <a class="reference internal" href="#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> functions.</p>
+<a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> and <a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> functions.</p>
 </div>
 </dd></dl>
 
@@ -677,7 +685,7 @@ or list of figures to be saved</p>
 </ul>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">In general, <a class="reference internal" href="#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> should be called before
+<p class="last">In general, <a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> should be called before
 <tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.show()</span></tt> so that the figure(s) are still present in
 memory.</p>
 </div>
@@ -695,7 +703,7 @@ memory.</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The <a class="reference internal" href="#modelicares.util.figure" title="modelicares.util.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> function can be used to directly create a
+<p class="last">The <a class="reference internal" href="util.html#modelicares.util.figure" title="modelicares.util.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> function can be used to directly create a
 figure with a label.</p>
 </div>
 </dd></dl>
@@ -707,7 +715,7 @@ figure with a label.</p>
 <p>The directory and base filenames (without extension) are taken from the
 <em>label</em> property of the open figures.  If a figure has an empty <em>label</em>,
 then a file dialog is opened to choose the filename.  Note that the
-<a class="reference internal" href="#modelicares.util.figure" title="modelicares.util.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> function can be used to directly create a figure with a
+<a class="reference internal" href="util.html#modelicares.util.figure" title="modelicares.util.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a> function can be used to directly create a figure with a
 label.</p>
 <p><strong>Arguments:</strong></p>
 <ul class="simple">
@@ -715,7 +723,7 @@ label.</p>
 </ul>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">In general, <a class="reference internal" href="#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> should be called before
+<p class="last">In general, <a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a> should be called before
 <tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.show()</span></tt> so that the figure(s) are still present
 in memory.</p>
 </div>
@@ -957,7 +965,7 @@ end of each branch is the full string.</p>
   <li><a href="changes.html">Change log</a></li>
   </ul>
 <h3><a href="modules-scripts.html">Modules and Scripts</a></h3>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
@@ -966,7 +974,7 @@ end of each branch is the full string.</p>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
 </ul>
 <h3>Useful Links</h3>
@@ -1005,6 +1013,12 @@ end of each branch is the full string.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
+        <li class="right" >
+          <a href="simres.html" title="modelicares.simres"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="modelicares.texunit.html" title="modelicares.texunit"
+             >previous</a> |</li>
         <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
       </ul>
     </div>

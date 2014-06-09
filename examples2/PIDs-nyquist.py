@@ -1,7 +1,7 @@
 #!/usr/bin/pythont
 # Example of LinResList.nyquist()
 
-from os.path import join, dirname
+from os.path import join
 from modelicares import LinResList, read_params
 
 lins = LinResList('PID.mat', 'PID/*/')
@@ -15,6 +15,6 @@ for lin in lins:
 lins.sort(key=lambda lin: lin.label)
 
 # and finally plot:
-lins.nyquist(title="Nyquist plot of Modelica.Blocks.Continuous.PID\n"
-                   "with varying differential time constant",
+lins.nyquist(title=("Nyquist plot of Modelica.Blocks.Continuous.PID\n"
+                    "with varying differential time constant"),
              freqs=(0.1, 100));
