@@ -4,6 +4,8 @@
 See README.md for instructions.
 """
 
+# pylint: disable=E0611, F0401
+
 import re
 
 from glob import glob
@@ -20,41 +22,43 @@ except ImportError:
             from numpy.distutils.core import setup
 
 def get_version(fname):
-    """Return the version number of file *fname*.
+    """Return the version number of the module in file *fname*.
     """
-    with open(fname) as f:
+    with open(fname) as module:
         try:
             return re.search('__version__ *= *["'"'"'](.*)["'"'"']',
-                             f.read()).group(1)
+                             module.read()).group(1)
         except AttributeError:
             return
 
-version = get_version('modelicares/__init__.py')
+VERSION = get_version('modelicares/__init__.py')
 
 setup(name='ModelicaRes',
-      version=version if version else '0-unreleased_copy',
-      description='Utilities to set up and analyze Modelica simulation experiments',
+      version=VERSION if VERSION else '0-unreleased_copy',
+      description=('Utilities to set up and analyze Modelica simulation '
+                   'experiments'),
       long_description=open('README.txt').read(),
       author='Kevin Davies',
       author_email='kdavies4@gmail.com',
       url='http://kdavies4.github.io/ModelicaRes/',
       download_url=('https://github.com/kdavies4/ModelicaRes/archive/v%s.zip'
-                    % version if version else ''),
+                    % VERSION if VERSION else ''),
       packages=['modelicares', 'modelicares.exps', 'modelicares._io'],
       scripts=glob('bin/*'),
-      classifiers=['Development Status :: 4 - Beta',
-                   'Operating System :: POSIX :: Linux',
-                   'Operating System :: Microsoft :: Windows',
-                   'Environment :: Console',
-                   'License :: OSI Approved :: BSD License',
-                   'Programming Language :: Python :: 2.7',
-                   'Programming Language :: Python :: 3.2',
-                   'Programming Language :: Python :: 3.3',
-                   'Programming Language :: Python :: 3.4',
-                   'Intended Audience :: Science/Research',
-                   'Topic :: Scientific/Engineering',
-                   'Topic :: Utilities',
-                   ],
+      classifiers=[
+          'Development Status :: 4 - Beta',
+          'Operating System :: POSIX :: Linux',
+          'Operating System :: Microsoft :: Windows',
+          'Environment :: Console',
+          'License :: OSI Approved :: BSD License',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3.2',
+          'Programming Language :: Python :: 3.3',
+          'Programming Language :: Python :: 3.4',
+          'Intended Audience :: Science/Research',
+          'Topic :: Scientific/Engineering',
+          'Topic :: Utilities',
+      ],
       license='BSD-compatible (see LICENSE.txt)',
       keywords=['Modelica', 'plot', 'results', 'simulation', 'experiment',
                 'Dymola', 'matplotlib', 'pandas'],
