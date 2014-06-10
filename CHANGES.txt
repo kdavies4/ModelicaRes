@@ -4,13 +4,15 @@ Change log
 The releases are numbered according to the `Semantic Versioning Specification
 <http://semver.org>`_.
 
-vx.x.x_ (YYYY-MM-DD) -- Updates:.. _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+v0.12.2_ (2014-6-10) -- Updates:
+
+   - Improved installation script and documentation
 
 v0.12.1_ (2014-6-10) -- Updates:
 
    - Updated documentation
    - General cleanup of code and development scripts
-   - Re-enabled setup_requires to automatically install requirements.. _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+   - Re-enabled setup_requires to automatically install requirements.. _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.12.0_ (2014-6-5) -- Updates:
 
@@ -50,11 +52,11 @@ v0.12.0_ (2014-6-5) -- Updates:
    - Supported Qt_ via several installations: PyQt4_, guidata_, and PySide_.
      PySide_ is no longer required, but if no Qt_ installation is available,
      then file dialogs are not available in :meth:`~modelicares.util.save` or
-     the `loadres <loadres.html>`_ script... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+     the `loadres <loadres.html>`_ script... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.11.1_ (2014-5-21) -- Updates:
 
-   - Fixed the release to PyPI_... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+   - Fixed the release to PyPI_... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.11.0_ (2014-5-21) -- Updates:
 
@@ -123,7 +125,7 @@ v0.11.0_ (2014-5-21) -- Updates:
    - Removed :meth:`~modelicares.simres.merge_times`.  It is not used internally
      and probably is not very helpful externally.
    - Removed :meth:`~modelicares.util.animate`.  matplotlib_ now has built-in
-     methods for this; see http://matplotlib.org/api/animation_api.html... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+     methods for this; see http://matplotlib.org/api/animation_api.html... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.10.0_ (2014-4-30) -- Updates:
 
@@ -144,7 +146,7 @@ v0.10.0_ (2014-4-30) -- Updates:
      :meth:`~modelicares.simres.SimRes.glob` into
      :meth:`~modelicares.simres.SimRes.names` and added the option to use
      regular expressions.  By default, :meth:`~modelicares.simres.SimRes.names`
-     still returns all variable names... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+     still returns all variable names... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.9.0_ (2014-3-17) -- Updates:
 
@@ -167,15 +169,15 @@ v0.9.0_ (2014-3-17) -- Updates:
    - Explained setup in the loadres_ example.
    - Updated expected example output.
    - Updated `matplotlibrc
-     <https://github.com/kdavies4/ModelicaRes/blob/master/examples/matplotlibrc>`_... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+     <https://github.com/kdavies4/ModelicaRes/blob/master/examples/matplotlibrc>`_... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.8.2_ (2013-10-16) -- Updates:
 
-   - Fixed installation issues (:mod:`setup.py`)... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+   - Fixed installation issues (:mod:`setup.py`)... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.8.1_ (2013-8-6) -- Updates:
 
-   - Added missing loadres_ script... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+   - Added missing loadres_ script... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.8.0_ (2013-8-6) -- Updates:
 
@@ -197,7 +199,7 @@ v0.8.0_ (2013-8-6) -- Updates:
    - Added :meth:`~modelicares.simres.SimRes.glob` to return variables that
      match a pattern.
    - Removed the :mod:`simres.info` submodule.  It is better to use the methods
-     of :class:`~modelicares.simres.SimRes` directly... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+     of :class:`~modelicares.simres.SimRes` directly... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.7.2_ (2013-7-9) -- Updates:
 
@@ -207,11 +209,11 @@ v0.7.2_ (2013-7-9) -- Updates:
    - Added warning message in :meth:`~modelicares.simres.SimRes.plot` if y-axis
      variable descriptions are different.
    - :meth:`~modelicares.exps.write_script` now writes scripts that are more
-     readable... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+     readable... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.7.1_ (2013-7-7) -- Updates:
 
-   - Added missing files to `MANIFEST <MANIFEST>`_... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+   - Added missing files to `MANIFEST <MANIFEST>`_... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.7.0_ (2013-7-7) -- Updates:
 
@@ -228,7 +230,7 @@ v0.7.0_ (2013-7-7) -- Updates:
      *permute* argument to :meth:`~modelicares.exps.gen_experiments` is now
      generalized to *design*, as in design of experiments.  Now, assign a
      function from :mod:`~modelicares.exps.doe` to that argument.
-   - Square axes are now the default for Nyquist plots... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+   - Square axes are now the default for Nyquist plots... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.6.2_ (2013-7-4) -- Updates:
 
@@ -247,12 +249,12 @@ v0.6.2_ (2013-7-4) -- Updates:
    - Added :meth:`~modelicares.simres.SimRes.keys` method to list variable names
      (same as :meth:`~modelicares.simres.SimRes.names`).
    - Added methods from :class:`~modelicares.simres.Info` to :mod:`simres.info`
-     submodule... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+     submodule... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.6.1_ (2013-7-2) -- Updates:
 
    - Fixed `README.txt
-     <https://github.com/kdavies4/ModelicaRes/blob/master/README.txt>`_... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+     <https://github.com/kdavies4/ModelicaRes/blob/master/README.txt>`_... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.6.0_ (2013-7-2) -- Updates:
 
@@ -260,7 +262,7 @@ v0.6.0_ (2013-7-2) -- Updates:
    - Added *use_paren* option to :meth:`~modelicares.simres.SimRes.plot`.
    - Changed :meth:`~modelicares.exps.write_script` to put results in folders
      instead of special renaming scheme.
-   - Improved organization of the *examples* folder... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+   - Improved organization of the *examples* folder... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.5.2_ (2013-6-30) -- Updates:
 
@@ -268,7 +270,7 @@ v0.5.2_ (2013-6-30) -- Updates:
      :meth:`~modelicares.simres.SimRes.get_values` and
      :meth:`~modelicares.simres.SimRes.get_times` include the final value and
      time.
-   - Added function to scale time... _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
+   - Added function to scale time... _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 
 v0.5.1_ (2013-6-18) -- Updates:
 
@@ -297,6 +299,7 @@ v0.2_ (2012-11-20) -- Updates:
 v0.1_ (2012-11-8) -- Initial release
 
 
+.. _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 .. _v0.12.1: https://github.com/kdavies4/ModelicaRes/archive/v0.12.1.zip
 .. _v0.12.0: https://github.com/kdavies4/ModelicaRes/archive/v0.12.0.zip
 .. _v0.11.1: https://github.com/kdavies4/ModelicaRes/archive/v0.11.1.zip

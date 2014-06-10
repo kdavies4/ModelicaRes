@@ -105,8 +105,8 @@ def release():
                'https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip')
     rpls = [(r'(<http://semver.org>`_\.)',
              r'\1\n\n' + newheading),
-            (r'\n(\nv[0-9]+\.[0-9]+\.[0-9]+_)',
-             newlink + r'\n\1')]
+            (r'(Initial release\n\n\n)',
+             r'\1%s\n' % newlink)]
     util.replace('CHANGES.txt', rpls)
 
 
