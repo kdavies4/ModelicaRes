@@ -43,15 +43,12 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
 
-import sys
-PY2 = sys.version < '3'
-del sys
-
 from collections import namedtuple
 from itertools import count
 from scipy.io import loadmat
 from scipy.io.matlab.mio_utils import chars_to_strings
 from control.matlab import ss
+from six import PY2
 
 from modelicares.simres import _VarDict, _select, _apply_function, _swap
 from modelicares.simres import Variable as GenericVariable
