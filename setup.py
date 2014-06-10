@@ -64,7 +64,8 @@ setup(name='ModelicaRes',
       requires=['numpy', 'scipy (>=0.10.0)', 'matplotlib (>=1.3.1)', 'pandas',
                 'control', 'six'],
       platforms='any',
-      )
+      zip_safe=True,
+     )
       # ModelicaRes may run with scipy as early as 0.7.0.  However, the control
       # package seems to need scipy >= 0.10.0 but does not stipulate the
       # version.
