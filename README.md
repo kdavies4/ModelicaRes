@@ -34,7 +34,12 @@ see the [main website].
 
 ### Installation
 
-The easiest way to install this package is to use [pip]:
+First, install the dependencies.  Most are installed automatically if you have
+the [setuptools] module.  However, [SciPy] >= 0.10.0 must be installed according
+to the instructions at http://www.scipy.org/install.html.  The GUIs require
+[Qt], which can be installed via [PyQt4], [guidata], or [PySide].
+
+Then install ModelicaRes.  The easiest way is to use [pip]:
 
     pip install modelicares
 
@@ -42,23 +47,17 @@ On Linux, it may be necessary to have root privileges:
 
     sudo pip install modelicares
 
-Another way is to download and extract a copy of the package.  The [main
-website], the [GitHub repository], and the [PyPI page] have copies which
-include the source code as well as examples and supporting files to build the
-documentation and run tests.  Once you have a copy, run the following command
-from the base folder:
+Another way to install ModelicaRes is to download and extract a copy of the
+package.  The [main website], the [GitHub repository], and the [PyPI page] have
+copies which include the source code as well as examples and supporting files to
+build the documentation and run tests.  Once you have a copy, run the following
+command from the base folder:
 
     python setup.py install
 
 Or, on Linux:
 
     sudo python setup.py install
-
-Some of the required packages may not install automatically.
-- [SciPy] can be installed according to the instructions at
-  http://www.scipy.org/install.html.
-- The GUIs require [Qt], which can be installed via [PyQt4], [guidata], or
-  [PySide].
 
 The [matplotlibrc file](examples/matplotlibrc) has some recommended revisions to
 [matplotlib]'s defaults.  To use it, copy it to the working directory or
@@ -105,6 +104,7 @@ suggestions, please
 [NumPy]: http://numpy.scipy.org/
 [SciPy]: http://www.scipy.org/index.html
 [OpenModelica]: https://www.openmodelica.org/
+[setuptools]: https://pypi.python.org/pypi/setuptools
 [Qt]: http://qt-project.org/
 [PyQt4]: http://www.riverbankcomputing.co.uk/software/pyqt/
 [guidata]: https://code.google.com/p/guidata/
