@@ -4,6 +4,8 @@ Change log
 The releases are numbered according to the `Semantic Versioning Specification
 <http://semver.org>`_.
 
+vx.x.x_ (YYYY-MM-DD) -- Updates:
+
 v0.12.2_ (2014-6-10) -- Updates:
 
    - Improved installation script and documentation
@@ -299,6 +301,7 @@ v0.2_ (2012-11-20) -- Updates:
 v0.1_ (2012-11-8) -- Initial release
 
 
+.. _vx.x.x: https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip
 .. _v0.12.2: https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip
 .. _v0.12.1: https://github.com/kdavies4/ModelicaRes/archive/v0.12.1.zip
 .. _v0.12.0: https://github.com/kdavies4/ModelicaRes/archive/v0.12.0.zip
