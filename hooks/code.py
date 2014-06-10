@@ -41,7 +41,7 @@ def build():
 
     # Update the version number.
     commit = git('rev-list', '--tags', '--max-count=1').stdout.rstrip()
-    lastversion = git.describe('--tags', commit).stdout.rstrip()
+    lastversion = git.describe('--tags', commit).stdout.rstrip().lstrip('v')
     # This is simpler but doesn't always return the latest tag:
     # lastversion = git.describe('--tag', abbrev=0).stdout.rstrip()
     version = raw_input("Enter the version number (last was %s): "

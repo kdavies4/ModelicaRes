@@ -95,11 +95,11 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
 import os
-import re
 import sys
 import time
 import numpy as np
 import matplotlib.pyplot as plt
+import re as regexp
 
 from collections import MutableMapping
 from decimal import Decimal
@@ -112,7 +112,6 @@ from matplotlib import rcParams
 from matplotlib._pylab_helpers import Gcf
 from matplotlib.cbook import iterable
 from matplotlib.lines import Line2D
-from re import compile as re_compile
 from six import string_types
 
 # Standard pylint settings for this project:
@@ -812,7 +811,7 @@ def match(strings, pattern=None, re=False):
         return list(strings) # Shortcut
     else:
         if re:
-            matcher = re_compile(pattern).search
+            matcher = regexp.compile(pattern).search
         else:
             matcher = lambda name: fnmatchcase(name, pattern)
         return list(filter(matcher, strings))
@@ -993,7 +992,7 @@ def replace(fnames, rpls):
 
     # Compile the regular expressions.
     for i, (old, new) in enumerate(rpls):
-        rpls[i] = (re.compile(old), new)
+        rpls[i] = (regexp.compile(old), new)
 
     # Read each file and make the replacements.
     for fname in flatten_list(fnames):
