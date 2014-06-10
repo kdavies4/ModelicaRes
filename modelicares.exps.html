@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '',
+        VERSION:     '0.12.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -51,7 +51,7 @@
         <li class="right" >
           <a href="modelicares.html" title="modelicares"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.12.2 Documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -167,7 +167,7 @@ order.</p>
 
 <dl class="function">
 <dt id="modelicares.exps.gen_experiments">
-<tt class="descclassname">modelicares.exps.</tt><tt class="descname">gen_experiments</tt><big>(</big><em>models=None</em>, <em>params={}</em>, <em>args={}</em>, <em>design=&lt;function fullfact at 0x7fdd479f3f50&gt;</em><big>)</big><a class="headerlink" href="#modelicares.exps.gen_experiments" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modelicares.exps.</tt><tt class="descname">gen_experiments</tt><big>(</big><em>models=None</em>, <em>params={}</em>, <em>args={}</em>, <em>design=&lt;function fullfact at 0x7f35a255d050&gt;</em><big>)</big><a class="headerlink" href="#modelicares.exps.gen_experiments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a generator for a set of simulation experiments using permutation
 or simple element-wise grouping.</p>
 <p>The generator yields instances of <a class="reference internal" href="#modelicares.exps.Experiment" title="modelicares.exps.Experiment"><tt class="xref py py-class docutils literal"><span class="pre">Experiment</span></tt></a>&#8212;named tuples of
@@ -411,7 +411,7 @@ supported.</p>
 
 <dl class="function">
 <dt id="modelicares.exps.write_script">
-<tt class="descclassname">modelicares.exps.</tt><tt class="descname">write_script</tt><big>(</big><em>experiments=[(None, {}, {})], packages=[], working_dir='~/Documents/Modelica', fname='run-sims.mos', command='simulateModel', results=['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x', 'dymolalg.txt']</em><big>)</big><a class="headerlink" href="#modelicares.exps.write_script" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modelicares.exps.</tt><tt class="descname">write_script</tt><big>(</big><em>experiments=[(None, {}, {})], packages=[], working_dir='~/Documents/Modelica', fname='run_sims.mos', command='simulateModel', results=['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x', 'dymolalg.txt']</em><big>)</big><a class="headerlink" href="#modelicares.exps.write_script" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write a <a class="reference external" href="http://www.modelica.org/">Modelica</a> script to run simulations.</p>
 <p><strong>Arguments</strong>:</p>
 <ul>
@@ -514,11 +514,11 @@ will be simulated.</p>
 <span class="gp">... </span>                        <span class="n">params</span><span class="o">=</span><span class="p">{},</span>
 <span class="gp">... </span>                        <span class="n">args</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">stopTime</span><span class="o">=</span><span class="mi">2500</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">write_script</span><span class="p">(</span><span class="n">experiment</span><span class="p">,</span>
-<span class="gp">... </span>             <span class="n">fname</span><span class="o">=</span><span class="s">&quot;examples/ChuaCircuit/run-sims1.mos&quot;</span><span class="p">)</span> 
+<span class="gp">... </span>             <span class="n">fname</span><span class="o">=</span><span class="s">&quot;examples/ChuaCircuit/run_sims1.mos&quot;</span><span class="p">)</span> 
 <span class="go">([&#39;ChuaCircuit&#39;], &#39;...examples/ChuaCircuit&#39;)</span>
 </pre></div>
 </div>
-<p>In <em>examples/ChuaCircuit/run-sims1.mos</em>:</p>
+<p>In <em>examples/ChuaCircuit/run_sims1.mos</em>:</p>
 <div class="highlight-modelica"><div class="highlight"><pre><span class="c">// Modelica experiment script written by modelicares ...</span>
 <span class="k">import</span> <span class="nc">Modelica.Utilities.Files.copy</span><span class="p">;</span>
 <span class="k">import</span> <span class="nc">Modelica.Utilities.Files.createDirectory</span><span class="p">;</span>
@@ -551,11 +551,11 @@ will be simulated.</p>
 <span class="gp">... </span>    <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;L.L&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">18</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
 <span class="gp">... </span>            <span class="s">&#39;C1.C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
 <span class="gp">... </span>            <span class="s">&#39;C2.C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">120</span><span class="p">]})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">write_script</span><span class="p">(</span><span class="n">experiments</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s">&quot;examples/ChuaCircuit/run-sims2.mos&quot;</span><span class="p">)</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">write_script</span><span class="p">(</span><span class="n">experiments</span><span class="p">,</span> <span class="n">fname</span><span class="o">=</span><span class="s">&quot;examples/ChuaCircuit/run_sims2.mos&quot;</span><span class="p">)</span> 
 <span class="go">([&#39;ChuaCircuit&#39;, ..., &#39;ChuaCircuit&#39;], &#39;...examples/ChuaCircuit&#39;)</span>
 </pre></div>
 </div>
-<p>In <em>examples/ChuaCircuit/run-sims2.mos</em>, there are commands to run and save
+<p>In <em>examples/ChuaCircuit/run_sims2.mos</em>, there are commands to run and save
 results from twelve simulations.</p>
 </dd></dl>
 
@@ -579,7 +579,6 @@ results from twelve simulations.</p>
   </ul>
 <h3><a href="modules-scripts.html">Modules and Scripts</a></h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
@@ -588,7 +587,6 @@ results from twelve simulations.</p>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
 </ul>
 <h3>Useful Links</h3>
   <ul>
@@ -610,8 +608,8 @@ results from twelve simulations.</p>
 <script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
   <ul>
     <li><a itemprop="downloadUrl"
-           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.12.0.tar.gz"
-           rel="nofollow">Latest version<br>(v0.12.0, 2014-06-05)</a></li>
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.12.2.tar.gz"
+           rel="nofollow">Latest version<br>(v0.12.2, 2014-06-10)</a></li>
   </ul>
         </div>
       </div>
@@ -632,12 +630,12 @@ results from twelve simulations.</p>
         <li class="right" >
           <a href="modelicares.html" title="modelicares"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes v0.12.2 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jun 09, 2014.
+      Last updated on Jun 10, 2014.
     </div>
   </body>
 </html>

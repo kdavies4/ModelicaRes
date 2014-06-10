@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '',
+        VERSION:     '0.12.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="javascripts/analytics.js"></script>
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
     <link rel="top" title="Analyze Modelica results in Python" href="#" />
-    <link rel="next" title="modelicares.linres" href="linres.html" />
+    <link rel="next" title="loadres script" href="loadres.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment, linearization, Modelica plot, analysis, sort, filter, browse, script, data, diagram, export">
     <meta name="author" content="Kevin Davies">
@@ -45,9 +45,9 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="linres.html" title="modelicares.linres"
+          <a href="loadres.html" title="loadres script"
              accesskey="N">next</a> |</li>
-        <li><a href="#">ModelicaRes Documentation</a> &raquo;</li> 
+        <li><a href="#">ModelicaRes v0.12.2 Documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -84,7 +84,11 @@ added easily.</p>
 or online as a <a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb">static page</a>.
 The links in the sidebar provide the full documentation and many more examples.</p>
 <p><strong>Installation</strong></p>
-<p>The easiest way to install ModelicaRes is to use <a class="reference external" href="https://pypi.python.org/pypi/pip">pip</a>:</p>
+<p>First, install the dependencies.  Most are installed automatically if you have
+the <a class="reference external" href="https://pypi.python.org/pypi/setuptools">setuptools</a> module.  However, <a class="reference external" href="http://www.scipy.org/index.html">SciPy</a> &gt;= 0.10.0 must be installed according
+to the instructions at <a class="reference external" href="http://www.scipy.org/install.html">http://www.scipy.org/install.html</a>.  The GUIs require
+<a class="reference external" href="http://qt-project.org/">Qt</a>, which can be installed via <a class="reference external" href="http://www.riverbankcomputing.co.uk/software/pyqt/">PyQt4</a>, <a class="reference external" href="https://code.google.com/p/guidata/">guidata</a>, or <a class="reference external" href="http://qt-project.org/wiki/pyside">PySide</a>.</p>
+<p>Then install ModelicaRes.  The easiest way is to use <a class="reference external" href="https://pypi.python.org/pypi/pip">pip</a>:</p>
 <div class="highlight-python"><div class="highlight"><pre>pip install modelicares
 </pre></div>
 </div>
@@ -93,7 +97,7 @@ The links in the sidebar provide the full documentation and many more examples.<
 </pre></div>
 </div>
 <p>Another way is to download and extract a copy of the package from the sidebar on
-the right.  Run the following command from the base folder:</p>
+the left.  Run the following command from the base folder:</p>
 <div class="highlight-python"><div class="highlight"><pre>python setup.py install
 </pre></div>
 </div>
@@ -101,12 +105,6 @@ the right.  Run the following command from the base folder:</p>
 <div class="highlight-python"><div class="highlight"><pre>sudo python setup.py install
 </pre></div>
 </div>
-<p>Some of the required packages may not install automatically.</p>
-<ul class="simple">
-<li><a class="reference external" href="http://www.scipy.org/index.html">SciPy</a> can be installed according to the instructions at
-<a class="reference external" href="http://www.scipy.org/install.html">http://www.scipy.org/install.html</a>.</li>
-<li>The GUIs require <a class="reference external" href="http://qt-project.org/">Qt</a>, which can be installed via <a class="reference external" href="http://www.riverbankcomputing.co.uk/software/pyqt/">PyQt4</a>, <a class="reference external" href="https://code.google.com/p/guidata/">guidata</a>, or <a class="reference external" href="http://qt-project.org/wiki/pyside">PySide</a>.</li>
-</ul>
 <p>The <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/release/matplotlibrc">matplotlibrc file</a> has some
 recommended revisions to <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>&#8216;s defaults.  To use it, copy it to the
 working directory or <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>&#8216;s configuration directory.  See
@@ -150,7 +148,6 @@ If you have suggestions, please <a class="reference external" href="https://gith
   </ul>
 <h3><a href="modules-scripts.html">Modules and Scripts</a></h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
@@ -159,7 +156,6 @@ If you have suggestions, please <a class="reference external" href="https://gith
 <li class="toctree-l1"><a class="reference internal" href="modelicares.simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
 </ul>
 <h3>Useful Links</h3>
   <ul>
@@ -181,8 +177,8 @@ If you have suggestions, please <a class="reference external" href="https://gith
 <script type="text/javascript">$('#searchbox').show(0);</script><h3>Download</h3>
   <ul>
     <li><a itemprop="downloadUrl"
-           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.12.0.tar.gz"
-           rel="nofollow">Latest version<br>(v0.12.0, 2014-06-05)</a></li>
+           href="https://pypi.python.org/packages/source/M/ModelicaRes/ModelicaRes-0.12.2.tar.gz"
+           rel="nofollow">Latest version<br>(v0.12.2, 2014-06-10)</a></li>
   </ul>
         </div>
       </div>
@@ -198,14 +194,14 @@ If you have suggestions, please <a class="reference external" href="https://gith
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="linres.html" title="modelicares.linres"
+          <a href="loadres.html" title="loadres script"
              >next</a> |</li>
-        <li><a href="#">ModelicaRes Documentation</a> &raquo;</li> 
+        <li><a href="#">ModelicaRes v0.12.2 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jun 09, 2014.
+      Last updated on Jun 10, 2014.
     </div>
   </body>
 </html>

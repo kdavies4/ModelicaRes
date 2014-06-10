@@ -113,11 +113,17 @@
   <filter action="drop" type="wildcard" pattern="*doc/" />
   <filter action="drop" type="wildcard" pattern="*doc/*" />
   <filter action="drop" type="wildcard" pattern="*dist*" />
+  <filter action="drop" type="wildcard" pattern="*egg-info*" />
   <filter action="drop" type="wildcard" pattern="*examples/*" />
+  <filter action="drop" type="wildcard" pattern="*examples2/" />
   <filter action="drop" type="wildcard" pattern="*google*" />
+  <filter action="drop" type="wildcard" pattern="*hooks*" />
+  <filter action="drop" type="wildcard" pattern="*images/" />
   <filter action="drop" type="wildcard" pattern="*images/math*" />
   <filter action="drop" type="wildcard" pattern="*javascripts*" />
   <filter action="drop" type="wildcard" pattern="*MANIFEST*" />
+  <filter action="drop" type="wildcard" pattern="*modelicares/" />
+  <filter action="drop" type="wildcard" pattern="*modelicares/*" />
   <filter action="drop" type="wildcard" pattern="*tests*" />
   <filter action="drop" type="wildcard" pattern="*TODO*" />
 
