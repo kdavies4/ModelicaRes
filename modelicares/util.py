@@ -311,15 +311,15 @@ class CallList(list):
         return [item(*args, **kwargs) for item in self]
 
 
-def cast_sametype(func):
+def cast_sametype(meth):
     """Decorator to cast the output of a method as an instance of the
     containing class.
     """
-    @wraps(func)
+    @wraps(meth)
     def wrapped(self, *args, **kwargs):
         """Function that casts its output as self.__class__
         """
-        return self.__class__(func(self, *args, **kwargs))
+        return self.__class__(meth(self, *args, **kwargs))
 
     return wrapped
 

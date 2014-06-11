@@ -4,7 +4,7 @@ Change log
 The releases are numbered according to the `Semantic Versioning Specification
 <http://semver.org>`_.
 
-vx.x.x_ (YYYY-MM-DD) -- Updates:
+TBD (YYYY-MM-DD) -- Updates:
 
 v0.12.2_ (2014-6-10) -- Updates:
 

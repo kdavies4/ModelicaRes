@@ -42,6 +42,12 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
                  "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
+# pylint: disable=C0103
 
 from collections import namedtuple
 from itertools import count
@@ -52,14 +58,6 @@ from six import PY2
 
 from modelicares.simres import _VarDict, _select, _apply_function, _swap
 from modelicares.simres import Variable as GenericVariable
-
-# Standard pylint settings for this project:
-# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
-# pylint: disable=I0011, W0141, W0142
-
-# Other:
-# pylint: disable=C0103
-
 
 # Namedtuple to store the time and value information of each variable
 Samples = namedtuple('Samples', ['times', 'values', 'negated'])
@@ -153,37 +151,35 @@ class Variable(GenericVariable):
         # Keep it updated there.
         return self.samples.times
 
-def get_strings_no_decode(str_arr):
-    """Return a list of strings from a character array.
-
-    Strip the whitespace from the right and return it to the character set it
-    was saved in.
-    """
-    return [line.rstrip(' \0').encode('latin-1')
-            for line in chars_to_strings(str_arr)]
-    # The encode part undoes scipy.io.loadmat's decoding.
-
-def get_strings(str_arr):
-    """Return a list of strings from a character array.
-
-    Strip the whitespace from the right and recode it as utf-8.
-    """
-    return [line.rstrip(' \0').encode('latin-1').decode('utf-8')
-            for line in chars_to_strings(str_arr)]
-    # Modelica encodes using utf-8 but scipy.io.loadmat decodes using latin-1,
-    # thus the encode ... decode part.
-
 if PY2:
     # For most strings (those besides the description), Unicode is not
     # necessary.  Unicode support is less integrated in Python 2; Unicode
     # strings are a special case that are represented by u'...' (which is
     # distracting in the examples).  Therefore, in Python 2, we'll only use
-    # Unicode for the description strings.  In Python 3, literal strings are
-    # Unicode by default
+    # Unicode for the description strings.
+    def get_strings(str_arr):
+        """Return a list of strings from a character array.
+
+        Strip the whitespace from the right and return it to the character set it
+        was saved in.
+        """
+        return [line.rstrip(' \0').encode('latin-1')
+                for line in chars_to_strings(str_arr)]
+        # The encode part undoes scipy.io.loadmat's decoding.
+else:
+    # In Python 3, literal strings are Unicode by default
     # (http://stackoverflow.com/questions/6812031/how-to-make-unicode-string-with-python3),
     # and we need to leave the strings decoded because encoded strings are bytes
     # objects.
-    get_strings = get_strings_no_decode
+    def get_strings(str_arr):
+        """Return a list of strings from a character array.
+
+        Strip the whitespace from the right and recode it as utf-8.
+        """
+        return [line.rstrip(' \0').encode('latin-1').decode('utf-8')
+                for line in chars_to_strings(str_arr)]
+        # Modelica encodes using utf-8 but scipy.io.loadmat decodes using latin-1,
+        # thus the encode ... decode part.
 
 def read(fname, constants_only=False):
     r"""Read variables from a MATLAB\ :sup:`®` file with Dymola\ :sup:`®` or
