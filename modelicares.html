@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.12.2',
+        VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="javascripts/analytics.js"></script>
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
     <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
-    <link rel="next" title="modelicares.exps" href="modelicares.exps.html" />
+    <link rel="next" title="modelicares.exps.doe" href="exps.doe.html" />
     <link rel="prev" title="loadres script" href="loadres.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment, linearization, Modelica plot, analysis, sort, filter, browse, script, data, diagram, export">
@@ -46,12 +46,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="modelicares.exps.html" title="modelicares.exps"
+          <a href="exps.doe.html" title="modelicares.exps.doe"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="loadres.html" title="loadres script"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.12.2 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -67,23 +67,23 @@ plot the results</p>
 <p>This module provides convenient access to the most important functions and
 classes from the submodules.  These are:</p>
 <ul class="simple">
-<li>To manage simulation experiments (<a class="reference internal" href="modelicares.exps.html#module-modelicares.exps" title="modelicares.exps"><tt class="xref py py-mod docutils literal"><span class="pre">exps</span></tt></a> submodule):
-<a class="reference internal" href="modelicares.exps.doe.html#module-modelicares.exps.doe" title="modelicares.exps.doe"><tt class="xref py py-mod docutils literal"><span class="pre">doe</span></tt></a>, <a class="reference internal" href="modelicares.exps.html#modelicares.exps.Experiment" title="modelicares.exps.Experiment"><tt class="xref py py-class docutils literal"><span class="pre">Experiment</span></tt></a>,
-<a class="reference internal" href="modelicares.exps.html#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-meth docutils literal"><span class="pre">gen_experiments()</span></tt></a>, <a class="reference internal" href="modelicares.exps.html#modelicares.exps.modelica_str" title="modelicares.exps.modelica_str"><tt class="xref py py-meth docutils literal"><span class="pre">modelica_str()</span></tt></a>,
-<a class="reference internal" href="modelicares.exps.html#modelicares.exps.ParamDict" title="modelicares.exps.ParamDict"><tt class="xref py py-class docutils literal"><span class="pre">ParamDict</span></tt></a>, <a class="reference internal" href="modelicares.exps.html#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-meth docutils literal"><span class="pre">run_models()</span></tt></a>,
-<a class="reference internal" href="modelicares.exps.html#modelicares.exps.write_params" title="modelicares.exps.write_params"><tt class="xref py py-meth docutils literal"><span class="pre">write_params()</span></tt></a>, and <a class="reference internal" href="modelicares.exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a></li>
-<li>For simulation results (<a class="reference internal" href="modelicares.simres.html#module-modelicares.simres" title="modelicares.simres"><tt class="xref py py-mod docutils literal"><span class="pre">simres</span></tt></a> submodule):
-<a class="reference internal" href="modelicares.simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> and <a class="reference internal" href="modelicares.simres.html#modelicares.simres.SimResList" title="modelicares.simres.SimResList"><tt class="xref py py-class docutils literal"><span class="pre">SimResList</span></tt></a></li>
-<li>For linearization results (<a class="reference internal" href="modelicares.linres.html#module-modelicares.linres" title="modelicares.linres"><tt class="xref py py-mod docutils literal"><span class="pre">linres</span></tt></a> submodule):
-<a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> and <a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a></li>
-<li>To label numbers and quantities (<a class="reference internal" href="modelicares.texunit.html#module-modelicares.texunit" title="modelicares.texunit"><tt class="xref py py-mod docutils literal"><span class="pre">texunit</span></tt></a> submodule):
-<a class="reference internal" href="modelicares.texunit.html#modelicares.texunit.number_label" title="modelicares.texunit.number_label"><tt class="xref py py-meth docutils literal"><span class="pre">number_label()</span></tt></a>, <a class="reference internal" href="modelicares.texunit.html#modelicares.texunit.quantity_str" title="modelicares.texunit.quantity_str"><tt class="xref py py-meth docutils literal"><span class="pre">quantity_str()</span></tt></a>, and
-<a class="reference internal" href="modelicares.texunit.html#modelicares.texunit.unit2tex" title="modelicares.texunit.unit2tex"><tt class="xref py py-meth docutils literal"><span class="pre">unit2tex()</span></tt></a></li>
-<li>Supporting classes and functions (<a class="reference internal" href="modelicares.util.html#module-modelicares.util" title="modelicares.util"><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt></a> submodule):
-<a class="reference internal" href="modelicares.util.html#modelicares.util.add_arrows" title="modelicares.util.add_arrows"><tt class="xref py py-meth docutils literal"><span class="pre">add_arrows()</span></tt></a>, <a class="reference internal" href="modelicares.util.html#modelicares.util.add_hlines" title="modelicares.util.add_hlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_hlines()</span></tt></a>, <a class="reference internal" href="modelicares.util.html#modelicares.util.add_vlines" title="modelicares.util.add_vlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_vlines()</span></tt></a>,
-<a class="reference internal" href="modelicares.util.html#modelicares.util.ArrowLine" title="modelicares.util.ArrowLine"><tt class="xref py py-class docutils literal"><span class="pre">ArrowLine</span></tt></a>, <tt class="xref py py-meth docutils literal"><span class="pre">closeall()</span></tt>, <a class="reference internal" href="modelicares.util.html#modelicares.util.figure" title="modelicares.util.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a>,
-<a class="reference internal" href="modelicares.util.html#modelicares.util.load_csv" title="modelicares.util.load_csv"><tt class="xref py py-meth docutils literal"><span class="pre">load_csv()</span></tt></a>, <a class="reference internal" href="modelicares.util.html#modelicares.util.multiglob" title="modelicares.util.multiglob"><tt class="xref py py-meth docutils literal"><span class="pre">multiglob()</span></tt></a>, <a class="reference internal" href="modelicares.util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a>,
-<a class="reference internal" href="modelicares.util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a>, and <a class="reference internal" href="modelicares.util.html#modelicares.util.setup_subplots" title="modelicares.util.setup_subplots"><tt class="xref py py-meth docutils literal"><span class="pre">setup_subplots()</span></tt></a></li>
+<li>To manage simulation experiments (<a class="reference internal" href="exps.html#module-modelicares.exps" title="modelicares.exps"><tt class="xref py py-mod docutils literal"><span class="pre">exps</span></tt></a> submodule):
+<a class="reference internal" href="exps.doe.html#module-modelicares.exps.doe" title="modelicares.exps.doe"><tt class="xref py py-mod docutils literal"><span class="pre">doe</span></tt></a>, <a class="reference internal" href="exps.html#modelicares.exps.Experiment" title="modelicares.exps.Experiment"><tt class="xref py py-class docutils literal"><span class="pre">Experiment</span></tt></a>,
+<a class="reference internal" href="exps.html#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-meth docutils literal"><span class="pre">gen_experiments()</span></tt></a>, <a class="reference internal" href="exps.html#modelicares.exps.modelica_str" title="modelicares.exps.modelica_str"><tt class="xref py py-meth docutils literal"><span class="pre">modelica_str()</span></tt></a>,
+<a class="reference internal" href="exps.html#modelicares.exps.ParamDict" title="modelicares.exps.ParamDict"><tt class="xref py py-class docutils literal"><span class="pre">ParamDict</span></tt></a>, <a class="reference internal" href="exps.html#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-meth docutils literal"><span class="pre">run_models()</span></tt></a>,
+<a class="reference internal" href="exps.html#modelicares.exps.write_params" title="modelicares.exps.write_params"><tt class="xref py py-meth docutils literal"><span class="pre">write_params()</span></tt></a>, and <a class="reference internal" href="exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a></li>
+<li>For simulation results (<a class="reference internal" href="simres.html#module-modelicares.simres" title="modelicares.simres"><tt class="xref py py-mod docutils literal"><span class="pre">simres</span></tt></a> submodule):
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> and <a class="reference internal" href="simres.html#modelicares.simres.SimResList" title="modelicares.simres.SimResList"><tt class="xref py py-class docutils literal"><span class="pre">SimResList</span></tt></a></li>
+<li>For linearization results (<a class="reference internal" href="linres.html#module-modelicares.linres" title="modelicares.linres"><tt class="xref py py-mod docutils literal"><span class="pre">linres</span></tt></a> submodule):
+<a class="reference internal" href="linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> and <a class="reference internal" href="linres.html#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a></li>
+<li>To label numbers and quantities (<a class="reference internal" href="texunit.html#module-modelicares.texunit" title="modelicares.texunit"><tt class="xref py py-mod docutils literal"><span class="pre">texunit</span></tt></a> submodule):
+<a class="reference internal" href="texunit.html#modelicares.texunit.number_label" title="modelicares.texunit.number_label"><tt class="xref py py-meth docutils literal"><span class="pre">number_label()</span></tt></a>, <a class="reference internal" href="texunit.html#modelicares.texunit.quantity_str" title="modelicares.texunit.quantity_str"><tt class="xref py py-meth docutils literal"><span class="pre">quantity_str()</span></tt></a>, and
+<a class="reference internal" href="texunit.html#modelicares.texunit.unit2tex" title="modelicares.texunit.unit2tex"><tt class="xref py py-meth docutils literal"><span class="pre">unit2tex()</span></tt></a></li>
+<li>Supporting classes and functions (<a class="reference internal" href="util.html#module-modelicares.util" title="modelicares.util"><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt></a> submodule):
+<a class="reference internal" href="util.html#modelicares.util.add_arrows" title="modelicares.util.add_arrows"><tt class="xref py py-meth docutils literal"><span class="pre">add_arrows()</span></tt></a>, <a class="reference internal" href="util.html#modelicares.util.add_hlines" title="modelicares.util.add_hlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_hlines()</span></tt></a>, <a class="reference internal" href="util.html#modelicares.util.add_vlines" title="modelicares.util.add_vlines"><tt class="xref py py-meth docutils literal"><span class="pre">add_vlines()</span></tt></a>,
+<a class="reference internal" href="util.html#modelicares.util.ArrowLine" title="modelicares.util.ArrowLine"><tt class="xref py py-class docutils literal"><span class="pre">ArrowLine</span></tt></a>, <tt class="xref py py-meth docutils literal"><span class="pre">closeall()</span></tt>, <a class="reference internal" href="util.html#modelicares.util.figure" title="modelicares.util.figure"><tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt></a>,
+<a class="reference internal" href="util.html#modelicares.util.load_csv" title="modelicares.util.load_csv"><tt class="xref py py-meth docutils literal"><span class="pre">load_csv()</span></tt></a>, <a class="reference internal" href="util.html#modelicares.util.multiglob" title="modelicares.util.multiglob"><tt class="xref py py-meth docutils literal"><span class="pre">multiglob()</span></tt></a>, <a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a>,
+<a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a>, and <a class="reference internal" href="util.html#modelicares.util.setup_subplots" title="modelicares.util.setup_subplots"><tt class="xref py py-meth docutils literal"><span class="pre">setup_subplots()</span></tt></a></li>
 </ul>
 <p>There is also a local function:</p>
 <dl class="function">
@@ -98,8 +98,8 @@ current directory.</p>
 will be given for files that cannot be loaded.</p>
 <p><strong>Returns:</strong></p>
 <ol class="arabic simple">
-<li><a class="reference internal" href="modelicares.simres.html#modelicares.simres.SimResList" title="modelicares.simres.SimResList"><tt class="xref py py-class docutils literal"><span class="pre">SimResList</span></tt></a> of simulations</li>
-<li><a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a> of linearizations</li>
+<li><a class="reference internal" href="simres.html#modelicares.simres.SimResList" title="modelicares.simres.SimResList"><tt class="xref py py-class docutils literal"><span class="pre">SimResList</span></tt></a> of simulations</li>
+<li><a class="reference internal" href="linres.html#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a> of linearizations</li>
 </ol>
 <p>Either may be an empty list.</p>
 <p><strong>Example:</strong></p>
@@ -140,12 +140,11 @@ will be given for files that cannot be loaded.</p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.exps.doe.html"><tt class="docutils literal"><span class="pre">modelicares.exps.doe</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="exps.doe.html"><tt class="docutils literal"><span class="pre">modelicares.exps.doe</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
 </ul>
 <h3>Useful Links</h3>
   <ul>
@@ -184,17 +183,17 @@ will be given for files that cannot be loaded.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="modelicares.exps.html" title="modelicares.exps"
+          <a href="exps.doe.html" title="modelicares.exps.doe"
              >next</a> |</li>
         <li class="right" >
           <a href="loadres.html" title="loadres script"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.12.2 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jun 10, 2014.
+      Last updated on Jun 13, 2014.
     </div>
   </body>
 </html>

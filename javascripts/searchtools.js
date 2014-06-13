@@ -435,8 +435,8 @@ var Search = {
             displayNextItem();
           });
         } else if (DOCUMENTATION_OPTIONS.HAS_SOURCE) {
-          $.ajax({url: DOCUMENTATION_OPTIONS.URL_ROOT + '_sources/' + item[0] + '.txt',
-                  dataType: "text",
+          $.ajax({url: DOCUMENTATION_OPTIONS.URL_ROOT + item[0] + '.html',
+                  dataType: "html",
                   complete: function(jqxhr, textstatus) {
                     var data = jqxhr.responseText;
                     if (data !== '') {

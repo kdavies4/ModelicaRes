@@ -9,6 +9,10 @@ dist/
 MANIFEST
 *.mos
 doc/examples
+*.egg-info
+
+# Link to matplotlibrc
+matplotlibrc
 
 # Backup files
 .ipynb_checkpoints

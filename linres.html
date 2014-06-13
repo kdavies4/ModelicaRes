@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.12.2',
+        VERSION:     '',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -27,8 +27,8 @@
     <script type="text/javascript" src="javascripts/analytics.js"></script>
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
     <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
-    <link rel="next" title="loadres script" href="loadres.html" />
-    <link rel="prev" title="ModelicaRes" href="index.html" />
+    <link rel="next" title="modelicares.simres" href="simres.html" />
+    <link rel="prev" title="modelicares.exps.doe" href="exps.doe.html" />
     <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
     <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment, linearization, Modelica plot, analysis, sort, filter, browse, script, data, diagram, export">
     <meta name="author" content="Kevin Davies">
@@ -46,12 +46,12 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="loadres.html" title="loadres script"
+          <a href="simres.html" title="modelicares.simres"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="ModelicaRes"
+          <a href="exps.doe.html" title="modelicares.exps.doe"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.12.2 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -61,14 +61,14 @@
           <div class="body">
             
   <div class="section" id="module-modelicares.linres">
-<span id="modelicares-linres"></span><h1><a class="reference internal" href="modelicares.linres.html#module-modelicares.linres" title="modelicares.linres"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.linres</span></tt></a><a class="headerlink" href="#module-modelicares.linres" title="Permalink to this headline">¶</a></h1>
+<span id="modelicares-linres"></span><h1><a class="reference internal" href="#module-modelicares.linres" title="modelicares.linres"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.linres</span></tt></a><a class="headerlink" href="#module-modelicares.linres" title="Permalink to this headline">¶</a></h1>
 <p>This submodule contains classes to help load, analyze, and plot results from
 <a class="reference external" href="http://www.modelica.org/">Modelica</a> linearizations:</p>
 <ul class="simple">
-<li><a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> - Class to load, contain, and analyze results from a <a class="reference external" href="http://www.modelica.org/">Modelica</a>
+<li><a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> - Class to load, contain, and analyze results from a <a class="reference external" href="http://www.modelica.org/">Modelica</a>
 linearization</li>
-<li><a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a> - Specialized list of linearization results
-(<a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instances)</li>
+<li><a class="reference internal" href="#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a> - Specialized list of linearization results
+(<a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instances)</li>
 </ul>
 <dl class="class">
 <dt id="modelicares.linres.LinRes">
@@ -94,11 +94,11 @@ works (or none do).</p>
 </ul>
 <p><strong>Methods:</strong></p>
 <ul class="simple">
-<li><a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes.bode" title="modelicares.linres.LinRes.bode"><tt class="xref py py-meth docutils literal"><span class="pre">bode()</span></tt></a> - Create a Bode plot of the system&#8217;s response.</li>
-<li><a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes.nyquist" title="modelicares.linres.LinRes.nyquist"><tt class="xref py py-meth docutils literal"><span class="pre">nyquist()</span></tt></a> - Create a Nyquist plot of the system&#8217;s response.</li>
-<li><a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes.to_siso" title="modelicares.linres.LinRes.to_siso"><tt class="xref py py-meth docutils literal"><span class="pre">to_siso()</span></tt></a> - Return a SISO state-space system given input and output
+<li><a class="reference internal" href="#modelicares.linres.LinRes.bode" title="modelicares.linres.LinRes.bode"><tt class="xref py py-meth docutils literal"><span class="pre">bode()</span></tt></a> - Create a Bode plot of the system&#8217;s response.</li>
+<li><a class="reference internal" href="#modelicares.linres.LinRes.nyquist" title="modelicares.linres.LinRes.nyquist"><tt class="xref py py-meth docutils literal"><span class="pre">nyquist()</span></tt></a> - Create a Nyquist plot of the system&#8217;s response.</li>
+<li><a class="reference internal" href="#modelicares.linres.LinRes.to_siso" title="modelicares.linres.LinRes.to_siso"><tt class="xref py py-meth docutils literal"><span class="pre">to_siso()</span></tt></a> - Return a SISO state-space system given input and output
 names.</li>
-<li><a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes.to_tf" title="modelicares.linres.LinRes.to_tf"><tt class="xref py py-meth docutils literal"><span class="pre">to_tf()</span></tt></a> - Return a transfer function given input and output names.</li>
+<li><a class="reference internal" href="#modelicares.linres.LinRes.to_tf" title="modelicares.linres.LinRes.to_tf"><tt class="xref py py-meth docutils literal"><span class="pre">to_tf()</span></tt></a> - Return a transfer function given input and output names.</li>
 </ul>
 <p><strong>Properties:</strong></p>
 <ul>
@@ -386,14 +386,14 @@ labeled</p>
 <p>Specialized list of linearization results</p>
 <p><strong>Initialization signatures:</strong></p>
 <ul>
-<li><p class="first"><a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a>(): Returns an empty linearization list</p>
+<li><p class="first"><a class="reference internal" href="#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a>(): Returns an empty linearization list</p>
 </li>
-<li><p class="first"><a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a>(<em>lins</em>), where lins is a list of <a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>
-instances:  Casts the list into a <a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a></p>
+<li><p class="first"><a class="reference internal" href="#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a>(<em>lins</em>), where lins is a list of <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>
+instances:  Casts the list into a <a class="reference internal" href="#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a></p>
 </li>
-<li><p class="first"><a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a>(<em>filespec</em>), where <em>filespec</em> is a filename or
+<li><p class="first"><a class="reference internal" href="#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a>(<em>filespec</em>), where <em>filespec</em> is a filename or
 directory, possibly with wildcards a la <a class="reference external" href="https://docs.python.org/2/library/glob.html">glob</a>:  Returns a
-<a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a> of <a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instances loaded from the
+<a class="reference internal" href="#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a> of <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instances loaded from the
 matching or contained files</p>
 <blockquote>
 <div><p>The filename or directory must include the absolute path or be
@@ -401,7 +401,7 @@ resolved to the current directory.</p>
 <p>An error is only raised if no files can be loaded.</p>
 </div></blockquote>
 </li>
-<li><p class="first"><a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a>(<em>filespec1</em>, <em>filespec2</em>, ...): Loads all files
+<li><p class="first"><a class="reference internal" href="#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a>(<em>filespec1</em>, <em>filespec2</em>, ...): Loads all files
 matching or contained by <em>filespec1</em>, <em>filespec2</em>, etc. as above.</p>
 <blockquote>
 <div><p>Each file will be opened once at most; duplicate filename matches are
@@ -410,7 +410,7 @@ ignored.</p>
 </li>
 </ul>
 <p><strong>Built-in methods:</strong></p>
-<p>The entries are <a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instances, but linearizations can be
+<p>The entries are <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instances, but linearizations can be
 specified via filename when initializing or appending the list.  The list
 has all of the methods of a standard <a class="reference external" href="http://www.python.org">Python</a> list (e.g.,
 + or <a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__add__">__add__</a>/<a class="reference external" href="https://docs.python.org/2/reference/datamodel.html#object.__radd__">__radd__</a>,
@@ -436,19 +436,19 @@ has all of the methods of a standard <a class="reference external" href="http://
 orders the list of linearizations by the full path of the result files.</p>
 <p><strong>Overloaded methods:</strong></p>
 <ul class="simple">
-<li><a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinResList.append" title="modelicares.linres.LinResList.append"><tt class="xref py py-meth docutils literal"><span class="pre">append()</span></tt></a> - Add linearization(s) to the end of the list of
-linearizations (accepts a <a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instance, directory, or
+<li><a class="reference internal" href="#modelicares.linres.LinResList.append" title="modelicares.linres.LinResList.append"><tt class="xref py py-meth docutils literal"><span class="pre">append()</span></tt></a> - Add linearization(s) to the end of the list of
+linearizations (accepts a <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instance, directory, or
 filename).</li>
 </ul>
 <p><strong>Additional methods:</strong></p>
 <ul class="simple">
-<li><a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinResList.bode" title="modelicares.linres.LinResList.bode"><tt class="xref py py-meth docutils literal"><span class="pre">bode()</span></tt></a> - Plot the linearizations onto a single Bode diagram.</li>
-<li><a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinResList.nyquist" title="modelicares.linres.LinResList.nyquist"><tt class="xref py py-meth docutils literal"><span class="pre">nyquist()</span></tt></a> - Plot the linearizations onto a single Bode diagram.</li>
+<li><a class="reference internal" href="#modelicares.linres.LinResList.bode" title="modelicares.linres.LinResList.bode"><tt class="xref py py-meth docutils literal"><span class="pre">bode()</span></tt></a> - Plot the linearizations onto a single Bode diagram.</li>
+<li><a class="reference internal" href="#modelicares.linres.LinResList.nyquist" title="modelicares.linres.LinResList.nyquist"><tt class="xref py py-meth docutils literal"><span class="pre">nyquist()</span></tt></a> - Plot the linearizations onto a single Bode diagram.</li>
 </ul>
 <p><strong>Properties:</strong></p>
 <ul class="simple">
 <li><em>basedir</em> - Highest common directory that the result files share</li>
-<li>Also, the properties of <a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> (<em>basename</em>, <em>dirname</em>, <em>fname</em>,
+<li>Also, the properties of <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> (<em>basename</em>, <em>dirname</em>, <em>fname</em>,
 <em>sys</em>, and <em>tool</em>) can be retrieved as a list across all of the
 linearizations; see the example below.</li>
 </ul>
@@ -464,11 +464,11 @@ linearizations; see the example below.</li>
 <dd><p>Add linearization(s) to the end of the list of linearizations.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
-<li><p class="first"><em>item</em>: <a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instance or a file specification</p>
+<li><p class="first"><em>item</em>: <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> instance or a file specification</p>
 <blockquote>
 <div><p>The file specification may be a filename or directory, possibly
 with wildcards a la <a class="reference external" href="https://docs.python.org/2/library/glob.html">glob</a>, where
-linearization results can be loaded by <a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>.  The
+linearization results can be loaded by <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>.  The
 filename or directory must include the absolute path or be resolved
 to the current directory.  An error is only raised if no files can
 be loaded.</p>
@@ -500,8 +500,8 @@ already included.</p>
 <dt id="modelicares.linres.LinResList.bode">
 <tt class="descname">bode</tt><big>(</big><em>axes=None, pair=(0, 0), label='bode', title='Bode plot', labels=None, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'], styles=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)], leg_kwargs={}, **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinResList.bode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the linearizations onto a single Bode diagram.</p>
-<p>This method calls <a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes.bode" title="modelicares.linres.LinRes.bode"><tt class="xref py py-meth docutils literal"><span class="pre">LinRes.bode()</span></tt></a> from the included instances
-of <a class="reference internal" href="modelicares.linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>.</p>
+<p>This method calls <a class="reference internal" href="#modelicares.linres.LinRes.bode" title="modelicares.linres.LinRes.bode"><tt class="xref py py-meth docutils literal"><span class="pre">LinRes.bode()</span></tt></a> from the included instances
+of <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><p class="first"><em>axes</em>: Tuple (pair) of axes for the magnitude and phase plots</p>
@@ -714,16 +714,13 @@ labeled</p>
   </ul>
 <h3><a href="modules-scripts.html">Modules and Scripts</a></h3>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.exps.doe.html"><tt class="docutils literal"><span class="pre">modelicares.exps.doe</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="modelicares.util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="exps.doe.html"><tt class="docutils literal"><span class="pre">modelicares.exps.doe</span></tt></a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
 </ul>
 <h3>Useful Links</h3>
   <ul>
@@ -762,17 +759,17 @@ labeled</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="loadres.html" title="loadres script"
+          <a href="simres.html" title="modelicares.simres"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="ModelicaRes"
+          <a href="exps.doe.html" title="modelicares.exps.doe"
              >previous</a> |</li>
-        <li><a href="index.html">ModelicaRes v0.12.2 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">ModelicaRes Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jun 10, 2014.
+      Last updated on Jun 13, 2014.
     </div>
   </body>
 </html>
