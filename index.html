@@ -61,28 +61,31 @@
 <p><strong>Set up and analyze Modelica simulations in Python</strong></p>
 <p>ModelicaRes is a free, open-source tool that can be used to</p>
 <ul class="simple">
-<li>generate simulation scripts,</li>
-<li>load and browse data,</li>
-<li>perform custom calculations,</li>
-<li>filter and sort groups of results,</li>
-<li>produce various plots and diagrams, and</li>
-<li>export data to various formats via <a class="reference external" href="http://pandas.pydata.org/">pandas</a>.</li>
+<li><a class="reference external" href="http://kdavies4.github.io/ModelicaRes/exps.html#modelicares.exps.write_script">generate simulation scripts</a>,</li>
+<li><a class="reference external" href="http://kdavies4.github.io/ModelicaRes/modelicares.html#modelicares.load">load</a>,
+<a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb#Analyzing-a-simulation-result">analyze</a>, and <a class="reference external" href="http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.browse">browse</a>
+data,</li>
+<li><a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb#Testing-simulations-based-on-criteria">filter</a>
+and <a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb#Simulations">sort</a> groups of results,</li>
+<li>produce various <a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb">plots</a> and <a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb#Sankey-diagrams">diagrams</a>,
+and</li>
+<li><a class="reference external" href="http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.to_pandas">export data via pandas</a>.</li>
 </ul>
-<p>The figures are generated via <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>, which offers a rich set of
-publication-quality plotting routines.  ModelicaRes has methods to create and
-automatically label <a class="reference external" href="http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.plot">xy plots</a>, <a class="reference external" href="http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.bode">Bode</a> and <a class="reference external" href="http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.nyquist">Nyquist</a> plots, and <a class="reference external" href="http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.sankey">Sankey
-diagrams</a>.  ModelicaRes can be scripted or used in an interactive <a class="reference external" href="http://www.python.org/">Python</a>
-session with math and matrix functions from <a class="reference external" href="http://numpy.scipy.org/">NumPy</a>.</p>
+<p>The goal of ModelicaRes is to leverage <a class="reference external" href="http://www.python.org/">Python</a> to make these tasks easy and
+complex tasks possible.  Publication-quality figures can be created with
+<a class="reference external" href="http://www.matplotlib.org/">matplotlib</a> using built-in methods that automatically add titles, labels, and
+legends.  ModelicaRes can be scripted or used in an interactive <a class="reference external" href="http://www.python.org/">Python</a> session
+with math and matrix functions from <a class="reference external" href="http://numpy.scipy.org/">NumPy</a>.</p>
 <a class="reference internal image-reference" href="images/browse.png"><img alt="Variable browser" src="images/browse.png" style="width: 247.8px; height: 121.5px;" /></a>
 <a class="reference internal image-reference" href="images/ChuaCircuit.png"><img alt="Plot of Chua circuit" src="images/ChuaCircuit.png" style="width: 195.3px; height: 135.3px;" /></a>
 <a class="reference internal image-reference" href="images/ThreeTanks.png"><img alt="Sankey diagrams of three tanks model" src="images/ThreeTanks.png" style="width: 202.2px; height: 130.8px;" /></a>
 <a class="reference internal image-reference" href="images/PIDs-bode.png"><img alt="Bode plot of PID with varying differential time constant" src="images/PIDs-bode.png" style="width: 199.5px; height: 137.7px;" /></a>
+<p>Please see the tutorial, which is available as an <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb">IPython notebook</a>
+or online as a <a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb">static page</a>.  The links in the sidebar provide the full documentation and
+many more examples.</p>
 <p>Currently, ModelicaRes only loads Dymola/<a class="reference external" href="https://www.openmodelica.org/">OpenModelica</a>-formatted results
 (*.mat), but the loading functions are modular so that other formats can be
 added easily.</p>
-<p>Please see the tutorial, which is available as an <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb">IPython notebook</a>
-or online as a <a class="reference external" href="http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb">static page</a>.
-The links in the sidebar provide the full documentation and many more examples.</p>
 <p><strong>Installation</strong></p>
 <p>First, install the dependencies.  Most are installed automatically if you have
 the <a class="reference external" href="https://pypi.python.org/pypi/setuptools">setuptools</a> module.  However, <a class="reference external" href="http://www.scipy.org/index.html">SciPy</a> &gt;= 0.10.0 must be installed according
@@ -150,6 +153,7 @@ Common Data Form (<a class="reference external" href="http://www.unidata.ucar.ed
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="exps.doe.html"><tt class="docutils literal"><span class="pre">modelicares.exps.doe</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
