@@ -82,8 +82,8 @@ suggestions, please
 
 - [awesim]\: helps run simulation experiments and organize results
 - [BuildingsPy]\: supports unit testing
-- [DyMat]\: exports [Modelica] simulation data to comma-separated values ([CSV]),
-  [Gnuplot], MATLAB&reg;, and Network Common Data Form ([netCDF])
+- [DyMat]\: exports [Modelica] simulation data to [Gnuplot], MATLAB&reg;, and
+  Network Common Data Form ([netCDF])
 - [PyFMI]\: tools to work with models through the Functional Mock-Up Interface
   ([FMI]) standard
 - [PySimulator]\: elaborate GUI; supports [FMI]
@@ -116,7 +116,6 @@ suggestions, please
 [PyFMI]: https://pypi.python.org/pypi/PyFMI
 [PySimulator]: https://github.com/PySimulator/PySimulator
 [Gnuplot]: http://www.gnuplot.info/
-[CSV]: http://en.wikipedia.org/wiki/Comma-separated_values
 [netCDF]: http://www.unidata.ucar.edu/software/netcdf
 [FMI]: https://www.fmi-standard.org/
 [python-control]: http://sourceforge.net/apps/mediawiki/python-control

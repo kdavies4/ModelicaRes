@@ -90,8 +90,8 @@ If you have suggestions, please `share them
 
 - awesim_: helps run simulation experiments and organize results
 - BuildingsPy_: supports unit testing
-- DyMat_: exports Modelica_ simulation data to comma-separated values
-  (CSV_), Gnuplot_, MATLAB®, and Network Common Data Form (netCDF_)
+- DyMat_: exports Modelica_ simulation data to Gnuplot_, MATLAB®, and Network
+  Common Data Form (netCDF_)
 - PyFMI_: tools to work with models through the Functional Mock-Up Interface
   (FMI_) standard
 - PySimulator_: elaborate GUI; supports FMI_
@@ -101,7 +101,13 @@ If you have suggestions, please `share them
   :hidden:
   :glob:
 
-  *res*
+  loadres
+  modelicares
+  exps.*
+  linres
+  simres
+  texunit
+  util
 
 .. _main website: http://kdavies4.github.io/ModelicaRes/
 .. _PyPI page: http://pypi.python.org/pypi/ModelicaRes/
@@ -130,6 +136,5 @@ If you have suggestions, please `share them
 .. _PyFMI: https://pypi.python.org/pypi/PyFMI
 .. _PySimulator: https://github.com/PySimulator/PySimulator
 .. _Gnuplot: http://www.gnuplot.info
-.. _CSV: http://en.wikipedia.org/wiki/Comma-separated_values
 .. _netCDF: http://www.unidata.ucar.edu/software/netcdf/
 .. _FMI: https://www.fmi-standard.org
