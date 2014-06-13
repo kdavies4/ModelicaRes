@@ -6,37 +6,42 @@
 
 ModelicaRes is a free, open-source tool that can be used to
 
-- generate simulation scripts,
-- load and browse data,
-- perform custom calculations,
-- filter and sort groups of results,
-- produce various plots and diagrams, and
-- export data to various formats via pandas_.
+- `generate simulation scripts
+  <http://kdavies4.github.io/ModelicaRes/exps.html#modelicares.exps.write_script>`_,
+- `load
+  <http://kdavies4.github.io/ModelicaRes/modelicares.html#modelicares.load>`_,
+  `analyze
+  <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb#Analyzing-a-simulation-result>`_, and `browse
+  <http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.browse>`_
+  data,
+- `filter
+  <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb#Testing-simulations-based-on-criteria>`_
+  and `sort
+  <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb#Simulations>`_ groups of results,
+- produce various `plots
+  <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_ and `diagrams
+  <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb#Sankey-diagrams>`_,
+  and
+- `export data via pandas
+  <http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.to_pandas>`_.
 
-The figures are generated via matplotlib_, which offers a rich set of
-publication-quality plotting routines.  ModelicaRes has methods to create and
-automatically label xy plots, Bode and Nyquist plots, and Sankey diagrams.
-ModelicaRes can be scripted or used in an interactive Python_ session with math
-and matrix functions from NumPy_.
-
-The figures are generated via matplotlib_, which offers a rich set of plotting
-routines.  ModelicaRes has methods to create and automatically label
-`xy plots`_, Bode_ and Nyquist_ plots, and `Sankey diagrams`_.  ModelicaRes can
-be scripted or used in an interactive Python_ session with math and matrix
-functions from NumPy_.
-
-Currently, ModelicaRes only loads Dymola/OpenModelica_-formatted results
-(\*.mat), but the loading functions are modular so that other formats can be
-added easily.
+The goal of ModelicaRes is to leverage Python_ to make these tasks easy and
+complex tasks possible.  Publication-quality figures can be created with
+matplotlib_ using built-in methods that automatically add titles, labels, and
+legends.  ModelicaRes can be scripted or used in an interactive Python_ session
+with math and matrix functions from NumPy_.
 
 Please see the tutorial, which is available as an `IPython notebook
 <https://github.com/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_
 or online as a `static page
 <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_.
-For the full documentation and many more examples, see the `main website`_.
-
-For a list of changes, please see the `change log
+For the full documentation and many more examples, see the `main website`_.  For
+a list of changes, please see the `change log
 <http://kdavies4.github.io/ModelicaRes/changelog.html>`_.
+
+Currently, ModelicaRes only loads Dymola/OpenModelica_-formatted results
+(\*.mat), but the interface is modular so that other formats can be added
+easily.
 
 Installation
 ~~~~~~~~~~~~
@@ -116,14 +121,8 @@ See also
 .. _PyPI page: http://pypi.python.org/pypi/ModelicaRes
 .. _GitHub repository: https://github.com/kdavies4/ModelicaRes
 
-.. _xy plots: http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.plot
-.. _Bode: http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.bode
-.. _Nyquist: http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.nyquist
-.. _Sankey diagrams: http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.sankey
-
 .. _Modelica: http://www.modelica.org/
 .. _Python: http://www.python.org/
-.. _pandas: http://pandas.pydata.org/
 .. _matplotlib: http://www.matplotlib.org/
 .. _NumPy: http://numpy.scipy.org/
 .. _SciPy: http://www.scipy.org/index.html

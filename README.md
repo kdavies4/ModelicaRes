@@ -4,12 +4,21 @@ ModelicaRes
 **Set up and analyze Modelica simulations in Python**
 
 ModelicaRes is a free, open-source tool that can be used to
-- generate simulation scripts,
-- load and browse data,
-- perform custom calculations,
-- filter and sort groups of results,
-- produce various plots and diagrams, and
-- export data to various formats via [pandas].
+- [generate simulation scripts](http://kdavies4.github.io/ModelicaRes/exps.html#modelicares.exps.write_script),
+- [load](http://kdavies4.github.io/ModelicaRes/modelicares.html#modelicares.load),
+  [analyze](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb#Analyzing-a-simulation-result), and
+  [browse](http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.browse)
+  data,
+- [filter](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb#Testing-simulations-based-on-criteria)
+  and
+  [sort](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb#Simulations)
+  groups of results,
+- produce various
+  [plots](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb)
+  and
+  [diagrams](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb#Sankey-diagrams),
+  and
+- [export data via pandas](http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.to_pandas).
 
 [![Plot of Chua circuit with varying parameters](doc/_static/ChuaCircuit-small.png)](http://kdavies4.github.io/ModelicaRes/examples2/ChuaCircuit.hires.png)
 ![ ](doc/_static/hspace.png)
@@ -17,20 +26,19 @@ ModelicaRes is a free, open-source tool that can be used to
 ![ ](doc/_static/hspace.png)
 [![Bode diagram of PID with varying parameters](doc/_static/PIDs-bode-small.png)](http://kdavies4.github.io/ModelicaRes/examples2/PIDs-bode.hires.png)
 
-The figures are generated via [matplotlib], which offers a rich set of
-publication-quality plotting routines.  ModelicaRes has methods to create and
-automatically label [xy plots], [Bode] and [Nyquist] plots, and
-[Sankey diagrams].  ModelicaRes can be scripted or used in an interactive
-[Python] session with math and matrix functions from [NumPy].
-
-Currently, ModelicaRes only loads Dymola/[OpenModelica]-formatted results
-(*.mat), but the loading functions are modular so that other formats can be
-added easily.
+The goal of ModelicaRes is to leverage [Python] to make these tasks easy and
+complex tasks possible.  Publication-quality figures can be created with
+[matplotlib] using built-in methods that automatically add titles, labels, and
+legends.  ModelicaRes can be scripted or used in an interactive [Python] session
+with math and matrix functions from [NumPy].
 
 Please see the tutorial, which is available as an
 [IPython notebook](examples/tutorial.ipynb) or online as a
-[static page](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb).  For the full documentation and many more examples,
-see the [main website].
+[static page](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb).  For the full documentation and many more examples, see the
+[main website].
+
+Currently, ModelicaRes only loads Dymola/[OpenModelica]-formatted results
+(*.mat), but the interface is modular so that other formats can be added easily.
 
 ### Installation
 
@@ -92,14 +100,9 @@ suggestions, please
 [main website]: http://kdavies4.github.io/ModelicaRes
 [PyPI page]: http://pypi.python.org/pypi/ModelicaRes
 [GitHub repository]: https://github.com/kdavies4/ModelicaRes
-[xy plots]: http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.plot
-[Bode]: http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.bode
-[Nyquist]: http://kdavies4.github.io/ModelicaRes/linres.html#modelicares.linres.LinRes.nyquist
-[Sankey diagrams]: http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.sankey
 
 [Modelica]: http://www.modelica.org/
 [Python]: http://www.python.org/
-[pandas]: http://pandas.pydata.org/
 [matplotlib]: http://www.matplotlib.org
 [NumPy]: http://numpy.scipy.org/
 [SciPy]: http://www.scipy.org/index.html
