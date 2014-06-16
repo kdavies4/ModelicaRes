@@ -145,7 +145,7 @@ def default_frequency_range(syslist, in_Hz=True):
     # Take the log of the features.
     features = np.log10(features)
 
-    # TODO: Add a check in discrete case to make sure we don't get aliasing.
+    # TODO: Add a check in discrete case to avoid aliasing.
 
     # Set the range to be two orders of magnitude beyond any features.
     unit = Hz if in_Hz else rad/s

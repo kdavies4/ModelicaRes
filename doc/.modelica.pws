@@ -1,4 +1,4 @@
-personal_ws-1.1 en 168 
+personal_ws-1.1 en 169 
 VarList
 ndims
 asin
@@ -23,6 +23,7 @@ connectorSizing
 defaultPrefixes
 der
 fe
+ecd
 sin
 MapleSim
 legendHorizontal

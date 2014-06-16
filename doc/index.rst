@@ -26,7 +26,7 @@ ModelicaRes is a free, open-source tool that can be used to
   <http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.to_pandas>`_.
 
 The goal of ModelicaRes is to leverage Python_ to make these tasks easy and
-complex tasks possible.  Publication-quality figures can be created with
+complex tasks feasible.  Publication-quality figures can be created with
 matplotlib_ using built-in methods that automatically add titles, labels, and
 legends.  ModelicaRes can be scripted or used in an interactive Python_ session
 with math and matrix functions from NumPy_.
@@ -48,9 +48,9 @@ with math and matrix functions from NumPy_.
    :alt: Bode plot of PID with varying differential time constant
 
 Please see the tutorial, which is available as an `IPython notebook
-<https://github.com/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb>`_
+<https://github.com/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_
 or online as a `static page
-<http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb>`_.  The links in the sidebar provide the full documentation and
+<http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_.  The links in the sidebar provide the full documentation and
 many more examples.
 
 Currently, ModelicaRes only loads Dymola/OpenModelica_-formatted results

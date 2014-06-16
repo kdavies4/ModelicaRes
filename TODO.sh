@@ -1,7 +1,7 @@
 #!/bin/bash
 # List the TODO tags in various project files.
 
-locations="bin/* .travis.yml "$(find . -name '*.py' ! -name 'code.py' ! -path '*build*' ! -path '*dist*' -or -name '*.sh' ! -name TODO.sh -or -name '*.md' -or -name '*.txt' ! -path '*egg-info*')
+locations="bin/* .travis.yml "$(find . \( -name '*.py' -or -name '*.sh' -or -name '*.md' -or -name '*.rst' -or -name '*.txt' \) ! \( -name code.py -or -name TODO.sh -or -path '*dist*' -or -path '*build*' -or -path '*egg*' \))
 
 grep TODO $locations -n --colour=always |
   sed -re  's/^([^:]+:[^:]+):(\x1b\[m\x1b\[K)[[:space:]]*(.*)/\1\x01\2\3/' |

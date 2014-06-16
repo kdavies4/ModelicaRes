@@ -26,7 +26,7 @@ ModelicaRes is a free, open-source tool that can be used to
   <http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.to_pandas>`_.
 
 The goal of ModelicaRes is to leverage Python_ to make these tasks easy and
-complex tasks possible.  Publication-quality figures can be created with
+complex tasks feasible.  Publication-quality figures can be created with
 matplotlib_ using built-in methods that automatically add titles, labels, and
 legends.  ModelicaRes can be scripted or used in an interactive Python_ session
 with math and matrix functions from NumPy_.
@@ -95,7 +95,7 @@ License terms and development
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ModelicaRes is published under a `BSD-compatible license
-<https://github.com/kdavies4/ModelicaRes/blob/release/LICENSE.txt>`_.  Please
+<https://github.com/kdavies4/ModelicaRes/blob/master/LICENSE.txt>`_.  Please
 share any modifications you make (preferably as a pull request to the ``master``
 branch of the `GitHub repository`_) in order to help others.  There are useful
 development scripts in the `hooks folder

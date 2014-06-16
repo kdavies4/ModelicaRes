@@ -27,7 +27,7 @@ ModelicaRes is a free, open-source tool that can be used to
 [![Bode diagram of PID with varying parameters](doc/_static/PIDs-bode-small.png)](http://kdavies4.github.io/ModelicaRes/examples2/PIDs-bode.hires.png)
 
 The goal of ModelicaRes is to leverage [Python] to make these tasks easy and
-complex tasks possible.  Publication-quality figures can be created with
+complex tasks feasible.  Publication-quality figures can be created with
 [matplotlib] using built-in methods that automatically add titles, labels, and
 legends.  ModelicaRes can be scripted or used in an interactive [Python] session
 with math and matrix functions from [NumPy].
