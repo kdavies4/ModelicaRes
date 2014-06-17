@@ -120,7 +120,7 @@ class Browser(wx.Frame):
         # Add the tree.
         self.tree = wx.TreeCtrl(panel_left, 1, wx.DefaultPosition, (-1, -1),
                                 wx.TR_HIDE_ROOT|wx.TR_HAS_BUTTONS)
-        root = sim.nametree()
+        root = sim.nametree
         _build_tree(root, self.tree.AddRoot(sim.fbase))
 
         # Bind events and finish.

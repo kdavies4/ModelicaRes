@@ -50,7 +50,7 @@ def build():
     set_version("'%s'" % version)
     # In CHANGES.txt:
     date = strftime('%Y-%-m-%-d')
-    rpls = [(r'TBD( -- Updates:)',
+    rpls = [(r'TBD.*( -- Updates:)',
              r'v{v}_ ({d})\1'.format(v=version, d=date)),
             (r'v%s_ \(.+\)( -- Updates:)' % version,
              r'v{v}_ ({d})\1'.format(v=version, d=date)),
@@ -100,7 +100,8 @@ def release():
     # In modelicares/__init__.py:
     set_version('None')
     # In CHANGES.txt:
-    newheading = 'TBD -- Updates:'
+    newheading = ('TBD (in `GitHub <https://github.com/kdavies4/ModelicaRes>`_ '
+                  'only) -- Updates:')
     newlink = ('.. _vx.x.x: '
                'https://github.com/kdavies4/ModelicaRes/archive/vx.x.x.zip')
     rpls = [(r'(<http://semver.org>`_\.)',

@@ -1413,7 +1413,7 @@ def si_prefix(pow1000):
                          "the SI prefixes (1e-24 to 1e24)." % 3*pow1000)
 
 
-def tree(strings, separator='.'):
+def tree(strings, separator='.', container=dict):
     """Return a tree of strings as a nested dictionary.
 
     The levels of hierarchy in each string are marked with *separator*.
@@ -1425,6 +1425,10 @@ def tree(strings, separator='.'):
     - *strings*: List of strings
 
     - *separator*: String that marks a level of hierarchy
+
+    - *container*: Dictionary-like class used for the results
+
+          To keep the order of the list for the tree, use :class:`collections.OrderedDict`.
 
     **Example:**
 
@@ -1440,13 +1444,13 @@ def tree(strings, separator='.'):
     # (Joerg Raedler,
     # http://www.j-raedler.de/2011/09/dymat-reading-modelica-results-with-python/,
     # BSD License).
-    root = {}
+    root = container()
     for string in strings:
         branch = root
         elements = string.split(separator)
         for element in elements[:-1]:
             if element not in branch:
-                branch[element] = {}
+                branch[element] = container()
             branch = branch[element]
         branch[elements[-1]] = string
     return root

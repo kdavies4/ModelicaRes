@@ -3,7 +3,21 @@ Change log
 
 The releases are numbered according to the `Semantic Versioning Specification`_.
 
-TBD -- Updates:
+TBD (in `GitHub <https://github.com/kdavies4/ModelicaRes>`_ only) -- Updates:
+
+   - Renamed :meth:`~modelicares.simres.SimResList.unique_IVs` to
+     :meth:`~modelicares.simres.SimResList.get_unique_IVs` to indicate that it
+     is a method.
+   - The variable tree in :class:`~modelicares.simres.SimRes.browse` is now
+     sorted alphabetically.
+   - In :class:`~modelicares.simres.SimRes`,
+     :attr:`~modelicares.simres.SimRes.names` and
+     :attr:`~modelicares.simres.SimRes.nametree` are now properties.  Use
+     :meth:`~modelicares.simres.SimRes.find` to find variables.  The
+     :attr:`~modelicares.simres.SimRes.names`,
+     :attr:`~modelicares.simres.SimRes.nametree`, and the results of
+     :meth:`~modelicares.simres.SimRes.find` are now sorted.  The same applies
+     in :class:`~modelicares.simres.SimResList`.
 
 v0.12.2_ (2014-6-10) -- Updates:
 

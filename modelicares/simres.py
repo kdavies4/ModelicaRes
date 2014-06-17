@@ -42,7 +42,7 @@ import os
 import numpy as np
 
 from abc import abstractmethod
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 from difflib import get_close_matches
 from functools import wraps
 from itertools import cycle
@@ -727,11 +727,7 @@ class SimRes(Res):
 
     - :meth:`browse` - Launch a variable browser.
 
-    - :meth:`names` - Return a list of variable names, optionally filtered by
-      pattern matching.
-
-    - :meth:`nametree` - Return a tree of variable names that reflects the
-      Modelica_ model hierarchy.
+    - :meth:`find` - Find variable names that match a pattern.
 
     - :meth:`plot` - Plot data as points and/or curves in 2D Cartesian
       coordinates.
@@ -742,18 +738,23 @@ class SimRes(Res):
 
     **Properties:**
 
-    - *dirname* - Directory from which the variables were loaded
+    - :attr:`dirname` - Directory from which the variables were loaded
 
-    - *fbase* - Base filename from which the results were loaded, without the
-      directory or file extension.
+    - :attr:`fbase` - Base filename from which the results were loaded, without
+      the directory or file extension.
 
-    - *fname* - Filename from which the variables were loaded, with absolute
-      path
+    - :attr:`fname` - Filename from which the variables were loaded, with
+      absolute path
 
-    - *n_constants* - Number of variables that do not change over time
+    - :attr:`n_constants` - Number of variables that do not change over time
 
-    - *tool* - String indicating the function used to load the results (named
-      after the corresponding Modelica_ tool)
+    - :attr:`names` - List of all the variable names
+
+    - :attr:`nametree` - Tree of variable names that reflects the model
+      hierarchy
+
+    - :attr:`tool` - String indicating the function used to load the results
+      (named after the corresponding Modelica_ tool)
 
     **Example:**
 
@@ -763,7 +764,8 @@ class SimRes(Res):
 
 
     .. _Python: http://www.python.org/
-    .. _pandas DataFrame: http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
+    .. _pandas DataFrame:
+       http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
 
     # pylint: disable=R0921
@@ -963,11 +965,35 @@ class SimRes(Res):
 
         do_work()
 
+    @property
+    def names(self):
+        """List of all of the variable names
 
-    def names(self, pattern=None, re=False, constants_only=False):
-        r"""Return a list of variable names that match a pattern.
+        The names are sorted alphabetically.
 
-        By default, all names are returned.
+        **Example:**
+
+        .. code-block:: python
+
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+
+           >>> # Names for voltages across all of the components:
+           >>> sim.names # doctest: +SKIP
+           ['C1.v', 'C2.v', 'G.v', 'L.v', 'Nr.v', 'Ro.v']
+
+        .. testcleanup::
+
+           >>> sorted(sim.names) # doctest: +ELLIPSIS
+           ['C1.C', 'C1.der(v)', 'C1.i', 'C1.n.i', ..., 'Time']
+
+        """
+        return sorted(self._variables)
+
+    def find(self, pattern=None, re=False, constants_only=False, as_tree=False):
+        r"""Find variable names that match a pattern.
+
+        By default, all names are returned.  The names are sorted
+        alphabetically.
 
         **Arguments:**
 
@@ -1008,6 +1034,11 @@ class SimRes(Res):
         - *constants_only*: *True* to include only the variables that do not
           change over time
 
+        - *as_tree*: *True* if the variable names should be returned as a nested
+          dictionary representing the model hierarchy (otherwise, simple list)
+
+             See :attr:`nametree` regarding the structure of the tree.
+
         **Example:**
 
         .. code-block:: python
@@ -1015,49 +1046,43 @@ class SimRes(Res):
            >>> sim = SimRes('examples/ChuaCircuit.mat')
 
            >>> # Names for voltages across all of the components:
-           >>> sim.names('^[^.]*.v$', re=True) # doctest: +SKIP
+           >>> sim.find('^[^.]*.v$', re=True) # doctest: +SKIP
            ['C1.v', 'C2.v', 'G.v', 'L.v', 'Nr.v', 'Ro.v']
 
         .. testcleanup::
 
-           >>> sorted(sim.names('^[^.]*.v$', re=True))
+           >>> sorted(sim.find('^[^.]*.v$', re=True))
            ['C1.v', 'C2.v', 'G.v', 'L.v', 'Nr.v', 'Ro.v']
         """
         # Get a list of all the variables or just the constants.
+        names = self.names
         if constants_only:
-            names = (name for (name, variable) in self._variables.items()
-                     if variable.is_constant)
-        else:
-            names = self._variables.keys()
+            names = [name for name in names if self[name].is_constant]
 
-        # Filter the list and return it.
-        return util.match(names, pattern, re)
+        # Filter the list.
+        names = util.match(names, pattern, re)
 
-    def nametree(self, pattern=None, re=False, constants_only=False):
-        """Return a tree of variable names based on the Modelica_ model
-        hierarchy.
+        # Return the list directly or as a tree.
+        return util.tree(names, container=OrderedDict) if as_tree else names
 
-        The tree is returned as a nested dictionary.  The keys are the Modelica_
+    @property
+    def nametree(self):
+        """Tree of variable names based on the model hierarchy
+
+        The tree is a nested ordered dictionary.  The keys are the Modelica_
         class instances (including the index if there are arrays) and the values
         are the subclasses.  The value at the end of each branch is the full
-        variable name.
+        variable name.  All entries are sorted alphabetically.
 
-        All names are included by default, but the names can be filtered using
-        *pattern*, *re*, and *constants_only*.  See :mod:`names` for a
-        description of those arguments.
+        To create a filtered tree, use :meth:`find` with *as_tree*=*True*.
 
         **Example:**
 
         >>> sim = SimRes('examples/ChuaCircuit.mat')
-        >>> sim.nametree('L*v') # doctest: +SKIP
-        {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
-
-        .. testcleanup::
-
-           >>> sim.nametree('L*v') == {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
-           True
+        >>> sim.nametree # doctest: +ELLIPSIS
+        OrderedDict([('C1', OrderedDict([('C', 'C1.C'), ('der(v)', 'C1.der(v)'), ..., ('Time', 'Time')])
         """
-        return util.tree(self.names(pattern, re, constants_only))
+        return util.tree(self.names, container=OrderedDict)
 
     @property
     def n_constants(self):
@@ -1430,7 +1455,7 @@ class SimRes(Res):
         **Examples:**
 
         >>> sim = SimRes('examples/ChuaCircuit.mat')
-        >>> voltages = sim.names('^[^.]*.v$', re=True)
+        >>> voltages = sim.find('^[^.]*.v$', re=True)
         >>> sim.to_pandas(voltages) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
                     C1.v / V  C2.v / V   G.v / V   L.v / V  Nr.v / V  Ro.v / V
         Time / s
@@ -1460,11 +1485,11 @@ class SimRes(Res):
         label = lambda name, unit: name + ' / ' + unit
 
         # Create the list of variable names.
-        if names is None:
-            names = self.names()
-        else:
+        if names:
             names = set(util.flatten_list(names))
             names.add('Time')
+        else:
+            names = self.names
 
         # Create a dictionary of names and values.
         times = self['Time'].values()
@@ -1590,13 +1615,13 @@ class SimRes(Res):
 
         and these properties:
 
-        - *description* - The Modelica_ variable's description string
+        - :attr:`description` - The Modelica_ variable's description string
 
-        - *unit* - The Modelica_ variable's *unit* attribute
+        - :attr:`unit` - The Modelica_ variable's *unit* attribute
 
-        - *displayUnit* - The Modelica_ variable's *displayUnit* attribute
+        - :attr:`displayUnit` - The Modelica_ variable's *displayUnit* attribute
 
-        - *is_constant* - *True*, if the variable does not change over time
+        - :attr:`is_constant` - *True*, if the variable does not change over time
 
         **Examples:**
 
@@ -1674,9 +1699,8 @@ class SimResList(ResList):
 
     **Built-in methods**
 
-    The list has all of the methods
-    of a standard Python_ list (e.g.,
-    + or `__add__
+    The list has all of the methods of a standard Python_ list (e.g., + or
+    `__add__
     <https://docs.python.org/2/reference/datamodel.html#object.__add__>`_/`__radd__
     <https://docs.python.org/2/reference/datamodel.html#object.__radd__>`_,
     :meth:`clear`,
@@ -1725,27 +1749,31 @@ class SimResList(ResList):
 
     **Additional methods:**
 
-    - :meth:`names` - Return a list of names of variables that are present in
-      all of the simulations and that match a pattern.
-
-    - :meth:`nametree` - Return a tree of the common variable names of the
-      simulations based on the Modelica_ model hierarchy.
+    - :meth:`find` - Find the names of variables that are present in all of the
+      simulations and that match a pattern.
 
     - :meth:`plot` - Plot data from the simulations in 2D Cartesian coordinates.
 
-    - :meth:`unique_IVs` - Return a dictionary of initial values that are
+    - :meth:`get_unique_IVs` - Return a dictionary of initial values that are
       different among the variables that the simulations share.
 
     **Properties:**
 
-    - *basedir* - Highest common directory that the result files share
+    - :attr:`basedir` - Highest common directory that the result files share
 
-    - *unique_names* - Return a dictionary of variable names that are not
+    - :attr:`unique_names` - Return a dictionary of variable names that are not
       in all of the simulations.
 
-    - Also, the properties of :class:`SimRes` (*dirname*, *fbase*, *fname*,
-      *n_constants*, and *tool*) can be retrieve as a list across all of the
-      linearizations; see the example below.
+    - :attr:`names` - List of names of variables that are present in all of the
+      simulations
+
+    - :attr:`nametree` - Tree of the common variable names of the simulations
+      based on the model hierarchy
+
+    - Also, the properties of :class:`SimRes` (:attr:`~SimRes.dirname`,
+      :attr:`~SimRes.fbase`, :attr:`~SimRes.fname`, :attr:`~SimRes.n_constants`,
+      and :attr:`~SimRes.tool`) can be retrieved as a list across all of the
+      simulations; see the example below.
 
     **Example:**
 
@@ -1848,11 +1876,12 @@ class SimResList(ResList):
             fnames = util.multiglob(item)
             self.extend(SimResList(_get_sims(fnames)))
 
-    def names(self, pattern=None, re=False, constants_only=False):
-        r"""Return a list of names of variables that are present in all of the
+    def find(self, pattern=None, re=False, constants_only=False, as_tree=False):
+        r"""Find the names of variables that are present in all of the
         simulations and that match a pattern.
 
-        By default, all of the common variables are returned.
+        By default, all of the common variables are returned.  The names are
+        sorted alphabetically.
 
         **Arguments:**
 
@@ -1893,6 +1922,11 @@ class SimResList(ResList):
         - *constants_only*: *True* to include only the variables that do not
           change over time
 
+        - *as_tree*: *True* if the variable names should be returned as a nested
+          dictionary representing the model hierarchy (otherwise, simple list)
+
+             See :attr:`nametree` regarding the structure of the tree.
+
         **Example:**
 
         .. code-block:: python
@@ -1900,37 +1934,98 @@ class SimResList(ResList):
            >>> sims = SimResList('examples/ChuaCircuit/*/')
 
            >>> # Names for voltages across all of the components:
-           >>> sorted(sims.names('^[^.]*.v$', re=True))
+           >>> sorted(sims.find('^[^.]*.v$', re=True))
            ['C1.v', 'C2.v', 'G.v', 'L.v', 'Nr.v', 'Ro.v']
         """
-        sets = [set(sim.names(constants_only=constants_only)) for sim in self]
-        return util.match(set.intersection(*sets), pattern, re)
+        # Get a sorted list of all the variables or just the constants.
+        names = set.intersection(*[set(sim.find(pattern, re, constants_only))
+                                   for sim in self])
+        names = sorted(names)
 
-    def nametree(self, pattern=None, re=False, constants_only=False):
-        """Return a tree of the common variable names of the simulations based
-        on the Modelica_ model hierarchy.
+        # Return the list directly or as a tree.
+        return util.tree(names, container=OrderedDict) if as_tree else names
 
-        The tree is returned as a nested dictionary.  The keys are the Modelica_
-        class instances (including the index if there are arrays) and the values
-        are the subclasses.  The value at the end of each branch is the full
-        variable name.
+    def get_unique_IVs(self, constants_only=False, tolerance=1e-10):
+        """Return a dictionary of initial values that are different among the
+        variables that the simulations share.  Each key is a variable name and
+        each value is a list of initial values across the simulations.
 
-        All names are included by default, but the names can be filtered using
-        *pattern*, *re*, and *constants_only*.  See :mod:`names` for a
-        description of those arguments.
+        **Arguments:**
+
+        - *constants_only*: *True* to include only the variables that do not
+          change over time
+
+        - *tolerance*: Maximum variation allowed for values to still be
+          considered the same
+
+        **Example:**
+
+        .. testsetup::
+
+           >>> from modelicares import SimResList
+
+        >>> sims = SimResList('examples/ChuaCircuit/*/')
+        >>> print(sims) # doctest: +SKIP
+        List of simulation results (SimRes instances) from the following files
+        in the .../examples/ChuaCircuit directory:
+           1/dsres.mat
+           2/dsres.mat
+        >>> sims.get_unique_IVs()['L.L'] # doctest: +SKIP
+        [15.0, 21.0]
+
+        .. testcleanup::
+
+           >>> sims.sort()
+           >>> print(sims) # doctest: +ELLIPSIS
+           List of simulation results (SimRes instances) from the following files
+           in the .../examples/ChuaCircuit directory:
+              1/dsres.mat
+              2/dsres.mat
+           >>> sims.get_unique_IVs()['L.L']
+           [15.0, 21.0]
+        """
+        unique_IVs = {}
+        for name in self.find(constants_only=constants_only):
+            IVs = self[name].IV()
+            if max(IVs) - min(IVs) > tolerance:
+                unique_IVs[name] = IVs
+        return unique_IVs
+
+    @property
+    def names(self):
+        """List of all of the names of variables that are present in all of the
+        simulations
+
+        The names are sorted alphabetically.
 
         **Example:**
 
         >>> sims = SimResList('examples/ChuaCircuit/*/')
-        >>> sims.nametree('L*v') # doctest: +SKIP
-        {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
-
-        .. testcleanup::
-
-           >>> sims.nametree('L*v') == {'L': {'p': {'v': 'L.p.v'}, 'n': {'v': 'L.n.v'}, 'v': 'L.v'}}
-           True
+        >>> sims.names # doctest: +ELLIPSIS
+        ['C1.C', 'C1.der(v)', 'C1.i', 'C1.n.i', ..., 'Time']
         """
-        return util.tree(self.names(pattern, re, constants_only))
+        names = set.intersection(*[set(sim.names) for sim in self])
+        return sorted(names)
+
+    @property
+    def nametree(self):
+        """Tree of the common variable names in the simulations based on the
+        model hierarchy
+
+        The tree is a nested ordered dictionary.  The keys are the Modelica_
+        class instances (including the index if there are arrays) and the values
+        are the subclasses.  The value at the end of each branch is the full
+        variable name.  All entries are sorted alphabetically.
+
+        To create a filtered tree, use :meth:`find` with *as_tree*=*True*.
+
+        **Example:**
+
+        >>> sims = SimResList('examples/ChuaCircuit/*/')
+        >>> sims.nametree # doctest: +ELLIPSIS
+        OrderedDict([('C1', OrderedDict([('C', 'C1.C'), ('der(v)', 'C1.der(v)'), ..., ('Time', 'Time')])
+        """
+        return util.tree(self.names, container=OrderedDict)
 
     def __contains__(self, item):
         """Return *True* if a variable is present in all of the simulation
@@ -2118,52 +2213,6 @@ class SimResList(ResList):
                 kwargs.update({'ax1': ax1, 'ax2': ax2})
         return ax1, ax2
 
-    def unique_IVs(self, constants_only=False, tolerance=1e-10):
-        """Return a dictionary of initial values that are different among the
-        variables that the simulations share.  Each key is a variable name and
-        each value is a list of initial values across the simulations.
-
-        **Arguments:**
-
-        - *constants_only*: *True* to include only the variables that do not
-          change over time
-
-        - *tolerance*: Maximum variation allowed for values to still be
-          considered the same
-
-        **Example:**
-
-        .. testsetup::
-
-           >>> from modelicares import SimResList
-
-        >>> sims = SimResList('examples/ChuaCircuit/*/')
-        >>> print(sims) # doctest: +SKIP
-        List of simulation results (SimRes instances) from the following files
-        in the .../examples/ChuaCircuit directory:
-           1/dsres.mat
-           2/dsres.mat
-        >>> sims.unique_IVs()['L.L'] # doctest: +SKIP
-        [15.0, 21.0]
-
-        .. testcleanup::
-
-           >>> sims.sort()
-           >>> print(sims) # doctest: +ELLIPSIS
-           List of simulation results (SimRes instances) from the following files
-           in the .../examples/ChuaCircuit directory:
-              1/dsres.mat
-              2/dsres.mat
-           >>> sims.unique_IVs()['L.L']
-           [15.0, 21.0]
-        """
-        unique_IVs = {}
-        for name in self.names(constants_only=constants_only):
-            IVs = self[name].IV()
-            if max(IVs) - min(IVs) > tolerance:
-                unique_IVs[name] = IVs
-        return unique_IVs
-
     @property
     def unique_names(self):
         """Dictionary of variable names that are not in all of the simulations
@@ -2193,9 +2242,9 @@ class SimResList(ResList):
            >>> sims.unique_names['L.L']
            [True, False]
         """
-        sets = [set(sim.names()) for sim in self]
+        sets = [set(sim.names) for sim in self]
         all_names = set.union(*sets)
-        unique_names = all_names - set(self.names())
+        unique_names = all_names
         return {name: [name in sim for sim in self] for name in unique_names}
 
 if __name__ == '__main__':
