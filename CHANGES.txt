@@ -5,6 +5,7 @@ The releases are numbered according to the `Semantic Versioning Specification`_.
 
 TBD (in `GitHub <https://github.com/kdavies4/ModelicaRes>`_ only) -- Updates:
 
+   - Moved :mod:`~modelicares.texunit` to :mod:`natu.util`.
    - Renamed :meth:`~modelicares.simres.SimResList.unique_IVs` to
      :meth:`~modelicares.simres.SimResList.get_unique_IVs` to indicate that it
      is a method.

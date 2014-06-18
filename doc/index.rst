@@ -118,7 +118,6 @@ If you have suggestions, please `share them
   exps*
   linres
   simres
-  texunit
   util
 
 .. _main website: http://kdavies4.github.io/ModelicaRes/

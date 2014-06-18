@@ -17,10 +17,6 @@ classes from the submodules.  These are:
 - For linearization results (:mod:`~modelicares.linres` submodule):
   :class:`~linres.LinRes` and :class:`~linres.LinResList`
 
-- To label numbers and quantities (:mod:`~modelicares.texunit` submodule):
-  :meth:`~texunit.number_label`, :meth:`~texunit.quantity_str`, and
-  :meth:`~texunit.unit2tex`
-
 - Supporting classes and functions (:mod:`~modelicares.util` submodule):
   :meth:`~util.add_arrows`, :meth:`~util.add_hlines`, :meth:`~util.add_vlines`,
   :class:`~util.ArrowLine`, :meth:`~util.closeall`, :meth:`~util.figure`,
@@ -60,7 +56,6 @@ from modelicares.exps import (doe, Experiment, gen_experiments, modelica_str,
                               ParamDict, read_params, write_params,
                               write_script)
 # TODO: Add run_models and include in the doc list once implemented.
-from modelicares.texunit import number_label, quantity_str, unit2tex
 
 
 def load(*args):

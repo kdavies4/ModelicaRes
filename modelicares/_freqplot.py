@@ -19,7 +19,7 @@
 #     it is always True
 # 10. Both plotting functions now only accept a single system (sys instead of
 #     syslist).
-# 11. Using modelicares.texunit.number_label to label the axes
+# 11. Using natu.util.number_label to label the axes
 # 12. Removed color as argument to nyquist_plot(); deferring to *args and
 #     **kwargs
 # 13. Renamed the omega argument to freqs in bode_plot() and nyquist_plot().
@@ -71,9 +71,9 @@ import matplotlib.pyplot as plt
 
 from functools import wraps
 from control.ctrlutil import unwrap
+from natu.util import quantity_str, number_label
 
 from modelicares.util import add_hlines, add_vlines
-from modelicares.texunit import quantity_str, number_label
 
 # Standard pylint settings for this project:
 # pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,

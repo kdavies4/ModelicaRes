@@ -49,6 +49,7 @@ from itertools import cycle
 from matplotlib import rcParams
 from matplotlib.cbook import iterable
 from matplotlib.pyplot import figlegend
+from natu.util import unit2tex, number_label
 from pandas import DataFrame
 from scipy.integrate import trapz as integral
 from scipy.interpolate import interp1d
@@ -56,7 +57,6 @@ from six import string_types
 
 from modelicares import util
 from modelicares._res import Res, ResList
-from modelicares.texunit import unit2tex, number_label
 
 def _apply_function(func):
     """Return a method that applies a function to its output, given a
