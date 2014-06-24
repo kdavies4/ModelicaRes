@@ -316,10 +316,10 @@ def cast_sametype(meth):
     containing class.
     """
     @wraps(meth)
-    def wrapped(self, *args, **kwargs):
+    def wrapped(myself, *args, **kwargs):
         """Function that casts its output as self.__class__
         """
-        return self.__class__(meth(self, *args, **kwargs))
+        return myself.__class__(meth(myself, *args, **kwargs))
 
     return wrapped
 

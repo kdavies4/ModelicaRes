@@ -14,15 +14,15 @@ from setuptools import setup
 
 here = path.abspath(path.dirname(__file__))
 
-with open(path.join(here, 'README.txt')) as f:
-    long_description = f.read()
-
 with open(path.join(here, 'modelicares', '__init__.py')) as f:
     hit = re.search('__version__ *= *["'"'"'](.*)["'"'"']', f.read())
     try:
         version = hit.group(1)
     except AttributeError:
         version = None
+
+with open(path.join(here, 'README.txt')) as f:
+    long_description = f.read()
 
 setup(name='ModelicaRes',
       version=version if version else '0-unreleased_copy',

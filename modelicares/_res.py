@@ -25,13 +25,13 @@ def assert_sametype(func):
     the containing class
     """
     @wraps(func)
-    def wrapped(self, other):
+    def wrapped(myself, other):
         """Method that can only operate on an instance of the containing class
         """
         if not isinstance(other, self.__class__):
             raise TypeError("A {obj} can only be combined with another "
                             "{obj}.".format(obj=self.__class__.__name__))
-        return func(self, other)
+        return func(myself, other)
 
     return wrapped
 
@@ -40,11 +40,11 @@ def compare_fnames(func):
     """Decorator that sends filenames to a comparison function
     """
     @wraps(func)
-    def wrapped(self, other):
+    def wrapped(myself, other):
         """Method that compares filenames of *self* and *other*
         """
         try:
-            return func(self.fname, other.fname)
+            return func(myself.fname, other.fname)
         except AttributeError:
             raise TypeError("A {obj} instance can only be compared with "
                             "another {obj} "

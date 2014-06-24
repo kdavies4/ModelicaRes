@@ -65,14 +65,14 @@ def _apply_function(func):
     I.e., a decorator to apply a function to the return value
     """
     @wraps(func)
-    def wrapped(self, f=None, *args, **kwargs):
+    def wrapped(myself, f=None, *args, **kwargs):
         """Function that applies a function *f* to its output
 
         If *f* is *None* (default), no function is applied (i.e., pass
         through or identity).
         """
-        return (func(self, *args, **kwargs) if f is None else
-                f(func(self, *args, **kwargs)))
+        return (func(myself, *args, **kwargs) if f is None else
+                f(func(myself, *args, **kwargs)))
 
     return wrapped
 
@@ -97,7 +97,7 @@ def _select(func):
     I.e., a decorator to use time-based indexing to select values
     """
     @wraps(func)
-    def wrapped(self, t=None, *args, **kwargs):
+    def wrapped(myself, t=None, *args, **kwargs):
         """Function that uses time-based indexing to return values
 
         If *t* is *None* (default), then all values are returned (i.e., pass
@@ -141,14 +141,14 @@ def _select(func):
 
         if t is None:
             # Return all values.
-            return func(self, *args, **kwargs)
+            return func(myself, *args, **kwargs)
         elif isinstance(t, tuple):
             # Apply a slice with optional start time, stop time, and number
             # of samples to skip.
-            return func(self, *args, **kwargs)[get_slice(t)]
+            return func(myself, *args, **kwargs)[get_slice(t)]
         else:
             # Interpolate at single time or list of times.
-            function_at_ = interp1d(self.times(), func(self, *args, **kwargs))
+            function_at_ = interp1d(myself.times(), func(myself, *args, **kwargs))
             # For some reason, this wraps single values as arrays, so need to
             # cast back to float.
             try:
@@ -170,9 +170,9 @@ def _swap(func):
     argument and the function to be the second.
     """
     @wraps(func)
-    def wrapped(self, t=None, f=None):
+    def wrapped(myself, t=None, f=None):
         """Look up the variable and pass it to the original function."""
-        return func(self, f, t)
+        return func(myself, f, t)
 
     return wrapped
 
@@ -616,8 +616,8 @@ class VarList(list):
 
     This class is typically not instantiated directly by the user, but instances
     are returned when indexing multiple variables from a simulation result
-    (:meth:`SimRes.__call__` method of a :class:`SimRes` instance) or a single
-    variable from multiple simulations (:meth:`SimResList.__getitem__` method of
+    (:meth:`~SimRes.__call__` method of a :class:`SimRes` instance) or a single
+    variable from multiple simulations (:meth:`~SimResList.__getitem__` method of
     a :class:`SimResList`).  In the case of indexing multiple variables from a
     simulation result, this list may be nested.
 

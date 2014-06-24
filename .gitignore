@@ -11,8 +11,11 @@ MANIFEST
 doc/examples
 *.egg-info
 
+# Backup files
+.ipynb_checkpoints
+
 # Link to matplotlibrc
 matplotlibrc
 
-# Backup files
-.ipynb_checkpoints
+# Other .gitignore files (this one already included)
+.gitignore
