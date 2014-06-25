@@ -21,6 +21,7 @@ Copy [pre-commit](pre-commit) and [post-checkout](post-checkout) to
 Add to *.git/config*:
 
     [alias]
+        cloc = !bash `git rev-parse --show-toplevel`/hooks/cloc.sh
 	    diff-matplotlibrc = !bash `git rev-parse --show-toplevel`/hooks/diff-matplotlibrc.sh
         pylint = !bash `git rev-parse --show-toplevel`/hooks/pylint.sh
 	    doc = !bash `git rev-parse --show-toplevel`/hooks/doc.sh
@@ -73,6 +74,10 @@ To compare the [matplotlibrc](../matplotlibrc) file to the user's configuration:
 To run [pylint](http://www.pylint.org/) on all of the source files:
 
     git pylint
+
+To count the number of lines of code:
+
+    git cloc
 
 #### Development workflow
 
