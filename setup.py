@@ -26,13 +26,14 @@ with open(path.join(here, 'README.txt')) as f:
 
 setup(name='ModelicaRes',
       version=version if version else '0-unreleased_copy',
-      description=("Utilities to set up and analyze Modelica simulations"),
+      description=("Set up, plot, and analyze Modelica simulations in Python"),
       long_description=long_description,
       author='Kevin Davies',
       author_email='kdavies4@gmail.com',
       license='BSD-compatible (see LICENSE.txt)',
-      keywords=('Modelica plot results simulation experiment Dymola matplotlib '
-                'pandas'),
+      keywords=('results dymola openmodelica data mat analysis script sort '
+                'filter browse export diagram simulation linearization '
+                'experiment matplotlib pandas'),
       url='http://kdavies4.github.io/ModelicaRes/',
       download_url=('https://github.com/kdavies4/ModelicaRes/archive/v%s.zip'
                     % version if version else ''),

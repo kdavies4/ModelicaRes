@@ -66,20 +66,20 @@ Qt_, which can be installed via PyQt4_, guidata_, or PySide_.
 
 Then install ModelicaRes.  The easiest way is to use pip_::
 
-    pip install modelicares
+    > pip install modelicares
 
 On Linux, it may be necessary to have root privileges::
 
-    sudo pip install modelicares
+    $ sudo pip install modelicares
 
 Another way is to download and extract a copy of the package from the sidebar on
 the left.  Run the following command from the base folder::
 
-    python setup.py install
+    > python setup.py install
 
 Or, on Linux::
 
-    sudo python setup.py install
+    $ sudo python setup.py install
 
 The `matplotlibrc file
 <https://github.com/kdavies4/ModelicaRes/blob/release/matplotlibrc>`_ has some

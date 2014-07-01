@@ -2,17 +2,27 @@ language: python
 
 python:
   - '2.7'
-  #- '3.2'
+  - '3.4'
 
 virtualenv:
   system_site_packages: true
 
-# Install as many packages as possible via pip, but some require apt-get.
+# Use conda since Travis CI doesn't ahve good support for scipy in Python 3.
 before_install:
   - sudo apt-get update
-  - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then sudo apt-get install python-scipy python-qt4; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == 3* ]]; then sudo apt-get install python3-scipy python3-pyqt4; fi
-  - pip install matplotlib pandas control six
+  - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then
+      wget http://repo.continuum.io/miniconda/Miniconda-3.4.2-Linux-x86_64.sh -O miniconda.sh
+    else
+      wget http://repo.continuum.io/miniconda/Miniconda3-3.4.2-Linux-x86_64.sh -O miniconda.sh
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update conda
+  - conda info -a # Useful for debugging issues with conda
+  - conda create -n test-environment python=$TRAVIS_PYTHON_VERSION scipy pandas control six PyQt4
+  - source activate test-environment
 
 install:
   - python setup.py install
@@ -22,5 +32,8 @@ before_script:
   - sh -e /etc/init.d/xvfb start
 
 script:
-  - python -m doctest tests/tests.txt
-  # - bash runtests.sh # Not yet ready to run all tests in Travis
+  - bash runtests.sh
+
+# TODO: Set this up.
+#after_success:
+#  - coveralls

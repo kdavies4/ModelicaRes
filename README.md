@@ -49,11 +49,11 @@ to the instructions at http://www.scipy.org/install.html.  The GUIs require
 
 Then install ModelicaRes.  The easiest way is to use [pip]:
 
-    pip install modelicares
+    > pip install modelicares
 
 On Linux, it may be necessary to have root privileges:
 
-    sudo pip install modelicares
+    $ sudo pip install modelicares
 
 Another way to install ModelicaRes is to download and extract a copy of the
 package.  The [main website], the [GitHub repository], and the [PyPI page] have
@@ -61,11 +61,11 @@ copies which include the source code as well as examples and supporting files to
 build the documentation and run tests.  Once you have a copy, run the following
 command from the base folder:
 
-    python setup.py install
+    > python setup.py install
 
 Or, on Linux:
 
-    sudo python setup.py install
+    $ sudo python setup.py install
 
 The [matplotlibrc file](examples/matplotlibrc) has some recommended revisions to
 [matplotlib]'s defaults.  To use it, copy it to the working directory or
