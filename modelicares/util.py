@@ -11,80 +11,80 @@
 
 **Functions:**
 
-- :meth:`add_arrows` - Overlay arrows with annotations on top of a pre-plotted
+- :func:`add_arrows` - Overlay arrows with annotations on top of a pre-plotted
   line.
 
-- :meth:`add_hlines` - Add horizontal lines to a set of axes with optional
+- :func:`add_hlines` - Add horizontal lines to a set of axes with optional
   labels.
 
-- :meth:`add_vlines` - Add vertical lines to a set of axes with optional
+- :func:`add_vlines` - Add vertical lines to a set of axes with optional
   labels.
 
-- :meth:`basename` - Return the base filename from *fname*.
+- :func:`basename` - Return the base filename from *fname*.
 
-- :meth:`cast_sametype` - Decorator to cast the output of a method as an
+- :func:`cast_sametype` - Decorator to cast the output of a method as an
   instance of the containing class
 
-- :meth:`color` - Plot 2D scalar data on a color axis in 2D Cartesian
+- :func:`color` - Plot 2D scalar data on a color axis in 2D Cartesian
   coordinates.
 
-- :meth:`closeall` - Close all open figures (shortcut to the
-  :meth:`destroy_all` from :class:`matplotlib._pylab_helpers.Gcf`).
+- :func:`closeall` - Close all open figures (shortcut to the
+  :func:`destroy_all` from :class:`matplotlib._pylab_helpers.Gcf`).
 
-- :meth:`delayed_exit` - Exit with a message and a delay.
+- :func:`delayed_exit` - Exit with a message and a delay.
 
-- :meth:`expand_path` - Expand a file path by replacing '~' with the user
+- :func:`expand_path` - Expand a file path by replacing '~' with the user
   directory and make the path absolute.
 
-- :meth:`flatten_dict` - Flatten a nested dictionary.
+- :func:`flatten_dict` - Flatten a nested dictionary.
 
-- :meth:`flatten_list` - Flatten a nested list.
+- :func:`flatten_list` - Flatten a nested list.
 
-- :meth:`figure` - Create a figure and set its label.
+- :func:`figure` - Create a figure and set its label.
 
-- :meth:`get_indices` - Return the pair of indices that bound a target value in
+- :func:`get_indices` - Return the pair of indices that bound a target value in
   a monotonically increasing vector.
 
-- :meth:`get_pow1000` - Return the exponent of 1000 for which the
+- :func:`get_pow1000` - Return the exponent of 1000 for which the
   significand of a number is within the range [1, 1000).
 
-- :meth:`list_packages` - Return a list of the names of a module and its
+- :func:`list_packages` - Return a list of the names of a module and its
   subpackages.
 
-- :meth:`load_csv` - Load a CSV file into a dictionary.
+- :func:`load_csv` - Load a CSV file into a dictionary.
 
-- :meth:`match` - Reduce a list of strings to those that match a pattern.
+- :func:`match` - Reduce a list of strings to those that match a pattern.
 
-- :meth:`multiglob` - Return a set of filenames that match sets of pathnames
+- :func:`multiglob` - Return a set of filenames that match sets of pathnames
   and extensions.
 
-- :meth:`plot` - Plot 1D scalar data as points and/or line segments in 2D
+- :func:`plot` - Plot 1D scalar data as points and/or line segments in 2D
   Cartesian coordinates.
 
-- :meth:`quiver` - Plot 2D vector data as arrows in 2D Cartesian coordinates.
+- :func:`quiver` - Plot 2D vector data as arrows in 2D Cartesian coordinates.
 
-- :meth:`replace` - Perform a list of replacements on the text in a list of
+- :func:`replace` - Perform a list of replacements on the text in a list of
   files.
 
-- :meth:`save` - Save the current figures as images in a format or list of
+- :func:`save` - Save the current figures as images in a format or list of
   formats.
 
-- :meth:`saveall` - Save all open figures as images in a format or list of
+- :func:`saveall` - Save all open figures as images in a format or list of
   formats.
 
-- :meth:`setup_subplots` - Create an array of subplots and return their axes.
+- :func:`setup_subplots` - Create an array of subplots and return their axes.
 
-- :meth:`shift_scale_x` - Apply an offset and a factor as necessary to the x
+- :func:`shift_scale_x` - Apply an offset and a factor as necessary to the x
   axis.
 
-- :meth:`shift_scale_y` - Apply an offset and a factor as necessary to the y
+- :func:`shift_scale_y` - Apply an offset and a factor as necessary to the y
   axis.
 
-- :meth:`si_prefix` - Return the SI prefix for a power of 1000.
+- :func:`si_prefix` - Return the SI prefix for a power of 1000.
 
-- :meth:`tree` - Return a tree of strings as a nested dictionary.
+- :func:`tree` - Return a tree of strings as a nested dictionary.
 
-- :meth:`yes` - Ask a yes/no question and return *True* if the answer is 'Y'
+- :func:`yes` - Ask a yes/no question and return *True* if the answer is 'Y'
   or 'y'.
 
 
@@ -227,14 +227,14 @@ def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
 
     **Arguments:**
 
-    - *ax*: Axes (:class:`matplotlib.axes` object)
+    - *ax*: Axes (:class:`matplotlib.axes.Axes` object)
 
     - *positions*: Positions (along the x axis)
 
     - *labels*: List of labels for the lines
 
     - *\*\*kwargs*: Line properties (propagated to
-      :meth:`matplotlib.pyplot.axhline`)
+      :func:`matplotlib.pyplot.axhline`)
 
          E.g., ``color='k', linestyle='--', linewidth=0.5``
 
@@ -265,14 +265,14 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
 
     **Arguments:**
 
-    - *ax*: Axes (:class:`matplotlib.axes` object)
+    - *ax*: Axes (:class:`matplotlib.axes.Axes` object)
 
     - *positions*: Positions (along the x axis)
 
     - *labels*: List of labels for the lines
 
     - *\*\*kwargs*: Line properties (propagated to
-      :meth:`matplotlib.pyplot.axvline`)
+      :func:`matplotlib.pyplot.axvline`)
 
          E.g., ``color='k', linestyle='--', linewidth=0.5``
 
@@ -340,7 +340,7 @@ def color(ax, c, *args, **kwargs):
     - *c*: color- or c-axis data (2D array)
 
     - *\*args*, *\*\*kwargs*: Additional arguments for
-      :meth:`matplotlib.pyplot.imshow`
+      :func:`matplotlib.pyplot.imshow`
 
     **Example:**
 
@@ -397,7 +397,7 @@ def figure(label='', *args, **kwargs):
     - *label*: String to apply to the figure's *label* property
 
     - *\*args*, *\*\*kwargs*: Additional arguments for
-      :meth:`matplotlib.pyplot.figure`
+      :func:`matplotlib.pyplot.figure`
 
     **Example:**
 
@@ -414,7 +414,7 @@ def figure(label='', *args, **kwargs):
        >>> plt.close()
 
     .. Note::  The *label* property is used as the base filename in the
-       :meth:`save` and :meth:`saveall` functions.
+       :func:`save` and :func:`saveall` functions.
     """
     fig = plt.figure(*args, **kwargs)
     plt.setp(fig, 'label', label)
@@ -425,13 +425,13 @@ def figure(label='', *args, **kwargs):
 def basename(fname):
     """Return the base filename from *fname*.
 
-    Unlike :meth:`os.path.basename`, this function strips the file extension."""
+    Unlike :func:`os.path.basename`, this function strips the file extension."""
     return os.path.splitext(os.path.basename(fname))[0]
 
 def multiglob(pathnames, extensions={'*.mat'}):
     r"""Return a set of filenames that match a pathname pattern.
 
-    Unlike Python's :meth:`glob.glob` function, this function runs an additional
+    Unlike Python's :func:`glob.glob` function, this function runs an additional
     expansion on matches that are directories.
 
     **Arguments:**
@@ -680,8 +680,8 @@ def get_pow1000(num):
 def list_packages(package):
     """Return a list of the names of a package and its subpackages.
 
-    This only works if the package has a *__path__* attribute, which not the
-    case for some (all?) of the built-in packages.
+    This only works if the package has a :attr:`__path__` attribute, which is
+    not the case for some (all?) of the built-in packages.
 
     **Example:**
 
@@ -731,7 +731,7 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
          made to cast each column into :class:`int`, :class:`float`, and
          :class:`str` (in that order).
 
-    - *\*\*kwargs*: Additional arguments for :meth:`csv.reader`
+    - *\*\*kwargs*: Additional arguments for :func:`csv.reader`
 
     **Example:**
 
@@ -822,7 +822,7 @@ def match(strings, pattern=None, re=False):
         module <http://docs.python.org/2/library/re.html>`_.  See also
         http://docs.python.org/2/howto/regex.html#regex-howto.
 
-        Since :mod:`re.search` is used to produce the matches, it is as if
+        Since :func:`re.search` is used to produce the matches, it is as if
         wildcards ('.*') are automatically added at the beginning and the
         end.  For example, 'x' matches all strings that contain "x".  Use '^x$'
         to match only the strings that begin with "x" and 'x$' to match only the
@@ -860,7 +860,7 @@ def plot(y, x=None, ax=None, label=None,
     r"""Plot 1D scalar data as points and/or line segments in 2D Cartesian
     coordinates.
 
-    This is similar to :meth:`matplotlib.pyplot.plot` (and actually calls that
+    This is similar to :func:`matplotlib.pyplot.plot` (and actually calls that
     function) but provides direct support for plotting an arbitrary number of
     curves.
 
@@ -882,14 +882,14 @@ def plot(y, x=None, ax=None, label=None,
     - *label*: List of labels of each series (to be used later for the legend
       if applied)
 
-    - *color*: Single entry, list, or :class:`itertools.cycle` of colors that
+    - *color*: Single entry, list, or :func:`itertools.cycle` of colors that
       will be used sequentially
 
          Each entry may be a character, grayscale, or rgb value.
 
          .. Seealso:: http://matplotlib.sourceforge.net/api/colors_api.html
 
-    - *marker*: Single entry, list, or :class:`itertools.cycle` of markers that
+    - *marker*: Single entry, list, or :func:`itertools.cycle` of markers that
       will be used sequentially
 
          Use *None* for no marker.  A good assortment is ['o', 'v', '^', '<',
@@ -897,7 +897,7 @@ def plot(y, x=None, ax=None, label=None,
          are listed at:
          http://matplotlib.sourceforge.net/api/artist_api.html#matplotlib.lines.Line2D.set_marker.
 
-    - *dashes*: Single entry, list, or :class:`itertools.cycle` of dash styles
+    - *dashes*: Single entry, list, or :func:`itertools.cycle` of dash styles
       that will be used sequentially
 
          Each style is a tuple of on/off lengths representing dashes.  Use
@@ -905,7 +905,7 @@ def plot(y, x=None, ax=None, label=None,
 
          .. Seealso:: http://matplotlib.sourceforge.net/api/collections_api.html
 
-    - *\*\*kwargs*: Additional arguments for :meth:`matplotlib.pyplot.plot`
+    - *\*\*kwargs*: Additional arguments for :func:`matplotlib.pyplot.plot`
 
     **Returns:** List of :class:`matplotlib.lines.Line2D` objects
 
@@ -977,9 +977,9 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
     - *pad*: Amount of white space around the data (relative to the span of the
       field)
 
-    - *pivot*: 'tail' | 'middle' | 'tip' (see :meth:`matplotlib.pyplot.quiver`)
+    - *pivot*: 'tail' | 'middle' | 'tip' (see :func:`matplotlib.pyplot.quiver`)
 
-    - *\*\*kwargs*: Additional arguments for :meth:`matplotlib.pyplot.quiver`
+    - *\*\*kwargs*: Additional arguments for :func:`matplotlib.pyplot.quiver`
 
     **Example:**
 
@@ -1064,8 +1064,8 @@ def save(formats=['pdf', 'png'], fname=None, fig=None):
 
            If *fig* is *None* (default), then the current figure will be saved.
 
-    .. Note::  In general, :meth:`save` should be called before
-       :meth:`matplotlib.pyplot.show` so that the figure(s) are still present in
+    .. Note::  In general, :func:`save` should be called before
+       :func:`matplotlib.pyplot.show` so that the figure(s) are still present in
        memory.
 
     **Example:**
@@ -1088,7 +1088,7 @@ def save(formats=['pdf', 'png'], fname=None, fig=None):
        >>> os.remove("examples/temp.png")
        >>> plt.close()
 
-    .. Note::  The :meth:`figure` function can be used to directly create a
+    .. Note::  The :func:`figure` function can be used to directly create a
        figure with a label.
     """
     # Get the figures.
@@ -1127,15 +1127,15 @@ def saveall(formats=['pdf', 'png']):
     The directory and base filenames (without extension) are taken from the
     *label* property of the open figures.  If a figure has an empty *label*,
     then a file dialog is opened to choose the filename.  Note that the
-    :meth:`figure` function can be used to directly create a figure with a
+    :func:`figure` function can be used to directly create a figure with a
     label.
 
     **Arguments:**
 
     - *formats*: Format or list of formats in which the figures should be saved
 
-    .. Note::  In general, :meth:`saveall` should be called before
-       :meth:`matplotlib.pyplot.show` so that the figure(s) are still present
+    .. Note::  In general, :func:`saveall` should be called before
+       :func:`matplotlib.pyplot.show` so that the figure(s) are still present
        in memory.
 
     **Example:**
@@ -1364,7 +1364,7 @@ def shift_scale_x(ax, eagerness=0.325):
 
     **Arguments:**
 
-    - *ax*: matplotlib.axes object
+    - *ax*: Axes (:class:`matplotlib.axes.Axes` object)
 
     - *eagerness*: Parameter to adjust how little of an offset is allowed
       before the label will be recentered
@@ -1394,7 +1394,7 @@ def shift_scale_y(ax, eagerness=0.325):
 
     **Arguments:**
 
-    - *ax*: matplotlib.axes object
+    - *ax*: Axes (:class:`matplotlib.axes.Axes` object)
 
     - *eagerness*: Parameter to adjust how little of an offset is allowed
       before the label will be recentered

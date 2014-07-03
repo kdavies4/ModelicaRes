@@ -3,10 +3,10 @@
 """Set up and help run Modelica_ simulation experiments.
 
 This module supports two approaches to managing simulations.  The first is to
-create a Modelica_ script (using :meth:`write_script`) and run it within
+create a Modelica_ script (using :func:`write_script`) and run it within
 a Modelica_ environment (see the scripts in *examples/ChuaCircuit/*), which
 translates and simulates the models with the prescribed settings.  The second
-approach is to execute pre-translated models.  The :meth:`run_models` method
+approach is to execute pre-translated models.  The :func:`run_models` method
 handles this by writing to initialization file(s) (e.g, *dsin.txt*) and
 launching the appropriate model executables.  The advantage of the first
 approach is that formal parameters (those that are hard-coded during
@@ -17,11 +17,11 @@ that are not hard-coded during translation) are changed.
 The first step in either case is to create a dictionary to specify model
 parameters and other settings for simulation experiment.  A single model
 parameter may have multiple possible values.  The dictionary is passed to the
-:meth:`gen_experiments` function (see that function for a description of the
+:func:`gen_experiments` function (see that function for a description of the
 dictionary format), which combines the values of all the variables (by
 piecewise alignment or permutation) and returns a generator to step through the
-experiments.  Finally, the generator is passed to the :meth:`write_script` or
-:meth:`run_models` function (see the first paragraph).
+experiments.  Finally, the generator is passed to the :func:`write_script` or
+:func:`run_models` function (see the first paragraph).
 
 **Classes:**
 
@@ -32,21 +32,21 @@ experiments.  Finally, the generator is passed to the :meth:`write_script` or
 
 **Functions:**
 
-- :meth:`gen_experiments` - Return a generator for a set of simulation
+- :func:`gen_experiments` - Return a generator for a set of simulation
   experiments using permutation or simple element-wise grouping.
 
-- :meth:`modelica_str` - Express a Python_ variable as a Modelica_ string.
+- :func:`modelica_str` - Express a Python_ variable as a Modelica_ string.
 
-- :meth:`read_params` - Read parameter values from an initialization or final
+- :func:`read_params` - Read parameter values from an initialization or final
   values file.
 
-- :meth:`run_models` - Run Modelica_ models via pairs of executables and
+- :func:`run_models` - Run Modelica_ models via pairs of executables and
   initialization files (not yet implemented).
 
-- :meth:`write_params` - Write parameter values to a simulation initialization
+- :func:`write_params` - Write parameter values to a simulation initialization
   file.
 
-- :meth:`write_script` - Write a Modelica_ script to run simulations.
+- :func:`write_script` - Write a Modelica_ script to run simulations.
 
 **Submodules:**
 
@@ -90,7 +90,7 @@ class Experiment(namedtuple('Experiment', ['model', 'params', 'args'])):
     """namedtuple_ to represent a simulation experiment
 
     Instances of this class may be used in the *experiments* argument of
-    :meth:`write_script` and :meth:`run_models`, although there are some
+    :func:`write_script` and :func:`run_models`, although there are some
     differences in the entries (see those functions for details).
 
     **Example:**
@@ -124,7 +124,7 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
          Modelica_ dot notation or via nested dictionaries.
 
     - *args*: Dictionary of command arguments for the Modelica_ tool or
-      environment (e.g., to the :meth:`simulateModel` command in Dymola)
+      environment (e.g., to the :func:`simulateModel` command in Dymola)
 
          Each key is an argument name and each entry is a list of settings.
 
@@ -542,7 +542,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
          equivalent (see :meth:`ParamDict.__str__`).  Redeclarations and other
          prefixes must be included in the keys along with the variable names.
 
-         :meth:`gen_experiments` can be used to create a generator for this
+         :func:`gen_experiments` can be used to create a generator for this
          argument.
 
          Items with values of *None* in *params* and *args* are skipped.
@@ -753,7 +753,7 @@ class ParamDict(dict):
 
     Otherwise, this class is the same as :class:`dict`.  The underlying
     structure is not nested or reformatted---only the informal representation
-    (:meth:`ParamDict.__str__`).
+    (:meth:`__str__`).
 
     In printing this dictionary (string representation), each key is interpreted
     as a parameter name (including the full model path in Modelica_ dot

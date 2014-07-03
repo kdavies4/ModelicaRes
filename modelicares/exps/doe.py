@@ -50,7 +50,7 @@ def aslisted(*space):
     return zip(*space)
 
 def ofat(*space):
-    """One-factor-at-a-time or OFAT method
+    """One-factor-at-a-time (OFAT) method
 
     The first entry in each sublist is taken as the baseline value for that
     dimension.

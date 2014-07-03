@@ -1,12 +1,12 @@
 #!/usr/bin/python
 """Functions to format numbers to support LaTeX_
 
-- :meth:`number_label` - Return a string to indicate a quantity in a unit
+- :func:`number_label` - Return a string to indicate a quantity in a unit
 
-- :meth:`quantity_str` - Return a string to represent a quantity as a number
+- :func:`quantity_str` - Return a string to represent a quantity as a number
   times a unit
 
-- :meth:`unit2tex` - Convert a Modelica_ unit string to LaTeX_
+- :func:`unit2tex` - Convert a Modelica_ unit string to LaTeX_
 
 
 .. _LaTeX: http://www.latex-project.org/
@@ -57,7 +57,7 @@ def number_label(quantity="", unit=None, times=r'\,', per=r'\,/\,',
     - *unit*: String specifying the unit
 
          This is expressed in extended Modelica_ notation.  See
-         :meth:`unit2tex`.
+         :func:`unit2tex`.
 
     - *times*: LaTeX_ math string to indicate multiplication
 
@@ -114,7 +114,7 @@ def quantity_str(number, unit='', use_si=True, format='%g', times=r'\,',
 
     - *unit*: String specifying the unit
 
-         *unit* uses extended Modelica_ notation.  See :meth:`unit2tex`.
+         *unit* uses extended Modelica_ notation.  See :func:`unit2tex`.
 
     - *use_si*: *True*, if SI prefixes should be used
 

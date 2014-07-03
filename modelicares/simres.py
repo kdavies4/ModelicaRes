@@ -501,7 +501,8 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
     def value(self, f=None):
         """Return function *f* of the value of a constant variable.
 
-        This method raises a **ValueError** if the variable is time-varying.
+        This method raises a :class:`ValueError` if the variable is
+        time-varying.
 
         **Arguments:**
 
@@ -848,8 +849,8 @@ class SimRes(Res):
         - *label*: Label for the figure
 
              This is used as the base filename if the figure is saved using
-             :meth:`~modelicares.util.save` or
-             :meth:`~modelicares.util.saveall`.
+             :func:`~modelicares.util.save` or
+             :func:`~modelicares.util.saveall`.
 
         - *xlabel*: Label for the x-axes (only shown for the subplots on the
           bottom row)
@@ -873,11 +874,11 @@ class SimRes(Res):
         - *vspace*: Vertical space between rows of subplots
 
         - *leg_kwargs*: Dictionary of keyword arguments for
-          :meth:`matplotlib.pyplot.legend`
+          :func:`matplotlib.pyplot.legend`
 
              If *leg_kwargs* is *None*, then no legend will be shown.
 
-        - *\*\*kwargs*: Additional arguments for  :meth:`matplotlib.pyplot.bar`
+        - *\*\*kwargs*: Additional arguments for  :func:`matplotlib.pyplot.bar`
 
         **Returns:**
 
@@ -1013,14 +1014,14 @@ class SimRes(Res):
 
             Wildcard characters ('\*') are not automatically added at the
             beginning or the end of the pattern.  For example, '\*x\*' matches
-            all variables that that contain "x", but 'x\*' matches only the
-            variables that begin with "x".
+            all variables that contain "x", but 'x\*' matches only the variables
+            that begin with "x".
 
           - If *re* is *True*, the regular expressions are used a la `Python's
-            res module <http://docs.python.org/2/library/re.html>`_.  See also
+            re module <http://docs.python.org/2/library/re.html>`_.  See also
             http://docs.python.org/2/howto/regex.html#regex-howto.
 
-            Since :mod:`re.search` is used to produce the matches, it is as if
+            Since :func:`re.search` is used to produce the matches, it is as if
             wildcards ('.*') are automatically added at the beginning and the
             end.  For example, 'x' matches all variables that contain "x".  Use
             '^x$' to match only the variables that begin with "x" and 'x$' to
@@ -1074,7 +1075,7 @@ class SimRes(Res):
         are the subclasses.  The value at the end of each branch is the full
         variable name.  All entries are sorted alphabetically.
 
-        To create a filtered tree, use :meth:`find` with *as_tree*=*True*.
+        To create a filtered tree, use :meth:`find` with *as_tree*\=\ *True*.
 
         **Example:**
 
@@ -1168,8 +1169,8 @@ class SimRes(Res):
         - *label*: Label for the figure (ignored if *ax* is provided)
 
              This is used as the base filename if the figure is saved using
-             :meth:`~modelicares.util.save` or
-             :meth:`~modelicares.util.saveall`.
+             :func:`~modelicares.util.save` or
+             :func:`~modelicares.util.saveall`.
 
         - *incl_prefix*: If *True*, prefix the legend strings with the base
           filename of the class.
@@ -1178,8 +1179,8 @@ class SimRes(Res):
 
         - *use_paren*: Add parentheses around the suffix
 
-        - *\*\*kwargs*: Propagated to :meth:`util.plot` and then to
-          :meth:`matplotlib.pyplot.plot`.
+        - *\*\*kwargs*: Propagated to :func:`modelicares.util.plot` and then to
+          :func:`matplotlib.pyplot.plot`.
 
              If both y axes are used (primary and secondary), then the *dashes*
              argument is ignored.  The curves on the primary axis will be solid
@@ -1358,8 +1359,8 @@ class SimRes(Res):
         - *label*: Label for the figure
 
              This is used as the base filename if the figure is saved using
-             :meth:`~modelicares.util.save` or
-             :meth:`~modelicares.util.saveall`.
+             :func:`~modelicares.util.save` or
+             :func:`~modelicares.util.saveall`.
 
         - *left*: Left margin
 
@@ -1908,7 +1909,7 @@ class SimResList(ResList):
             module <http://docs.python.org/2/library/re.html>`_.  See also
             http://docs.python.org/2/howto/regex.html#regex-howto.
 
-            Since :mod:`re.search` is used to produce the matches, it is as if
+            Since :func:`re.search` is used to produce the matches, it is as if
             wildcards ('.*') are automatically added at the beginning and the
             end.  For example, 'x' matches all variables that contain "x".  Use
             '^x$' to match only the variables that begin with "x" and 'x$' to
@@ -2132,34 +2133,34 @@ class SimResList(ResList):
         r"""Plot data from selected variables over all of the simulations in 2D
         Cartesian coordinates.
 
-        This method calls :meth:`SimRes.plot` from the included instances of
+        This method calls :meth:`~SimRes.plot` from the included instances of
         :class:`SimRes`.
 
         A new figure is created if necessary.
 
         **Arguments:**
 
-        *\*args* and *\*\*kwargs* are propagated to :meth:`simres.SimRes.plot`
-        (then to :meth:`util.plot` and finally to
-        :meth:`matplotlib.pyplot.plot`), except for the following keyword
+        *\*args* and *\*\*kwargs* are propagated to :meth:`SimRes.plot`
+        (then to :func:`modelicares.util.plot` and finally to
+        :func:`matplotlib.pyplot.plot`), except for the following keyword
         arguments:
 
         - *suffixes*: Suffix or list of suffixes for the legends (see
-          :meth:`simres.SimRes.plot`)
+          :meth:`SimRes.plot`)
 
              Use '' for no suffix.  If *suffixes* is *None*, the *label*
              property of the simulations will be used.  If the simulations do
              not have *label* properties, then the base filenames will be used
              with enough of the path to distinguish the files.
 
-        - *color*: Single entry, list, or :class:`itertools.cycle` of colors
-          to be used sequentially
+        - *color*: Single entry, list, or :func:`itertools.cycle` of colors to
+          be used sequentially
 
              Each entry may be a character, grayscale, or rgb value.
 
              .. Seealso:: http://matplotlib.sourceforge.net/api/colors_api.html
 
-        - *dashes*: Single entry, list, or :class:`itertools.cycle` of dash
+        - *dashes*: Single entry, list, or :func:`itertools.cycle` of dash
           styles to be used sequentially
 
              Each style is a tuple of on/off lengths representing dashes.  Use

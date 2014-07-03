@@ -8,8 +8,9 @@ If no arguments are given, then the script provides a dialog to choose files or
 a folder.  After loading files, it provides working session of `IPython
 <http://www.ipython.org/>`_ with the results available.  PyLab_ is imported
 (``from pylab import *``) to provide many functions of NumPy_ and matplotlib_
-(e.g., :meth:`sin` and :meth:`plot`).  The essential classes and functions of
-ModelicaRes are imported as well (``from modelicares import *``).
+(e.g., :func:`~numpy.sin` and :func:`~matplotlib.pyplot.plot`).  The essential
+classes and functions of ModelicaRes are imported as well (``from modelicares
+import *``).
 
 **Setup and example:**
 

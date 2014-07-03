@@ -125,32 +125,33 @@ class LinRes(Res):
 
     **Properties:**
 
-    - *dirname* - Directory from which the variables were loaded
+    - :attr:`dirname` - Directory from which the variables were loaded
 
-    - *fbase* - Base filename from which the variables were loaded, without
+    - :attr:`fbase` - Base filename from which the variables were loaded, without
       the directory or extension
 
-    - *fname* - Filename from which the variables were loaded, with absolute
+    - :attr:`fname` - Filename from which the variables were loaded, with absolute
       path
 
-    - *sys* - State-space system as an instance of :class:`control.StateSpace`
+    - :attr:`sys` - State-space system as an instance of :class:`control.StateSpace`
 
          It contains:
 
-         - *A*, *B*, *C*, *D*: Matrices of the linear system
+         - :attr:`A`, :attr:`B`, :attr:`C`, :attr:`D`: Matrices of the linear
+           system
 
               .. code-block:: modelica
 
                  der(x) = A*x + B*u;
                       y = C*x + D*u;
 
-         - *state_names*: List of names of the states (*x*)
+         - :attr:`state_names`: List of names of the states (*x*)
 
-         - *input_names*: List of names of the inputs (*u*)
+         - :attr:`input_names`: List of names of the inputs (*u*)
 
-         - *output_names*: List of names of the outputs (*y*)
+         - :attr:`output_names`: List of names of the outputs (*y*)
 
-    - *tool* - String indicating the function used to load the results (named
+    - :attr:`tool` - String indicating the function used to load the results (named
       after the corresponding Modelica_ tool)
 
     **Example:**
@@ -287,8 +288,8 @@ class LinRes(Res):
         - *label*: Label for the figure (ignored if *axes* is provided)
 
              This is used as the base filename if the figure is saved using
-             :meth:`~modelicares.util.save` or
-             :meth:`~modelicares.util.saveall`.
+             :func:`~modelicares.util.save` or
+             :func:`~modelicares.util.saveall`.
 
         - *title*: Title for the figure
 
@@ -329,7 +330,7 @@ class LinRes(Res):
                (otherwise, radians)
 
              Other keyword arguments are passed to
-             :meth:`matplotlib.pyplot.plot`.
+             :func:`matplotlib.pyplot.plot`.
 
         **Returns:**
 
@@ -413,8 +414,8 @@ class LinRes(Res):
         - *label*: Label for the figure (ignored if ax is provided)
 
              This is used as the base filename if the figure is saved using
-             :meth:`~modelicares.util.save` or
-             :meth:`~modelicares.util.saveall`.
+             :func:`~modelicares.util.save` or
+             :func:`~modelicares.util.saveall`.
 
         - *title*: Title for the figure
 
@@ -455,7 +456,7 @@ class LinRes(Res):
                labeled
 
              Other keyword arguments are passed to
-             :meth:`matplotlib.pyplot.plot`.
+             :func:`matplotlib.pyplot.plot`.
 
         **Returns:**
 
@@ -604,11 +605,12 @@ class LinResList(ResList):
 
     **Properties:**
 
-    - *basedir* - Highest common directory that the result files share
+    - :attr:`basedir` - Highest common directory that the result files share
 
-    - Also, the properties of :class:`LinRes` (*basename*, *dirname*, *fname*,
-      *sys*, and *tool*) can be retrieved as a list across all of the
-      linearizations; see the example below.
+    - Also, the properties of :class:`LinRes` (:attr:`basename`,
+      :attr:`dirname`, :attr:`fname`, :attr:`sys`, and :attr:`tool`) can be
+      retrieved as a list across all of the linearizations; see the example
+      below.
 
     **Example:**
 
@@ -789,8 +791,8 @@ class LinResList(ResList):
         - *label*: Label for the figure (ignored if axes is provided)
 
              This is used as the base filename if the figure is saved using
-             :meth:`~modelicares.util.save` or
-             :meth:`~modelicares.util.saveall`.
+             :func:`~modelicares.util.save` or
+             :func:`~modelicares.util.saveall`.
 
         - *title*: Title for the figure
 
@@ -816,7 +818,7 @@ class LinResList(ResList):
                 http://matplotlib.sourceforge.net/api/collections_api.html
 
         - *leg_kwargs*: Dictionary of keyword arguments for
-          :meth:`matplotlib.pyplot.legend`
+          :func:`matplotlib.pyplot.legend`
 
              If *leg_kwargs* is *None*, then no legend will be shown.
 
@@ -837,7 +839,7 @@ class LinResList(ResList):
                (otherwise, radians)
 
              Other keyword arguments are passed to
-             :meth:`matplotlib.pyplot.plot`.
+             :func:`matplotlib.pyplot.plot`.
 
         **Returns:**
 
@@ -900,8 +902,8 @@ class LinResList(ResList):
                 leg_kwargs={}, **kwargs):
         r"""Plot the linearizations onto a single Nyquist diagram.
 
-        This method calls :meth:`linres.LinRes.nyquist` from the included
-        instances of :class:`linres.LinRes`.
+        This method calls :meth:`~LinRes.nyquist` from the included instances of
+        :class:`LinRes`.
 
         **Arguments:**
 
@@ -917,8 +919,8 @@ class LinResList(ResList):
         - *label*: Label for the figure (ignored if axes is provided)
 
              This is used as the base filename if the figure is saved using
-             :meth:`~modelicares.util.save` or
-             :meth:`~modelicares.util.saveall`.
+             :func:`~modelicares.util.save` or
+             :func:`~modelicares.util.saveall`.
 
         - *title*: Title for the figure
 
@@ -938,7 +940,7 @@ class LinResList(ResList):
              .. Seealso:: http://matplotlib.sourceforge.net/api/colors_api.html
 
         - *leg_kwargs*: Dictionary of keyword arguments for
-          :meth:`matplotlib.pyplot.legend`
+          :func:`matplotlib.pyplot.legend`
 
              If *leg_kwargs* is *None*, then no legend will be shown.
 
@@ -965,7 +967,7 @@ class LinResList(ResList):
                labeled
 
              Other keyword arguments are passed to
-             :meth:`matplotlib.pyplot.plot`.
+             :func:`matplotlib.pyplot.plot`.
 
         **Returns:**
 

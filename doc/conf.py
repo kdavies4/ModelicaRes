@@ -40,10 +40,21 @@ def setup(app):
 extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.doctest',
               'sphinx.ext.pngmath',
+              'sphinx.ext.intersphinx',
               'matplotlib.sphinxext.plot_directive'
              ]
 # Note: sphinx.ext.autosummary produces a table, but I'd rather have a bulleted
 # list.
+
+# Mappings to other packages
+# TODO: Fix numpy link.
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/', None),
+    'matplotlib': ('http://matplotlib.org/1.3.1', None),
+    'pandas': ('http://pandas.pydata.org/pandas-docs/stable/', None),
+    'numpy': ('http://docs.scipy.org/doc/numpy/', None),
+    'control': ('http://python-control.sourceforge.net/manual/', None),
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

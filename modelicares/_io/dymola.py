@@ -12,12 +12,12 @@ Classes:
 
 Functions:
 
-- :meth:`read` - Read variables from a MATLAB\ :sup:`®` file with
+- :func:`read` - Read variables from a MATLAB\ :sup:`®` file with
   Dymola\ :sup:`®` or OpenModelica results.
 
-- :meth:`loadsim` - Load Dymola\ :sup:`®` or OpenModelica simulation results.
+- :func:`loadsim` - Load Dymola\ :sup:`®` or OpenModelica simulation results.
 
-- :meth:`loadlin` - Load Dymola\ :sup:`®` or OpenModelica linearization results.
+- :func:`loadlin` - Load Dymola\ :sup:`®` or OpenModelica linearization results.
 
 Errors are raised under the following conditions:
 

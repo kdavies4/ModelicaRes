@@ -3,19 +3,19 @@
 
 Each submodule contains the following functions for a specific Modelica_ tool:
 
-- :meth:`loadsim` - Load simulation results.
+- :func:`loadsim` - Load simulation results.
 
-- :meth:`loadlin` - Load linearization results.
+- :func:`loadlin` - Load linearization results.
 
 The first argument of each function is *fname*, the name of the results file
-(including the path).  :meth:`loadsim` takes a second argument,
-*constants_only*.  If it is *True* and the format supports it, :meth:`loadsim`
+(including the path).  :func:`loadsim` takes a second argument,
+*constants_only*.  If it is *True* and the format supports it, :func:`loadsim`
 will only load constants.
 
-:meth:`loadsim` returns an instance of :class:`~modelicares.simres._VarDict`, a
+:func:`loadsim` returns an instance of :class:`~modelicares.simres._VarDict`, a
 specialized dictionary of variables.  The keys are variable names and the values
 are instances of :class:`~modelicares.simres.Variable` or a derived class.
-:meth:`loadlin` returns an instance of :class:`control.StateSpace`.
+:func:`loadlin` returns an instance of :class:`control.StateSpace`.
 
 Errors are raised under the following conditions:
 

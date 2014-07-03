@@ -7,9 +7,9 @@ classes from the submodules.  These are:
 
 - To manage simulation experiments (:mod:`~modelicares.exps` submodule):
   :mod:`~modelicares.exps.doe`, :class:`~exps.Experiment`,
-  :meth:`~exps.gen_experiments`, :meth:`~exps.modelica_str`,
-  :class:`~exps.ParamDict`, :meth:`~exps.run_models`,
-  :meth:`~exps.write_params`, and :meth:`~exps.write_script`
+  :func:`~exps.gen_experiments`, :func:`~exps.modelica_str`,
+  :class:`~exps.ParamDict`, :func:`~exps.run_models`,
+  :func:`~exps.write_params`, and :func:`~exps.write_script`
 
 - For simulation results (:mod:`~modelicares.simres` submodule):
   :class:`~simres.SimRes` and :class:`~simres.SimResList`
@@ -18,10 +18,10 @@ classes from the submodules.  These are:
   :class:`~linres.LinRes` and :class:`~linres.LinResList`
 
 - Supporting classes and functions (:mod:`~modelicares.util` submodule):
-  :meth:`~util.add_arrows`, :meth:`~util.add_hlines`, :meth:`~util.add_vlines`,
-  :class:`~util.ArrowLine`, :meth:`~util.closeall`, :meth:`~util.figure`,
-  :meth:`~util.load_csv`, :meth:`~util.multiglob`, :meth:`~util.save`,
-  :meth:`~util.saveall`, and :meth:`~util.setup_subplots`
+  :func:`~util.add_arrows`, :func:`~util.add_hlines`, :func:`~util.add_vlines`,
+  :class:`~util.ArrowLine`, :func:`~util.closeall`, :func:`~util.figure`,
+  :func:`~util.load_csv`, :func:`~util.multiglob`, :func:`~util.save`,
+  :func:`~util.saveall`, and :func:`~util.setup_subplots`
 
 There is also a local function:
 
