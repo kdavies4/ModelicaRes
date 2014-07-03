@@ -1458,10 +1458,10 @@ class SimRes(Res):
         >>> sim = SimRes('examples/ChuaCircuit.mat')
         >>> voltages = sim.find('^[^.]*.v$', re=True)
         >>> sim.to_pandas(voltages) # doctest: +ELLIPSIS +NORMALIZE_WHITESPACE
-                    C1.v / V  C2.v / V   G.v / V   L.v / V  Nr.v / V  Ro.v / V
+                  C1.v / V  C2.v / V   G.v / V   L.v / V  Nr.v / V  Ro.v / V
         Time / s
-        0.000000    4.000000  0.000000 -4.000000  0.000000  4.000000  0.000000
-        5.000000    3.882738  0.109426 -3.773312  0.109235  3.882738  0.000191
+        0         4.000000  0.000000 -4.000000  0.000000  4.000000  0.000000
+        5         3.882738  0.109426 -3.773312  0.109235  3.882738  0.000191
         ...
         [514 rows x 6 columns]
 
@@ -1482,6 +1482,9 @@ class SimRes(Res):
         ...
         [502 rows x 3 columns]
         """
+        # Note: The frst doctest above requires pandas >= 0.14.0.  Otherwise,
+        # more decimal places are shown in the Time column.
+
         # Simple function to label a variable with its unit:
         label = lambda name, unit: name + ' / ' + unit
 

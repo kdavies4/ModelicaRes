@@ -4,16 +4,15 @@ python:
   - '2.7'
   - '3.4'
 
-virtualenv:
-  system_site_packages: true
-
 # Use conda since Travis CI doesn't ahve good support for scipy in Python 3.
 before_install:
   - sudo apt-get update
   - if [[ $TRAVIS_PYTHON_VERSION == 2* ]]; then
-      wget http://repo.continuum.io/miniconda/Miniconda-3.4.2-Linux-x86_64.sh -O miniconda.sh
+      wget http://repo.continuum.io/miniconda/Miniconda-3.5.5-Linux-x86_64.sh -O miniconda.sh;
+      sudo apt-get install python-qt4;
     else
-      wget http://repo.continuum.io/miniconda/Miniconda3-3.4.2-Linux-x86_64.sh -O miniconda.sh
+      wget http://repo.continuum.io/miniconda/Miniconda3-3.5.5-Linux-x86_64.sh -O miniconda.sh;
+      sudo apt-get install python-qt4;
     fi
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
@@ -21,19 +20,22 @@ before_install:
   - conda config --set always_yes yes --set changeps1 no
   - conda update conda
   - conda info -a # Useful for debugging issues with conda
-  - conda create -n test-environment python=$TRAVIS_PYTHON_VERSION scipy pandas control six PyQt4
+  - conda create -n test-environment scipy matplotlib pandas six
+  # 7/2/14: python=3.4 doesn't work, but conda currently defaults to 3.4.1
+  # anyway if version 3 is installed (see conda info above) and 2.7.7 otherwise.
+  - pip install control
   - source activate test-environment
 
 install:
   - python setup.py install
 
-# before_script:
-#   - export DISPLAY=:99.0
-#   - sh -e /etc/init.d/xvfb start
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
 
 script:
   - python setup.py test
 
 # TODO: Set this up.
-#after_success:
-#  - coveralls
+after_success:
+  - coveralls

@@ -24,6 +24,9 @@ with open(path.join(here, 'modelicares', '__init__.py')) as f:
 with open(path.join(here, 'README.txt')) as f:
     long_description = f.read()
 
+import sys
+print(sys.version)
+
 setup(name='ModelicaRes',
       version=version if version else '0',
       description=("Set up, plot, and analyze Modelica simulations in Python"),

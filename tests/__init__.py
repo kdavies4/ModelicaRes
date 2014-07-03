@@ -13,6 +13,8 @@ from os import path
 this_dir = path.dirname(path.realpath(__file__))
 doctest_files = [path.basename(fname)
                  for fname in glob(path.join(this_dir, '*.txt'))]
+package_names = util.list_packages(thismodule)
+package_names.remove('modelicares._gui')
 
 # TODO: Add tests here; consider moving tests from tests.txt.
 class MyTest(unittest.TestCase):
@@ -25,8 +27,7 @@ def test_suite():
     suite = unittest.TestSuite()
     suite.addTests([unittest.makeSuite(MyTest)])
     suite.addTests([doctest.DocFileSuite(fname) for fname in doctest_files])
-    suite.addTests([doctest.DocTestSuite(package)
-                    for package in util.list_packages(thismodule)])
+    suite.addTests([doctest.DocTestSuite(package) for package in package_names])
     return suite
 
 if __name__ == '__main__':
