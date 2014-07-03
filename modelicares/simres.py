@@ -49,7 +49,6 @@ from itertools import cycle
 from matplotlib import rcParams
 from matplotlib.cbook import iterable
 from matplotlib.pyplot import figlegend
-from natu.util import unit2tex, number_label
 from pandas import DataFrame
 from scipy.integrate import trapz as integral
 from scipy.interpolate import interp1d
@@ -57,6 +56,7 @@ from six import string_types
 
 from modelicares import util
 from modelicares._res import Res, ResList
+from modelicares.texunit import unit2tex, number_label
 
 def _apply_function(func):
     """Return a method that applies a function to its output, given a
@@ -134,7 +134,7 @@ def _select(func):
                 "time limit.")
 
             # Determine the corresponding indices and return them in a tuple.
-            times = self.times()
+            times = myself.times()
             i1 = None if t1 is None else util.get_indices(times, t1)[1]
             i2 = None if t2 is None else util.get_indices(times, t2)[0] + 1
             return slice(i1, i2, skip)

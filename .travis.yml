@@ -27,12 +27,12 @@ before_install:
 install:
   - python setup.py install
 
-before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
+# before_script:
+#   - export DISPLAY=:99.0
+#   - sh -e /etc/init.d/xvfb start
 
 script:
-  - bash runtests.sh
+  - python setup.py test
 
 # TODO: Set this up.
 #after_success:

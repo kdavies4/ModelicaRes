@@ -15,7 +15,7 @@ from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 from matplotlib.figure import Figure
 from six import string_types
 
-from natu.util import unit2tex
+from modelicares.texunit import unit2tex
 
 # Standard pylint settings for this project:
 # pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,

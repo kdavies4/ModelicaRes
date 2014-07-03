@@ -25,7 +25,7 @@ with open(path.join(here, 'README.txt')) as f:
     long_description = f.read()
 
 setup(name='ModelicaRes',
-      version=version if version else '0-unreleased_copy',
+      version=version if version else '0-unreleased_version',
       description=("Set up, plot, and analyze Modelica simulations in Python"),
       long_description=long_description,
       author='Kevin Davies',
@@ -60,6 +60,7 @@ setup(name='ModelicaRes',
                 'natu', 'control', 'six'],
       platforms='any',
       zip_safe=True,
+      test_suite = 'tests.test_suite',
      )
 # ModelicaRes may run with scipy as early as 0.7.0.  However, the control
 # package needs scipy >= 0.10.0 but does not stipulate the version.

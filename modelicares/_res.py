@@ -28,9 +28,9 @@ def assert_sametype(func):
     def wrapped(myself, other):
         """Method that can only operate on an instance of the containing class
         """
-        if not isinstance(other, self.__class__):
+        if not isinstance(other, myself.__class__):
             raise TypeError("A {obj} can only be combined with another "
-                            "{obj}.".format(obj=self.__class__.__name__))
+                            "{obj}.".format(obj=myself.__class__.__name__))
         return func(myself, other)
 
     return wrapped
