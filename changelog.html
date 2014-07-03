@@ -27,8 +27,8 @@
     <script type="text/javascript" src="javascripts/analytics.js"></script>
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
     <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
-    <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
-    <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment, linearization, Modelica plot, analysis, sort, filter, browse, script, data, diagram, export">
+    <meta name="description" content="Set up, plot, and analyze Modelica simulations in Python">
+    <meta name="keywords" content="results dymola openmodelica data mat analysis script sort filter browse export diagram simulation linearization experiment matplotlib pandas">
     <meta name="author" content="Kevin Davies">
  
 
@@ -55,7 +55,25 @@
   <div class="section" id="change-log">
 <h1>Change log<a class="headerlink" href="#change-log" title="Permalink to this headline">¶</a></h1>
 <p>The releases are numbered according to the <a class="reference external" href="http://semver.org">Semantic Versioning Specification</a>.</p>
-<p>TBD &#8211; Updates:</p>
+<p>TBD (in <a class="reference external" href="https://github.com/kdavies4/ModelicaRes">GitHub</a> only) &#8211; Updates:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Moved <tt class="xref py py-mod docutils literal"><span class="pre">texunit</span></tt> to <tt class="xref py py-mod docutils literal"><span class="pre">natu.util</span></tt>.</li>
+<li>Renamed <tt class="xref py py-meth docutils literal"><span class="pre">unique_IVs()</span></tt> to
+<a class="reference internal" href="simres.html#modelicares.simres.SimResList.get_unique_IVs" title="modelicares.simres.SimResList.get_unique_IVs"><tt class="xref py py-meth docutils literal"><span class="pre">get_unique_IVs()</span></tt></a> to indicate that it
+is a method.</li>
+<li>The variable tree in <a class="reference internal" href="simres.html#modelicares.simres.SimRes.browse" title="modelicares.simres.SimRes.browse"><tt class="xref py py-class docutils literal"><span class="pre">browse</span></tt></a> is now
+sorted alphabetically.</li>
+<li>In <a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a>,
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-attr docutils literal"><span class="pre">names</span></tt></a> and
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.nametree" title="modelicares.simres.SimRes.nametree"><tt class="xref py py-attr docutils literal"><span class="pre">nametree</span></tt></a> are now properties.  Use
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.find" title="modelicares.simres.SimRes.find"><tt class="xref py py-meth docutils literal"><span class="pre">find()</span></tt></a> to find variables.  The
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-attr docutils literal"><span class="pre">names</span></tt></a>,
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.nametree" title="modelicares.simres.SimRes.nametree"><tt class="xref py py-attr docutils literal"><span class="pre">nametree</span></tt></a>, and the results of
+<a class="reference internal" href="simres.html#modelicares.simres.SimRes.find" title="modelicares.simres.SimRes.find"><tt class="xref py py-meth docutils literal"><span class="pre">find()</span></tt></a> are now sorted.  The same applies
+in <a class="reference internal" href="simres.html#modelicares.simres.SimResList" title="modelicares.simres.SimResList"><tt class="xref py py-class docutils literal"><span class="pre">SimResList</span></tt></a>.</li>
+</ul>
+</div></blockquote>
 <p><a class="reference external" href="https://github.com/kdavies4/ModelicaRes/archive/v0.12.2.zip">v0.12.2</a> (2014-6-10) &#8211; Updates:</p>
 <blockquote>
 <div><ul class="simple">
@@ -95,20 +113,20 @@ linearizations in those lists.</li>
 property of <a class="reference internal" href="simres.html#modelicares.simres.SimResList" title="modelicares.simres.SimResList"><tt class="xref py py-class docutils literal"><span class="pre">SimResList</span></tt></a> instead.</li>
 <li><a class="reference internal" href="simres.html#modelicares.simres.Variable.is_constant" title="modelicares.simres.Variable.is_constant"><tt class="xref py py-meth docutils literal"><span class="pre">is_constant()</span></tt></a> is now a property instead
 of a method of <a class="reference internal" href="simres.html#modelicares.simres.Variable" title="modelicares.simres.Variable"><tt class="xref py py-class docutils literal"><span class="pre">Variable</span></tt></a>.</li>
-<li><tt class="xref py py-meth docutils literal"><span class="pre">sort()</span></tt> now correctly sorts <a class="reference internal" href="simres.html#modelicares.simres.SimResList" title="modelicares.simres.SimResList"><tt class="xref py py-class docutils literal"><span class="pre">SimResList</span></tt></a>
+<li><tt class="xref py py-func docutils literal"><span class="pre">sort()</span></tt> now correctly sorts <a class="reference internal" href="simres.html#modelicares.simres.SimResList" title="modelicares.simres.SimResList"><tt class="xref py py-class docutils literal"><span class="pre">SimResList</span></tt></a>
 and <a class="reference internal" href="linres.html#modelicares.linres.LinResList" title="modelicares.linres.LinResList"><tt class="xref py py-class docutils literal"><span class="pre">LinResList</span></tt></a> by absolute file path.</li>
 <li>Improved the generation of defaults for the Bode and Nyquist plots.</li>
 <li>Fixed an issue with slicing a <a class="reference internal" href="simres.html#modelicares.simres.SimResList" title="modelicares.simres.SimResList"><tt class="xref py py-class docutils literal"><span class="pre">SimResList</span></tt></a>.</li>
-<li>Removed <tt class="xref py py-meth docutils literal"><span class="pre">pow10()</span></tt>.  It is not used internally and
+<li>Removed <tt class="xref py py-func docutils literal"><span class="pre">pow10()</span></tt>.  It is not used internally and
 probably is not very helpful externally.</li>
 <li>Change the default value of <em>roman</em> in
-<a class="reference internal" href="texunit.html#modelicares.texunit.quantity_str" title="modelicares.texunit.quantity_str"><tt class="xref py py-meth docutils literal"><span class="pre">quantity_str()</span></tt></a> to <em>False</em>.</li>
+<tt class="xref py py-func docutils literal"><span class="pre">quantity_str()</span></tt> to <em>False</em>.</li>
 <li>Renamed and/or reordered the arguments of
-<a class="reference internal" href="util.html#modelicares.util.setup_subplots" title="modelicares.util.setup_subplots"><tt class="xref py py-meth docutils literal"><span class="pre">setup_subplots()</span></tt></a>, and
-<a class="reference internal" href="exps.html#modelicares.exps.modelica_str" title="modelicares.exps.modelica_str"><tt class="xref py py-meth docutils literal"><span class="pre">modelica_str()</span></tt></a> for clarity and simplicity.</li>
+<a class="reference internal" href="util.html#modelicares.util.setup_subplots" title="modelicares.util.setup_subplots"><tt class="xref py py-func docutils literal"><span class="pre">setup_subplots()</span></tt></a>, and
+<a class="reference internal" href="exps.html#modelicares.exps.modelica_str" title="modelicares.exps.modelica_str"><tt class="xref py py-func docutils literal"><span class="pre">modelica_str()</span></tt></a> for clarity and simplicity.</li>
 <li>Supported <a class="reference external" href="http://qt-project.org/">Qt</a> via several installations: <a class="reference external" href="http://www.riverbankcomputing.co.uk/software/pyqt/">PyQt4</a>, <a class="reference external" href="https://code.google.com/p/guidata/">guidata</a>, and <a class="reference external" href="http://qt-project.org/wiki/pyside">PySide</a>.
 <a class="reference external" href="http://qt-project.org/wiki/pyside">PySide</a> is no longer required, but if no <a class="reference external" href="http://qt-project.org/">Qt</a> installation is available,
-then file dialogs are not available in <a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> or
+then file dialogs are not available in <a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-func docutils literal"><span class="pre">save()</span></tt></a> or
 the <a class="reference external" href="loadres.html">loadres</a> script.</li>
 </ul>
 </div></blockquote>
@@ -158,7 +176,7 @@ of constants in a simulation.</li>
 <li>Added option to <a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-class docutils literal"><span class="pre">names</span></tt></a> to list only the
 constants.</li>
 <li>Added <a class="reference internal" href="util.html#modelicares.util.si_prefix" title="modelicares.util.si_prefix"><tt class="xref py py-mod docutils literal"><span class="pre">si_prefix</span></tt></a> (previously nested in
-<a class="reference internal" href="texunit.html#module-modelicares.texunit" title="modelicares.texunit"><tt class="xref py py-mod docutils literal"><span class="pre">texunit</span></tt></a>)</li>
+<tt class="xref py py-mod docutils literal"><span class="pre">texunit</span></tt>)</li>
 <li>The <em>fname</em> attribute in <a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> and
 <a class="reference internal" href="linres.html#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> now includes the absolute path.
 <tt class="xref py py-meth docutils literal"><span class="pre">fbase()</span></tt> returns the base filename without
@@ -173,18 +191,18 @@ instead.</li>
 It is a package of utility functions and classes, not base classes.</li>
 <li>Renamed internal submodules with leading underscore to denote that they
 are not meant for external use.</li>
-<li>Renamed <tt class="xref py py-meth docutils literal"><span class="pre">label_number()</span></tt> to
-<tt class="xref py py-meth docutils literal"><span class="pre">label_number()</span></tt> and
-<tt class="xref py py-meth docutils literal"><span class="pre">label_quantity()</span></tt> to
-<a class="reference internal" href="texunit.html#modelicares.texunit.quantity_str" title="modelicares.texunit.quantity_str"><tt class="xref py py-meth docutils literal"><span class="pre">quantity_str()</span></tt></a>.</li>
-<li>Merged <tt class="xref py py-meth docutils literal"><span class="pre">modelica_array()</span></tt> and
-<tt class="xref py py-meth docutils literal"><span class="pre">modelica_boolean()</span></tt> into a new function,
-<a class="reference internal" href="exps.html#modelicares.exps.modelica_str" title="modelicares.exps.modelica_str"><tt class="xref py py-meth docutils literal"><span class="pre">modelica_str()</span></tt></a>.</li>
+<li>Renamed <tt class="xref py py-func docutils literal"><span class="pre">label_number()</span></tt> to
+<tt class="xref py py-func docutils literal"><span class="pre">label_number()</span></tt> and
+<tt class="xref py py-func docutils literal"><span class="pre">label_quantity()</span></tt> to
+<tt class="xref py py-func docutils literal"><span class="pre">quantity_str()</span></tt>.</li>
+<li>Merged <tt class="xref py py-func docutils literal"><span class="pre">modelica_array()</span></tt> and
+<tt class="xref py py-func docutils literal"><span class="pre">modelica_boolean()</span></tt> into a new function,
+<a class="reference internal" href="exps.html#modelicares.exps.modelica_str" title="modelicares.exps.modelica_str"><tt class="xref py py-func docutils literal"><span class="pre">modelica_str()</span></tt></a>.</li>
 <li>Removed <tt class="xref py py-class docutils literal"><span class="pre">Quantity</span></tt> and
-<tt class="xref py py-meth docutils literal"><span class="pre">convert()</span></tt> from <a class="reference internal" href="util.html#module-modelicares.util" title="modelicares.util"><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt></a>.</li>
-<li>Removed <tt class="xref py py-meth docutils literal"><span class="pre">merge_times()</span></tt>.  It is not used internally
+<tt class="xref py py-func docutils literal"><span class="pre">convert()</span></tt> from <a class="reference internal" href="util.html#module-modelicares.util" title="modelicares.util"><tt class="xref py py-mod docutils literal"><span class="pre">util</span></tt></a>.</li>
+<li>Removed <tt class="xref py py-func docutils literal"><span class="pre">merge_times()</span></tt>.  It is not used internally
 and probably is not very helpful externally.</li>
-<li>Removed <tt class="xref py py-meth docutils literal"><span class="pre">animate()</span></tt>.  <a class="reference external" href="http://matplotlib.org/">matplotlib</a> now has built-in
+<li>Removed <tt class="xref py py-func docutils literal"><span class="pre">animate()</span></tt>.  <a class="reference external" href="http://matplotlib.org/">matplotlib</a> now has built-in
 methods for this; see <a class="reference external" href="http://matplotlib.org/api/animation_api.html">http://matplotlib.org/api/animation_api.html</a>.</li>
 </ul>
 </div></blockquote>
@@ -220,8 +238,8 @@ still returns all variable names.</li>
 </li>
 <li><p class="first">Removed spaces in fahrenheit and celsius.</p>
 </li>
-<li><p class="first">Improved <a class="reference internal" href="exps.html#modelicares.exps.write_params" title="modelicares.exps.write_params"><tt class="xref py py-meth docutils literal"><span class="pre">write_params()</span></tt></a> and
-<a class="reference internal" href="exps.html#modelicares.exps.read_params" title="modelicares.exps.read_params"><tt class="xref py py-meth docutils literal"><span class="pre">read_params()</span></tt></a>:</p>
+<li><p class="first">Improved <a class="reference internal" href="exps.html#modelicares.exps.write_params" title="modelicares.exps.write_params"><tt class="xref py py-func docutils literal"><span class="pre">write_params()</span></tt></a> and
+<a class="reference internal" href="exps.html#modelicares.exps.read_params" title="modelicares.exps.read_params"><tt class="xref py py-func docutils literal"><span class="pre">read_params()</span></tt></a>:</p>
 <blockquote>
 <div><ol class="arabic simple">
 <li>More flexible with respect to whitespace</li>
@@ -265,17 +283,17 @@ per <a class="reference external" href="https://github.com/tbeu">tbeu</a>.</p>
 <blockquote>
 <div><ul class="simple">
 <li>Updated <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/master/examples/matplotlibrc">matplotlibrc</a> (default formatting).</li>
-<li>Added patterns to <a class="reference internal" href="exps.html#modelicares.exps.write_params" title="modelicares.exps.write_params"><tt class="xref py py-meth docutils literal"><span class="pre">write_params()</span></tt></a> to match more
+<li>Added patterns to <a class="reference internal" href="exps.html#modelicares.exps.write_params" title="modelicares.exps.write_params"><tt class="xref py py-func docutils literal"><span class="pre">write_params()</span></tt></a> to match more
 entries in a dsin file.</li>
-<li><a class="reference internal" href="exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a> now clears the log between runs.</li>
+<li><a class="reference internal" href="exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-func docutils literal"><span class="pre">write_script()</span></tt></a> now clears the log between runs.</li>
 <li>Fixed bug so that <a class="reference internal" href="simres.html#modelicares.simres.SimRes.plot" title="modelicares.simres.SimRes.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a> keeps the axis
 labels blank when <em>xlabel</em> = &#8220;&#8221;, <em>ylabel1</em> = &#8220;&#8221;, or <em>ylabel2</em> = &#8220;&#8221;.</li>
-<li><tt class="xref py py-meth docutils literal"><span class="pre">label_number()</span></tt> now uses &#8220;in&#8221; instead of &#8220;/&#8221; to
+<li><tt class="xref py py-func docutils literal"><span class="pre">label_number()</span></tt> now uses &#8220;in&#8221; instead of &#8220;/&#8221; to
 denote a quantity in a unit that involves a function other than simple
 scaling (e.g., degC, dB).</li>
-<li><a class="reference internal" href="texunit.html#modelicares.texunit.unit2tex" title="modelicares.texunit.unit2tex"><tt class="xref py py-meth docutils literal"><span class="pre">unit2tex()</span></tt></a> now automatically formats some units
+<li><tt class="xref py py-func docutils literal"><span class="pre">unit2tex()</span></tt> now automatically formats some units
 and constants.</li>
-<li>Added <em>color</em> option to <tt class="xref py py-meth docutils literal"><span class="pre">multiplot()</span></tt>.</li>
+<li>Added <em>color</em> option to <tt class="xref py py-func docutils literal"><span class="pre">multiplot()</span></tt>.</li>
 <li>Added <tt class="xref py py-meth docutils literal"><span class="pre">variables()</span></tt> method to list variable
 names (same as <tt class="xref py py-meth docutils literal"><span class="pre">keys()</span></tt> and
 <a class="reference internal" href="simres.html#modelicares.simres.SimRes.names" title="modelicares.simres.SimRes.names"><tt class="xref py py-meth docutils literal"><span class="pre">names()</span></tt></a>).</li>
@@ -290,10 +308,10 @@ of <a class="reference internal" href="simres.html#modelicares.simres.SimRes" ti
 <div><ul class="simple">
 <li>When a variable cannot be found, suggestions are now given.  See the
 example in <tt class="xref py py-meth docutils literal"><span class="pre">get_values()</span></tt>.</li>
-<li><a class="reference internal" href="exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a> now allows initialization scripts.</li>
+<li><a class="reference internal" href="exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-func docutils literal"><span class="pre">write_script()</span></tt></a> now allows initialization scripts.</li>
 <li>Added warning message in <a class="reference internal" href="simres.html#modelicares.simres.SimRes.plot" title="modelicares.simres.SimRes.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a> if y-axis
 variable descriptions are different.</li>
-<li><a class="reference internal" href="exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a> now writes scripts that are more
+<li><a class="reference internal" href="exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-func docutils literal"><span class="pre">write_script()</span></tt></a> now writes scripts that are more
 readable.</li>
 </ul>
 </div></blockquote>
@@ -306,17 +324,17 @@ readable.</li>
 <p><a class="reference external" href="https://github.com/kdavies4/ModelicaRes/archive/v0.7.0.zip">v0.7.0</a> (2013-7-7) &#8211; Updates:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Added <tt class="xref py py-meth docutils literal"><span class="pre">multibode()</span></tt> and
-<tt class="xref py py-meth docutils literal"><span class="pre">multinyquist()</span></tt> to create Bode and Nyquist diagrams
+<li>Added <tt class="xref py py-func docutils literal"><span class="pre">multibode()</span></tt> and
+<tt class="xref py py-func docutils literal"><span class="pre">multinyquist()</span></tt> to create Bode and Nyquist diagrams
 of multiple linearizations.</li>
 <li>Fixed and improved specification of axes in
 <a class="reference internal" href="linres.html#modelicares.linres.LinRes.bode" title="modelicares.linres.LinRes.bode"><tt class="xref py py-meth docutils literal"><span class="pre">bode()</span></tt></a> and
 <a class="reference internal" href="linres.html#modelicares.linres.LinRes.nyquist" title="modelicares.linres.LinRes.nyquist"><tt class="xref py py-meth docutils literal"><span class="pre">nyquist()</span></tt></a>.  The argument <em>ax</em> argument to
 <a class="reference internal" href="linres.html#modelicares.linres.LinRes.bode" title="modelicares.linres.LinRes.bode"><tt class="xref py py-meth docutils literal"><span class="pre">bode()</span></tt></a> is now <em>axes</em> instead&#8212;a tuple
 (pair) of axes.</li>
-<li>Fixed error with chosen directory in <tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></li>
+<li>Fixed error with chosen directory in <tt class="xref py py-func docutils literal"><span class="pre">save()</span></tt></li>
 <li>Added function to generate one-factor-at-a-time experiments.  The old
-<em>permute</em> argument to <a class="reference internal" href="exps.html#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-meth docutils literal"><span class="pre">gen_experiments()</span></tt></a> is now
+<em>permute</em> argument to <a class="reference internal" href="exps.html#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-func docutils literal"><span class="pre">gen_experiments()</span></tt></a> is now
 generalized to <em>design</em>, as in design of experiments.  Now, assign a
 function from <a class="reference internal" href="exps.doe.html#module-modelicares.exps.doe" title="modelicares.exps.doe"><tt class="xref py py-mod docutils literal"><span class="pre">doe</span></tt></a> to that argument.</li>
 <li>Square axes are now the default for Nyquist plots.</li>
@@ -332,7 +350,7 @@ to 0.6c.  The <em>mark</em> argument has been removed from
 removed from <a class="reference internal" href="linres.html#modelicares.linres.LinRes.bode" title="modelicares.linres.LinRes.bode"><tt class="xref py py-meth docutils literal"><span class="pre">bode()</span></tt></a> and
 <a class="reference internal" href="linres.html#modelicares.linres.LinRes.nyquist" title="modelicares.linres.LinRes.nyquist"><tt class="xref py py-meth docutils literal"><span class="pre">nyquist()</span></tt></a>.  Instead, use <em>omega</em> with
 bounds or a list of frequencies.</li>
-<li><a class="reference internal" href="exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a> now saves the Dymola command log
+<li><a class="reference internal" href="exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-func docutils literal"><span class="pre">write_script()</span></tt></a> now saves the Dymola command log
 with translation information.</li>
 <li>Fixed error in <a class="reference external" href="loadres.html">loadres</a> script in loading from a folder.</li>
 <li>Added option to <a class="reference internal" href="simres.html#modelicares.simres.SimRes" title="modelicares.simres.SimRes"><tt class="xref py py-class docutils literal"><span class="pre">SimRes</span></tt></a> (<em>constants_only</em>) to
@@ -352,9 +370,9 @@ submodule.</li>
 <p><a class="reference external" href="https://github.com/kdavies4/ModelicaRes/archive/v0.6.0.zip">v0.6.0</a> (2013-7-2) &#8211; Updates:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Added <tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt> to save the current figure.</li>
+<li>Added <tt class="xref py py-func docutils literal"><span class="pre">save()</span></tt> to save the current figure.</li>
 <li>Added <em>use_paren</em> option to <a class="reference internal" href="simres.html#modelicares.simres.SimRes.plot" title="modelicares.simres.SimRes.plot"><tt class="xref py py-meth docutils literal"><span class="pre">plot()</span></tt></a>.</li>
-<li>Changed <a class="reference internal" href="exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a> to put results in folders
+<li>Changed <a class="reference internal" href="exps.html#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-func docutils literal"><span class="pre">write_script()</span></tt></a> to put results in folders
 instead of special renaming scheme.</li>
 <li>Improved organization of the <em>examples</em> folder.</li>
 </ul>
@@ -372,7 +390,7 @@ time.</li>
 <p><a class="reference external" href="https://github.com/kdavies4/ModelicaRes/archive/v0.5.1.zip">v0.5.1</a> (2013-6-18) &#8211; Updates:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Fixed errors in <tt class="xref py py-meth docutils literal"><span class="pre">load_csv()</span></tt>.</li>
+<li>Fixed errors in <tt class="xref py py-func docutils literal"><span class="pre">load_csv()</span></tt>.</li>
 </ul>
 </div></blockquote>
 <p><a class="reference external" href="https://github.com/kdavies4/ModelicaRes/archive/v0.5.zip">v0.5</a> (2013-6-5) &#8211; Updates:</p>
@@ -384,7 +402,7 @@ time.</li>
 <p><a class="reference external" href="https://github.com/kdavies4/ModelicaRes/archive/v0.4.zip">v0.4</a> (2012-12-10) &#8211; Updates:</p>
 <blockquote>
 <div><ul class="simple">
-<li>Added default of <em>label</em> = &#8216;&#8217; to <tt class="xref py py-meth docutils literal"><span class="pre">figure()</span></tt>.</li>
+<li>Added default of <em>label</em> = &#8216;&#8217; to <tt class="xref py py-func docutils literal"><span class="pre">figure()</span></tt>.</li>
 <li>Updated documentation for Windows.</li>
 <li>Added check for Python version (currently requires 2.7).</li>
 </ul>
@@ -430,7 +448,6 @@ time.</li>
 <li class="toctree-l1"><a class="reference internal" href="exps.doe.html"><tt class="docutils literal"><span class="pre">modelicares.exps.doe</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
 </ul>
 <h3>Useful Links</h3>
@@ -474,7 +491,7 @@ time.</li>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jun 16, 2014.
+      Last updated on Jul 02, 2014.
     </div>
   </body>
 </html>

@@ -29,8 +29,8 @@
     <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
     <link rel="next" title="modelicares.simres" href="simres.html" />
     <link rel="prev" title="modelicares.exps.doe" href="exps.doe.html" />
-    <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
-    <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment, linearization, Modelica plot, analysis, sort, filter, browse, script, data, diagram, export">
+    <meta name="description" content="Set up, plot, and analyze Modelica simulations in Python">
+    <meta name="keywords" content="results dymola openmodelica data mat analysis script sort filter browse export diagram simulation linearization experiment matplotlib pandas">
     <meta name="author" content="Kevin Davies">
  
 
@@ -102,19 +102,20 @@ names.</li>
 </ul>
 <p><strong>Properties:</strong></p>
 <ul>
-<li><p class="first"><em>dirname</em> - Directory from which the variables were loaded</p>
+<li><p class="first"><tt class="xref py py-attr docutils literal"><span class="pre">dirname</span></tt> - Directory from which the variables were loaded</p>
 </li>
-<li><p class="first"><em>fbase</em> - Base filename from which the variables were loaded, without
+<li><p class="first"><tt class="xref py py-attr docutils literal"><span class="pre">fbase</span></tt> - Base filename from which the variables were loaded, without
 the directory or extension</p>
 </li>
-<li><p class="first"><em>fname</em> - Filename from which the variables were loaded, with absolute
+<li><p class="first"><tt class="xref py py-attr docutils literal"><span class="pre">fname</span></tt> - Filename from which the variables were loaded, with absolute
 path</p>
 </li>
-<li><p class="first"><em>sys</em> - State-space system as an instance of <tt class="xref py py-class docutils literal"><span class="pre">control.StateSpace</span></tt></p>
+<li><p class="first"><tt class="xref py py-attr docutils literal"><span class="pre">sys</span></tt> - State-space system as an instance of <tt class="xref py py-class docutils literal"><span class="pre">control.StateSpace</span></tt></p>
 <blockquote>
 <div><p>It contains:</p>
 <ul>
-<li><p class="first"><em>A</em>, <em>B</em>, <em>C</em>, <em>D</em>: Matrices of the linear system</p>
+<li><p class="first"><tt class="xref py py-attr docutils literal"><span class="pre">A</span></tt>, <tt class="xref py py-attr docutils literal"><span class="pre">B</span></tt>, <tt class="xref py py-attr docutils literal"><span class="pre">C</span></tt>, <tt class="xref py py-attr docutils literal"><span class="pre">D</span></tt>: Matrices of the linear
+system</p>
 <blockquote>
 <div><div class="highlight-modelica"><div class="highlight"><pre><span class="nb">der</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="n">A</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">B</span><span class="o">*</span><span class="n">u</span><span class="p">;</span>
      <span class="n">y</span> <span class="o">=</span> <span class="n">C</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">D</span><span class="o">*</span><span class="n">u</span><span class="p">;</span>
@@ -122,16 +123,16 @@ path</p>
 </div>
 </div></blockquote>
 </li>
-<li><p class="first"><em>state_names</em>: List of names of the states (<em>x</em>)</p>
+<li><p class="first"><tt class="xref py py-attr docutils literal"><span class="pre">state_names</span></tt>: List of names of the states (<em>x</em>)</p>
 </li>
-<li><p class="first"><em>input_names</em>: List of names of the inputs (<em>u</em>)</p>
+<li><p class="first"><tt class="xref py py-attr docutils literal"><span class="pre">input_names</span></tt>: List of names of the inputs (<em>u</em>)</p>
 </li>
-<li><p class="first"><em>output_names</em>: List of names of the outputs (<em>y</em>)</p>
+<li><p class="first"><tt class="xref py py-attr docutils literal"><span class="pre">output_names</span></tt>: List of names of the outputs (<em>y</em>)</p>
 </li>
 </ul>
 </div></blockquote>
 </li>
-<li><p class="first"><em>tool</em> - String indicating the function used to load the results (named
+<li><p class="first"><tt class="xref py py-attr docutils literal"><span class="pre">tool</span></tt> - String indicating the function used to load the results (named
 after the corresponding <a class="reference external" href="http://www.modelica.org/">Modelica</a> tool)</p>
 </li>
 </ul>
@@ -164,8 +165,8 @@ each transfer function to be evaluated</p>
 <li><p class="first"><em>label</em>: Label for the figure (ignored if <em>axes</em> is provided)</p>
 <blockquote>
 <div><p>This is used as the base filename if the figure is saved using
-<a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> or
-<a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a>.</p>
+<a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-func docutils literal"><span class="pre">save()</span></tt></a> or
+<a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-func docutils literal"><span class="pre">saveall()</span></tt></a>.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>title</em>: Title for the figure</p>
@@ -216,7 +217,7 @@ Hz and should be plotted in Hz (otherwise, rad/s)</p>
 </li>
 </ul>
 <p>Other keyword arguments are passed to
-<tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt>.</p>
+<a class="reference external" href="http://matplotlib.org/1.3.1/api/pyplot_api.html#matplotlib.pyplot.plot" title="(in Matplotlib v1.3.1)"><tt class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt></a>.</p>
 </div></blockquote>
 </li>
 </ul>
@@ -253,8 +254,8 @@ each transfer function to be evaluated</p>
 <li><p class="first"><em>label</em>: Label for the figure (ignored if ax is provided)</p>
 <blockquote>
 <div><p>This is used as the base filename if the figure is saved using
-<a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> or
-<a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a>.</p>
+<a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-func docutils literal"><span class="pre">save()</span></tt></a> or
+<a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-func docutils literal"><span class="pre">saveall()</span></tt></a>.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>title</em>: Title for the figure</p>
@@ -304,7 +305,7 @@ labeled</p>
 </li>
 </ul>
 <p>Other keyword arguments are passed to
-<tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt>.</p>
+<a class="reference external" href="http://matplotlib.org/1.3.1/api/pyplot_api.html#matplotlib.pyplot.plot" title="(in Matplotlib v1.3.1)"><tt class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt></a>.</p>
 </div></blockquote>
 </li>
 </ul>
@@ -321,7 +322,7 @@ labeled</p>
 
 <dl class="method">
 <dt id="modelicares.linres.LinRes.to_siso">
-<tt class="descname">to_siso</tt><big>(</big><em>iu=None</em>, <em>iy=None</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinRes.to_siso" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">to_siso</tt><big>(</big><em>myself</em>, <em>iu=None</em>, <em>iy=None</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinRes.to_siso" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a SISO system given input and output indices.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -354,7 +355,7 @@ labeled</p>
 
 <dl class="method">
 <dt id="modelicares.linres.LinRes.to_tf">
-<tt class="descname">to_tf</tt><big>(</big><em>iu=None</em>, <em>iy=None</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinRes.to_tf" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">to_tf</tt><big>(</big><em>myself</em>, <em>iu=None</em>, <em>iy=None</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinRes.to_tf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a transfer function given input and output names.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -447,10 +448,11 @@ filename).</li>
 </ul>
 <p><strong>Properties:</strong></p>
 <ul class="simple">
-<li><em>basedir</em> - Highest common directory that the result files share</li>
-<li>Also, the properties of <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> (<em>basename</em>, <em>dirname</em>, <em>fname</em>,
-<em>sys</em>, and <em>tool</em>) can be retrieved as a list across all of the
-linearizations; see the example below.</li>
+<li><tt class="xref py py-attr docutils literal"><span class="pre">basedir</span></tt> - Highest common directory that the result files share</li>
+<li>Also, the properties of <a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a> (<tt class="xref py py-attr docutils literal"><span class="pre">basename</span></tt>,
+<tt class="xref py py-attr docutils literal"><span class="pre">dirname</span></tt>, <tt class="xref py py-attr docutils literal"><span class="pre">fname</span></tt>, <tt class="xref py py-attr docutils literal"><span class="pre">sys</span></tt>, and <tt class="xref py py-attr docutils literal"><span class="pre">tool</span></tt>) can be
+retrieved as a list across all of the linearizations; see the example
+below.</li>
 </ul>
 <p><strong>Example:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">lins</span> <span class="o">=</span> <span class="n">LinResList</span><span class="p">(</span><span class="s">&#39;examples/PID/*/&#39;</span><span class="p">)</span>
@@ -519,8 +521,8 @@ transfer function to be chosen from each system (applied to all)</p>
 <li><p class="first"><em>label</em>: Label for the figure (ignored if axes is provided)</p>
 <blockquote>
 <div><p>This is used as the base filename if the figure is saved using
-<a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> or
-<a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a>.</p>
+<a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-func docutils literal"><span class="pre">save()</span></tt></a> or
+<a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-func docutils literal"><span class="pre">saveall()</span></tt></a>.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>title</em>: Title for the figure</p>
@@ -553,7 +555,7 @@ and &#8216;-&#8216; for a solid line.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>leg_kwargs</em>: Dictionary of keyword arguments for
-<tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.legend()</span></tt></p>
+<a class="reference external" href="http://matplotlib.org/1.3.1/api/pyplot_api.html#matplotlib.pyplot.legend" title="(in Matplotlib v1.3.1)"><tt class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.legend()</span></tt></a></p>
 <blockquote>
 <div><p>If <em>leg_kwargs</em> is <em>None</em>, then no legend will be shown.</p>
 </div></blockquote>
@@ -578,7 +580,7 @@ Hz and should be plotted in Hz (otherwise, rad/s)</p>
 </li>
 </ul>
 <p>Other keyword arguments are passed to
-<tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt>.</p>
+<a class="reference external" href="http://matplotlib.org/1.3.1/api/pyplot_api.html#matplotlib.pyplot.plot" title="(in Matplotlib v1.3.1)"><tt class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt></a>.</p>
 </div></blockquote>
 </li>
 </ul>
@@ -597,8 +599,8 @@ Hz and should be plotted in Hz (otherwise, rad/s)</p>
 <dt id="modelicares.linres.LinResList.nyquist">
 <tt class="descname">nyquist</tt><big>(</big><em>ax=None, pair=(0, 0), label='nyquist', title='Nyquist plot', xlabel='Real axis', ylabel='Imaginary axis', labels=None, colors=['b', 'g', 'r', 'c', 'm', 'y', 'k'], leg_kwargs={}, **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.linres.LinResList.nyquist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the linearizations onto a single Nyquist diagram.</p>
-<p>This method calls <tt class="xref py py-meth docutils literal"><span class="pre">linres.LinRes.nyquist()</span></tt> from the included
-instances of <tt class="xref py py-class docutils literal"><span class="pre">linres.LinRes</span></tt>.</p>
+<p>This method calls <a class="reference internal" href="#modelicares.linres.LinRes.nyquist" title="modelicares.linres.LinRes.nyquist"><tt class="xref py py-meth docutils literal"><span class="pre">nyquist()</span></tt></a> from the included instances of
+<a class="reference internal" href="#modelicares.linres.LinRes" title="modelicares.linres.LinRes"><tt class="xref py py-class docutils literal"><span class="pre">LinRes</span></tt></a>.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
 <li><p class="first"><em>ax</em>: Axes onto which the Nyquist diagrams should be plotted</p>
@@ -615,8 +617,8 @@ transfer function to be chosen from each system (applied to all)</p>
 <li><p class="first"><em>label</em>: Label for the figure (ignored if axes is provided)</p>
 <blockquote>
 <div><p>This is used as the base filename if the figure is saved using
-<a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-meth docutils literal"><span class="pre">save()</span></tt></a> or
-<a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-meth docutils literal"><span class="pre">saveall()</span></tt></a>.</p>
+<a class="reference internal" href="util.html#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-func docutils literal"><span class="pre">save()</span></tt></a> or
+<a class="reference internal" href="util.html#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-func docutils literal"><span class="pre">saveall()</span></tt></a>.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>title</em>: Title for the figure</p>
@@ -643,7 +645,7 @@ empty string (&#8216;&#8217;), then the base filenames will be used.</p>
 </div></blockquote>
 </li>
 <li><p class="first"><em>leg_kwargs</em>: Dictionary of keyword arguments for
-<tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.legend()</span></tt></p>
+<a class="reference external" href="http://matplotlib.org/1.3.1/api/pyplot_api.html#matplotlib.pyplot.legend" title="(in Matplotlib v1.3.1)"><tt class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.legend()</span></tt></a></p>
 <blockquote>
 <div><p>If <em>leg_kwargs</em> is <em>None</em>, then no legend will be shown.</p>
 </div></blockquote>
@@ -675,7 +677,7 @@ labeled</p>
 </li>
 </ul>
 <p>Other keyword arguments are passed to
-<tt class="xref py py-meth docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt>.</p>
+<a class="reference external" href="http://matplotlib.org/1.3.1/api/pyplot_api.html#matplotlib.pyplot.plot" title="(in Matplotlib v1.3.1)"><tt class="xref py py-func docutils literal"><span class="pre">matplotlib.pyplot.plot()</span></tt></a>.</p>
 </div></blockquote>
 </li>
 </ul>
@@ -720,7 +722,6 @@ labeled</p>
 <li class="toctree-l1"><a class="reference internal" href="exps.doe.html"><tt class="docutils literal"><span class="pre">modelicares.exps.doe</span></tt></a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href=""><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
 </ul>
 <h3>Useful Links</h3>
@@ -770,7 +771,7 @@ labeled</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jun 16, 2014.
+      Last updated on Jul 02, 2014.
     </div>
   </body>
 </html>

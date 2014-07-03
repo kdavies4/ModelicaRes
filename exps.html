@@ -29,8 +29,8 @@
     <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
     <link rel="next" title="modelicares.exps.doe" href="exps.doe.html" />
     <link rel="prev" title="modelicares" href="modelicares.html" />
-    <meta name="description" content="Python modules to set up, plot, and analyze Modelica simulations">
-    <meta name="keywords" content="Modelica, Python, plot, results, simulation, experiment, linearization, Modelica plot, analysis, sort, filter, browse, script, data, diagram, export">
+    <meta name="description" content="Set up, plot, and analyze Modelica simulations in Python">
+    <meta name="keywords" content="results dymola openmodelica data mat analysis script sort filter browse export diagram simulation linearization experiment matplotlib pandas">
     <meta name="author" content="Kevin Davies">
  
 
@@ -64,10 +64,10 @@
 <span id="modelicares-exps"></span><h1><a class="reference internal" href="#module-modelicares.exps" title="modelicares.exps"><tt class="xref py py-mod docutils literal"><span class="pre">modelicares.exps</span></tt></a><a class="headerlink" href="#module-modelicares.exps" title="Permalink to this headline">¶</a></h1>
 <p>Set up and help run <a class="reference external" href="http://www.modelica.org/">Modelica</a> simulation experiments.</p>
 <p>This module supports two approaches to managing simulations.  The first is to
-create a <a class="reference external" href="http://www.modelica.org/">Modelica</a> script (using <a class="reference internal" href="#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a>) and run it within
+create a <a class="reference external" href="http://www.modelica.org/">Modelica</a> script (using <a class="reference internal" href="#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-func docutils literal"><span class="pre">write_script()</span></tt></a>) and run it within
 a <a class="reference external" href="http://www.modelica.org/">Modelica</a> environment (see the scripts in <em>examples/ChuaCircuit/</em>), which
 translates and simulates the models with the prescribed settings.  The second
-approach is to execute pre-translated models.  The <a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-meth docutils literal"><span class="pre">run_models()</span></tt></a> method
+approach is to execute pre-translated models.  The <a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-func docutils literal"><span class="pre">run_models()</span></tt></a> method
 handles this by writing to initialization file(s) (e.g, <em>dsin.txt</em>) and
 launching the appropriate model executables.  The advantage of the first
 approach is that formal parameters (those that are hard-coded during
@@ -77,11 +77,11 @@ that are not hard-coded during translation) are changed.</p>
 <p>The first step in either case is to create a dictionary to specify model
 parameters and other settings for simulation experiment.  A single model
 parameter may have multiple possible values.  The dictionary is passed to the
-<a class="reference internal" href="#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-meth docutils literal"><span class="pre">gen_experiments()</span></tt></a> function (see that function for a description of the
+<a class="reference internal" href="#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-func docutils literal"><span class="pre">gen_experiments()</span></tt></a> function (see that function for a description of the
 dictionary format), which combines the values of all the variables (by
 piecewise alignment or permutation) and returns a generator to step through the
-experiments.  Finally, the generator is passed to the <a class="reference internal" href="#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a> or
-<a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-meth docutils literal"><span class="pre">run_models()</span></tt></a> function (see the first paragraph).</p>
+experiments.  Finally, the generator is passed to the <a class="reference internal" href="#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-func docutils literal"><span class="pre">write_script()</span></tt></a> or
+<a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-func docutils literal"><span class="pre">run_models()</span></tt></a> function (see the first paragraph).</p>
 <p><strong>Classes:</strong></p>
 <ul class="simple">
 <li><a class="reference internal" href="#modelicares.exps.ParamDict" title="modelicares.exps.ParamDict"><tt class="xref py py-class docutils literal"><span class="pre">ParamDict</span></tt></a> - Dictionary that prints its items as nested tuple-based
@@ -90,16 +90,16 @@ modifiers, formatted for <a class="reference external" href="http://www.modelica
 </ul>
 <p><strong>Functions:</strong></p>
 <ul class="simple">
-<li><a class="reference internal" href="#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-meth docutils literal"><span class="pre">gen_experiments()</span></tt></a> - Return a generator for a set of simulation
+<li><a class="reference internal" href="#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-func docutils literal"><span class="pre">gen_experiments()</span></tt></a> - Return a generator for a set of simulation
 experiments using permutation or simple element-wise grouping.</li>
-<li><a class="reference internal" href="#modelicares.exps.modelica_str" title="modelicares.exps.modelica_str"><tt class="xref py py-meth docutils literal"><span class="pre">modelica_str()</span></tt></a> - Express a <a class="reference external" href="http://www.python.org/">Python</a> variable as a <a class="reference external" href="http://www.modelica.org/">Modelica</a> string.</li>
-<li><a class="reference internal" href="#modelicares.exps.read_params" title="modelicares.exps.read_params"><tt class="xref py py-meth docutils literal"><span class="pre">read_params()</span></tt></a> - Read parameter values from an initialization or final
+<li><a class="reference internal" href="#modelicares.exps.modelica_str" title="modelicares.exps.modelica_str"><tt class="xref py py-func docutils literal"><span class="pre">modelica_str()</span></tt></a> - Express a <a class="reference external" href="http://www.python.org/">Python</a> variable as a <a class="reference external" href="http://www.modelica.org/">Modelica</a> string.</li>
+<li><a class="reference internal" href="#modelicares.exps.read_params" title="modelicares.exps.read_params"><tt class="xref py py-func docutils literal"><span class="pre">read_params()</span></tt></a> - Read parameter values from an initialization or final
 values file.</li>
-<li><a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-meth docutils literal"><span class="pre">run_models()</span></tt></a> - Run <a class="reference external" href="http://www.modelica.org/">Modelica</a> models via pairs of executables and
+<li><a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-func docutils literal"><span class="pre">run_models()</span></tt></a> - Run <a class="reference external" href="http://www.modelica.org/">Modelica</a> models via pairs of executables and
 initialization files (not yet implemented).</li>
-<li><a class="reference internal" href="#modelicares.exps.write_params" title="modelicares.exps.write_params"><tt class="xref py py-meth docutils literal"><span class="pre">write_params()</span></tt></a> - Write parameter values to a simulation initialization
+<li><a class="reference internal" href="#modelicares.exps.write_params" title="modelicares.exps.write_params"><tt class="xref py py-func docutils literal"><span class="pre">write_params()</span></tt></a> - Write parameter values to a simulation initialization
 file.</li>
-<li><a class="reference internal" href="#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a> - Write a <a class="reference external" href="http://www.modelica.org/">Modelica</a> script to run simulations.</li>
+<li><a class="reference internal" href="#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-func docutils literal"><span class="pre">write_script()</span></tt></a> - Write a <a class="reference external" href="http://www.modelica.org/">Modelica</a> script to run simulations.</li>
 </ul>
 <p><strong>Submodules:</strong></p>
 <ul class="simple">
@@ -111,7 +111,7 @@ file.</li>
 <dd><p>Bases: <a class="reference internal" href="#modelicares.exps.Experiment" title="modelicares.exps.Experiment"><tt class="xref py py-class docutils literal"><span class="pre">modelicares.exps.Experiment</span></tt></a></p>
 <p><a class="reference external" href="https://docs.python.org/2/library/collections.html#collections.namedtuple">namedtuple</a> to represent a simulation experiment</p>
 <p>Instances of this class may be used in the <em>experiments</em> argument of
-<a class="reference internal" href="#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-meth docutils literal"><span class="pre">write_script()</span></tt></a> and <a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-meth docutils literal"><span class="pre">run_models()</span></tt></a>, although there are some
+<a class="reference internal" href="#modelicares.exps.write_script" title="modelicares.exps.write_script"><tt class="xref py py-func docutils literal"><span class="pre">write_script()</span></tt></a> and <a class="reference internal" href="#modelicares.exps.run_models" title="modelicares.exps.run_models"><tt class="xref py py-func docutils literal"><span class="pre">run_models()</span></tt></a>, although there are some
 differences in the entries (see those functions for details).</p>
 <p><strong>Example:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">experiment</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="s">&#39;ChuaCircuit&#39;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;L.L&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">},</span> <span class="n">args</span><span class="o">=</span><span class="p">{})</span>
@@ -124,12 +124,12 @@ differences in the entries (see those functions for details).</p>
 <dl class="class">
 <dt id="modelicares.exps.ParamDict">
 <em class="property">class </em><tt class="descclassname">modelicares.exps.</tt><tt class="descname">ParamDict</tt><a class="headerlink" href="#modelicares.exps.ParamDict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a></p>
 <p>Dictionary that prints its items (string mapping) as nested tuple-based
 modifiers, formatted for <a class="reference external" href="http://www.modelica.org/">Modelica</a></p>
-<p>Otherwise, this class is the same as <tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt>.  The underlying
+<p>Otherwise, this class is the same as <a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>.  The underlying
 structure is not nested or reformatted&#8212;only the informal representation
-(<tt class="xref py py-meth docutils literal"><span class="pre">ParamDict.__str__()</span></tt>).</p>
+(<tt class="xref py py-meth docutils literal"><span class="pre">__str__()</span></tt>).</p>
 <p>In printing this dictionary (string representation), each key is interpreted
 as a parameter name (including the full model path in <a class="reference external" href="http://www.modelica.org/">Modelica</a> dot
 notation) and each entry is a parameter value.  The value may be a number
@@ -167,14 +167,14 @@ order.</p>
 
 <dl class="function">
 <dt id="modelicares.exps.gen_experiments">
-<tt class="descclassname">modelicares.exps.</tt><tt class="descname">gen_experiments</tt><big>(</big><em>models=None</em>, <em>params={}</em>, <em>args={}</em>, <em>design=&lt;function fullfact at 0x7f2e8fe967d0&gt;</em><big>)</big><a class="headerlink" href="#modelicares.exps.gen_experiments" title="Permalink to this definition">¶</a></dt>
+<tt class="descclassname">modelicares.exps.</tt><tt class="descname">gen_experiments</tt><big>(</big><em>models=None</em>, <em>params={}</em>, <em>args={}</em>, <em>design=&lt;function fullfact at 0x7fe871fa95f0&gt;</em><big>)</big><a class="headerlink" href="#modelicares.exps.gen_experiments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a generator for a set of simulation experiments using permutation
 or simple element-wise grouping.</p>
 <p>The generator yields instances of <a class="reference internal" href="#modelicares.exps.Experiment" title="modelicares.exps.Experiment"><tt class="xref py py-class docutils literal"><span class="pre">Experiment</span></tt></a>&#8212;named tuples of
 (<em>model</em>, <em>params</em>, <em>args</em>), where <em>model</em> is the name of a single model
 (type <tt class="xref py py-class docutils literal"><span class="pre">str</span></tt>), <em>params</em> is a specialized dictionary
 (<a class="reference internal" href="#modelicares.exps.ParamDict" title="modelicares.exps.ParamDict"><tt class="xref py py-class docutils literal"><span class="pre">ParamDict</span></tt></a>) of model parameter names and values, and <em>arg_dict</em> is
-a dictionary (<tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt>) of command arguments (keyword and value) for
+a dictionary (<a class="reference external" href="https://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt></a>) of command arguments (keyword and value) for
 the <a class="reference external" href="http://www.modelica.org/">Modelica</a> tool or environment.</p>
 <p><strong>Arguments:</strong></p>
 <ul>
@@ -189,7 +189,7 @@ keys must indicate the hierarchy within the model&#8212;either in
 </div></blockquote>
 </li>
 <li><p class="first"><em>args</em>: Dictionary of command arguments for the <a class="reference external" href="http://www.modelica.org/">Modelica</a> tool or
-environment (e.g., to the <tt class="xref py py-meth docutils literal"><span class="pre">simulateModel()</span></tt> command in Dymola)</p>
+environment (e.g., to the <tt class="xref py py-func docutils literal"><span class="pre">simulateModel()</span></tt> command in Dymola)</p>
 <blockquote>
 <div><p>Each key is an argument name and each entry is a list of settings.</p>
 </div></blockquote>
@@ -432,7 +432,7 @@ via nested dictionaries.  If <em>model</em> is <em>None</em>, then <em>params</e
 used.  <a class="reference external" href="http://www.python.org/">Python</a> values are automatically mapped to their <a class="reference external" href="http://www.modelica.org/">Modelica</a>
 equivalent (see <tt class="xref py py-meth docutils literal"><span class="pre">ParamDict.__str__()</span></tt>).  Redeclarations and other
 prefixes must be included in the keys along with the variable names.</p>
-<p><a class="reference internal" href="#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-meth docutils literal"><span class="pre">gen_experiments()</span></tt></a> can be used to create a generator for this
+<p><a class="reference internal" href="#modelicares.exps.gen_experiments" title="modelicares.exps.gen_experiments"><tt class="xref py py-func docutils literal"><span class="pre">gen_experiments()</span></tt></a> can be used to create a generator for this
 argument.</p>
 <p>Items with values of <em>None</em> in <em>params</em> and <em>args</em> are skipped.</p>
 </div></blockquote>
@@ -585,7 +585,6 @@ results from twelve simulations.</p>
 <li class="toctree-l1"><a class="reference internal" href="exps.doe.html"><tt class="docutils literal"><span class="pre">modelicares.exps.doe</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="texunit.html"><tt class="docutils literal"><span class="pre">modelicares.texunit</span></tt></a></li>
 <li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
 </ul>
 <h3>Useful Links</h3>
@@ -635,7 +634,7 @@ results from twelve simulations.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jun 16, 2014.
+      Last updated on Jul 02, 2014.
     </div>
   </body>
 </html>
