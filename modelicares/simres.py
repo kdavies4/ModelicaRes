@@ -58,21 +58,18 @@ from modelicares import util
 from modelicares._res import Res, ResList
 from modelicares.texunit import unit2tex, number_label
 
-def _apply_function(func):
-    """Return a method that applies a function to its output, given a
-    method that doesn't (*func*).
-
-    I.e., a decorator to apply a function to the return value
+def _apply_function(meth):
+    """Decorate a method to apply a function to its output
     """
-    @wraps(func)
-    def wrapped(myself, f=None, *args, **kwargs):
-        """Function that applies a function *f* to its output
+    @wraps(meth)
+    def wrapped(self, f=None, *args, **kwargs):
+        """Method that applies a function *f* to its output
 
         If *f* is *None* (default), no function is applied (i.e., pass
         through or identity).
         """
-        return (func(myself, *args, **kwargs) if f is None else
-                f(func(myself, *args, **kwargs)))
+        return (meth(self, *args, **kwargs) if f is None else
+                f(meth(self, *args, **kwargs)))
 
     return wrapped
 
@@ -90,15 +87,12 @@ def _get_sims(fnames):
     assert len(sims) > 0, "No simulations were loaded."
     return sims
 
-def _select(func):
-    """Return a method that uses time-based indexing to return values,
-    given a method that returns all values (*f*).
-
-    I.e., a decorator to use time-based indexing to select values
+def _select(meth):
+    """Decorate a method to use time-based indexing to select values.
     """
-    @wraps(func)
-    def wrapped(myself, t=None, *args, **kwargs):
-        """Function that uses time-based indexing to return values
+    @wraps(meth)
+    def wrapped(self, t=None, *args, **kwargs):
+        """Method that uses time-based indexing to return values
 
         If *t* is *None* (default), then all values are returned (i.e., pass
         through or identity).
@@ -134,45 +128,45 @@ def _select(func):
                 "time limit.")
 
             # Determine the corresponding indices and return them in a tuple.
-            times = myself.times()
+            times = self.times()
             i1 = None if t1 is None else util.get_indices(times, t1)[1]
             i2 = None if t2 is None else util.get_indices(times, t2)[0] + 1
             return slice(i1, i2, skip)
 
         if t is None:
             # Return all values.
-            return func(myself, *args, **kwargs)
+            return meth(self, *args, **kwargs)
         elif isinstance(t, tuple):
             # Apply a slice with optional start time, stop time, and number
             # of samples to skip.
-            return func(myself, *args, **kwargs)[get_slice(t)]
+            return meth(self, *args, **kwargs)[get_slice(t)]
         else:
             # Interpolate at single time or list of times.
-            function_at_ = interp1d(myself.times(), func(myself, *args, **kwargs))
+            meth_at_ = interp1d(self.times(), meth(self, *args, **kwargs))
             # For some reason, this wraps single values as arrays, so need to
             # cast back to float.
             try:
                 # Assume t is a list of times.
-                return [float(function_at_(time)) for time in t]
+                return [float(meth_at_(time)) for time in t]
             except TypeError:
                 # t is a single time.
-                return float(function_at_(t))
+                return float(meth_at_(t))
 
     return wrapped
 
-def _swap(func):
-    """Decorator that swaps the first two arguments of a method and gives them
-    each a default of *None*.
+def _swap(meth):
+    """Swap the first two arguments of a method and give both a default of
+    *None*.
 
     This is useful because for computational efficiency it's best to apply the
     time selection (_select decorator below) before the applying the fuction
     (_apply_function decorator), but we want time to be the first
     argument and the function to be the second.
     """
-    @wraps(func)
-    def wrapped(myself, t=None, f=None):
-        """Look up the variable and pass it to the original function."""
-        return func(myself, f, t)
+    @wraps(meth)
+    def wrapped(self, t=None, f=None):
+        """Look up the variable and pass it to the original method."""
+        return meth(self, f, t)
 
     return wrapped
 
@@ -650,18 +644,17 @@ class VarList(list):
     """
     # pylint: disable=E0213
 
-    def _listmethod(func):
+    def _listmethod(meth):
         """Return a method that operates on all of the variables in the list of
         variables, given a function that operates on a single variable.
         """
-        @wraps(func)
+        @wraps(meth)
         def wrapped(self, attr):
             """Traverse the list recursively until the argument is a single
-            variable, then pass it to the function and return the result
-            upwards.
+            variable, then pass it to the method and return the result upwards.
             """
             # pylint: disable=E1102
-            return util.CallList([func(variable, attr)
+            return util.CallList([meth(variable, attr)
                                   if isinstance(variable, Variable) else
                                   wrapped(variable, attr)
                                   for variable in self])

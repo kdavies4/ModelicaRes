@@ -36,6 +36,5 @@ before_script:
 script:
   - python setup.py test
 
-# TODO: Set this up.
 after_success:
   - coveralls

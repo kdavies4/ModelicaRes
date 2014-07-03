@@ -43,14 +43,14 @@ from modelicares._io.dymola import loadlin as dymola
 LOADERS = [('dymola', dymola)] # LinRes tries these in order.
 # All of the keys should be in lowercase.
 
-def _from_names(func):
+def _from_names(meth):
     """Return a method that accepts names or indices to identify system inputs
-    and outputs, given a method that only accepts indices (*func*).
+    and outputs, given a method that only accepts indices (*meth*).
 
     I.e., a decorator to accept names or indices to identify inputs and outputs
     """
-    @wraps(func)
-    def wrapped(myself, iu=None, iy=None):
+    @wraps(meth)
+    def wrapped(self, iu=None, iy=None):
         """Method that accepts names or indices to identify system inputs and
         outputs
 
@@ -66,7 +66,7 @@ def _from_names(func):
         """
         # Get the input index.
         if iu is None:
-            if len(myself.sys.input_names) == 1:
+            if len(self.sys.input_names) == 1:
                 iu = 0
             else:
                 raise IndexError("iu must be specified since this is a MI "
@@ -79,7 +79,7 @@ def _from_names(func):
 
         # Get the output index.
         if iy is None:
-            if len(myself.sys.output_names) == 1:
+            if len(self.sys.output_names) == 1:
                 iy = 0
             else:
                 raise IndexError("iy must be specified since this is a MO "
@@ -90,7 +90,7 @@ def _from_names(func):
             except ValueError:
                 raise ValueError('The output "%s" is invalid.' % iy)
 
-        return func(myself, iu, iy)
+        return meth(self, iu, iy)
 
     return wrapped
 

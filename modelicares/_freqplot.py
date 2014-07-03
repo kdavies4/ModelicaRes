@@ -156,7 +156,7 @@ def default_frequency_range(syslist, in_Hz=True):
 
 
 def require_SISO(func):
-    """Decorator to require that the system is SISO.
+    """Decorate a function to require that the first argument is a SISO system.
     """
     @wraps(func)
     def wrapped(sys, *args, **kwargs):
@@ -170,13 +170,12 @@ def require_SISO(func):
     return wrapped
 
 def overload_freqs(func):
-    """Decorator to allow frequencies to be specified via (min, max) or default
+    """Decorate a function to accept frequencies via (min, max) or default
     (*None*), as well as a list of frequencies.
     """
     @wraps(func)
     def wrapped(sys, freqs=None, in_Hz=True, *args, **kwargs):
-        """Decorator that allows frequencies to be specified via (min, max) or
-        default (*None*), as well as a list of frequencies.
+        """Updated function
         """
         if freqs is None:
             f = default_frequency_range(sys, in_Hz)
@@ -198,11 +197,11 @@ def overload_freqs(func):
 
 
 def via_system(func):
-    """Decorator to specify magnitude and phase via a system.
+    """Decorate a function to accept magnitude and phase via a system.
     """
     @wraps(func)
     def wrapped(sys, f, *args, **kwargs):
-        """Function that accepts a system.
+        """Updated function
         """
         mag, phase = sys.freqresp(f/(rad/s))[0:2]
         mag = np.squeeze(mag)

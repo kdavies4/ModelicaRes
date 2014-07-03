@@ -280,7 +280,7 @@ def read_params(names, fname='dsin.txt'):
     # Aliases for some regular subexpressions
     u = r'\d+' # Unsigned integer
     i = '[+-]?' + u # Integer
-    f = i + r'(?:\.' + u + ')?(?:[Ee][+-]' + u + ')?' # Floating point number
+    f = i + r'(?:\.' + u + ')?(?:[Ee][+-]?' + u + ')?' # Floating point number
 
     # Possible regular expressions for a parameter specification (with '%s' for
     # the parameter name)

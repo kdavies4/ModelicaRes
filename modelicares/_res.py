@@ -20,31 +20,31 @@ from modelicares.util import cast_sametype, basename
 # pylint: disable=I0011, W0141, W0142
 
 
-def assert_sametype(func):
-    """Decorator that checks that an argument to a method is also an instance of
-    the containing class
+def assert_sametype(meth):
+    """Decorate a method to check that the second argument is an instance of the
+    containing class
     """
-    @wraps(func)
-    def wrapped(myself, other):
+    @wraps(meth)
+    def wrapped(self, other):
         """Method that can only operate on an instance of the containing class
         """
-        if not isinstance(other, myself.__class__):
+        if not isinstance(other, self.__class__):
             raise TypeError("A {obj} can only be combined with another "
-                            "{obj}.".format(obj=myself.__class__.__name__))
-        return func(myself, other)
+                            "{obj}.".format(obj=self.__class__.__name__))
+        return meth(self, other)
 
     return wrapped
 
 
-def compare_fnames(func):
-    """Decorator that sends filenames to a comparison function
+def compare_fnames(meth):
+    """Decorate a method to send filenames to a comparison method.
     """
-    @wraps(func)
-    def wrapped(myself, other):
+    @wraps(meth)
+    def wrapped(self, other):
         """Method that compares filenames of *self* and *other*
         """
         try:
-            return func(myself.fname, other.fname)
+            return meth(self.fname, other.fname)
         except AttributeError:
             raise TypeError("A {obj} instance can only be compared with "
                             "another {obj} "

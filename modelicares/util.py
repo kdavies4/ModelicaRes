@@ -22,8 +22,8 @@
 
 - :func:`basename` - Return the base filename from *fname*.
 
-- :func:`cast_sametype` - Decorator to cast the output of a method as an
-  instance of the containing class
+- :func:`cast_sametype` - Decorate a method to return an instance of the
+  containing class.
 
 - :func:`color` - Plot 2D scalar data on a color axis in 2D Cartesian
   coordinates.
@@ -316,14 +316,13 @@ class CallList(list):
 
 
 def cast_sametype(meth):
-    """Decorator to cast the output of a method as an instance of the
-    containing class.
+    """Decorate a method to return an instance of the containing class.
     """
     @wraps(meth)
-    def wrapped(myself, *args, **kwargs):
+    def wrapped(self, *args, **kwargs):
         """Function that casts its output as self.__class__
         """
-        return myself.__class__(meth(myself, *args, **kwargs))
+        return self.__class__(meth(self, *args, **kwargs))
 
     return wrapped
 
