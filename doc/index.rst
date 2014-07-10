@@ -114,11 +114,7 @@ If you have suggestions, please `share them
   :glob:
 
   loadres
-  modelicares
-  exps*
-  linres
-  simres
-  util
+  modelicares*
 
 .. _main website: http://kdavies4.github.io/ModelicaRes/
 .. _PyPI page: http://pypi.python.org/pypi/ModelicaRes/
