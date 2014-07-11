@@ -59,10 +59,10 @@ class PreviewPanel(wx.Panel):
         """Show the variable's attributes and a small plot."""
         self.axes.clear()
         if name:
-            text = 'Name: %s' % name
-            text += '\n' + 'Description: %s' % sim[name].description
-            text += '\n' + 'unit: %s' % sim[name].unit
-            text += '\n' + 'displayUnit: %s' % sim[name].displayUnit
+            text = 'Name: ' + name
+            text += '\n' + 'Description: ' + sim[name].description
+            text += '\n' + 'unit: ' + sim[name].unit
+            text += '\n' + 'displayUnit: ' + sim[name].displayUnit
             self.display.SetLabel(text)
             self.axes.clear()
             self.axes.plot(sim[name].times(), sim[name].values())

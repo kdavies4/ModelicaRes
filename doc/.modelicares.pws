@@ -54,7 +54,6 @@ subfigures
 nametree
 yticks
 dslin
-mathrm
 Joerg
 degC
 redeclarations
@@ -190,7 +189,6 @@ Td
 Ro
 py
 xstar
-LaTeX
 freqs
 tf
 linewidth

@@ -593,7 +593,7 @@ class _VarDict(dict):
         try:
             return dict.__getitem__(self, key)
         except KeyError:
-            msg = '%s is not a valid variable name.' % key
+            msg = key + ' is not a valid variable name.'
             close_matches = get_close_matches(key, self.keys())
             if close_matches:
                 msg += "\n       ".join(["\n\nDid you mean one of these?"]

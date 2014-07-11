@@ -348,7 +348,7 @@ class LinRes(Res):
 
         # Create a title if necessary.
         if title is None:
-            title = "Bode plot of %s" % self.fbase
+            title = "Bode plot of " + self.fbase
 
         # Set up the color(s) and line style(s).
         if not iterable(colors):
@@ -474,7 +474,7 @@ class LinRes(Res):
 
         # Create a title if necessary.
         if title is None:
-            title = "Nyquist plot of %s" % self.fbase
+            title = "Nyquist plot of " + self.fbase
 
         # Set up the color(s).
         if not iterable(colors):
