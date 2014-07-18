@@ -23,9 +23,12 @@ from six import string_types
 
 from modelicares.texunit import unit2tex
 
+
 class PreviewPanel(wx.Panel):
+
     """Panel for information about a variable
     """
+
     def __init__(self, parent, id_num):
         # Change the matplotlib backend, but remember the original.
         orig_backend = rcParams['backend']
@@ -78,6 +81,7 @@ class PreviewPanel(wx.Panel):
 
 
 class Browser(wx.Frame):
+
     """Class to browse the variables of a simulation (used in
     :meth:`simres.SimRes.browse`)
 
@@ -104,7 +108,7 @@ class Browser(wx.Frame):
                 else:
                     data.SetData('')
                     subbranch = self.tree.AppendItem(branch, key, data=data)
-                    _build_tree(branches[key], subbranch) # Recursion
+                    _build_tree(branches[key], subbranch)  # Recursion
 
         # Initial setup
         wx.Frame.__init__(self, parent, id_num, pos=wx.DefaultPosition,
@@ -117,7 +121,7 @@ class Browser(wx.Frame):
 
         # Add the tree.
         self.tree = wx.TreeCtrl(panel_left, 1, wx.DefaultPosition, (-1, -1),
-                                wx.TR_HIDE_ROOT|wx.TR_HAS_BUTTONS)
+                                wx.TR_HIDE_ROOT | wx.TR_HAS_BUTTONS)
         root = sim.nametree
         _build_tree(root, self.tree.AddRoot(sim.fbase))
 

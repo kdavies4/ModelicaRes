@@ -65,15 +65,18 @@ Samples = namedtuple('Samples', ['times', 'values', 'negated'])
 # The negated field indicates if the values should be negated upon access.
 
 # Named tuple to store the data for each variable
+
+
 class Variable(GenericVariable):
+
     """Specialized namedtuple to represent a variable in a model simulated by
     Dymola or OpenModelica
     """
     # pylint: disable=I0011, W0221
 
-    @_swap           # We want the times (t) to be the first argument,
-    @_apply_function # but for efficiency, it's best to
-    @_select         # select the values first.
+    @_swap            # We want the times (t) to be the first argument,
+    @_apply_function  # but for efficiency, it's best to
+    @_select          # select the values first.
     def values(self):
         """Return function *f* of the values of the variable.
 
@@ -112,9 +115,9 @@ class Variable(GenericVariable):
         return (-self.samples.values if self.samples.negated else
                 self.samples.values)
 
-    @_swap           # We want the times (t) to be the first argument,
-    @_apply_function # but for efficiency, it's best to
-    @_select         # select the values first.
+    @_swap            # We want the times (t) to be the first argument,
+    @_apply_function  # but for efficiency, it's best to
+    @_select          # select the values first.
     def times(self):
         """Return function *f* of the recorded times of the variable.
 
@@ -180,6 +183,7 @@ else:
                 for line in chars_to_strings(str_arr)]
         # Modelica encodes using utf-8 but scipy.io.loadmat decodes using latin-1,
         # thus the encode ... decode part.
+
 
 def read(fname, constants_only=False):
     r"""Read variables from a MATLAB\ :sup:`®` file with Dymola\ :sup:`®` or
@@ -266,7 +270,7 @@ def loadsim(fname, constants_only=False):
             try:
                 unit, displayUnit = unit.rsplit('|', 1)
             except ValueError:
-                pass # (displayUnit = '')
+                pass  # (displayUnit = '')
         description = description.rstrip()
         if PY2:
             description = description.decode('utf-8')
@@ -328,9 +332,9 @@ def loadsim(fname, constants_only=False):
                 data = (mat['data_%i' % i].T if transposed else
                         mat['data_%i' % i])
             except KeyError:
-                break # There are no more "data_i" variables.
+                break  # There are no more "data_i" variables.
             else:
-                if data.shape[1] > 1: # In case the data set is empty.
+                if data.shape[1] > 1:  # In case the data set is empty.
                     times = data[:, 0]
                     variables.update({name:
                                       Variable(Samples(times,
@@ -415,7 +419,7 @@ def loadlin(fname):
     xuyName = mat['xuyName']
     sys.state_names = get_strings(xuyName[:nx])
     sys.input_names = get_strings(xuyName[nx:nx + nu])
-    sys.output_names = get_strings(xuyName[nx+nu:])
+    sys.output_names = get_strings(xuyName[nx + nu:])
 
     return sys
 

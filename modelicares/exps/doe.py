@@ -10,6 +10,7 @@ These can be passed to the *design* argument of
 
 from itertools import product
 
+
 def fullfact(*space):
     """Full-factorial DOE
 
@@ -33,6 +34,7 @@ def fullfact(*space):
     """
     return product(*space)
 
+
 def aslisted(*space):
     """Step through all the entries together (jointly or element-wise).
 
@@ -47,6 +49,7 @@ def aslisted(*space):
     (1, 1, 1)
      """
     return zip(*space)
+
 
 def ofat(*space):
     """One-factor-at-a-time (OFAT) method
@@ -70,11 +73,11 @@ def ofat(*space):
     for i, dimension in enumerate(space):
         for level in dimension[1:]:
             if i == 0:
-                yield tuple([level] + baseline[i+1:])
+                yield tuple([level] + baseline[i + 1:])
             elif i == len(space) - 1:
                 yield tuple(baseline[:i] + [level])
             else:
-                yield tuple(baseline[:i] + [level] + baseline[i+1:])
+                yield tuple(baseline[:i] + [level] + baseline[i + 1:])
 
 if __name__ == '__main__':
     # Test the contents of this file.

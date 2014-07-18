@@ -1,13 +1,16 @@
 #!/usr/bin/python
-# Example of loading a CSV file using util.load_csv()
+"""Example of loading a CSV file using util.load_csv()
+"""
+
+# pylint: disable=I0011, C0103, C0301, C0325, E0611, F0401
 
 from modelicares import load_csv
 
-if __name__=='__main__':
+if __name__ == '__main__':
 
     fname = "load-csv.csv"
     data = load_csv(fname, header_row=2)
-    print('Data has been loaded from "%s" into the "data" dictionary.'%fname)
+    print('Data has been loaded from "%s" into the "data" dictionary.' % fname)
     print("It contains these keys:")
     print(data.keys())
     print("Use the Python prompt to explore the data.")

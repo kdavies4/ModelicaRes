@@ -18,6 +18,7 @@ import os
 from functools import wraps
 from modelicares.util import cast_sametype, basename
 
+
 def assert_sametype(meth):
     """Decorate a method to check that the second argument is an instance of the
     containing class
@@ -52,6 +53,7 @@ def compare_fnames(meth):
 
 
 class Res(object):
+
     """Base class for a Modelica_ result
     """
     # pylint: disable=I0011, E0213
@@ -116,7 +118,9 @@ class Res(object):
         """
         return basename(self.fname)
 
+
 class ResList(list):
+
     """Base class for a list of Modelica_ results
     """
 

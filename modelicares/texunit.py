@@ -100,6 +100,7 @@ def number_label(quantity="", unit=None, times=r'\,', per=r'\,/\,',
     else:
         return quantity
 
+
 def quantity_str(number, unit='', use_si=True, format='%g', times=r'\,',
                  roman=True):
     r"""Generate a string to write a quantity as a number times a unit.
@@ -161,7 +162,7 @@ def quantity_str(number, unit='', use_si=True, format='%g', times=r'\,',
     # Factor out powers of 1000 if SI prefixes will be used.
     if use_si and unit:
         pow1000 = max(min(get_pow1000(number), 8), -8)
-        number /= 1000**pow1000
+        number /= 1000 ** pow1000
         unit = si_prefix(pow1000) + unit
 
     # Format the number as a string.
@@ -172,7 +173,7 @@ def quantity_str(number, unit='', use_si=True, format='%g', times=r'\,',
     try:
         significand, exponent = numstr.split('e')
     except ValueError:
-        pass # No exponent
+        pass  # No exponent
     else:
         numstr = significand + r'$\times10^{%i}$' % int(exponent)
 

@@ -1,4 +1,4 @@
-#!/usr/bin/python # pylint: disable=I0011, C0302
+# !/usr/bin/python # pylint: disable=I0011, C0302
 # -*- coding: utf-8 -*-
 """Classes and functions to help plot and interpret experimental data
 
@@ -102,7 +102,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 # pylint: disable=I0011, W0141, W0142
 
 # Other:
-# pylint: disable=I0011, C0103, C0301, E1101, W0102, W0621
+# pylint: disable=I0011, C0103, C0301, E1101, F0401, R0921, W0102, W0621
 
 import os
 import sys
@@ -145,6 +145,7 @@ except:
 
 # Function to close all open figures
 closeall = Gcf.destroy_all
+
 
 def add_arrows(plot, x_locs=[0], xstar_offset=0, ystar_offset=0,
                lstar=0.05, label='', orientation='tangent', color='r'):
@@ -198,18 +199,18 @@ def add_arrows(plot, x_locs=[0], xstar_offset=0, ystar_offset=0,
         x_pts = x_dat.take([i_a, i_b])
         y_pts = y_dat.take([i_a, i_b])
         if orientation == 'vertical':
-            dx = lstar*Deltax
+            dx = lstar * Deltax
             dy = 0
         elif orientation == 'horizontal':
             dx = 0
-            dy = lstar*Deltay
-        else: # tangent
-            theta = atan((y_pts[1] - y_pts[0])*Deltax/((x_pts[1] -
-                                                        x_pts[0])*Deltay))
-            dx = lstar*Deltax*cos(theta)
-            dy = lstar*Deltay*sin(theta)
-        x_mid = sum(x_pts)/2
-        y_mid = sum(y_pts)/2
+            dy = lstar * Deltay
+        else:  # tangent
+            theta = atan((y_pts[1] - y_pts[0]) * Deltax / ((x_pts[1] -
+                                                            x_pts[0]) * Deltay))
+            dx = lstar * Deltax * cos(theta)
+            dy = lstar * Deltay * sin(theta)
+        x_mid = sum(x_pts) / 2
+        y_mid = sum(y_pts) / 2
 
         # Add the arrow and text.
         line = ArrowLine([x_mid - dx, x_mid + dx], [y_mid - dy, y_mid + dy],
@@ -218,7 +219,7 @@ def add_arrows(plot, x_locs=[0], xstar_offset=0, ystar_offset=0,
                          arrowsize=10)
         ax.add_line(line)
         if label:
-            ax.text(x_mid + xstar_offset*Deltax, y_mid + ystar_offset*Deltax,
+            ax.text(x_mid + xstar_offset * Deltax, y_mid + ystar_offset * Deltax,
                     s=label, fontsize=12)
 
 
@@ -254,7 +255,7 @@ def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
     # Add and label lines.
     for position in positions:
         ax.axhline(y=position, **kwargs)
-    xpos = sum(ax.axis()[0:2])/2.0
+    xpos = sum(ax.axis()[0:2]) / 2.0
     for i, label in enumerate(labels):
         ax.text(xpos, positions[i], label, backgroundcolor='w',
                 horizontalalignment='center', verticalalignment='center')
@@ -292,13 +293,14 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
     # Add and label lines.
     for position in positions:
         ax.axvline(x=position, **kwargs)
-    ypos = sum(ax.axis()[2::])/2.0
+    ypos = sum(ax.axis()[2::]) / 2.0
     for i, label in enumerate(labels):
         ax.text(positions[i], ypos, label, backgroundcolor='w',
                 horizontalalignment='center', verticalalignment='center')
 
 
 class CallList(list):
+
     """List that when called returns a list of the results from calling its
     elements.
 
@@ -309,6 +311,7 @@ class CallList(list):
     >>> l(5)
     [10, 15]
     """
+
     def __call__(self, *args, **kwargs):
         """Return a list of the results from calling the elements of the list.
         """
@@ -421,11 +424,13 @@ def figure(label='', *args, **kwargs):
     # supported directly.
     return fig
 
+
 def basename(fname):
     """Return the base filename from *fname*.
 
     Unlike :func:`os.path.basename`, this function strips the file extension."""
     return os.path.splitext(os.path.basename(fname))[0]
+
 
 def multiglob(pathnames, extensions={'*.mat'}):
     r"""Return a set of filenames that match a pathname pattern.
@@ -532,7 +537,7 @@ def flatten_list(l, ltypes=(list, tuple)):
     # http://rightfootin.blogspot.com/2006/09/more-on-python-flatten.html,
     # 10/28/2011
     ltype = type(l)
-    if ltype not in ltypes: # So that strings aren't split into characters
+    if ltype not in ltypes:  # So that strings aren't split into characters
         return [l]
     l = list(l)
     i = 0
@@ -576,7 +581,7 @@ def _gen_offset_factor(label, tick_lo, tick_up, eagerness=0.325):
         """Format an offset and factor into a LaTeX string and add to it an
         existing string.
         """
-        DIVIDE = r'\,/\,' # LaTeX string for division
+        DIVIDE = r'\,/\,'  # LaTeX string for division
 
         # Add the offset string.
         if offset_factor:
@@ -586,24 +591,24 @@ def _gen_offset_factor(label, tick_lo, tick_up, eagerness=0.325):
                 label += r'$\,-\,%i$' % offset_factor
             if offset_pow1000:
                 label = label.rstrip(r'$') + (r'\times10^{%i}$' %
-                                              (3*offset_pow1000))
+                                              (3 * offset_pow1000))
 
         # Add the scaling notation.
         if pow1000:
             if offset_factor:
                 label = (r'$($' + label.rstrip(r'$') + r')' + DIVIDE +
-                         r'10^{%i}$' % (3*pow1000))
+                         r'10^{%i}$' % (3 * pow1000))
             else:
                 if DIVIDE in label:
                     desc, unit = label.split(DIVIDE, 1)
                     if unit.endswith(r')$'):
-                        label = (desc + DIVIDE + r'(10^{%i}' % (3*pow1000) +
+                        label = (desc + DIVIDE + r'(10^{%i}' % (3 * pow1000) +
                                  unit.lstrip(r'('))
                     else:
-                        label = (desc + DIVIDE + r'(10^{%i}' % (3*pow1000) +
+                        label = (desc + DIVIDE + r'(10^{%i}' % (3 * pow1000) +
                                  unit.rstrip(r'$') + r')$')
                 else:
-                    label += r'$' + DIVIDE + r'10^{%i}$' % (3*pow1000)
+                    label += r'$' + DIVIDE + r'10^{%i}$' % (3 * pow1000)
         return label
 
     offset = 0
@@ -612,10 +617,10 @@ def _gen_offset_factor(label, tick_lo, tick_up, eagerness=0.325):
     outside = min(tick_lo, 0) + max(tick_up, 0)
     if outside != 0:
         inside = max(tick_lo, 0) + min(tick_up, 0)
-        if inside/outside > 1 - eagerness:
-            offset = inside - np.mod(inside, 1000**get_pow1000(inside))
+        if inside / outside > 1 - eagerness:
+            offset = inside - np.mod(inside, 1000 ** get_pow1000(inside))
             offset_pow1000 = get_pow1000(offset)
-            offset_factor = offset/1000**offset_pow1000
+            offset_factor = offset / 1000 ** offset_pow1000
             outside = min(tick_lo - offset, 0) + max(tick_up - offset, 0)
     pow1000 = get_pow1000(outside)
     label = _label_offset_factor(label, offset_factor, offset_pow1000, pow1000)
@@ -646,7 +651,7 @@ def get_indices(x, target):
         i_1 = 0
         i_2 = len(x) - 1
         while i_1 < i_2 - 1:
-            i_mid = int((i_1 + i_2)/2)
+            i_mid = int((i_1 + i_2) / 2)
             if x[i_mid] == target:
                 return i_mid, i_mid
             elif x[i_mid] > target:
@@ -673,9 +678,12 @@ def get_pow1000(num):
         return 0
     elif dnum < 0:
         dnum = -dnum
-    return int(floor(dnum.log10()/3))
+    return int(floor(dnum.log10() / 3))
 
-# TODO: Move to natu and attribute to unutbu at http://stackoverflow.com/questions/1707709
+# TODO: Move to natu and attribute to unutbu at
+# http://stackoverflow.com/questions/1707709
+
+
 def list_packages(package):
     """Return a list of the names of a package and its subpackages.
 
@@ -700,12 +708,15 @@ def list_packages(package):
     modelicares.texunit
     modelicares.util
     """
+    # pylint: disable=I0011, W0612
+
     names = [package.__name__]
     for __, name, __ in walk_packages(package.__path__,
                                       prefix=package.__name__ + '.',
                                       onerror=lambda x: None):
         names.append(name)
     return names
+
 
 def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
     r"""Load a CSV file into a dictionary.
@@ -842,7 +853,7 @@ def match(strings, pattern=None, re=False):
     """
     if pattern is None or (pattern in ['.*', '.+', '.', '.?', ''] if re
                            else pattern == '*'):
-        return list(strings) # Shortcut
+        return list(strings)  # Shortcut
     else:
         if re:
             matcher = regexp.compile(pattern).search
@@ -991,8 +1002,8 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
         p = ax.quiver(x, y, u, v, pivot=pivot, **kwargs)
     plt.axis('tight')
     l, r, b, t = plt.axis()
-    dx, dy = r-l, t-b
-    plt.axis([l-pad*dx, r+pad*dx, b-pad*dy, t+pad*dy])
+    dx, dy = r - l, t - b
+    plt.axis([l - pad * dx, r + pad * dx, b - pad * dy, t + pad * dy])
     return p
 
 
@@ -1262,7 +1273,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
         "cytpe must be 'vertical', 'horizontal', or None."
 
     # Create the figure.
-    subplotpars = SubplotParams(left=left, top=1-top,
+    subplotpars = SubplotParams(left=left, top=1 - top,
                                 right=1 - (cbar if ctype == 'vertical'
                                            else right),
                                 bottom=(cbar if ctype == 'horizontal'
@@ -1275,13 +1286,13 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
 
     # Add the subplots.
     # Provide at least as many panels as needed.
-    n_cols = int(np.ceil(float(n_plots)/n_rows))
+    n_cols = int(np.ceil(float(n_plots) / n_rows))
     ax = []
     for i in range(n_plots):
         # Create the axes.
         i_col = np.mod(i, n_cols)
         # i_row = (i - i_col)/n_cols
-        a = fig.add_subplot(n_rows, n_cols, i+1)
+        a = fig.add_subplot(n_rows, n_cols, i + 1)
         ax.append(a)
 
         # Scale and label the axes.
@@ -1290,7 +1301,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
         if yticks is not None:
             a.set_yticks(yticks)
         # Only show the xlabel and xticklabels for the bottom row.
-        if True:#i_row == n_rows - 1:
+        if True:  # i_row == n_rows - 1:
             a.set_xlabel(xlabel)
             if xticklabels is not None:
                 a.set_xticklabels(xticklabels)
@@ -1329,6 +1340,8 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
         return ax, n_cols
 
 # TODO: Remove the "_" prefix and add it to the list once this is finished.
+
+
 def _shift_scale_c(cbar, vmin, vmax, eagerness=0.325):
     """"If helpful, apply an offset and a factor to the colorbar.
 
@@ -1354,7 +1367,8 @@ def _shift_scale_c(cbar, vmin, vmax, eagerness=0.325):
     label = cbar.ax.get_ylabel()
     ticks = cbar.ax.get_yticks()
     label, offset, pow1000 = _gen_offset_factor(label, vmin, vmax, eagerness)
-    cbar.set_ticklabels(["%.1f" % x for x in (ticks - offset)/1000**pow1000])
+    cbar.set_ticklabels(
+        ["%.1f" % x for x in (ticks - offset) / 1000 ** pow1000])
     cbar.set_label(label)
 
 
@@ -1384,7 +1398,8 @@ def shift_scale_x(ax, eagerness=0.325):
     ticks = ax.get_xticks()
     label, offset, pow1000 = _gen_offset_factor(label, ticks[0], ticks[-1],
                                                 eagerness)
-    ax.set_xticklabels(["%.1f" % x for x in (ticks - offset)/1000**pow1000])
+    ax.set_xticklabels(
+        ["%.1f" % x for x in (ticks - offset) / 1000 ** pow1000])
     ax.set_xlabel(label)
 
 
@@ -1414,7 +1429,8 @@ def shift_scale_y(ax, eagerness=0.325):
     ticks = ax.get_yticks()
     label, offset, pow1000 = _gen_offset_factor(label, ticks[0], ticks[-1],
                                                 eagerness)
-    ax.set_yticklabels(["%.1f" % x for x in (ticks - offset)/1000**pow1000])
+    ax.set_yticklabels(
+        ["%.1f" % x for x in (ticks - offset) / 1000 ** pow1000])
     ax.set_ylabel(label)
 
 
@@ -1425,26 +1441,26 @@ def si_prefix(pow1000):
     # (http://www.bipm.org/en/si/si_brochure/; excluding hecto, deca, deci,
     # and centi).
     try:
-        return ['Y', # yotta (10^24)
-                'Z', # zetta (10^21)
-                'E', # exa (10^18)
-                'P', # peta (10^15)
-                'T', # tera (10^12)
-                'G', # giga (10^9)
-                'M', # mega (10^6)
-                'k', # kilo (10^3)
-                '', # (10^0)
-                'm', # milli (10^-3)
-                r'{\mu}', # micro (10^-6)
-                'n', # nano (10^-9)
-                'p', # pico (10^-12)
-                'f', # femto (10^-15)
-                'a', # atto (10^-18)
-                'z', # zepto (10^-21)
-                'y'][8 - pow1000] # yocto (10^-24)
+        return ['Y',  # yotta (10^24)
+                'Z',  # zetta (10^21)
+                'E',  # exa (10^18)
+                'P',  # peta (10^15)
+                'T',  # tera (10^12)
+                'G',  # giga (10^9)
+                'M',  # mega (10^6)
+                'k',  # kilo (10^3)
+                '',   # (10^0)
+                'm',  # milli (10^-3)
+                r'{\mu}',  # micro (10^-6)
+                'n',  # nano (10^-9)
+                'p',  # pico (10^-12)
+                'f',  # femto (10^-15)
+                'a',  # atto (10^-18)
+                'z',  # zepto (10^-21)
+                'y'][8 - pow1000]  # yocto (10^-24)
     except IndexError:
         raise IndexError("The factor 1e%i is beyond the range covered by "
-                         "the SI prefixes (1e-24 to 1e24)." % 3*pow1000)
+                         "the SI prefixes (1e-24 to 1e24)." % 3 * pow1000)
 
 
 def tree(strings, separator='.', container=dict):
@@ -1493,6 +1509,7 @@ def tree(strings, separator='.', container=dict):
 # From http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html,
 # accessed 2010/11/2012
 class ArrowLine(Line2D):
+
     r"""A matplotlib_ subclass to draw an arrowhead on a line
 
     **Arguments:**
@@ -1528,7 +1545,7 @@ class ArrowLine(Line2D):
 
     # pylint: disable=E1101
 
-    arrows = {'>' : '_draw_triangle_arrow'}
+    arrows = {'>': '_draw_triangle_arrow'}
     _arrow_path = Path([[0.0, 0.0], [-1.0, 1.0], [-1.0, -1.0], [0.0, 0.0]],
                        [Path.MOVETO, Path.LINETO, Path.LINETO, Path.CLOSEPOLY])
 
@@ -1538,7 +1555,7 @@ class ArrowLine(Line2D):
         See the top-level class documentation.
         """
         self._arrow = kwargs.pop('arrow', '-')
-        self._arrowsize = kwargs.pop('arrowsize', 2*4)
+        self._arrowsize = kwargs.pop('arrowsize', 2 * 4)
         self._arrowedgecolor = kwargs.pop('arrowedgecolor', 'b')
         self._arrowfacecolor = kwargs.pop('arrowfacecolor', 'b')
         self._arrowedgewidth = kwargs.pop('arrowedgewidth', 4)
@@ -1581,8 +1598,8 @@ class ArrowLine(Line2D):
         segment = [i[0] for i in path.iter_segments()][-2:]
         startx, starty = path_trans.transform_point(segment[0])
         endx, endy = path_trans.transform_point(segment[1])
-        angle = atan2(endy-starty, endx-startx)
-        halfwidth = 0.5*renderer.points_to_pixels(self._arrowheadwidth)
+        angle = atan2(endy - starty, endx - startx)
+        halfwidth = 0.5 * renderer.points_to_pixels(self._arrowheadwidth)
         length = renderer.points_to_pixels(self._arrowheadlength)
         transform = Affine2D().scale(length, halfwidth).rotate(angle)\
                                                        .translate(endx, endy)
@@ -1605,9 +1622,13 @@ class ArrowLine(Line2D):
 # Getch classes based on
 # http://code.activestate.com/recipes/134892-getch-like-unbuffered-character-reading-from-stdin/,
 # accessed 5/31/14
+
+
 class _Getch(object):
+
     """Get a single character from the standard input.
     """
+
     def __init__(self):
         try:
             self.impl = _GetchWindows()
@@ -1617,9 +1638,12 @@ class _Getch(object):
     def __call__(self):
         return self.impl()
 
+
 class _GetchUnix(object):
+
     """Get a single character from the standard input on Unix.
     """
+
     def __init__(self):
         # pylint: disable=I0011, W0611, W0612
         import tty
@@ -1636,16 +1660,20 @@ class _GetchUnix(object):
             termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
         return ch
 
+
 class _GetchWindows(object):
+
     """Get a single character from the standard input on Windows.
     """
+    # pylint: disable=I0011, W0611, W0612
+
     def __init__(self):
-        # pylint: disable=W0611, W0612
         import msvcrt
 
     def __call__(self):
         import msvcrt
         return msvcrt.getch()
+
 
 def yes(question):
     """Ask a yes/no question and return *True* if the answer is 'Y' or 'y'.

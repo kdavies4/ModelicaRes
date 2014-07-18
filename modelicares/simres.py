@@ -1,4 +1,4 @@
-#!/usr/bin/python # pylint: disable=I0011, C0301, C0302
+# !/usr/bin/python # pylint: disable=I0011, C0301, C0302
 # -*- coding: utf-8 -*-
 """This submodule contains the following classes:
 
@@ -35,7 +35,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 # pylint: disable=I0011, W0141, W0142
 
 # Other:
-# pylint: disable=I0011, C0103, E0611, E1101, W0102
+# pylint: disable=I0011, C0103, E0611, E1101, R0801, R0921, W0102
 
 import os
 import numpy as np
@@ -57,6 +57,7 @@ from modelicares import util
 from modelicares._res import Res, ResList
 from modelicares.texunit import unit2tex, number_label
 
+
 def _apply_function(meth):
     """Decorate a method to apply a function to its output
     """
@@ -72,6 +73,7 @@ def _apply_function(meth):
 
     return wrapped
 
+
 def _get_sims(fnames):
     """Return a list of :class:`SimRes` instances from a list of filenames.
 
@@ -85,6 +87,7 @@ def _get_sims(fnames):
             continue
     assert len(sims) > 0, "No simulations were loaded."
     return sims
+
 
 def _select(meth):
     """Decorate a method to use time-based indexing to select values.
@@ -112,7 +115,8 @@ def _select(meth):
               - (*start*, *stop*, *skip*): Every *skip*th sample between *start*
                 and *stop* is included.
             """
-            # Retrieve the start time, stop time, and number of samples to skip.
+            # Retrieve the start time, stop time, and number of samples to
+            # skip.
             try:
                 (t1, t2, skip) = t
             except ValueError:
@@ -153,6 +157,7 @@ def _select(meth):
 
     return wrapped
 
+
 def _swap(meth):
     """Swap the first two arguments of a method and give both a default of
     *None*.
@@ -172,6 +177,7 @@ def _swap(meth):
 
 class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
                                                  'unit', 'displayUnit'])):
+
     """Special namedtuple_ to represent a variable in a simulation, with
     methods to retrieve and perform calculations on its values
 
@@ -366,7 +372,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         0.76859528
         """
         t = self.times()
-        return integral(self.values(f=f), t)/(t[-1] - t[0])
+        return integral(self.values(f=f), t) / (t[-1] - t[0])
 
     def mean_rectified(self, f=None):
         """Return the time-averaged rectified arithmetic mean value of function
@@ -385,7 +391,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         2.2870927
         """
         t = self.times()
-        return integral(np.abs(self.values(f=f)), t)/(t[-1] - t[0])
+        return integral(np.abs(self.values(f=f)), t) / (t[-1] - t[0])
 
     def min(self, f=None):
         """Return the minimum value of function *f* of the variable.
@@ -421,7 +427,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         2.4569478
         """
         t = self.times()
-        return np.sqrt(integral(self.values(f=f)**2, t)/(t[-1] - t[0]))
+        return np.sqrt(integral(self.values(f=f) ** 2, t) / (t[-1] - t[0]))
 
     def RMS_AC(self, f=None):
         """Return the time-averaged AC-coupled root mean square value of
@@ -441,8 +447,8 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         """
         t = self.times()
         mean = self.mean(f=f)
-        return mean + np.sqrt(integral((self.values(f=f) - mean)**2, t)
-                              /(t[-1] - t[0]))
+        return mean + np.sqrt(integral((self.values(f=f) - mean) ** 2, t)
+                              / (t[-1] - t[0]))
 
     @abstractmethod
     def times(self, t=None, f=None):
@@ -576,6 +582,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
 
 
 class _VarDict(dict):
+
     """Special dictionary for simulation variables (instances of
     :class:`Variable`)
     """
@@ -599,7 +606,9 @@ class _VarDict(dict):
                                         + close_matches)
             raise LookupError(msg)
 
+
 class VarList(list):
+
     """Special list of simulation variables (instances of :class:`Variable`),
     allowing access to information from all of the variables at once
 
@@ -670,12 +679,14 @@ class VarList(list):
 
 # List of file-loading functions for SimRes
 from modelicares._io.dymola import loadsim as dymola
-LOADERS = [('dymola', dymola)] # SimRes tries these in order.
+LOADERS = [('dymola', dymola)]  # SimRes tries these in order.
 # All of the keys should be in lowercase.
 # This must be below the definition of Variable and _VarDict because those
 # classes are required by the loading functions.
 
+
 class SimRes(Res):
+
     """Class to load, analyze, and plot results from a Modelica_ simulation
 
     **Initialization arguments:**
@@ -760,7 +771,6 @@ class SimRes(Res):
     .. _pandas DataFrame:
        http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
-    # pylint: disable=I0011, R0921
 
     def __init__(self, fname='dsres.mat', constants_only=False, tool=None):
         """Upon initialization, load Modelica_ simulation results from a file.
@@ -802,9 +812,9 @@ class SimRes(Res):
              title=None, subtitles=[], label="bar",
              xlabel=None, xticklabels=None, ylabel=None,
              left=rcParams['figure.subplot.left'],
-             right=1-rcParams['figure.subplot.right'],
+             right=1 - rcParams['figure.subplot.right'],
              bottom=rcParams['figure.subplot.bottom'],
-             top=1-rcParams['figure.subplot.top'],
+             top=1 - rcParams['figure.subplot.top'],
              hspace=0.1, vspace=0.25,
              leg_kwargs=None, **kwargs):
         r"""Create a sequence of bar plots at times.
@@ -886,7 +896,7 @@ class SimRes(Res):
             title = self.fbase
 
         # Set up the subplots.
-        n_plots = len(times) # Number of plots
+        n_plots = len(times)  # Number of plots
         ax = util.setup_subplots(n_plots=n_plots, n_rows=n_rows,
                                  title=title, subtitles=subtitles, label=label,
                                  xlabel=xlabel, xticks=ind,
@@ -897,10 +907,10 @@ class SimRes(Res):
 
         # Create the bar plots.
         for axis, time in zip(ax, times):
-            axis.bar(ind-width/2., self(names).values(time),
+            axis.bar(ind - width / 2., self(names).values(time),
                      width, **kwargs)
             a = axis.axis()
-            axis.axis([0, ind[-1]+1, a[2], a[3]])
+            axis.axis([0, ind[-1] + 1, a[2], a[3]])
 
         # Decorate and finish.
         if leg_kwargs is not None:
@@ -1194,7 +1204,7 @@ class SimRes(Res):
             """Generate a y-axis label and set of legend entries.
             """
             if ynames:
-                if ylabel is None: # Try to create a suitable axis label.
+                if ylabel is None:  # Try to create a suitable axis label.
                     descriptions = self(ynames).description
                     # If the descriptions are the same, label the y axis with
                     # the 1st one.
@@ -1277,10 +1287,10 @@ class SimRes(Res):
 
         # Plot the data.
         if ynames2:
-            y2times = (yvars2.times() + [all_times]*len(f2)
+            y2times = (yvars2.times() + [all_times] * len(f2)
                        if xname == 'Time' else x)
         if ynames1:
-            y1times = (yvars1.times() + [all_times]*len(f1)
+            y1times = (yvars1.times() + [all_times] * len(f1)
                        if xname == 'Time' else x)
             if ynames2:
                 # Use solid lines for the primary axis and dotted lines for the
@@ -1492,9 +1502,9 @@ class SimRes(Res):
 
             # Get the values.
             if np.array_equal(self[name].times(), times):
-                values = self[name].values() # Save computation.
+                values = self[name].values()  # Save computation.
             else:
-                values = self[name].values(t=times) # Resample.
+                values = self[name].values(t=times)  # Resample.
 
             unit = self[name].unit
 
@@ -1542,7 +1552,7 @@ class SimRes(Res):
             if isinstance(names, string_types):
                 return self._variables[names]
             else:
-                return [entries(name) for name in names] # Recursion
+                return [entries(name) for name in names]  # Recursion
 
         if isinstance(names, string_types):
             return self._variables[names]
@@ -1665,6 +1675,7 @@ class SimRes(Res):
 
 
 class SimResList(ResList):
+
     r"""Special list of simulation results (:class:`SimRes` instances)
 
     **Initialization signatures:**
@@ -1793,7 +1804,7 @@ class SimResList(ResList):
         if not args:
             super(SimResList, self).__init__([])
 
-        elif isinstance(args[0], string_types): # Filenames or directories
+        elif isinstance(args[0], string_types):  # Filenames or directories
             try:
                 fnames = util.multiglob(args)
             except TypeError:
@@ -1803,7 +1814,7 @@ class SimResList(ResList):
                     "arguments, each of which is a filename or directory.")
             list.__init__(self, _get_sims(fnames))
 
-        elif len(args) == 1: # List or iterable of SimRes instances
+        elif len(args) == 1:  # List or iterable of SimRes instances
             sims = list(args[0])
             for sim in sims:
                 assert isinstance(sim, SimRes), ("All entries in the list must "
@@ -2198,7 +2209,7 @@ class SimResList(ResList):
             except AttributeError:
                 suffixes = self.fnames
         elif suffixes == '':
-            suffixes = ['']*len(self)
+            suffixes = [''] * len(self)
 
         # Generate the plots.
         for i, (sim, suffix) in enumerate(zip(self, suffixes)):

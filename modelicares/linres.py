@@ -1,4 +1,4 @@
-#!/usr/bin/python # pylint: disable=I0011, C0301, C0302
+# !/usr/bin/python # pylint: disable=I0011, C0301, C0302
 # -*- coding: utf-8 -*-
 """This submodule contains classes to help load, analyze, and plot results from
 Modelica_ linearizations:
@@ -23,7 +23,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 # pylint: disable=I0011, W0141, W0142
 
 # Other:
-# pylint: disable=I0011, C0103, E0611, E1101, W0102
+# pylint: disable=I0011, C0103, E0611, E1101, R0801, W0102
 
 import os
 import numpy as np
@@ -40,8 +40,9 @@ from modelicares._res import Res, ResList
 
 # File loading functions
 from modelicares._io.dymola import loadlin as dymola
-LOADERS = [('dymola', dymola)] # LinRes tries these in order.
+LOADERS = [('dymola', dymola)]  # LinRes tries these in order.
 # All of the keys should be in lowercase.
+
 
 def _from_names(meth):
     """Return a method that accepts names or indices to identify system inputs
@@ -96,6 +97,7 @@ def _from_names(meth):
 
 
 class LinRes(Res):
+
     """Class for Modelica_-based linearization results and methods to analyze
     those results
 
@@ -496,14 +498,13 @@ class LinRes(Res):
             # Note: modelicares._freqplot.nyquist() is currently only
             # implemented for SISO systems.
 
-
         # Decorate.
         if len(pairs) > 1:
             ax.legend()
         ax.set_title(title)
-        if xlabel: # Without this check, xlabel=None will give label of "None".
+        if xlabel:  # Without this check, xlabel=None will give label of "None".
             ax.set_xlabel(xlabel)
-        if ylabel: # Same purpose
+        if ylabel:  # Same purpose
             ax.set_ylabel(ylabel)
 
         return ax
@@ -525,6 +526,7 @@ def _get_lins(fnames):
 
 
 class LinResList(ResList):
+
     r"""Specialized list of linearization results
 
     **Initialization signatures:**
@@ -636,7 +638,7 @@ class LinResList(ResList):
         if not args:
             super(LinResList, self).__init__([])
 
-        elif isinstance(args[0], string_types): # Filenames or directories
+        elif isinstance(args[0], string_types):  # Filenames or directories
             try:
                 fnames = util.multiglob(args)
             except TypeError:
@@ -646,7 +648,7 @@ class LinResList(ResList):
                     "arguments, each of which is a filename or directory.")
             list.__init__(self, _get_lins(fnames))
 
-        elif len(args) == 1: # List or iterable of LinRes instances
+        elif len(args) == 1:  # List or iterable of LinRes instances
             lins = list(args[0])
             for lin in lins:
                 assert isinstance(lin, LinRes), ("All entries in the list must "
@@ -763,7 +765,7 @@ class LinResList(ResList):
             except AttributeError:
                 labels = self.fnames
         elif labels == '':
-            labels = ['']*len(self)
+            labels = [''] * len(self)
 
         return labels
 
@@ -1009,7 +1011,7 @@ class LinResList(ResList):
         if xlabel:
             # Without this check, xlabel=None will give a label of "None".
             ax.set_xlabel(xlabel)
-        if ylabel: # Same purpose
+        if ylabel:  # Same purpose
             ax.set_ylabel(ylabel)
         if leg_kwargs is not None:
             loc = leg_kwargs.pop('loc', 'best')

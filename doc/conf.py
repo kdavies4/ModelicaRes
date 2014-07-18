@@ -16,15 +16,17 @@ show the default.
 # pylint: disable=I0011, W0141, W0142
 
 # Other:
-# pylint: disable=C0103
+# pylint: disable=I0011, C0103, W0621, W0622
+
 
 def skip(app, what, name, obj, skip, options):
     """Include otherwise hidden methods.
     """
-    # pylint: disable=W0613
+    # pylint: disable=I0011, W0613
     if name in ["__call__", "__contains__", "__getitem__", "__len__"]:
         return False
     return skip
+
 
 def setup(app):
     """Add roles and javascripts.
@@ -33,7 +35,7 @@ def setup(app):
     app.add_javascript('copybutton.js')
     app.add_javascript('analytics.js')
 
-# -- General configuration -----------------------------------------------------
+# -- General configuration -----------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
@@ -88,7 +90,7 @@ exclude_patterns = []
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
 
-# -- Options for HTML output ---------------------------------------------------
+# -- Options for HTML output ---------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for a
 # list of builtin themes.

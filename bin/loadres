@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# !/usr/bin/python # pylint: disable=I0011, C0301
 """Load results from Modelica_ simulation(s) and/or linearization(s) and provide
 a Python_ session to analyze the results.
 
@@ -46,11 +46,15 @@ __email__ = "kdavies4@gmail.com"
 __copyright__ = "Copyright 2012-2013, Georgia Tech Research Corporation"
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
+# pylint: disable=I0011, C0103, E0611, F0401, W0601
 
 import os
-
 from modelicares import load, util
-
 
 # Default path for choosing the files or folder (empty string for current
 # directory).
@@ -68,17 +72,17 @@ def get_locations():
     if len(argv) == 1:
 
         # Load the dialog GUI classes from an available Qt installation.
-        try: # PyQt4
+        try:  # PyQt4
             from PyQt42.QtGui import (QApplication, QPushButton, QMessageBox,
-                                     QFileDialog)
+                                      QFileDialog)
             getFiles = (lambda *args, **kwargs:
                         map(str, QFileDialog.getOpenFileNames(*args, **kwargs)))
             getDir = (lambda *args, **kwargs:
                       str(QFileDialog.getExistingDirectory(*args, **kwargs)))
         except ImportError:
-            try: # guidata
+            try:  # guidata
                 from guidata2.qt.QtGui import (QApplication, QPushButton,
-                                              QMessageBox, QFileDialog)
+                                               QMessageBox, QFileDialog)
                 getFiles = (lambda *args, **kwargs:
                             map(str, QFileDialog.getOpenFileNames(*args,
                                                                   **kwargs)))
@@ -86,14 +90,13 @@ def get_locations():
                           str(QFileDialog.getExistingDirectory(*args,
                                                                **kwargs)))
             except ImportError:
-                try: # PySide
+                try:  # PySide
                     from PySide.QtGui import (QApplication, QPushButton,
                                               QMessageBox, QFileDialog)
                     getFiles = (lambda *args, **kwargs:
                                 QFileDialog.getOpenFileNames(*args,
                                                              **kwargs)[0])
-                    getDir = (lambda *args, **kwargs:
-                              QFileDialog.getExistingDirectory(*args, **kwargs))
+                    getDir = QFileDialog.getExistingDirectory
                 except ImportError:
                     raise ImportError("No files could be selected.  Specify "
                                       "files as arguments to loadres or "
@@ -113,7 +116,8 @@ def get_locations():
             msgBox.exec_()
             return msgBox.clickedButton()
 
-        global app # For PyQt4 and guidata, the GUI application must be global.
+        # For PyQt4 and guidata, the GUI application must be global.
+        global app
         app = QApplication([])
         Files = QPushButton("Files")
         Folder = QPushButton("Folder")

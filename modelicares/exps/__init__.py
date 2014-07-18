@@ -86,7 +86,9 @@ import modelicares.util as util
 
 from modelicares.exps import doe
 
+
 class Experiment(namedtuple('Experiment', ['model', 'params', 'args'])):
+
     """namedtuple_ to represent a simulation experiment
 
     Instances of this class may be used in the *experiments* argument of
@@ -100,6 +102,7 @@ class Experiment(namedtuple('Experiment', ['model', 'params', 'args'])):
     'ChuaCircuit'
     """
     pass
+
 
 def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
     """Return a generator for a set of simulation experiments using permutation
@@ -218,6 +221,7 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
         print("Error in call to gen_experiments(): models and all of the "
               "entries in params and args must be lists.")
 
+
 def modelica_str(value):
     """Express a Python_ value as a Modelica_ string
 
@@ -258,6 +262,7 @@ def modelica_str(value):
     else:
         return str(value)
 
+
 def read_params(names, fname='dsin.txt'):
     """Read parameter values from an initialization or final values file (e.g.,
     dsin.txt or dsfinal.txt).
@@ -278,13 +283,13 @@ def read_params(names, fname='dsin.txt'):
     [0.1, 0.5]
     """
     # Aliases for some regular subexpressions
-    u = r'\d+' # Unsigned integer
-    i = '[+-]?' + u # Integer
-    f = i + r'(?:\.' + u + ')?(?:[Ee][+-]?' + u + ')?' # Floating point number
+    u = r'\d+'  # Unsigned integer
+    i = '[+-]?' + u  # Integer
+    f = i + r'(?:\.' + u + ')?(?:[Ee][+-]?' + u + ')?'  # Floating point number
 
     # Possible regular expressions for a parameter specification (with '%s' for
     # the parameter name)
-    patterns = [# Dymola 1- or 2-line parameter specification
+    patterns = [  # Dymola 1- or 2-line parameter specification
         (r'^\s*%s\s+(%s)\s+%s\s+%s\s+%s\s+%s\s*#\s*%s\s*$'
          % (i, f, f, f, u, u, '%s')),
         # From Dymola:
@@ -327,13 +332,13 @@ def read_params(names, fname='dsin.txt'):
     # Read the parameters.
     def _read_param(name):
         """Read a single parameter"""
-        namere = re.escape(name) # Escape the dots, square brackets, etc.
+        namere = re.escape(name)  # Escape the dots, square brackets, etc.
         for pattern in patterns:
             try:
                 return float(re.search(pattern % namere, text,
                                        re.MULTILINE).group(1))
             except AttributeError:
-                pass # Try the next pattern.
+                pass  # Try the next pattern.
         else:
             # pylint: disable=I0011, W0120
             raise AssertionError(
@@ -473,13 +478,13 @@ def write_params(params, fname='dsin.txt'):
             "file.")
 
     # Aliases for some regular subexpressions
-    u = r'\d+' # Unsigned integer
-    i = '[+-]?' + u # Integer
-    f = i + r'(?:\.' + u + ')?(?:[Ee][+-]' + u + ')?' # Floating point number
+    u = r'\d+'  # Unsigned integer
+    i = '[+-]?' + u  # Integer
+    f = i + r'(?:\.' + u + ')?(?:[Ee][+-]' + u + ')?'  # Floating point number
 
     # Possible regular expressions for a parameter specification (with '%s' for
     # the parameter name)
-    patterns = [# Dymola 1- or 2-line parameter specification
+    patterns = [  # Dymola 1- or 2-line parameter specification
         (r'(^\s*%s\s+)%s(\s+%s\s+%s\s+%s\s+%s\s*#\s*%s\s*$)'
          % (i, f, f, f, u, u, '%s')),
         r'(^\s*)' + i + r'(\s*#\s*%s)',
@@ -497,7 +502,7 @@ def write_params(params, fname='dsin.txt'):
 
     # Set the parameters.
     for name, value in params.items():
-        namere = re.escape(name) # Escape the dots, square brackets, etc.
+        namere = re.escape(name)  # Escape the dots, square brackets, etc.
         for pattern in patterns:
             text, num = re.subn(pattern % namere, r'\g<1>%s\2' % value, text, 1,
                                 re.MULTILINE)
@@ -719,7 +724,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
         models = []
         for i, (model, params, args) in zip(count(1), experiments):
             # Create an abbreviated name for the model.
-            models.append(model[model.rfind('.')+1:])
+            models.append(model[model.rfind('.') + 1:])
 
             # Write to the Dymola script.
             mos.write('// Experiment %i\n' % i)
@@ -748,6 +753,7 @@ def write_script(experiments=[(None, {}, {})], packages=[],
 
 
 class ParamDict(dict):
+
     """Dictionary that prints its items (string mapping) as nested tuple-based
     modifiers, formatted for Modelica_
 
@@ -794,6 +800,7 @@ class ParamDict(dict):
     >>> print(ParamDict({}))
     <BLANKLINE>
     """
+
     def __str__(self):
         """Map the :class:`ParamDict` instance to a string using tuple-based
         modifiers formatted for Modelica_.

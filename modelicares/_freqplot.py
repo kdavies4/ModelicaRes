@@ -85,10 +85,11 @@ from modelicares.util import add_hlines, add_vlines
 # Units
 rad = 1
 s = 1
-cyc = 2*np.pi*rad
-deg = cyc/360
-Hz = cyc/s
-to_dB = lambda x: 20*np.log10(x)
+cyc = 2 * np.pi * rad
+deg = cyc / 360
+Hz = cyc / s
+to_dB = lambda x: 20 * np.log10(x)
+
 
 def default_frequency_range(syslist, in_Hz=True):
     """Examine the poles and zeros of systems and return a reasonable frequency
@@ -125,13 +126,13 @@ def default_frequency_range(syslist, in_Hz=True):
 
     # Put the single system in a list if necessary.
     if not getattr(syslist, '__iter__', False):
-        syslist = [syslist,]
+        syslist = [syslist, ]
 
     for sys in syslist:
         try:
             # Add new features to the list.
-            features = np.concatenate((features, np.abs(sys.pole())*rad/s))
-            features = np.concatenate((features, np.abs(sys.zero())*rad/s))
+            features = np.concatenate((features, np.abs(sys.pole()) * rad / s))
+            features = np.concatenate((features, np.abs(sys.zero()) * rad / s))
         except:
             pass
 
@@ -148,10 +149,10 @@ def default_frequency_range(syslist, in_Hz=True):
     # TODO: Add a check in discrete case to avoid aliasing.
 
     # Set the range to be two orders of magnitude beyond any features.
-    unit = Hz if in_Hz else rad/s
-    e0 = np.floor(np.min(features)/unit) - 2
-    e1 = np.ceil(np.max(features)/unit) + 2
-    return np.logspace(e0, e1, (e1 - e0)*20 + 1)*unit
+    unit = Hz if in_Hz else rad / s
+    e0 = np.floor(np.min(features) / unit) - 2
+    e1 = np.ceil(np.max(features) / unit) + 2
+    return np.logspace(e0, e1, (e1 - e0) * 20 + 1) * unit
     # 20 matches the default skip in nyquist_plot().
 
 
@@ -169,6 +170,7 @@ def require_SISO(func):
 
     return wrapped
 
+
 def overload_freqs(func):
     """Decorate a function to accept frequencies via (min, max) or default
     (*None*), as well as a list of frequencies.
@@ -185,11 +187,11 @@ def overload_freqs(func):
             assert len(freqs) == 2, ("The freqs tuple must be a pair with the "
                                      "minimum and maximum frequencies.")
             e = np.log10(freqs)
-            f = np.logspace(e[0], e[1], np.diff(e)*20 + 1)*(Hz if in_Hz else
-                                                            rad/s)
+            f = np.logspace(e[0], e[1], np.diff(e) * 20 + 1) * (Hz if in_Hz else
+                                                                rad / s)
             # 20 matches the default skip in nyquist_plot().
         else:
-            f = freqs*(Hz if in_Hz else rad/s)
+            f = freqs * (Hz if in_Hz else rad / s)
 
         return func(sys, f, in_Hz, *args, **kwargs)
 
@@ -203,15 +205,16 @@ def via_system(func):
     def wrapped(sys, f, *args, **kwargs):
         """Updated function
         """
-        mag, phase = sys.freqresp(f/(rad/s))[0:2]
+        mag, phase = sys.freqresp(f / (rad / s))[0:2]
         mag = np.squeeze(mag)
-        phase = np.squeeze(phase)*rad
+        phase = np.squeeze(phase) * rad
 
         return func(mag, phase, f, *args, **kwargs)
 
     return wrapped
 
-@require_SISO # TODO: Support MIMO.
+
+@require_SISO  # TODO: Support MIMO.
 @overload_freqs
 @via_system
 def bode_plot(mag, phase, f, in_Hz=True, in_dB=True, in_deg=True, label=None,
@@ -259,14 +262,14 @@ def bode_plot(mag, phase, f, in_Hz=True, in_dB=True, in_deg=True, label=None,
        >>> axes = bode_plot(sys)
     """
     phase = unwrap(phase)
-    freq_unit = Hz if in_Hz else rad/s
+    freq_unit = Hz if in_Hz else rad / s
 
     # Create axes if necessary.
     if axes is None or (None, None):
         axes = (plt.subplot(211), plt.subplot(212))
 
     # Magnitude plot
-    axes[0].semilogx(f/freq_unit, to_dB(mag) if in_dB else mag,
+    axes[0].semilogx(f / freq_unit, to_dB(mag) if in_dB else mag,
                      label=label, *args, **kwargs)
 
     # Add a grid and labels.
@@ -275,7 +278,7 @@ def bode_plot(mag, phase, f, in_Hz=True, in_dB=True, in_deg=True, label=None,
     axes[0].set_ylabel("Magnitude in dB" if in_dB else "Magnitude")
 
     # Phase plot
-    axes[1].semilogx(f/freq_unit, phase/(deg if in_deg else rad),
+    axes[1].semilogx(f / freq_unit, phase / (deg if in_deg else rad),
                      label=label, *args, **kwargs)
 
     # Add a grid and labels.
@@ -287,7 +290,7 @@ def bode_plot(mag, phase, f, in_Hz=True, in_dB=True, in_deg=True, label=None,
     return axes
 
 
-@require_SISO # TODO: Support MIMO.
+@require_SISO  # TODO: Support MIMO.
 @overload_freqs
 @via_system
 def nyquist_plot(mag, phase, f, in_Hz=True, label=None, mark=False,
@@ -352,7 +355,7 @@ def nyquist_plot(mag, phase, f, in_Hz=True, label=None, mark=False,
         ax = fig.add_subplot(111, aspect='equal')
 
     # Plot the primary curve and mirror image.
-    kwargs.pop('linestyle', None) # Ignore the linestyle argument.
+    kwargs.pop('linestyle', None)  # Ignore the linestyle argument.
     ax.plot(x, y, linestyle='-', label=label, *args, **kwargs)
     ax.plot(x, -y, linestyle='--', *args, **kwargs)
 
@@ -375,7 +378,7 @@ def nyquist_plot(mag, phase, f, in_Hz=True, label=None, mark=False,
             # Apply the text.
             if label_freq:
                 # Use a space before the text to prevent overlap with the data.
-                ax.text(xpt, ypt, ' ' + quantity_str(fpt/Hz, 'Hz', '%.0e',
+                ax.text(xpt, ypt, ' ' + quantity_str(fpt / Hz, 'Hz', '%.0e',
                                                      roman=False))
 
     # Set the x and y limits the same.

@@ -2,7 +2,7 @@
 """Script to clean, build, and release the ModelicaRes code.
 """
 
-# pylint: disable=E0611
+# pylint: disable=I0011, C0103, C0325, E0611
 
 import sys
 import os
@@ -15,10 +15,12 @@ from modelicares import util
 
 setup = python.bake('setup.py')
 
+
 def set_version(version, fname='modelicares/__init__.py'):
     """Update the version in a file.
     """
     util.replace(fname, [('(__version__) *= *.+', r"\1 = %s" % version)])
+
 
 def build():
     """Build/make the code.
@@ -70,11 +72,13 @@ def build():
     # Tag the version (will prompt for message).
     git.tag('-af', 'v' + version)
 
+
 def clean():
     """Clean/remove the built code.
     """
     setup.clean('--all')
     rm('-rf', "ModelicaRes.egg-info")
+
 
 def release():
     """Release/publish the code.
@@ -116,6 +120,7 @@ ACTIONS = {'clean'   : Action(clean, "Clean/remove the built code."),
            'build'   : Action(build, "Build/make the code."),
            'release' : Action(release, "Release/publish the code."),
           }
+
 
 def funcs_str():
     """Return a string listing the valid functions and their descriptions.
