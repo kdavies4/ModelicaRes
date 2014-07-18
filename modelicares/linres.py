@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python # pylint: disable=I0011, C0301, C0302
 # -*- coding: utf-8 -*-
 """This submodule contains classes to help load, analyze, and plot results from
 Modelica_ linearizations:
@@ -19,11 +19,11 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
 # Standard pylint settings for this project:
-# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915
 # pylint: disable=I0011, W0141, W0142
 
 # Other:
-# pylint: disable=C0103, E0611, E1101, W0102
+# pylint: disable=I0011, C0103, E0611, E1101, W0102
 
 import os
 import numpy as np

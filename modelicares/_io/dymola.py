@@ -43,11 +43,11 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
 # Standard pylint settings for this project:
-# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915
 # pylint: disable=I0011, W0141, W0142
 
 # Other:
-# pylint: disable=C0103
+# pylint: disable=I0011, C0103, C0301
 
 from collections import namedtuple
 from itertools import count
@@ -69,7 +69,7 @@ class Variable(GenericVariable):
     """Specialized namedtuple to represent a variable in a model simulated by
     Dymola or OpenModelica
     """
-    # pylint: disable=W0221
+    # pylint: disable=I0011, W0221
 
     @_swap           # We want the times (t) to be the first argument,
     @_apply_function # but for efficiency, it's best to
@@ -385,7 +385,7 @@ def loadlin(fname):
     """
     # This does the task of mfiles/traj/tloadlin.m in the Dymola installation.
 
-    # pylint: disable=W0621
+    # pylint: disable=I0011, W0621
 
     # Load the file.
     mat, Aclass = read(fname)
@@ -422,6 +422,8 @@ def loadlin(fname):
 
 if __name__ == '__main__':
     # Test the contents of this file.
+
+    # pylint: disable=I0011, W0631
 
     import os
     import doctest

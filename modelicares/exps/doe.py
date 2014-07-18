@@ -4,12 +4,11 @@
 These can be passed to the *design* argument of
 :meth:`~modelicares.exps.gen_experiments`.
 """
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915
+# pylint: disable=I0011, W0141, W0142
 
 from itertools import product
-
-# Standard pylint settings for this project:
-# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
-# pylint: disable=I0011, W0141, W0142
 
 def fullfact(*space):
     """Full-factorial DOE

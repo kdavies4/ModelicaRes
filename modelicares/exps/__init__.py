@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# pylint: disable=I0011, C0301
 """Set up and help run Modelica_ simulation experiments.
 
 This module supports two approaches to managing simulations.  The first is to
@@ -64,6 +65,12 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
                  "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
+# pylint: disable=I0011, C0103, E1101, W0102
 
 import os
 import re
@@ -78,13 +85,6 @@ from types import GeneratorType
 import modelicares.util as util
 
 from modelicares.exps import doe
-
-# Standard pylint settings for this project:
-# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
-# pylint: disable=I0011, W0141, W0142
-
-# Other:
-# pylint: disable=C0103, E1101, W0102
 
 class Experiment(namedtuple('Experiment', ['model', 'params', 'args'])):
     """namedtuple_ to represent a simulation experiment
@@ -335,7 +335,7 @@ def read_params(names, fname='dsin.txt'):
             except AttributeError:
                 pass # Try the next pattern.
         else:
-            # pylint: disable=W0120
+            # pylint: disable=I0011, W0120
             raise AssertionError(
                 "Parameter %s does not exist or is not formatted as expected "
                 "in %s." % (name, fname))
@@ -846,7 +846,7 @@ if __name__ == '__main__':
         else:
             raise IOError("Could not find the examples folder.")
         try:
-            # pylint: disable=W0631
+            # pylint: disable=I0011, W0631
             os.symlink(example_dir, 'examples')
         except AttributeError:
             raise AttributeError("This method of testing isn't supported in "

@@ -10,15 +10,13 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
                  "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915
+# pylint: disable=I0011, W0141, W0142
 
 import os
 from functools import wraps
 from modelicares.util import cast_sametype, basename
-
-# Standard pylint settings for this project:
-# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
-# pylint: disable=I0011, W0141, W0142
-
 
 def assert_sametype(meth):
     """Decorate a method to check that the second argument is an instance of the
@@ -56,7 +54,7 @@ def compare_fnames(meth):
 class Res(object):
     """Base class for a Modelica_ result
     """
-    # pylint: disable=E0213
+    # pylint: disable=I0011, E0213
 
     def __init__(self, fname):
         self.fname = os.path.abspath(fname)

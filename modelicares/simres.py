@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python # pylint: disable=I0011, C0301, C0302
 # -*- coding: utf-8 -*-
 """This submodule contains the following classes:
 
@@ -30,13 +30,12 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
                  "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
-
 # Standard pylint settings for this project:
-# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915
 # pylint: disable=I0011, W0141, W0142
 
 # Other:
-# pylint: disable=C0103, E0611, E1101, W0102
+# pylint: disable=I0011, C0103, E0611, E1101, W0102
 
 import os
 import numpy as np
@@ -642,7 +641,7 @@ class VarList(list):
        [-1.6083468, 0.84736514]
 
     """
-    # pylint: disable=E0213
+    # pylint: disable=I0011, E0213
 
     def _listmethod(meth):
         """Return a method that operates on all of the variables in the list of
@@ -653,7 +652,7 @@ class VarList(list):
             """Traverse the list recursively until the argument is a single
             variable, then pass it to the method and return the result upwards.
             """
-            # pylint: disable=E1102
+            # pylint: disable=I0011, E1102
             return util.CallList([meth(variable, attr)
                                   if isinstance(variable, Variable) else
                                   wrapped(variable, attr)
@@ -761,8 +760,7 @@ class SimRes(Res):
     .. _pandas DataFrame:
        http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
-
-    # pylint: disable=R0921
+    # pylint: disable=I0011, R0921
 
     def __init__(self, fname='dsres.mat', constants_only=False, tool=None):
         """Upon initialization, load Modelica_ simulation results from a file.
@@ -979,7 +977,6 @@ class SimRes(Res):
 
            >>> sorted(sim.names) # doctest: +ELLIPSIS
            ['C1.C', 'C1.der(v)', 'C1.i', 'C1.n.i', ..., 'Time']
-
         """
         return sorted(self._variables)
 
@@ -1061,7 +1058,7 @@ class SimRes(Res):
 
     @property
     def nametree(self):
-        """Tree of variable names based on the model hierarchy
+        r"""Tree of variable names based on the model hierarchy
 
         The tree is a nested ordered dictionary.  The keys are the Modelica_
         class instances (including the index if there are arrays) and the values

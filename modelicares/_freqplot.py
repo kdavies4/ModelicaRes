@@ -66,6 +66,13 @@
 # OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
+# pylint: disable=I0011, C0103, E1101
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -74,13 +81,6 @@ from control.ctrlutil import unwrap
 
 from modelicares.texunit import quantity_str, number_label
 from modelicares.util import add_hlines, add_vlines
-
-# Standard pylint settings for this project:
-# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
-# pylint: disable=I0011, W0141, W0142
-
-# Other:
-# pylint: disable=C0103, E1101
 
 # Units
 rad = 1

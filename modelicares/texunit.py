@@ -17,17 +17,16 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
                  "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
+# pylint: disable=I0011, C0103, W0622
 
 import re
 
 from modelicares.util import si_prefix, get_pow1000
-
-# Standard pylint settings for this project:
-# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
-# pylint: disable=I0011, W0141, W0142
-
-# Other:
-# pylint: disable=C0103, W0622
 
 # Special replacements for unit strings in tex
 REPLACEMENTS = [(re.compile(replacement[0]), replacement[1])

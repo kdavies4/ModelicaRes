@@ -7,6 +7,12 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
                  "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
+# pylint: disable=I0011, E1101, E1121
 
 import wx
 
@@ -17,18 +23,10 @@ from six import string_types
 
 from modelicares.texunit import unit2tex
 
-# Standard pylint settings for this project:
-# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
-# pylint: disable=I0011, W0141, W0142
-
-# Other:
-# pylint: disable=E1101
-
 class PreviewPanel(wx.Panel):
     """Panel for information about a variable
     """
     def __init__(self, parent, id_num):
-
         # Change the matplotlib backend, but remember the original.
         orig_backend = rcParams['backend']
         rcParams['backend'] = 'WXAgg'
@@ -91,7 +89,7 @@ class Browser(wx.Frame):
 
     - *sim*: Instance of :class:`simres.SimRes`
     """
-    # pylint: disable=C0103
+    # pylint: disable=I0011, C0103
 
     def __init__(self, parent, id_num, sim):
 

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python # pylint: disable=I0011, C0302
 # -*- coding: utf-8 -*-
 """Classes and functions to help plot and interpret experimental data
 
@@ -97,6 +97,13 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
                  "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
 
+# Standard pylint settings for this project:
+# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915
+# pylint: disable=I0011, W0141, W0142
+
+# Other:
+# pylint: disable=I0011, C0103, C0301, E1101, W0102, W0621
+
 import os
 import sys
 import time
@@ -117,13 +124,6 @@ from matplotlib.cbook import iterable
 from matplotlib.lines import Line2D
 from pkgutil import walk_packages
 from six import string_types
-
-# Standard pylint settings for this project:
-# pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915,
-# pylint: disable=I0011, W0141, W0142
-
-# Other:
-# pylint: disable=C0103, E1101, W0102, W0621
 
 # Load the getSaveFileName function from an available Qt installation.
 try:
@@ -761,7 +761,7 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
 
     # Read the data.
     if first_data_row:
-        # pylint: disable=W0612
+        # pylint: disable=I0011, W0612
         for __ in range(first_data_row - header_row - 1):
             next(reader)
     if types:
@@ -1621,7 +1621,7 @@ class _GetchUnix(object):
     """Get a single character from the standard input on Unix.
     """
     def __init__(self):
-        # pylint: disable=W0611, W0612
+        # pylint: disable=I0011, W0611, W0612
         import tty
 
     def __call__(self):
