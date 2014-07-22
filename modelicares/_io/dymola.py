@@ -56,8 +56,8 @@ from scipy.io.matlab.mio_utils import chars_to_strings
 from control.matlab import ss
 from six import PY2
 
-from modelicares.simres import _VarDict, _select, _apply_function, _swap
-from modelicares.simres import Variable as GenericVariable
+from modelicares.simres import (_VarDict, _select, _apply_function, _swap,
+                                Variable as GenericVariable)
 
 # Namedtuple to store the time and value information of each variable
 Samples = namedtuple('Samples', ['times', 'values', 'negated'])

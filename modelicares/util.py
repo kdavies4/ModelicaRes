@@ -1,5 +1,4 @@
 # !/usr/bin/python # pylint: disable=I0011, C0302
-# -*- coding: utf-8 -*-
 """Classes and functions to help plot and interpret experimental data
 
 **Classes:**

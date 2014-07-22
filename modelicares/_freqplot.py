@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 """Bode and Nyquist plots for control systems
 """
 # Kevin Davies 5/14/14:

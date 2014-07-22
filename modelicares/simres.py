@@ -1,5 +1,4 @@
 # !/usr/bin/python # pylint: disable=I0011, C0301, C0302
-# -*- coding: utf-8 -*-
 """This submodule contains the following classes:
 
 - :class:`SimRes` - Class to load, analyze, and plot results from a Modelica_
