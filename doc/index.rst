@@ -1,6 +1,6 @@
-###############
-  ModelicaRes
-###############
+#############
+ ModelicaRes
+#############
 
 **Set up and analyze Modelica simulations in Python**
 
@@ -57,12 +57,13 @@ Currently, ModelicaRes only loads Dymola/OpenModelica_-formatted results
 (\*.mat), but the interface is modular so that other formats can be added
 easily.
 
-**Installation**
+Installation
+~~~~~~~~~~~~
 
-First, install the dependencies.  Most are installed automatically if you have
-the setuptools_ module.  However, SciPy_ >= 0.10.0 must be installed according
+First, install the dependencies.  SciPy_ >= 0.10.0 must be installed according
 to the instructions at http://www.scipy.org/install.html.  The GUIs require
-Qt_, which can be installed via PyQt4_, guidata_, or PySide_.
+Qt_, which can be installed via PyQt4_, guidata_, or PySide_.  The rest of the
+dependencies are installed automatically by the setuptools_ module.
 
 Then install ModelicaRes.  The easiest way is to use pip_::
 
@@ -82,12 +83,13 @@ Or, on Linux::
     $ sudo python setup.py install
 
 The `matplotlibrc file
-<https://github.com/kdavies4/ModelicaRes/blob/release/matplotlibrc>`_ has some
-recommended revisions to matplotlib_'s defaults.  To use it, copy it to the
-working directory or matplotlib_'s configuration directory.  See
+<https://github.com/kdavies4/ModelicaRes/blob/master/examples/matplotlibrc>`_
+has some recommended revisions to matplotlib_'s defaults.  To use it, copy
+it to the working directory or matplotlib_'s configuration directory.  See
 http://matplotlib.org/users/customizing.html for details.
 
-**License terms and development**
+License terms and development
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ModelicaRes is published under a `BSD-compatible license <license.html>`_.
 Please share any modifications you make (preferably as a pull request to the
@@ -98,7 +100,8 @@ bug, please `report it <https://github.com/kdavies4/ModelicaRes/issues/new>`_.
 If you have suggestions, please `share them
 <https://github.com/kdavies4/ModelicaRes/wiki/Suggestions>`_.
 
-**See also**
+See also
+~~~~~~~~
 
 - awesim_: helps run simulation experiments and organize results
 - BuildingsPy_: supports unit testing

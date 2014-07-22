@@ -46,10 +46,10 @@ easily.
 Installation
 ~~~~~~~~~~~~
 
-First, install the dependencies.  Most are installed automatically if you have
-the setuptools_ module.  However, SciPy_ >= 0.10.0 must be installed according
+First, install the dependencies.  SciPy_ >= 0.10.0 must be installed according
 to the instructions at http://www.scipy.org/install.html.  The GUIs require
-Qt_, which can be installed via PyQt4_, guidata_, or PySide_.
+Qt_, which can be installed via PyQt4_, guidata_, or PySide_.  The rest of the
+dependencies are installed automatically by the setuptools_ module.
 
 Then install ModelicaRes.  The easiest way is to use pip_::
 
@@ -73,7 +73,7 @@ Or, on Linux::
 
 The `matplotlibrc file
 <https://github.com/kdavies4/ModelicaRes/blob/master/examples/matplotlibrc>`_
-file has some recommended revisions to matplotlib_'s defaults.  To use it, copy
+has some recommended revisions to matplotlib_'s defaults.  To use it, copy
 it to the working directory or matplotlib_'s configuration directory.  See
 http://matplotlib.org/users/customizing.html for details.
 
@@ -95,7 +95,7 @@ License terms and development
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ModelicaRes is published under a `BSD-compatible license
-<https://github.com/kdavies4/ModelicaRes/blob/master/LICENSE.txt>`_.  Please
+<http://kdavies4.github.io/ModelicaRes/license.html>`_.  Please
 share any modifications you make (preferably as a pull request to the ``master``
 branch of the `GitHub repository`_) in order to help others.  There are useful
 development scripts in the `hooks folder
@@ -118,7 +118,7 @@ See also
 
 
 .. _main website: http://kdavies4.github.io/ModelicaRes/
-.. _PyPI page: http://pypi.python.org/pypi/ModelicaRes
+.. _PyPI page: http://pypi.python.org/pypi/ModelicaRes/
 .. _GitHub repository: https://github.com/kdavies4/ModelicaRes
 
 .. _Modelica: http://www.modelica.org/
