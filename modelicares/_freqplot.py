@@ -78,8 +78,8 @@ import matplotlib.pyplot as plt
 from functools import wraps
 from control.ctrlutil import unwrap
 
-from modelicares.texunit import quantity_str, number_label
-from modelicares.util import add_hlines, add_vlines
+from .texunit import quantity_str, number_label
+from .util import add_hlines, add_vlines
 
 # Units
 rad = 1

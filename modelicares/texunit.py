@@ -26,7 +26,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 
 import re
 
-from modelicares.util import si_prefix, get_pow1000
+from .util import si_prefix, get_pow1000
 
 # Special replacements for unit strings in tex
 REPLACEMENTS = [(re.compile(replacement[0]), replacement[1])

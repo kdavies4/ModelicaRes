@@ -16,7 +16,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 
 import os
 from functools import wraps
-from modelicares.util import cast_sametype, basename
+from .util import cast_sametype, basename
 
 
 def assert_sametype(meth):

@@ -1,4 +1,5 @@
 # !/usr/bin/python # pylint: disable=I0011, C0301, C0302
+# -*- coding: utf-8 -*-
 """This submodule contains the following classes:
 
 - :class:`SimRes` - Class to load, analyze, and plot results from a Modelica_
@@ -52,9 +53,9 @@ from scipy.integrate import trapz as integral
 from scipy.interpolate import interp1d
 from six import string_types
 
-from modelicares import util
-from modelicares._res import Res, ResList
-from modelicares.texunit import unit2tex, number_label
+from . import util
+from ._res import Res, ResList
+from .texunit import unit2tex, number_label
 
 
 def _apply_function(meth):
@@ -677,11 +678,12 @@ class VarList(list):
         return getattr(variable, attr)
 
 # List of file-loading functions for SimRes
-from modelicares._io.dymola import loadsim as dymola
+from ._io.dymola import loadsim as dymola
 LOADERS = [('dymola', dymola)]  # SimRes tries these in order.
 # All of the keys should be in lowercase.
 # This must be below the definition of Variable and _VarDict because those
 # classes are required by the loading functions.
+# TODO: Avoid this cyclic import between simres and _io.
 
 
 class SimRes(Res):
@@ -945,7 +947,7 @@ class SimRes(Res):
                               "variable browser.  It is available at "
                               "http://www.wxpython.org/")
 
-        from modelicares._gui import Browser
+        from ._gui import Browser
 
         def do_work():
             """Launch the broswer."""

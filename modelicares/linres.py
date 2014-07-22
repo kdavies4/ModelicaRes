@@ -34,12 +34,12 @@ from matplotlib.cbook import iterable
 from scipy.signal import ss2tf
 from six import string_types
 
-from modelicares import util
-from modelicares._freqplot import bode_plot, nyquist_plot
-from modelicares._res import Res, ResList
+from . import util
+from ._freqplot import bode_plot, nyquist_plot
+from ._res import Res, ResList
 
 # File loading functions
-from modelicares._io.dymola import loadlin as dymola
+from ._io.dymola import loadlin as dymola
 LOADERS = [('dymola', dymola)]  # LinRes tries these in order.
 # All of the keys should be in lowercase.
 

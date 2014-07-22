@@ -82,9 +82,8 @@ from datetime import date
 from six import string_types
 from types import GeneratorType
 
-import modelicares.util as util
-
-from modelicares.exps import doe
+from .. import util
+from . import doe
 
 
 class Experiment(namedtuple('Experiment', ['model', 'params', 'args'])):

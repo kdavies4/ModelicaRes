@@ -46,14 +46,12 @@ __version__ = None
 #
 # These will be available directly from modelicares; others must be loaded from
 # their submodules.
-from modelicares.simres import SimRes, SimResList
-from modelicares.linres import LinRes, LinResList
-from modelicares.util import (add_arrows, add_hlines, add_vlines, ArrowLine,
-                              closeall, multiglob, figure, load_csv, save,
-                              saveall, setup_subplots)
-from modelicares.exps import (doe, Experiment, gen_experiments, modelica_str,
-                              ParamDict, read_params, write_params,
-                              write_script)
+from .simres import SimRes, SimResList
+from .linres import LinRes, LinResList
+from .util import (add_arrows, add_hlines, add_vlines, ArrowLine, closeall,
+                   multiglob, figure, load_csv, save, saveall, setup_subplots)
+from .exps import (doe, Experiment, gen_experiments, modelica_str, ParamDict,
+                   read_params, write_params, write_script)
 # TODO: Add run_models and include in the doc list once implemented.
 
 
