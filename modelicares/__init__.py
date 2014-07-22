@@ -102,10 +102,12 @@ def load(*args):
             sims.append(SimRes(fname))
         except IOError:
             continue
-        except:
+        except (AssertionError, IndexError, KeyError, TypeError,
+                ValueError):
             try:
                 lins.append(LinRes(fname))
-            except:
+            except (AssertionError, IndexError, IOError, KeyError, TypeError,
+                    ValueError):
                 continue
 
     return sims, lins

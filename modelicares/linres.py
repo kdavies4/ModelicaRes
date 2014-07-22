@@ -190,7 +190,7 @@ class LinRes(Res):
             loaderdict = dict(LOADERS)
             try:
                 load = loaderdict[tool.lower()]
-            except:
+            except KeyError:
                 raise LookupError('"%s" is not one of the available tools '
                                   '("%s").' % (tool,
                                                '", "'.join(list(loaderdict))))
@@ -519,7 +519,8 @@ def _get_lins(fnames):
     for fname in fnames:
         try:
             lins.append(LinRes(fname))
-        except:
+        except (AssertionError, IndexError, IOError, KeyError, TypeError,
+                ValueError):
             continue
     assert len(lins) > 0, "No linearizations were loaded."
     return lins

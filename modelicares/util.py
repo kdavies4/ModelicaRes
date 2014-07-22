@@ -129,17 +129,17 @@ try:
     from PyQt4.QtGui import QFileDialog
     getSaveFileName = (lambda *args, **kwargs:
                        str(QFileDialog.getSaveFileName(*args, **kwargs)))
-except:
+except ImportError:
     try:
         from guidata.qt.QtGui import QFileDialog
         getSaveFileName = (lambda *args, **kwargs:
                            str(QFileDialog.getSaveFileName(*args, **kwargs)))
-    except:
+    except ImportError:
         try:
             from PySide.QtGui import QFileDialog
             getSaveFileName = (lambda *args, **kwargs:
                                QFileDialog.getSaveFileName(*args, **kwargs)[0])
-        except:
+        except ImportError:
             getSaveFileName = lambda *args, **kwargs: None
 
 # Function to close all open figures
@@ -790,11 +790,11 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
         for key, column in zip(keys, zip(*reader)):
             try:
                 data[key] = np.array(map(int, column))
-            except:
+            except ValueError:
                 try:
                     data[key] = np.array(map(float, column))
-                except:
-                    data[key] = map(str, column)
+                except ValueError:
+                    data[key] = column
 
     return data
 

@@ -121,7 +121,7 @@ def default_frequency_range(syslist, in_Hz=True):
              6.28318531e+03])
     """
     # Find the list of all poles and zeros in the systems.
-    features = np.array([])
+    features = []
 
     # Put the single system in a list if necessary.
     if not getattr(syslist, '__iter__', False):

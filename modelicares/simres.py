@@ -83,7 +83,8 @@ def _get_sims(fnames):
     for fname in fnames:
         try:
             sims.append(SimRes(fname))
-        except:
+        except (AssertionError, IndexError, IOError, KeyError, TypeError,
+                ValueError):
             continue
     assert len(sims) > 0, "No simulations were loaded."
     return sims
@@ -798,7 +799,7 @@ class SimRes(Res):
             loaderdict = dict(LOADERS)
             try:
                 load = loaderdict[tool.lower()]
-            except:
+            except KeyError:
                 raise LookupError('"%s" is not one of the available tools '
                                   '("%s").' % (tool,
                                                '", "'.join(list(loaderdict))))
