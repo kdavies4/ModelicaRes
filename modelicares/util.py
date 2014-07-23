@@ -47,9 +47,6 @@
 - :func:`get_pow1000` - Return the exponent of 1000 for which the
   significand of a number is within the range [1, 1000).
 
-- :func:`list_packages` - Return a list of the names of a module and its
-  subpackages.
-
 - :func:`load_csv` - Load a CSV file into a dictionary.
 
 - :func:`match` - Reduce a list of strings to those that match a pattern.
@@ -121,7 +118,6 @@ from matplotlib import rcParams
 from matplotlib._pylab_helpers import Gcf
 from matplotlib.cbook import iterable
 from matplotlib.lines import Line2D
-from pkgutil import walk_packages
 from six import string_types
 
 # Load the getSaveFileName function from an available Qt installation.
@@ -678,6 +674,7 @@ def get_pow1000(num):
     elif dnum < 0:
         dnum = -dnum
     return int(floor(dnum.log10() / 3))
+
 
 def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
     r"""Load a CSV file into a dictionary.

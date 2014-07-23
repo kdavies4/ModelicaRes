@@ -42,10 +42,10 @@ Currently, ModelicaRes only loads Dymola/[OpenModelica]-formatted results
 
 ### Installation
 
-First, install the dependencies.  [SciPy] >= 0.10.0 must be installed according
-to the instructions at http://www.scipy.org/install.html.  The GUIs require
-[Qt], which can be installed via [PyQt4], [guidata], or [PySide].  The rest of
-the depencies are installed automatically by the [setuptools] module.
+First, install the dependencies.  Most are installed automatically, but
+[SciPy] >= 0.10.0 must be installed according to the instructions at
+http://www.scipy.org/install.html.  The GUIs require [Qt], which can be
+installed via [PyQt4], [guidata], or [PySide].
 
 Then install ModelicaRes.  The easiest way is to use [pip]:
 

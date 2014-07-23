@@ -9,13 +9,13 @@ import doctest
 import modelicares as thismodule
 
 from glob import glob
-from modelicares import util
+from natu.util import list_packages
 from os import path
 
 THIS_DIR = path.dirname(path.realpath(__file__))
 DOCTEST_FILES = [path.basename(fname)
                  for fname in glob(path.join(THIS_DIR, '*.txt'))]
-PACKAGE_NAMES = util.list_packages(thismodule)
+PACKAGE_NAMES = list_packages(thismodule)
 PACKAGE_NAMES.remove('modelicares._gui')
 
 # TODO: Add tests here; consider moving tests from tests.txt.

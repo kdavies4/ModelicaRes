@@ -46,10 +46,10 @@ easily.
 Installation
 ~~~~~~~~~~~~
 
-First, install the dependencies.  SciPy_ >= 0.10.0 must be installed according
-to the instructions at http://www.scipy.org/install.html.  The GUIs require
-Qt_, which can be installed via PyQt4_, guidata_, or PySide_.  The rest of the
-dependencies are installed automatically by the setuptools_ module.
+First, install the dependencies.  Most are installed automatically, but
+SciPy_ >= 0.10.0 must be installed according to the instructions at
+http://www.scipy.org/install.html.  The GUIs require Qt_, which can be installed
+via PyQt4_, guidata_, or PySide_.
 
 Then install ModelicaRes.  The easiest way is to use pip_::
 
