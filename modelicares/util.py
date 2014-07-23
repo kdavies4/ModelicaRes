@@ -679,44 +679,6 @@ def get_pow1000(num):
         dnum = -dnum
     return int(floor(dnum.log10() / 3))
 
-# TODO: Move to natu and attribute to unutbu at
-# http://stackoverflow.com/questions/1707709
-
-
-def list_packages(package):
-    """Return a list of the names of a package and its subpackages.
-
-    This only works if the package has a :attr:`__path__` attribute, which is
-    not the case for some (all?) of the built-in packages.
-
-    **Example:**
-
-    >>> import modelicares
-    >>> for package in list_packages(modelicares):
-    ...     print(package)
-    modelicares
-    modelicares._freqplot
-    modelicares._gui
-    modelicares._io
-    modelicares._io.dymola
-    modelicares._res
-    modelicares.exps
-    modelicares.exps.doe
-    modelicares.linres
-    modelicares.simres
-    modelicares.texunit
-    modelicares.util
-    """
-    # pylint: disable=I0011, W0612
-
-    names = [package.__name__]
-    for __, name, __ in walk_packages(package.__path__,
-                                      prefix=package.__name__ + '.',
-                                      onerror=lambda x: None):
-        names.append(name)
-    return names
-
-
 def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
     r"""Load a CSV file into a dictionary.
 
