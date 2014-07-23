@@ -1,5 +1,8 @@
 #!/usr/bin/python
-# Example of SimRes.sankey()
+"""Example of SimRes.sankey()
+"""
+
+# pylint: disable=I0011, C0103
 
 from modelicares import SimRes
 

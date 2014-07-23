@@ -1,5 +1,8 @@
 #!/usr/bin/python
-# Example of SimResList.plot()
+"""Example of SimResList.plot()
+"""
+
+# pylint: disable=I0011, C0103
 
 from modelicares import SimResList
 

@@ -1,5 +1,8 @@
 #!/usr/bin/python
-# Example of LinResList.bode()
+"""Example of LinResList.bode()
+"""
+
+# pylint: disable=I0011, C0103, R0801
 
 from os.path import join
 from modelicares import LinResList, read_params

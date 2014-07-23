@@ -86,11 +86,12 @@ many more examples.</p>
 <p>Currently, ModelicaRes only loads Dymola/<a class="reference external" href="https://www.openmodelica.org/">OpenModelica</a>-formatted results
 (*.mat), but the interface is modular so that other formats can be added
 easily.</p>
-<p><strong>Installation</strong></p>
-<p>First, install the dependencies.  Most are installed automatically if you have
-the <a class="reference external" href="https://pypi.python.org/pypi/setuptools">setuptools</a> module.  However, <a class="reference external" href="http://www.scipy.org/index.html">SciPy</a> &gt;= 0.10.0 must be installed according
-to the instructions at <a class="reference external" href="http://www.scipy.org/install.html">http://www.scipy.org/install.html</a>.  The GUIs require
-<a class="reference external" href="http://qt-project.org/">Qt</a>, which can be installed via <a class="reference external" href="http://www.riverbankcomputing.co.uk/software/pyqt/">PyQt4</a>, <a class="reference external" href="https://code.google.com/p/guidata/">guidata</a>, or <a class="reference external" href="http://qt-project.org/wiki/pyside">PySide</a>.</p>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>First, install the dependencies.  Most are installed automatically, but
+<a class="reference external" href="http://www.scipy.org/index.html">SciPy</a> &gt;= 0.10.0 must be installed according to the instructions at
+<a class="reference external" href="http://www.scipy.org/install.html">http://www.scipy.org/install.html</a>.  The GUIs require <a class="reference external" href="http://qt-project.org/">Qt</a>, which can be installed
+via <a class="reference external" href="http://www.riverbankcomputing.co.uk/software/pyqt/">PyQt4</a>, <a class="reference external" href="https://code.google.com/p/guidata/">guidata</a>, or <a class="reference external" href="http://qt-project.org/wiki/pyside">PySide</a>.</p>
 <p>Then install ModelicaRes.  The easiest way is to use <a class="reference external" href="https://pypi.python.org/pypi/pip">pip</a>:</p>
 <div class="highlight-python"><div class="highlight"><pre>&gt; pip install modelicares
 </pre></div>
@@ -108,18 +109,22 @@ the left.  Run the following command from the base folder:</p>
 <div class="highlight-python"><div class="highlight"><pre>$ sudo python setup.py install
 </pre></div>
 </div>
-<p>The <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/release/matplotlibrc">matplotlibrc file</a> has some
-recommended revisions to <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>&#8216;s defaults.  To use it, copy it to the
-working directory or <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>&#8216;s configuration directory.  See
+<p>The <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/master/examples/matplotlibrc">matplotlibrc file</a>
+has some recommended revisions to <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>&#8216;s defaults.  To use it, copy
+it to the working directory or <a class="reference external" href="http://www.matplotlib.org/">matplotlib</a>&#8216;s configuration directory.  See
 <a class="reference external" href="http://matplotlib.org/users/customizing.html">http://matplotlib.org/users/customizing.html</a> for details.</p>
-<p><strong>License terms and development</strong></p>
+</div>
+<div class="section" id="license-terms-and-development">
+<h2>License terms and development<a class="headerlink" href="#license-terms-and-development" title="Permalink to this headline">¶</a></h2>
 <p>ModelicaRes is published under a <a class="reference external" href="license.html">BSD-compatible license</a>.
 Please share any modifications you make (preferably as a pull request to the
 <tt class="docutils literal"><span class="pre">master</span></tt> branch of the <a class="reference external" href="https://github.com/kdavies4/ModelicaRes">GitHub repository</a>) in order to help others.  There
 are useful development scripts in the <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/blob/master/hooks/">hooks folder</a>.  If you find a
 bug, please <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/issues/new">report it</a>.
 If you have suggestions, please <a class="reference external" href="https://github.com/kdavies4/ModelicaRes/wiki/Suggestions">share them</a>.</p>
-<p><strong>See also</strong></p>
+</div>
+<div class="section" id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><a class="reference external" href="https://github.com/saroele/awesim">awesim</a>: helps run simulation experiments and organize results</li>
 <li><a class="reference external" href="http://simulationresearch.lbl.gov/modelica/buildingspy/">BuildingsPy</a>: supports unit testing</li>
@@ -130,6 +135,7 @@ Common Data Form (<a class="reference external" href="http://www.unidata.ucar.ed
 <li><a class="reference external" href="https://github.com/PySimulator/PySimulator">PySimulator</a>: elaborate GUI; supports <a class="reference external" href="https://www.fmi-standard.org">FMI</a></li>
 </ul>
 <div class="toctree-wrapper compound">
+</div>
 </div>
 </div>
 
@@ -153,11 +159,11 @@ Common Data Form (<a class="reference external" href="http://www.unidata.ucar.ed
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="loadres.html"><tt class="docutils literal"><span class="pre">loadres</span></tt> script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modelicares.html"><tt class="docutils literal"><span class="pre">modelicares</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="exps.doe.html"><tt class="docutils literal"><span class="pre">modelicares.exps.doe</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
-<li class="toctree-l1"><a class="reference internal" href="util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelicares.exps.html"><tt class="docutils literal"><span class="pre">modelicares.exps</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelicares.exps.doe.html"><tt class="docutils literal"><span class="pre">modelicares.exps.doe</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelicares.linres.html"><tt class="docutils literal"><span class="pre">modelicares.linres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelicares.simres.html"><tt class="docutils literal"><span class="pre">modelicares.simres</span></tt></a></li>
+<li class="toctree-l1"><a class="reference internal" href="modelicares.util.html"><tt class="docutils literal"><span class="pre">modelicares.util</span></tt></a></li>
 </ul>
 <h3>Useful Links</h3>
   <ul>
@@ -203,7 +209,7 @@ Common Data Form (<a class="reference external" href="http://www.unidata.ucar.ed
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jul 02, 2014.
+      Last updated on Jul 22, 2014.
     </div>
   </body>
 </html>
