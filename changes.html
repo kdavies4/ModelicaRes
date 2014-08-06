@@ -25,10 +25,13 @@
     <script type="text/javascript" src="javascripts/doctools.js"></script>
     <script type="text/javascript" src="javascripts/copybutton.js"></script>
     <script type="text/javascript" src="javascripts/analytics.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Analyze Modelica results in Python"
+          href="javascripts/opensearch.xml"/>
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
     <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
-    <meta name="description" content="Set up, plot, and analyze Modelica simulations in Python">
-    <meta name="keywords" content="results dymola openmodelica data mat analysis script sort filter browse export diagram simulation linearization experiment matplotlib pandas">
+    <meta name="description" content="Plot and analyze Modelica results in Python">
+    <meta name="keywords" content="dymola openmodelica data mat analysis analyse script sort filter browse export diagram simulation linearization experiment DOE matplotlib pandas">
     <meta name="author" content="Kevin Davies">
  
 
@@ -58,6 +61,10 @@
 <p>TBD (in <a class="reference external" href="https://github.com/kdavies4/ModelicaRes">GitHub</a> only) &#8211; Updates:</p>
 <blockquote>
 <div><ul class="simple">
+<li>Moved <tt class="xref py py-func docutils literal"><span class="pre">delayed_exit()</span></tt>,
+<tt class="xref py py-func docutils literal"><span class="pre">flatten_list()</span></tt>,
+<tt class="xref py py-func docutils literal"><span class="pre">multiglob()</span></tt>, <tt class="xref py py-func docutils literal"><span class="pre">replace()</span></tt>, and
+<tt class="xref py py-func docutils literal"><span class="pre">yes()</span></tt> to <tt class="xref py py-mod docutils literal"><span class="pre">natu</span></tt>.</li>
 <li>Renamed <tt class="xref py py-meth docutils literal"><span class="pre">unique_IVs()</span></tt> to
 <a class="reference internal" href="modelicares.simres.html#modelicares.simres.SimResList.get_unique_IVs" title="modelicares.simres.SimResList.get_unique_IVs"><tt class="xref py py-meth docutils literal"><span class="pre">get_unique_IVs()</span></tt></a> to indicate that it
 is a method.</li>
@@ -490,7 +497,7 @@ time.</li>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jul 22, 2014.
+      Last updated on Aug 06, 2014.
     </div>
   </body>
 </html>

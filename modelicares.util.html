@@ -25,11 +25,14 @@
     <script type="text/javascript" src="javascripts/doctools.js"></script>
     <script type="text/javascript" src="javascripts/copybutton.js"></script>
     <script type="text/javascript" src="javascripts/analytics.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Analyze Modelica results in Python"
+          href="javascripts/opensearch.xml"/>
     <link rel="shortcut icon" href="javascripts/favicon.ico"/>
     <link rel="top" title="Analyze Modelica results in Python" href="index.html" />
     <link rel="prev" title="modelicares.simres" href="modelicares.simres.html" />
-    <meta name="description" content="Set up, plot, and analyze Modelica simulations in Python">
-    <meta name="keywords" content="results dymola openmodelica data mat analysis script sort filter browse export diagram simulation linearization experiment matplotlib pandas">
+    <meta name="description" content="Plot and analyze Modelica results in Python">
+    <meta name="keywords" content="dymola openmodelica data mat analysis analyse script sort filter browse export diagram simulation linearization experiment DOE matplotlib pandas">
     <meta name="author" content="Kevin Davies">
  
 
@@ -80,11 +83,9 @@ containing class.</li>
 coordinates.</li>
 <li><tt class="xref py py-func docutils literal"><span class="pre">closeall()</span></tt> - Close all open figures (shortcut to the
 <tt class="xref py py-func docutils literal"><span class="pre">destroy_all()</span></tt> from <tt class="xref py py-class docutils literal"><span class="pre">matplotlib._pylab_helpers.Gcf</span></tt>).</li>
-<li><a class="reference internal" href="#modelicares.util.delayed_exit" title="modelicares.util.delayed_exit"><tt class="xref py py-func docutils literal"><span class="pre">delayed_exit()</span></tt></a> - Exit with a message and a delay.</li>
 <li><a class="reference internal" href="#modelicares.util.expand_path" title="modelicares.util.expand_path"><tt class="xref py py-func docutils literal"><span class="pre">expand_path()</span></tt></a> - Expand a file path by replacing &#8216;~&#8217; with the user
 directory and make the path absolute.</li>
 <li><a class="reference internal" href="#modelicares.util.flatten_dict" title="modelicares.util.flatten_dict"><tt class="xref py py-func docutils literal"><span class="pre">flatten_dict()</span></tt></a> - Flatten a nested dictionary.</li>
-<li><a class="reference internal" href="#modelicares.util.flatten_list" title="modelicares.util.flatten_list"><tt class="xref py py-func docutils literal"><span class="pre">flatten_list()</span></tt></a> - Flatten a nested list.</li>
 <li><a class="reference internal" href="#modelicares.util.figure" title="modelicares.util.figure"><tt class="xref py py-func docutils literal"><span class="pre">figure()</span></tt></a> - Create a figure and set its label.</li>
 <li><a class="reference internal" href="#modelicares.util.get_indices" title="modelicares.util.get_indices"><tt class="xref py py-func docutils literal"><span class="pre">get_indices()</span></tt></a> - Return the pair of indices that bound a target value in
 a monotonically increasing vector.</li>
@@ -92,13 +93,9 @@ a monotonically increasing vector.</li>
 significand of a number is within the range [1, 1000).</li>
 <li><a class="reference internal" href="#modelicares.util.load_csv" title="modelicares.util.load_csv"><tt class="xref py py-func docutils literal"><span class="pre">load_csv()</span></tt></a> - Load a CSV file into a dictionary.</li>
 <li><a class="reference internal" href="#modelicares.util.match" title="modelicares.util.match"><tt class="xref py py-func docutils literal"><span class="pre">match()</span></tt></a> - Reduce a list of strings to those that match a pattern.</li>
-<li><a class="reference internal" href="#modelicares.util.multiglob" title="modelicares.util.multiglob"><tt class="xref py py-func docutils literal"><span class="pre">multiglob()</span></tt></a> - Return a set of filenames that match sets of pathnames
-and extensions.</li>
 <li><a class="reference internal" href="#modelicares.util.plot" title="modelicares.util.plot"><tt class="xref py py-func docutils literal"><span class="pre">plot()</span></tt></a> - Plot 1D scalar data as points and/or line segments in 2D
 Cartesian coordinates.</li>
 <li><a class="reference internal" href="#modelicares.util.quiver" title="modelicares.util.quiver"><tt class="xref py py-func docutils literal"><span class="pre">quiver()</span></tt></a> - Plot 2D vector data as arrows in 2D Cartesian coordinates.</li>
-<li><a class="reference internal" href="#modelicares.util.replace" title="modelicares.util.replace"><tt class="xref py py-func docutils literal"><span class="pre">replace()</span></tt></a> - Perform a list of replacements on the text in a list of
-files.</li>
 <li><a class="reference internal" href="#modelicares.util.save" title="modelicares.util.save"><tt class="xref py py-func docutils literal"><span class="pre">save()</span></tt></a> - Save the current figures as images in a format or list of
 formats.</li>
 <li><a class="reference internal" href="#modelicares.util.saveall" title="modelicares.util.saveall"><tt class="xref py py-func docutils literal"><span class="pre">saveall()</span></tt></a> - Save all open figures as images in a format or list of
@@ -110,8 +107,6 @@ axis.</li>
 axis.</li>
 <li><a class="reference internal" href="#modelicares.util.si_prefix" title="modelicares.util.si_prefix"><tt class="xref py py-func docutils literal"><span class="pre">si_prefix()</span></tt></a> - Return the SI prefix for a power of 1000.</li>
 <li><a class="reference internal" href="#modelicares.util.tree" title="modelicares.util.tree"><tt class="xref py py-func docutils literal"><span class="pre">tree()</span></tt></a> - Return a tree of strings as a nested dictionary.</li>
-<li><a class="reference internal" href="#modelicares.util.yes" title="modelicares.util.yes"><tt class="xref py py-func docutils literal"><span class="pre">yes()</span></tt></a> - Ask a yes/no question and return <em>True</em> if the answer is &#8216;Y&#8217;
-or &#8216;y&#8217;.</li>
 </ul>
 <dl class="class">
 <dt id="modelicares.util.CallList">
@@ -251,17 +246,6 @@ the text</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.util.delayed_exit">
-<tt class="descclassname">modelicares.util.</tt><tt class="descname">delayed_exit</tt><big>(</big><em>message='Exiting...'</em>, <em>t=0.5</em><big>)</big><a class="headerlink" href="#modelicares.util.delayed_exit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Exit with a message (<em>message</em>) and a delay of <em>t</em> seconds.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">delayed_exit</span><span class="p">()</span> 
-<span class="go">Exiting...</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
 <dt id="modelicares.util.expand_path">
 <tt class="descclassname">modelicares.util.</tt><tt class="descname">expand_path</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#modelicares.util.expand_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Expand a file path by replacing &#8216;~&#8217; with the user directory and making
@@ -314,27 +298,6 @@ names</li>
 <p><strong>Example:</strong></p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">flatten_dict</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="s">&#39;hello&#39;</span><span class="p">)))</span> 
 <span class="go">{&#39;a&#39;: 1, &#39;b.c&#39;: 2, &#39;b.d&#39;: &#39;hello&#39;}</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="modelicares.util.flatten_list">
-<tt class="descclassname">modelicares.util.</tt><tt class="descname">flatten_list</tt><big>(</big><em>l</em>, <em>ltypes=(&lt;type 'list'&gt;</em>, <em>&lt;type 'tuple'&gt;)</em><big>)</big><a class="headerlink" href="#modelicares.util.flatten_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Flatten a nested list.</p>
-<p><strong>Arguments:</strong></p>
-<ul>
-<li><p class="first"><em>l</em>: List (may be nested to an arbitrary depth)</p>
-<blockquote>
-<div><p>If the type of <em>l</em> is not in ltypes, then it is placed in a list.</p>
-</div></blockquote>
-</li>
-<li><p class="first"><em>ltypes</em>: Tuple (not list) of accepted indexable types</p>
-</li>
-</ul>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">flatten_list</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">[</span><span class="mi">4</span><span class="p">]]])</span>
-<span class="go">[1, 2, 3, 4]</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -476,64 +439,6 @@ regular expressions.  Escape the subclass separator as &#8216;\.&#8217;.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="modelicares.util.multiglob">
-<tt class="descclassname">modelicares.util.</tt><tt class="descname">multiglob</tt><big>(</big><em>pathnames</em>, <em>extensions=set(['*.mat'])</em><big>)</big><a class="headerlink" href="#modelicares.util.multiglob" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a set of filenames that match a pathname pattern.</p>
-<blockquote>
-<div><p>Unlike Python&#8217;s <a class="reference external" href="https://docs.python.org/library/glob.html#glob.glob" title="(in Python v2.7)"><tt class="xref py py-func docutils literal"><span class="pre">glob.glob()</span></tt></a> function, this function runs an additional
-expansion on matches that are directories.</p>
-<p><strong>Arguments:</strong></p>
-<ul>
-<li><p class="first"><em>pathnames</em>: String or set of strings used to match files or folders</p>
-<blockquote>
-<div><p>This may contain Unix shell-style patterns:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="30%" />
-<col width="70%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Character(s)</th>
-<th class="head">Role</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>*</td>
-<td>Matches everything</td>
-</tr>
-<tr class="row-odd"><td>?</td>
-<td>Matches any single character</td>
-</tr>
-<tr class="row-even"><td>[seq]</td>
-<td>Matches any character in seq</td>
-</tr>
-<tr class="row-odd"><td>[!seq]</td>
-<td>Matches any char not in seq</td>
-</tr>
-</tbody>
-</table>
-</div></blockquote>
-</li>
-</ul>
-</div></blockquote>
-<ul>
-<li><p class="first"><em>extensions</em>: Filename pattern or set of patterns that should be used to
-match files in any directories generated from <em>pathnames</em></p>
-<blockquote>
-<div><p>These may also use the shell-style patterns above.</p>
-</div></blockquote>
-</li>
-</ul>
-<blockquote>
-<div><p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">multiglob</span><span class="p">(</span><span class="s">&quot;examples/ChuaCircuit/*/&quot;</span><span class="p">)</span> 
-<span class="go">[&#39;examples/ChuaCircuit/1/dsres.mat&#39;, &#39;examples/ChuaCircuit/2/dsres.mat&#39;]</span>
-</pre></div>
-</div>
-</div></blockquote>
-</dd></dl>
-
-<dl class="function">
 <dt id="modelicares.util.plot">
 <tt class="descclassname">modelicares.util.</tt><tt class="descname">plot</tt><big>(</big><em>y, x=None, ax=None, label=None, color=['b', 'g', 'r', 'c', 'm', 'y', 'k'], marker=None, dashes=[(None, None), (3, 3), (1, 1), (3, 2, 1, 2)], **kwargs</em><big>)</big><a class="headerlink" href="#modelicares.util.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot 1D scalar data as points and/or line segments in 2D Cartesian
@@ -621,34 +526,6 @@ field)</li>
 <p>(<a class="reference external" href="./examples2/util-quiver.py">Source code</a>, <a class="reference external" href="./examples2/util-quiver.png">png</a>, <a class="reference external" href="./examples2/util-quiver.hires.png">hires.png</a>, <a class="reference external" href="./examples2/util-quiver.pdf">pdf</a>)</p>
 <div class="figure">
 <img alt="plot of quiver()" src="images/util-quiver.png" />
-</div>
-</dd></dl>
-
-<dl class="function">
-<dt id="modelicares.util.replace">
-<tt class="descclassname">modelicares.util.</tt><tt class="descname">replace</tt><big>(</big><em>fnames</em>, <em>rpls</em><big>)</big><a class="headerlink" href="#modelicares.util.replace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform a list of replacements on the text in a list of files.</p>
-<p><strong>Arguments:</strong></p>
-<ul>
-<li><p class="first"><em>fnames</em>: Filename or list of filenames</p>
-</li>
-<li><p class="first"><em>rpl</em>: List of replacements to make</p>
-<blockquote>
-<div><p>Each entry is a tuple of (<em>src</em>, <em>dest</em>), where <em>dest</em> is a string that
-will replace the <em>src</em> string.  Each string can use Python&#8217;s :mod:re
-expressions; see https://docs.python.org/2/library/re.html for details.</p>
-</div></blockquote>
-</li>
-</ul>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">fname</span> <span class="o">=</span> <span class="s">&#39;temp.txt&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="n">__</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;apple orange banana&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">replace</span><span class="p">([</span><span class="n">fname</span><span class="p">],</span> <span class="p">[(</span><span class="s">&#39;ba(.*)&#39;</span><span class="p">,</span> <span class="s">r&#39;ba\1\1&#39;</span><span class="p">)])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-<span class="go">apple orange banananana</span>
-</pre></div>
 </div>
 </dd></dl>
 
@@ -910,21 +787,6 @@ end of each branch is the full string.</p>
 </div>
 </dd></dl>
 
-<dl class="function">
-<dt id="modelicares.util.yes">
-<tt class="descclassname">modelicares.util.</tt><tt class="descname">yes</tt><big>(</big><em>question</em><big>)</big><a class="headerlink" href="#modelicares.util.yes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ask a yes/no question and return <em>True</em> if the answer is &#8216;Y&#8217; or &#8216;y&#8217;.</p>
-<p><strong>Arguments:</strong></p>
-<ul class="simple">
-<li><em>question</em>: String representing the question to the user</li>
-</ul>
-<p><strong>Example:</strong></p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">yes</span><span class="p">(</span><span class="s">&quot;Do you want to print hello (y/n)?&quot;</span><span class="p">):</span> 
-<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="s">&quot;hello&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
 <dl class="class">
 <dt id="modelicares.util.ArrowLine">
 <em class="property">class </em><tt class="descclassname">modelicares.util.</tt><tt class="descname">ArrowLine</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#modelicares.util.ArrowLine" title="Permalink to this definition">¶</a></dt>
@@ -1020,7 +882,7 @@ end of each branch is the full string.</p>
     </div>
     <div class="footer">
         &copy; Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and Georgia Tech Research Corporation.
-      Last updated on Jul 22, 2014.
+      Last updated on Aug 06, 2014.
     </div>
   </body>
 </html>
