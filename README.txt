@@ -37,7 +37,7 @@ or online as a `static page
 <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_.
 For the full documentation and many more examples, see the `main website`_.  For
 a list of changes, please see the `change log
-<http://kdavies4.github.io/ModelicaRes/changelog.html>`_.
+<http://kdavies4.github.io/ModelicaRes/changes.html>`_.
 
 Currently, ModelicaRes only loads Dymola/OpenModelica_-formatted results
 (\*.mat), but the interface is modular so that other formats can be added

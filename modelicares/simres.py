@@ -215,8 +215,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
 
     .. testcleanup::
 
-       >>> T.description == 'Temperature of HeatPort'
-       True
+       >>> assert T.description == 'Temperature of HeatPort'
 
     Besides the properties in the above, there are methods to retrieve times,
     values, and functions of the times and values (:meth:`array`, :meth:`FV`,
@@ -649,7 +648,6 @@ class VarList(list):
        >>> sims.sort()
        >>> sims['C1.v'].mean()
        [-1.6083468, 0.84736514]
-
     """
     # pylint: disable=I0011, E0213
 

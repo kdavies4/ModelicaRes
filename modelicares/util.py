@@ -496,8 +496,7 @@ def flatten_dict(d, parent_key='', separator='.'):
 
     .. testcleanup::
 
-       >>> flatten_dict(dict(a=1, b=dict(c=2, d='hello'))) == {'a': 1, 'b.c': 2, 'b.d': 'hello'}
-       True
+       >>> assert flatten_dict(dict(a=1, b=dict(c=2, d='hello'))) == {'a': 1, 'b.c': 2, 'b.d': 'hello'}
     """
     # From
     # http://stackoverflow.com/questions/6027558/flatten-nested-python-dictionaries-compressing-keys,
@@ -711,7 +710,6 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
 
        >>> sorted(data)
        ['Description', 'Make', 'Model', 'Price', 'Year']
-
     """
     import csv
 
