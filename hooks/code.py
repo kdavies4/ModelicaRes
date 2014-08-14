@@ -26,9 +26,9 @@ def build():
     """Build/make the code.
     """
 
-    # Check that README.txt is a valid ReST file (otherwise, the PyPI page will
-    # not show correctly).
-    readme = 'README.txt'
+    # Check that long-description.txt is a valid ReST file (otherwise, the PyPI
+    # page won't show correctly).
+    readme = 'doc/long-description.txt'
     error_start = 'Docutils System Messages\n'
     with open(readme, 'r') as rstfile:
         parsed = publish_string(rstfile.read())
@@ -64,7 +64,8 @@ def build():
     setup.build()
     os.system('sudo python setup.py install')
     os.system('sudo python3 setup.py install')
-    print(bash('runtests.sh'))
+    os.system('python setup.py test')
+    os.system('python3 setup.py test')
 
     # Create a tarball and zip (*.tar.gz and *.zip).
     setup.sdist(formats='gztar,zip')

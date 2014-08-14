@@ -151,7 +151,7 @@ def release():
 
     # Commit the changes.
     try:
-        git.commit('-a', m="Rebuilt documentation")
+        git.commit('-a', m="Rebuild documentation")
     except ErrorReturnCode_1:
         pass  # No changes to commit
 

@@ -21,7 +21,7 @@ with open(path.join(here, 'modelicares', '__init__.py')) as f:
     except AttributeError:
         version = None
 
-with open(path.join(here, 'README.txt')) as f:
+with open(path.join(here, 'doc/long-description.txt')) as f:
     long_description = f.read()
 
 setup(name='ModelicaRes',
