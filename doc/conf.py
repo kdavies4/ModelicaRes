@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" ModelicaRes documentation build configuration file, created by
+"""ModelicaRes documentation build configuration file, created by
 sphinx-quickstart on Mon Oct 15 09:06:21 2012.
 
 This file is execfile()d with the current directory set to its containing dir.
@@ -43,6 +43,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.doctest',
               'sphinx.ext.pngmath',
               'sphinx.ext.intersphinx',
+              #'sphinx.ext.inheritance_diagram',
+              #'sphinx.ext.graphviz',
               'matplotlib.sphinxext.plot_directive'
              ]
 # Note: sphinx.ext.autosummary produces a table, but I'd rather have a bulleted
@@ -105,7 +107,7 @@ html_theme_options = {
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
-html_title = "Analyze Modelica results in Python"
+html_title = "Plot and analyze Modelica results in Python"
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 version_str = " v%s" % version if version else ''

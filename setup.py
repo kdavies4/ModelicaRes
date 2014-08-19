@@ -31,8 +31,8 @@ setup(name='ModelicaRes',
       author='Kevin Davies',
       author_email='kdavies4@gmail.com',
       license='BSD-compatible (see LICENSE.txt)',
-      keywords=('results dymola openmodelica data mat analysis script sort '
-                'filter browse export diagram simulation linearization '
+      keywords=('results dymola openmodelica data mat file analysis script '
+                'sort filter browse export diagram simulation linearization '
                 'experiment matplotlib pandas'),
       url='http://kdavies4.github.io/ModelicaRes/',
       download_url=('https://github.com/kdavies4/ModelicaRes/archive/v%s.zip'

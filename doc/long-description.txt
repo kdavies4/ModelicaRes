@@ -4,7 +4,7 @@
 
 **Set up and analyze Modelica simulations**
 
-ModelicaRes is a free, open-source tool that can be used to
+ModelicaRes_ is a free, open-source tool that can be used to
 
 - `generate simulation scripts
   <http://kdavies4.github.io/ModelicaRes/exps.html#modelicares.exps.write_script>`_,
@@ -25,21 +25,20 @@ ModelicaRes is a free, open-source tool that can be used to
 - `export data via pandas
   <http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.to_pandas>`_.
 
-The goal of ModelicaRes is to leverage Python_ to make these tasks easy and
+The goal of ModelicaRes_ is to leverage Python_ to make these tasks easy and
 complex tasks feasible.  Publication-quality figures can be created with
 matplotlib_ using built-in methods that automatically add titles, labels, and
-legends.  ModelicaRes can be scripted or used in an interactive Python_ session
+legends.  ModelicaRes_ can be scripted or used in an interactive Python_ session
 with math and matrix functions from NumPy_.
 
 Please see the tutorial, which is available as an `IPython notebook
 <https://github.com/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_
 or online as a `static page
 <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_.
-For the full documentation and many more examples, see the `main website`_.  For
-a list of changes, please see the `change log
-<http://kdavies4.github.io/ModelicaRes/changes.html>`_.
+For the full documentation and many more examples, please visit the `main
+website`_.
 
-Currently, ModelicaRes only loads Dymola/OpenModelica_-formatted results
+Currently, ModelicaRes_ only loads Dymola/OpenModelica_-formatted results
 (\*.mat), but the interface is modular so that other formats can be added
 easily.
 
@@ -51,25 +50,13 @@ SciPy_ >= 0.10.0 must be installed according to the instructions at
 http://www.scipy.org/install.html.  The GUIs require Qt_, which can be installed
 via PyQt4_, guidata_, or PySide_.
 
-Then install ModelicaRes.  The easiest way is to use pip_::
+Then install ModelicaRes_.  The easiest way is to use pip_::
 
     > pip install modelicares
 
 On Linux, it may be necessary to have root privileges::
 
     $ sudo pip install modelicares
-
-Another way to install ModelicaRes is to download and extract a copy of the
-package.  The `main website`_, the `GitHub repository`_, and the `PyPI page`_
-have copies which include the source code as well as examples and supporting
-files to build the documentation and run tests.  Once you have a copy, run the
-following command from the base folder::
-
-    > python setup.py install
-
-Or, on Linux::
-
-    $ sudo python setup.py install
 
 The `matplotlibrc file
 <https://github.com/kdavies4/ModelicaRes/blob/master/examples/matplotlibrc>`_
@@ -94,16 +81,13 @@ Wetter.
 License terms and development
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-ModelicaRes is published under a `BSD-compatible license
-<http://kdavies4.github.io/ModelicaRes/license.html>`_.  Please
-share any modifications you make (preferably as a pull request to the ``master``
-branch of the `GitHub repository`_) in order to help others.  There are useful
-development scripts in the `hooks folder
-<https://github.com/kdavies4/ModelicaRes/blob/master/hooks/>`_.  If you find a
-bug, please `report it
-<https://github.com/kdavies4/ModelicaRes/issues/new>`_.  If you have
-suggestions, please `share them
-<https://github.com/kdavies4/ModelicaRes/wiki/Suggestions>`_.
+ModelicaRes_ is published under a `BSD-compatible license
+<http://kdavies4.github.io/ModelicaRes/license.html>`_.  Please share any
+improvements you make, preferably as a pull request to the ``master`` branch of
+the `GitHub repository`_.  There are useful development scripts in the `hooks
+folder <https://github.com/kdavies4/ModelicaRes/blob/master/hooks/>`_.  If you
+find a bug, have a suggestion, or just want to leave a comment, please `open an
+issue <https://github.com/kdavies4/ModelicaRes/issues/new>`_.
 
 See also
 ~~~~~~~~
@@ -117,6 +101,7 @@ See also
 - PySimulator_: elaborate GUI; supports FMI_
 
 
+.. _ModelicaRes: http://kdavies4.github.io/ModelicaRes/
 .. _main website: http://kdavies4.github.io/ModelicaRes/
 .. _PyPI page: http://pypi.python.org/pypi/ModelicaRes/
 .. _GitHub repository: https://github.com/kdavies4/ModelicaRes

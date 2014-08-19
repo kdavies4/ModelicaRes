@@ -16,7 +16,7 @@ import sys
 from sh import git, python, sphinx_build, ErrorReturnCode_1, ErrorReturnCode_128
 from glob import glob
 from collections import namedtuple
-from modelicares import util
+from natu import util
 
 BUILD_DIR = 'build/html'
 
@@ -175,8 +175,8 @@ def spellcheck():
     """Spellcheck the HTML docs.
     """
     # Options
-    wordfile = os.path.abspath('.modelicares.pws')  # Name of custom word file
-    extrafile = os.path.abspath('.modelica.pws')  # Name of extra word file
+    wordfile = os.path.abspath('modelicares.pws')  # Name of custom word file
+    extrafile = os.path.abspath('modelica.pws')  # Name of extra word file
     html_files = glob('build/html/*.html')  # Names of the HTML files
 
     print("If there are misspellings, fix them in the Python or ReST "
@@ -243,7 +243,6 @@ def static():
                   title=("Modelica.Electrical.Analog.Examples.ChuaCircuit\n"
                          "Current through and voltage across the inductor"))[0]
     # Mark the start and stop points.
-
     def mark(time, text):
         """Mark a frequency point.
         """

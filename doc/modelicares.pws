@@ -134,7 +134,6 @@ sankey
 imul
 ArrowLine
 cd
-indexable
 aslisted
 ynames
 eb
@@ -163,7 +162,6 @@ cbar
 iu
 Versioning
 loadres
-ltypes
 js
 iy
 util
@@ -257,7 +255,6 @@ subfigure
 overlayed
 Dassl
 whitespace
-pathname
 simulateModel
 recentered
 ABCD

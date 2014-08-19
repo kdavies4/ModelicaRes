@@ -3,9 +3,7 @@
 #
 # This requires Meld (http://meldmerge.org/).
 
-if [[ $1 != '' ]]; then
-    meld ../natu/$1 $1
-else
+if [[ $1 == '' ]]; then
     files="
     LICENSE.txt
     MANIFEST.in
@@ -23,7 +21,6 @@ else
     doc/_templates/links.html
     doc/_templates/search.html
     doc/_templates/searchbox.html
-    hooks/build.sh
     hooks/code.py
     hooks/code.sh
     hooks/doc.sh
@@ -31,10 +28,14 @@ else
     hooks/pre-commit
     hooks/pylint.sh
     hooks/README.md
-    hooks/release.sh
+    .git/hooks/pre-commit
+    .git/hooks/post-checkout
+    .git/config
     "
 
     for f in $files; do
         meld ../natu/$f $f
     done
+else
+    meld ../natu/$1 $1
 fi

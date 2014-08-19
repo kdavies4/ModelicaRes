@@ -34,7 +34,8 @@ with math and matrix functions from [NumPy].
 
 Please see the tutorial, which is available as an
 [IPython notebook](examples/tutorial.ipynb) or online as a
-[static page](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb).  For the full documentation and many more examples, see the
+[static page](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb).
+For the full documentation and many more examples, see the
 [main website].
 
 Currently, ModelicaRes only loads Dymola/[OpenModelica]-formatted results
@@ -55,18 +56,6 @@ On Linux, it may be necessary to have root privileges:
 
     $ sudo pip install modelicares
 
-Another way to install ModelicaRes is to download and extract a copy of the
-package.  The [main website], the [GitHub repository], and the [PyPI page] have
-copies which include the source code as well as examples and supporting files to
-build the documentation and run tests.  Once you have a copy, run the following
-command from the base folder:
-
-    > python setup.py install
-
-Or, on Linux:
-
-    $ sudo python setup.py install
-
 The [matplotlibrc file](examples/matplotlibrc) has some recommended revisions to
 [matplotlib]'s defaults.  To use it, copy it to the working directory or
 [matplotlib]'s configuration directory.  See
@@ -74,13 +63,12 @@ http://matplotlib.org/users/customizing.html for details.
 
 ### License terms and development
 
-ModelicaRes is published under a [BSD-compatible license](LICENSE.txt).  Please
-share any modifications you make (preferably as a pull request to the ``master``
-branch of the [GitHub repository]) in order to help others.  There are useful
-development scripts in the [hooks folder](hooks).  If you find a bug, please
-[report it](https://github.com/kdavies4/ModelicaRes/issues/new).  If you have
-suggestions, please
-[share them](https://github.com/kdavies4/ModelicaRes/wiki/Suggestions).
+ModelicaRes is published under a [BSD-compatible license](LICENSE.txt).   Please
+share any improvements you make, preferably as a pull request to the ``master``
+branch of the [GitHub repository].  There are useful development scripts in the
+[hooks folder](hooks).  If you find a bug, have a suggestion, or just want to
+leave a comment, please
+[open an issue](https://github.com/kdavies4/ModelicaRes/issues/new).
 
 [![Build Status](https://travis-ci.org/kdavies4/ModelicaRes.svg?branch=travis)](https://travis-ci.org/kdavies4/ModelicaRes)
 ![ ](doc/_static/hspace.png)

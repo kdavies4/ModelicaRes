@@ -62,7 +62,7 @@ Installation
 
 First, install the dependencies.  Most are installed automatically, but
 SciPy_ >= 0.10.0 must be installed according to the instructions at
-http://www.scipy.org/install.html.  The GUIs requireQt_, which can be installed
+http://www.scipy.org/install.html.  The GUIs require Qt_, which can be installed
 via PyQt4_, guidata_, or PySide_.
 
 Then install ModelicaRes.  The easiest way is to use pip_::
@@ -92,13 +92,12 @@ License terms and development
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ModelicaRes is published under a `BSD-compatible license <license.html>`_.
-Please share any modifications you make (preferably as a pull request to the
-``master`` branch of the `GitHub repository`_) in order to help others.  There
-are useful development scripts in the `hooks folder
+Please share any improvements you make, preferably as a pull request to the
+``master`` branch of the `GitHub repository`_.  There are useful development
+scripts in the `hooks folder
 <https://github.com/kdavies4/ModelicaRes/blob/master/hooks/>`_.  If you find a
-bug, please `report it <https://github.com/kdavies4/ModelicaRes/issues/new>`_.
-If you have suggestions, please `share them
-<https://github.com/kdavies4/ModelicaRes/wiki/Suggestions>`_.
+bug, have a suggestion, or just want to leave a comment, please `open an issue
+<https://github.com/kdavies4/ModelicaRes/issues/new>`_.
 
 See also
 ~~~~~~~~
