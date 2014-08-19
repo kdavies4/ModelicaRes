@@ -1,0 +1,9 @@
+<map id="inheritancea6069fa3fc" name="inheritancea6069fa3fc">
+<area shape="rect" id="node1" title="Base class for a Modelica_ result" alt="" coords="68,153,225,178"/>
+<area shape="rect" id="node3" href="#modelicares.simres.SimRes" title="Class to load, analyze, and plot results from a Modelica_ simulation" alt="" coords="347,153,546,178"/>
+<area shape="rect" id="node2" title="Base class for a list of Modelica_ results" alt="" coords="57,103,236,129"/>
+<area shape="rect" id="node4" href="#modelicares.simres.SimResList" title="Special list of simulation results (:class:`SimRes` instances)" alt="" coords="337,103,557,129"/>
+<area shape="rect" id="node5" href="#modelicares.simres.VarList" title="Special list of simulation variables (instances of :class:`Variable`)," alt="" coords="49,54,244,79"/>
+<area shape="rect" id="node6" href="#modelicares.simres.Variable" title="Special namedtuple_ to represent a variable in a simulation, with" alt="" coords="345,5,548,30"/>
+<area shape="rect" id="node7" title="VariableNamedTuple(samples, description, unit, displayUnit)" alt="" coords="6,5,287,30"/>
+</map>
