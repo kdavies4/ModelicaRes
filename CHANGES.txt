@@ -76,9 +76,9 @@ v0.11.1_ (2014-5-21) -- Updates:
 v0.11.0_ (2014-5-21) -- Updates:
 
    - Added IPython notebooks (`tutorial
-     <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/tutorial.ipynb>`_
+     <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb>`_
      and
-     `advanced <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/release/examples/advanced.ipynb>`_).
+     `advanced <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb>`_).
    - Decoupled the Dymola-specific algorithms and placed them in a submodule.
      ModelicaRes is now independent with respect to the simulation tool.
    - New classes :class:`~modelicares.simres.SimResList` and
@@ -228,7 +228,7 @@ v0.7.2_ (2013-7-9) -- Updates:
 
 v0.7.1_ (2013-7-7) -- Updates:
 
-   - Added missing files to `MANIFEST <MANIFEST>`_.
+   - Added missing files to :file:`MANIFEST`_.
 
 v0.7.0_ (2013-7-7) -- Updates:
 
@@ -268,8 +268,7 @@ v0.6.2_ (2013-7-4) -- Updates:
 
 v0.6.1_ (2013-7-2) -- Updates:
 
-   - Fixed `README.txt
-     <https://github.com/kdavies4/ModelicaRes/blob/master/README.txt>`_.
+   - Fixed README.txt.
 
 v0.6.0_ (2013-7-2) -- Updates:
 

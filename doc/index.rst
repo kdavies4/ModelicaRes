@@ -7,12 +7,12 @@
 ModelicaRes is a free, open-source tool that can be used to
 
 - `generate simulation scripts
-  <http://kdavies4.github.io/ModelicaRes/exps.html#modelicares.exps.write_script>`_,
+  <http://kdavies4.github.io/ModelicaRes/modelicares.exps.html#modelicares.exps.write_script>`_,
 - `load
   <http://kdavies4.github.io/ModelicaRes/modelicares.html#modelicares.load>`_,
   `analyze
   <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb#Analyzing-a-simulation-result>`_, and `browse
-  <http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.browse>`_
+  <http://kdavies4.github.io/ModelicaRes/modelicares.simres.html#modelicares.simres.SimRes.browse>`_
   data,
 - `filter
   <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb#Testing-simulations-based-on-criteria>`_
@@ -23,7 +23,7 @@ ModelicaRes is a free, open-source tool that can be used to
   <http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb#Sankey-diagrams>`_,
   and
 - `export data via pandas
-  <http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.to_pandas>`_.
+  <http://kdavies4.github.io/ModelicaRes/modelicares.simres.html#modelicares.simres.SimRes.to_pandas>`_.
 
 The goal of ModelicaRes is to leverage Python_ to make these tasks easy and
 complex tasks feasible.  Publication-quality figures can be created with
