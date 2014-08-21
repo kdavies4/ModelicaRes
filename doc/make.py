@@ -151,11 +151,11 @@ def release():
 
     # Commit the changes.
     try:
-        git.commit('-a', m="Rebuild documentation")
+        git.commit('-a', m="Rebuilt documentation")
     except ErrorReturnCode_1:
         pass  # No changes to commit
 
-    # If desired, push the changes to origin.
+    # If desired, rebase and push the changes to origin.
     print("The gh-pages branch has been updated and is currently checked out.")
     if util.yes("Do you want to rebase it and push the changes to "
                 "origin (y/n)?"):

@@ -71,7 +71,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'ModelicaRes'
-copyright = ('2012-2014, Kevin Davies, Hawaii Natural Energy Institute, and '
+copyright = ('2012-2014, Kevin Davies, Hawaii Natural Energy Institute and '
              'Georgia Tech Research Corporation')
 
 # The version info for the project you're documenting, acts as replacement for

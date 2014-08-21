@@ -4,10 +4,10 @@ ModelicaRes
 **Set up and analyze Modelica simulations in Python**
 
 ModelicaRes is a free, open-source tool that can be used to
-- [generate simulation scripts](http://kdavies4.github.io/ModelicaRes/exps.html#modelicares.exps.write_script),
+- [generate simulation scripts](http://kdavies4.github.io/ModelicaRes/modelicares.exps.html#modelicares.exps.write_script),
 - [load](http://kdavies4.github.io/ModelicaRes/modelicares.html#modelicares.load),
   [analyze](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/tutorial.ipynb#Analyzing-a-simulation-result), and
-  [browse](http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.browse)
+  [browse](http://kdavies4.github.io/ModelicaRes/modelicares.simres.html#modelicares.simres.SimRes.browse)
   data,
 - [filter](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb#Testing-simulations-based-on-criteria)
   and
@@ -18,7 +18,7 @@ ModelicaRes is a free, open-source tool that can be used to
   and
   [diagrams](http://nbviewer.ipython.org/github/kdavies4/ModelicaRes/blob/master/examples/advanced.ipynb#Sankey-diagrams),
   and
-- [export data via pandas](http://kdavies4.github.io/ModelicaRes/simres.html#modelicares.simres.SimRes.to_pandas).
+- [export data via pandas](http://kdavies4.github.io/ModelicaRes/modelicares.simres.html#modelicares.simres.SimRes.to_pandas).
 
 [![Plot of Chua circuit with varying parameters](doc/_static/ChuaCircuit-small.png)](http://kdavies4.github.io/ModelicaRes/examples2/ChuaCircuit.hires.png)
 ![ ](doc/_static/hspace.png)
