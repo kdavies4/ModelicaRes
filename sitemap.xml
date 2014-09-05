@@ -6,382 +6,82 @@
                       http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/changelog.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/changes.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/credits.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/ChuaCircuit.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/ChuaCircuit.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/ChuaCircuit.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/ChuaCircuit.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/ChuaCircuits.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/ChuaCircuits.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/ChuaCircuits.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/ChuaCircuits.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PID-bode.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PID-bode.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PID-bode.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PID-bode.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PID-nyquist.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PID-nyquist.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PID-nyquist.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PID-nyquist.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PIDs-bode.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PIDs-bode.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PIDs-bode.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PIDs-bode.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PIDs-nyquist.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PIDs-nyquist.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PIDs-nyquist.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/PIDs-nyquist.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/ThreeTanks.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/ThreeTanks.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/ThreeTanks.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/ThreeTanks.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-ArrowLine.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-ArrowLine.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-ArrowLine.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-ArrowLine.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-add_arrows.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-add_arrows.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-add_arrows.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-add_arrows.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-add_hlines.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-add_hlines.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-add_hlines.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-add_hlines.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-add_vlines.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-add_vlines.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-add_vlines.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-add_vlines.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-quiver.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-quiver.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-quiver.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-quiver.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-setup_subplots.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-setup_subplots.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-setup_subplots.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-setup_subplots.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-shift_scale_x.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-shift_scale_x.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-shift_scale_x.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-shift_scale_x.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-shift_scale_y.hires.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-shift_scale_y.pdf</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-shift_scale_y.png</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/examples2/util-shift_scale_y.py</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/genindex.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/ChuaCircuit.png</loc>
-  <lastmod>2014-08-19T21:28:34Z</lastmod>
+  <lastmod>2014-09-05T20:15:12Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/ChuaCircuit1.png</loc>
-  <lastmod>2014-08-21T22:36:46Z</lastmod>
+  <lastmod>2014-09-05T20:15:21Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/ChuaCircuits.png</loc>
-  <lastmod>2014-08-21T22:36:47Z</lastmod>
+  <lastmod>2014-09-05T20:15:22Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/PID-bode.png</loc>
-  <lastmod>2014-08-21T22:36:41Z</lastmod>
+  <lastmod>2014-09-05T20:15:16Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/PID-nyquist.png</loc>
-  <lastmod>2014-08-21T22:36:42Z</lastmod>
+  <lastmod>2014-09-05T20:15:18Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/PIDs-bode.png</loc>
-  <lastmod>2014-08-19T21:28:34Z</lastmod>
+  <lastmod>2014-09-05T20:15:12Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/PIDs-bode1.png</loc>
-  <lastmod>2014-08-21T22:36:43Z</lastmod>
+  <lastmod>2014-09-05T20:15:18Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/PIDs-nyquist.png</loc>
-  <lastmod>2014-08-21T22:36:45Z</lastmod>
+  <lastmod>2014-09-05T20:15:20Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/ThreeTanks.png</loc>
-  <lastmod>2014-08-19T21:28:34Z</lastmod>
+  <lastmod>2014-09-05T20:15:12Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/ThreeTanks1.png</loc>
-  <lastmod>2014-08-21T22:36:46Z</lastmod>
+  <lastmod>2014-09-05T20:15:21Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/browse.png</loc>
-  <lastmod>2014-08-19T21:28:34Z</lastmod>
+  <lastmod>2014-09-05T20:15:12Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
@@ -390,103 +90,98 @@
   <priority>0.5000</priority>
  </url>
  <url>
-  <loc>http://kdavies4.github.io/ModelicaRes/images/inheritance-eda065401d0b594230d330eeec093ea37761c411.png.map</loc>
-  <lastmod>2014-08-19T21:18:20Z</lastmod>
-  <priority>0.5000</priority>
- </url>
- <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/util-ArrowLine.png</loc>
-  <lastmod>2014-08-21T22:36:51Z</lastmod>
+  <lastmod>2014-09-05T20:15:26Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/util-add_arrows.png</loc>
-  <lastmod>2014-08-21T22:36:47Z</lastmod>
+  <lastmod>2014-09-05T20:15:22Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/util-add_hlines.png</loc>
-  <lastmod>2014-08-21T22:36:48Z</lastmod>
+  <lastmod>2014-09-05T20:15:23Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/util-add_vlines.png</loc>
-  <lastmod>2014-08-21T22:36:48Z</lastmod>
+  <lastmod>2014-09-05T20:15:23Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/util-quiver.png</loc>
-  <lastmod>2014-08-21T22:36:48Z</lastmod>
+  <lastmod>2014-09-05T20:15:23Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/util-setup_subplots.png</loc>
-  <lastmod>2014-08-21T22:36:49Z</lastmod>
+  <lastmod>2014-09-05T20:15:24Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/util-shift_scale_x.png</loc>
-  <lastmod>2014-08-21T22:36:50Z</lastmod>
+  <lastmod>2014-09-05T20:15:25Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/images/util-shift_scale_y.png</loc>
-  <lastmod>2014-08-21T22:36:50Z</lastmod>
+  <lastmod>2014-09-05T20:15:25Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/license.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/loadres.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/modelicares.exps.doe.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/modelicares.exps.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/modelicares.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/modelicares.linres.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/modelicares.simres.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/modelicares.util.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/modules-scripts.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/py-modindex.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://kdavies4.github.io/ModelicaRes/search.html</loc>
-  <lastmod>2014-08-21T22:47:12Z</lastmod>
+  <lastmod>2014-09-05T20:16:49Z</lastmod>
   <priority>0.5000</priority>
  </url>
 </urlset>

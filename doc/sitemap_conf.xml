@@ -100,31 +100,27 @@
   they are.
   ********************************************************* -->
 
-  <filter action="drop" type="wildcard" pattern="*.git/" />
-  <filter action="drop" type="wildcard" pattern="*.git/*" />
-  <filter action="drop" type="wildcard" pattern="*.gitattributes" />
-  <filter action="drop" type="wildcard" pattern="*.gitignore" />
   <filter action="drop" type="wildcard" pattern="*.ini" />
   <filter action="drop" type="wildcard" pattern="*.inv" />
   <filter action="drop" type="wildcard" pattern="*.js" />
+  <filter action="drop" type="wildcard" pattern="*.map" />
   <filter action="drop" type="wildcard" pattern="*.md" />
+  <filter action="drop" type="wildcard" pattern="*.py" />
   <filter action="drop" type="wildcard" pattern="*.txt" />
   <filter action="drop" type="wildcard" pattern="*build*" />
-  <filter action="drop" type="wildcard" pattern="*doc/" />
-  <filter action="drop" type="wildcard" pattern="*doc/*" />
   <filter action="drop" type="wildcard" pattern="*dist*" />
   <filter action="drop" type="wildcard" pattern="*egg-info*" />
-  <filter action="drop" type="wildcard" pattern="*examples/*" />
-  <filter action="drop" type="wildcard" pattern="*examples2/" />
+  <filter action="drop" type="wildcard" pattern="*examples*" />
   <filter action="drop" type="wildcard" pattern="*google*" />
   <filter action="drop" type="wildcard" pattern="*hooks*" />
   <filter action="drop" type="wildcard" pattern="*images/" />
   <filter action="drop" type="wildcard" pattern="*images/math*" />
   <filter action="drop" type="wildcard" pattern="*javascripts*" />
   <filter action="drop" type="wildcard" pattern="*MANIFEST*" />
-  <filter action="drop" type="wildcard" pattern="*modelicares/" />
-  <filter action="drop" type="wildcard" pattern="*modelicares/*" />
   <filter action="drop" type="wildcard" pattern="*tests*" />
   <filter action="drop" type="wildcard" pattern="*TODO*" />
+  <filter action="drop" type="regexp" pattern="ModelicaRes/\.git.*" />
+  <filter action="drop" type="regexp" pattern="ModelicaRes/doc/.*" />
+  <filter action="drop" type="regexp" pattern="ModelicaRes/modelicares/.*" />
 
 </site>
