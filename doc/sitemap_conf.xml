@@ -103,7 +103,6 @@
   <filter action="drop" type="wildcard" pattern="*.ini" />
   <filter action="drop" type="wildcard" pattern="*.inv" />
   <filter action="drop" type="wildcard" pattern="*.js" />
-  <filter action="drop" type="wildcard" pattern="*.map" />
   <filter action="drop" type="wildcard" pattern="*.md" />
   <filter action="drop" type="wildcard" pattern="*.py" />
   <filter action="drop" type="wildcard" pattern="*.txt" />
