@@ -48,6 +48,7 @@ from itertools import cycle
 from matplotlib import rcParams
 from matplotlib.cbook import iterable
 from matplotlib.pyplot import figlegend
+from natu.util import flatten_list, multiglob
 from pandas import DataFrame
 from scipy.integrate import trapz as integral
 from scipy.interpolate import interp1d
@@ -1239,8 +1240,8 @@ class SimRes(Res):
             return ylabel, legends
 
         # Process the inputs.
-        ynames1 = util.flatten_list(ynames1)
-        ynames2 = util.flatten_list(ynames2)
+        ynames1 = flatten_list(ynames1)
+        ynames2 = flatten_list(ynames2)
         assert ynames1 or ynames2, "No signals were provided."
         if title is None:
             title = self.fbase
@@ -1300,7 +1301,6 @@ class SimRes(Res):
                 kwargs['dashes'] = [(3, 3)]
                 util.plot(y2, y2times, ax2, label=legends2, **kwargs)
             else:
-
                 util.plot(y1, y1times, ax1, label=legends1, **kwargs)
         elif ynames2:
             util.plot(y2, y2times, ax2, label=legends2, **kwargs)
@@ -1490,7 +1490,7 @@ class SimRes(Res):
 
         # Create the list of variable names.
         if names:
-            names = set(util.flatten_list(names))
+            names = set(flatten_list(names))
             names.add('Time')
         else:
             names = self.names
@@ -1806,7 +1806,7 @@ class SimResList(ResList):
 
         elif isinstance(args[0], string_types):  # Filenames or directories
             try:
-                fnames = util.multiglob(args)
+                fnames = multiglob(args)
             except TypeError:
                 raise TypeError(
                     "The simulation list can only be initialized by "
@@ -1878,7 +1878,7 @@ class SimResList(ResList):
             assert isinstance(item, string_types), (
                 "The simulation list can ony be appended by providing a SimRes "
                 "instance, filename, or directory.")
-            fnames = util.multiglob(item)
+            fnames = multiglob(item)
             self.extend(SimResList(_get_sims(fnames)))
 
     def find(self, pattern=None, re=False, constants_only=False, as_tree=False):

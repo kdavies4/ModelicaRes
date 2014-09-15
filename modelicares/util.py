@@ -30,14 +30,10 @@
 - :func:`closeall` - Close all open figures (shortcut to the
   :func:`destroy_all` from :class:`matplotlib._pylab_helpers.Gcf`).
 
-- :func:`delayed_exit` - Exit with a message and a delay.
-
 - :func:`expand_path` - Expand a file path by replacing '~' with the user
   directory and make the path absolute.
 
 - :func:`flatten_dict` - Flatten a nested dictionary.
-
-- :func:`flatten_list` - Flatten a nested list.
 
 - :func:`figure` - Create a figure and set its label.
 
@@ -51,16 +47,10 @@
 
 - :func:`match` - Reduce a list of strings to those that match a pattern.
 
-- :func:`multiglob` - Return a set of filenames that match sets of pathnames
-  and extensions.
-
 - :func:`plot` - Plot 1D scalar data as points and/or line segments in 2D
   Cartesian coordinates.
 
 - :func:`quiver` - Plot 2D vector data as arrows in 2D Cartesian coordinates.
-
-- :func:`replace` - Perform a list of replacements on the text in a list of
-  files.
 
 - :func:`save` - Save the current figures as images in a format or list of
   formats.
@@ -79,9 +69,6 @@
 - :func:`si_prefix` - Return the SI prefix for a power of 1000.
 
 - :func:`tree` - Return a tree of strings as a nested dictionary.
-
-- :func:`yes` - Ask a yes/no question and return *True* if the answer is 'Y'
-  or 'y'.
 
 
 .. _matplotlib: http://www.matplotlib.org/
@@ -358,19 +345,6 @@ def color(ax, c, *args, **kwargs):
     return ax.imshow(c, *args, **kwargs)
 
 
-def delayed_exit(message="Exiting...", t=0.5):
-    """Exit with a message (*message*) and a delay of *t* seconds.
-
-    **Example:**
-
-    >>> delayed_exit() # doctest: +SKIP
-    Exiting...
-    """
-    print(message)
-    time.sleep(t)
-    exit()
-
-
 def expand_path(path):
     r"""Expand a file path by replacing '~' with the user directory and making
     the path absolute.
@@ -427,56 +401,6 @@ def basename(fname):
     return os.path.splitext(os.path.basename(fname))[0]
 
 
-def multiglob(pathnames, extensions={'*.mat'}):
-    r"""Return a set of filenames that match a pathname pattern.
-
-    Unlike Python's :func:`glob.glob` function, this function runs an additional
-    expansion on matches that are directories.
-
-    **Arguments:**
-
-    - *pathnames*: String or set of strings used to match files or folders
-
-         This may contain Unix shell-style patterns:
-
-         ============   ============================
-         Character(s)   Role
-         ============   ============================
-         \*             Matches everything
-         ?              Matches any single character
-         [seq]          Matches any character in seq
-         [!seq]         Matches any char not in seq
-         ============   ============================
-
-   - *extensions*: Filename pattern or set of patterns that should be used to
-     match files in any directories generated from *pathnames*
-
-        These may also use the shell-style patterns above.
-
-    **Example:**
-
-    >>> multiglob("examples/ChuaCircuit/*/") # doctest: +SKIP
-    ['examples/ChuaCircuit/1/dsres.mat', 'examples/ChuaCircuit/2/dsres.mat']
-
-    .. testcleanup::
-
-       >>> sorted(multiglob("examples/ChuaCircuit/*/"))
-       ['examples/ChuaCircuit/1/dsres.mat', 'examples/ChuaCircuit/2/dsres.mat']
-    """
-    # Since order is arbitrary, the doctest is skipped here and included in
-    # tests/tests.txt instead.
-    fnames = set()
-    for pathname in flatten_list(pathnames):
-        items = glob(pathname)
-        for item in items:
-            if os.path.isdir(item):
-                for ext in set(extensions):
-                    fnames = fnames.union(glob(os.path.join(item, ext)))
-            else:
-                fnames.add(item)
-    return fnames
-
-
 def flatten_dict(d, parent_key='', separator='.'):
     """Flatten a nested dictionary.
 
@@ -509,42 +433,6 @@ def flatten_dict(d, parent_key='', separator='.'):
         else:
             items.append((new_key, value))
     return dict(items)
-
-
-def flatten_list(l, ltypes=(list, tuple)):
-    """Flatten a nested list.
-
-    **Arguments:**
-
-    - *l*: List (may be nested to an arbitrary depth)
-
-          If the type of *l* is not in ltypes, then it is placed in a list.
-
-    - *ltypes*: Tuple (not list) of accepted indexable types
-
-    **Example:**
-
-    >>> flatten_list([1, [2, 3, [4]]])
-    [1, 2, 3, 4]
-    """
-    # Based on
-    # http://rightfootin.blogspot.com/2006/09/more-on-python-flatten.html,
-    # 10/28/2011
-    ltype = type(l)
-    if ltype not in ltypes:  # So that strings aren't split into characters
-        return [l]
-    l = list(l)
-    i = 0
-    while i < len(l):
-        while isinstance(l[i], ltypes):
-            if l[i]:
-                l[i:i + 1] = l[i]
-            else:
-                l.pop(i)
-                i -= 1
-                break
-        i += 1
-    return ltype(l)
 
 
 def _gen_offset_factor(label, tick_lo, tick_up, eagerness=0.325):
@@ -869,7 +757,7 @@ def plot(y, x=None, ax=None, label=None,
          Each style is a tuple of on/off lengths representing dashes.  Use
          (0, 1) for no line and (*None*, *None*) for a solid line.
 
-         .. Seealso:: http://matplotlib.sourceforge.net/api/collections_api.html
+         .. Seealso:: http://matplotlib.org/api/lines_api.html#matplotlib.lines.Line2D.set_dashes
 
     - *\*\*kwargs*: Additional arguments for :func:`matplotlib.pyplot.plot`
 
@@ -961,49 +849,6 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
     dx, dy = r - l, t - b
     plt.axis([l - pad * dx, r + pad * dx, b - pad * dy, t + pad * dy])
     return p
-
-
-def replace(fnames, rpls):
-    r"""Perform a list of replacements on the text in a list of files.
-
-    **Arguments:**
-
-    - *fnames*: Filename or list of filenames
-
-    - *rpl*: List of replacements to make
-
-         Each entry is a tuple of (*src*, *dest*), where *dest* is a string that
-         will replace the *src* string.  Each string can use Python's :mod:re
-         expressions; see https://docs.python.org/2/library/re.html for details.
-
-    **Example:**
-
-    >>> fname = 'temp.txt'
-    >>> with open(fname, 'w') as f:
-    ...     __ = f.write("apple orange banana")
-    >>> replace([fname], [('ba(.*)', r'ba\1\1')])
-    >>> with open(fname, 'r') as f:
-    ...     print(f.read())
-    apple orange banananana
-
-    .. testcleanup::
-
-       >>> os.remove(fname)
-    """
-
-    # Compile the regular expressions.
-    for i, (old, new) in enumerate(rpls):
-        rpls[i] = (regexp.compile(old), new)
-
-    # Read each file and make the replacements.
-    for fname in flatten_list(fnames):
-        with open(fname, 'r+') as f:
-            text = f.read()
-            for (old, new) in rpls:
-                text = old.sub(new, text)
-            f.seek(0)
-            f.write(text)
-            f.truncate()
 
 
 def save(formats=['pdf', 'png'], fname=None, fig=None):
@@ -1630,24 +1475,6 @@ class _GetchWindows(object):
         import msvcrt
         return msvcrt.getch()
 
-
-def yes(question):
-    """Ask a yes/no question and return *True* if the answer is 'Y' or 'y'.
-
-    **Arguments:**
-
-    - *question*: String representing the question to the user
-
-    **Example:**
-
-    >>> if yes("Do you want to print hello (y/n)?"): # doctest: +SKIP
-    ...     print("hello")
-    """
-    getch = _Getch()
-    sys.stdout.write(question + ' ')
-    answer = getch()
-    print(answer)
-    return answer.lower() == 'y'
 
 if __name__ == "__main__":
     # Test the contents of this file.

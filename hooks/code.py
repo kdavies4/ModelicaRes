@@ -11,7 +11,7 @@ from time import strftime
 from collections import namedtuple
 from docutils.core import publish_string
 from sh import bash, git, python, rm
-from modelicares import util
+from natu.util import delayed_exit, replace, yes
 
 setup = python.bake('setup.py')
 
@@ -19,7 +19,7 @@ setup = python.bake('setup.py')
 def set_version(version, fname='modelicares/__init__.py'):
     """Update the version in a file.
     """
-    util.replace(fname, [('(__version__) *= *.+', r"\1 = %s" % version)])
+    replace(fname, [('(__version__) *= *.+', r"\1 = %s" % version)])
 
 
 def build():
@@ -34,12 +34,12 @@ def build():
         parsed = publish_string(rstfile.read())
     if error_start in parsed:
         print("Errors in " + readme)
-        util.delayed_exit()
+        delayed_exit()
 
     # Run other setup tests.
     if setup.check('-rms').exit_code:
         print("The setup.py check failed.")
-        util.delayed_exit()
+        delayed_exit()
 
     # Update the version number.
     commit = git('rev-list', '--tags', '--max-count=1').stdout.rstrip()
@@ -58,7 +58,7 @@ def build():
              r'v{v}_ ({d})\1'.format(v=version, d=date)),
             (r'(.. _)vx\.x\.x(.+)vx\.x\.x(\.zip)',
              r'\1v{v}\2v{v}\3'.format(v=version))]
-    util.replace('CHANGES.txt', rpls)
+    replace('CHANGES.txt', rpls)
 
     # Build, install, and test the code.
     setup.build()
@@ -89,16 +89,15 @@ def release():
     print("Here are the remaining TODO items:")
     print(bash('TODO.sh'))
     print()
-    if not util.yes("Do you still want to rebase and push the master with tags "
-                    "to origin (y/n)?"):
-        util.delayed_exit()
+    if not yes("Do you still want to rebase and push the master with tags to "
+               " origin (y/n)?"):
+        delayed_exit()
     git.rebase('-i', 'origin/master')
     git.push('--tags', 'origin', 'master')
 
     # Upload to PyPI.
-    if not util.yes("Do you want to upload to PyPI (this is permanent!) "
-                    "(y/n)?"):
-        util.delayed_exit()
+    if not yes("Do you want to upload to PyPI (this is permanent!) (y/n)?"):
+        delayed_exit()
     setup.sdist.upload()
 
     # Reset the version number.
@@ -113,7 +112,7 @@ def release():
              r'\1\n\n' + newheading),
             (r'(Initial release\n\n\n)',
              r'\1%s\n' % newlink)]
-    util.replace('CHANGES.txt', rpls)
+    replace('CHANGES.txt', rpls)
 
 
 Action = namedtuple("Action", ['f', 'description'])

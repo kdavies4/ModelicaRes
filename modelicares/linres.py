@@ -31,6 +31,7 @@ import numpy as np
 from control.matlab import ss
 from functools import wraps
 from matplotlib.cbook import iterable
+from natu.util import multiglob
 from scipy.signal import ss2tf
 from six import string_types
 
@@ -641,7 +642,7 @@ class LinResList(ResList):
 
         elif isinstance(args[0], string_types):  # Filenames or directories
             try:
-                fnames = util.multiglob(args)
+                fnames = multiglob(args)
             except TypeError:
                 raise TypeError(
                     "The linearization list can only be initialized by "
@@ -713,7 +714,7 @@ class LinResList(ResList):
             assert isinstance(item, string_types), (
                 "The linearization list can only be appended by providing a "
                 "LinRes instance, filename, or directory.")
-            fnames = util.multiglob(item)
+            fnames = multiglob(item)
             self.extend(LinResList(_get_lins(fnames)))
 
     def __str__(self):

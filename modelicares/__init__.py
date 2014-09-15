@@ -20,8 +20,8 @@ classes from the submodules.  These are:
 - Supporting classes and functions (:mod:`~modelicares.util` submodule):
   :func:`~util.add_arrows`, :func:`~util.add_hlines`, :func:`~util.add_vlines`,
   :class:`~util.ArrowLine`, :func:`~util.closeall`, :func:`~util.figure`,
-  :func:`~util.load_csv`, :func:`~util.multiglob`, :func:`~util.save`,
-  :func:`~util.saveall`, and :func:`~util.setup_subplots`
+  :func:`~util.load_csv`, :func:`~util.save`, :func:`~util.saveall`, and
+  :func:`~util.setup_subplots`
 
 There is also a local function:
 
@@ -49,7 +49,7 @@ __version__ = None
 from .simres import SimRes, SimResList
 from .linres import LinRes, LinResList
 from .util import (add_arrows, add_hlines, add_vlines, ArrowLine, closeall,
-                   multiglob, figure, load_csv, save, saveall, setup_subplots)
+                   figure, load_csv, save, saveall, setup_subplots)
 from .exps import (doe, Experiment, gen_experiments, modelica_str, ParamDict,
                    read_params, write_params, write_script)
 # TODO: Add run_models and include in the doc list once implemented.
@@ -90,6 +90,7 @@ def load(*args):
        >>> sims['L.L'].value()
        [15.0, 21.0]
     """
+    from natu.util import multiglob
 
     # Get the set of matching filenames.
     fnames = multiglob(args)
