@@ -1485,9 +1485,6 @@ class SimRes(Res):
         # Note: The frst doctest above requires pandas >= 0.14.0.  Otherwise,
         # more decimal places are shown in the Time column.
 
-        # Simple function to label a variable with its unit:
-        label = lambda name, unit: name + ' / ' + unit
-
         # Create the list of variable names.
         if names:
             names = set(flatten_list(names))
@@ -1514,7 +1511,10 @@ class SimRes(Res):
             except KeyError:
                 pass
 
-            data.update({label(name, unit): values})
+            if unit:
+                data.update({name + ' / ' + unit: values})
+            else:
+                data.update({name: values})
 
         # Create the pandas data frame.
         return DataFrame(data).set_index('Time / s')
