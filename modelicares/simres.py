@@ -1673,6 +1673,78 @@ class SimRes(Res):
         """
         return "Modelica simulation results from " + self.fname
 
+    def get_dimension(self, names):
+        """Return the dimension(s) of trajectory variable(s).
+
+        **Arguments:**
+
+        - *names*: Name(s) of the variable(s) from which to get the
+          dimension(s)
+
+             This may be a single string or (possibly nested) list of strings
+             representing the names of the variables.
+
+        If *names* is a string, then the output will be a single unit.  If
+        *names* is a (optionally nested) list of strings, then the output will
+        be a (nested) list of units.
+
+        **Example:**
+
+           >>> from fcres import SimRes
+
+           >>> sim = SimRes('examples/SaturationPressure.mat')
+           >>> sim.get_dimension('environment.p')
+           'm/(l.T2)'
+           >>> sim.get_dimension([[['environment.p', 'environment.T']]])
+           [[['m/(l.T2)', 'l2.m/(N.T2)']]]
+        """
+        return self._get(names, lambda name: self._traj[name].unit)
+
+    def _set_constants(self, record=None):
+        """Establish the values of the base constants.
+
+        **Arguments:**
+
+        - *record*: Full Modelica_ model path to the record which contains the
+          base units
+
+             If *record* is *None* (default), then the base constants are set so
+             that the values of the SI base units are one.
+
+        There are no return values.  All other constants and units are dependent
+        on the base constants which are set here.  See the `QCalc package`_ and
+        in particular the `QCalc.Units.UnitSystem`_ record.
+
+        .. _QCalc package: http://kdavies4.github.io/QCalc
+        .. _QCalc.Units.UnitSystem: http://kdavies4.github.io/QCalc/QCalc_Units.html#QCalc.Units.UnitSystem
+        """
+        # Mathematical constants
+        from math import acos
+        pi = 2*acos(0)
+        self.U = dict(pi=pi)
+
+        # Base physical constants
+        if record:
+            record += '.'
+            R_inf = self.value(record + 'R_inf')
+            c = self.value(record + 'c')
+            k_J = self.value(record + 'k_J')
+            R_K = self.value(record + 'R_K')
+            k_F = self.value(record + 'k_F')
+            R = self.value(record + 'R')
+            k_Aprime = self.value(record + 'k_Aprime')
+        else:
+            R_inf = self.value(record + 'R_inf')
+            c = self.value(record + 'c')
+            k_J = self.value(record + 'k_J')
+            R_K = self.value(record + 'R_K')
+            k_F = self.value(record + 'k_F')
+            R = self.value(record + 'R')
+            k_Aprime = self.value(record + 'k_Aprime')
+        self.U.update(R_inf=R_inf, c=c, k_J=k_J, R_K=R_K, k_F=k_F, R=R,
+                      k_Aprime=k_Aprime)
+
+        # **Add others or link to natu.
 
 class SimResList(ResList):
 
