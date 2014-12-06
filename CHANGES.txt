@@ -5,6 +5,7 @@ The releases are numbered according to the `Semantic Versioning Specification`_.
 
 TBD (in `GitHub <https://github.com/kdavies4/ModelicaRes>`_ only) -- Updates:
 
+   - '/' may now be used as a path separator in Windows (and Unix/Linux).
    - Removed :func:`~modelicares.util.delayed_exit`,
      :func:`~modelicares.util.flatten_list`,
      :func:`~modelicares.util.multiglob`, :func:`~modelicares.util.replace`, and

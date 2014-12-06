@@ -694,6 +694,8 @@ class SimRes(Res):
 
     - *fname*: Name of the file (including the directory if necessary)
 
+         '/' can be used as a path separator in both Windows and Unix/Linux.
+
     - *constants_only*: *True* to load only the variables from the first
       data table
 
@@ -780,9 +782,10 @@ class SimRes(Res):
         """
 
         # Load the file.
+        fname = os.path.normpath(fname) # Allow '/' as path sep in Windows.
         if tool is None:
             # Load the file and store the variables.
-            for (tool, load) in LOADERS[:-1]:
+            for tool, load in LOADERS[:-1]:
                 try:
                     self._variables = load(fname, constants_only)
                 except IOError:
@@ -793,7 +796,7 @@ class SimRes(Res):
                     continue
                 else:
                     break
-            (tool, load) = LOADERS[-1]
+            tool, load = LOADERS[-1]
         else:
             loaderdict = dict(LOADERS)
             try:
@@ -1431,8 +1434,8 @@ class SimRes(Res):
     def to_pandas(self, names=None, aliases={}):
         """Return a `pandas DataFrame`_ with values from selected variables.
 
-        The index is time.  The column headings indicate the variable names as
-        well as the units.
+        The index is time.  The column headings indicate the variable names and
+        units.
 
         The data frame has methods for further manipulation and exporting (e.g.,
         :meth:`~pandas.DataFrame.to_clipboard`,

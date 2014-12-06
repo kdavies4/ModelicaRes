@@ -108,6 +108,7 @@ class LinRes(Res):
 
          The file must contain four matrices:  *Aclass* (specifies the class
          name, which must be "AlinearSystem"), *nx*, *xuyName*, and *ABCD*.
+         '/' can be used as a path separator in both Windows and Unix/Linux.
 
     - *tool*: String indicating the linearization tool that created the file
       and thus the function to be used to load it
@@ -172,9 +173,10 @@ class LinRes(Res):
         """
 
         # Load the file.
+        fname = os.path.normpath(fname) # Allow '/' as path sep in Windows.
         if tool is None:
             # Load the file and store the data.
-            for (tool, load) in LOADERS[:-1]:
+            for tool, load in LOADERS[:-1]:
                 try:
                     self.sys = load(fname)
                 except IOError:
@@ -186,7 +188,7 @@ class LinRes(Res):
                     continue
                 else:
                     break
-            (tool, load) = LOADERS[-1]
+            tool, load = LOADERS[-1]
         else:
             loaderdict = dict(LOADERS)
             try:
