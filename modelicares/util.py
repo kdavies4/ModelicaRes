@@ -134,7 +134,7 @@ def add_arrows(plot, x_locs=[0], xstar_offset=0, ystar_offset=0,
                lstar=0.05, label='', orientation='tangent', color='r'):
     """Overlay arrows with annotations on a pre-plotted line.
 
-    **Arguments:**
+    **Parameters:**
 
     - *plot*: A plot instance (:class:`matplotlib.lines.Line2D` object)
 
@@ -209,7 +209,7 @@ def add_arrows(plot, x_locs=[0], xstar_offset=0, ystar_offset=0,
 def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
     r"""Add horizontal lines to a set of axes with optional labels.
 
-    **Arguments:**
+    **Parameters:**
 
     - *ax*: Axes (:class:`matplotlib.axes.Axes` object)
 
@@ -247,7 +247,7 @@ def add_hlines(ax=None, positions=[0], labels=[], **kwargs):
 def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
     r"""Add vertical lines to a set of axes with optional labels.
 
-    **Arguments:**
+    **Parameters:**
 
     - *ax*: Axes (:class:`matplotlib.axes.Axes` object)
 
@@ -318,7 +318,7 @@ def color(ax, c, *args, **kwargs):
 
     This uses a uniform grid.
 
-    **Arguments:**
+    **Parameters:**
 
     - *ax*: Axis onto which the data should be plotted
 
@@ -364,7 +364,7 @@ def expand_path(path):
 def figure(label='', *args, **kwargs):
     r"""Create a figure and set its label.
 
-    **Arguments:**
+    **Parameters:**
 
     - *label*: String to apply to the figure's *label* property
 
@@ -405,7 +405,7 @@ def basename(fname):
 def flatten_dict(d, parent_key='', separator='.'):
     """Flatten a nested dictionary.
 
-    **Arguments:**
+    **Parameters:**
 
     - *d*: Dictionary (may be nested to an arbitrary depth)
 
@@ -439,7 +439,7 @@ def flatten_dict(d, parent_key='', separator='.'):
 def _gen_offset_factor(label, tick_lo, tick_up, eagerness=0.325):
     """Apply an offset and a scaling factor to a label if necessary.
 
-    **Arguments:**
+    **Parameters:**
 
     - *tick_lo*: Lower tick value
 
@@ -514,7 +514,7 @@ def get_indices(x, target):
     """Return the pair of indices that bound a target value in a monotonically
     increasing vector.
 
-    **Arguments:**
+    **Parameters:**
 
     - *x*: Vector
 
@@ -569,7 +569,7 @@ def load_csv(fname, header_row=0, first_data_row=None, types=None, **kwargs):
 
     The strings from the header row are used as dictionary keys.
 
-    **Arguments:**
+    **Parameters:**
 
     - *fname*: Path and name of the file
 
@@ -650,7 +650,7 @@ def match(strings, pattern=None, re=False):
 
     By default, all of the strings are returned.
 
-    **Arguments:**
+    **Parameters:**
 
     - *strings*: List of strings
 
@@ -719,7 +719,7 @@ def plot(y, x=None, ax=None, label=None,
     function) but provides direct support for plotting an arbitrary number of
     curves.
 
-    **Arguments:**
+    **Parameters:**
 
     - *y*: List of y-axis series
 
@@ -821,7 +821,7 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
     r"""Plot 2D vector data as arrows in 2D Cartesian coordinates using a
     uniform grid.
 
-    **Arguments:**
+    **Parameters:**
 
     - *ax*: Axis onto which the data should be plotted
 
@@ -865,7 +865,7 @@ def save(formats=['pdf', 'png'], fname=None, fig=None):
     A forward slash (;/') can be used as a path separator, even if the operating
     system is Windows.  Folders are created as needed.
 
-    **Arguments:**
+    **Parameters:**
 
     - *formats*: Format or list of formats in which the figure should be saved
 
@@ -942,7 +942,7 @@ def saveall(formats=['pdf', 'png']):
     :func:`figure` function can be used to directly create a figure with a
     label.
 
-    **Arguments:**
+    **Parameters:**
 
     - *formats*: Format or list of formats in which the figures should be saved
 
@@ -989,7 +989,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
                    cbar_space=0.1, cbar_width=0.05):
     """Create an array of subplots and return their axes.
 
-    **Arguments:**
+    **Parameters:**
 
     - *n_plots*: Number of subplots
 
@@ -1147,7 +1147,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
 def _shift_scale_c(cbar, vmin, vmax, eagerness=0.325):
     """"If helpful, apply an offset and a factor to the colorbar.
 
-    **Arguments:**
+    **Parameters:**
 
     - *cbar*: :class:`matplotlib.colorbar.Colorbar` object
 
@@ -1177,7 +1177,7 @@ def _shift_scale_c(cbar, vmin, vmax, eagerness=0.325):
 def shift_scale_x(ax, eagerness=0.325):
     """If helpful, apply an offset and a factor to the x axis.
 
-    **Arguments:**
+    **Parameters:**
 
     - *ax*: Axes (:class:`matplotlib.axes.Axes` object)
 
@@ -1208,7 +1208,7 @@ def shift_scale_x(ax, eagerness=0.325):
 def shift_scale_y(ax, eagerness=0.325):
     """If helpful, apply an offset and a factor to the y axis.
 
-    **Arguments:**
+    **Parameters:**
 
     - *ax*: Axes (:class:`matplotlib.axes.Axes` object)
 
@@ -1272,7 +1272,7 @@ def tree(strings, separator='.', container=dict):
     The keys in the dictionary are the sub-branch names.  The value at the
     end of each branch is the full string.
 
-    **Arguments:**
+    **Parameters:**
 
     - *strings*: List of strings
 
@@ -1314,7 +1314,7 @@ class ArrowLine(Line2D):
 
     r"""A matplotlib_ subclass to draw an arrowhead on a line
 
-    **Arguments:**
+    **Parameters:**
 
     - *arrow* (='-'): Type of arrow ('<' | '-' | '>')
 

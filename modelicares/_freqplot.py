@@ -220,7 +220,7 @@ def bode_plot(mag, phase, f, in_Hz=True, in_dB=True, in_deg=True, label=None,
               axes=None, *args, **kwargs):
     r"""Create a Bode plot for a system.
 
-    **Arguments:**
+    **Parameters:**
 
     - *sys*: Linear input/output system (Lti)
 
@@ -297,7 +297,7 @@ def nyquist_plot(mag, phase, f, in_Hz=True, label=None, mark=False,
                  **kwargs):
     r"""Create a Nyquist plot for a system.
 
-    **Arguments:**
+    **Parameters:**
 
     - *sys*: Linear input/output system (Lti)
 

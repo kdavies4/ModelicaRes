@@ -234,7 +234,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         The times and values are taken at index or slice *i*.  If *i* is *None*,
         then all times and values are returned.
 
-        **Arguments:**
+        **Parameters:**
 
         - *t*: Time index
 
@@ -455,7 +455,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
     def times(self, t=None, f=None):
         """Return function *f* of the recorded times of the variable.
 
-        **Arguments:**
+        **Parameters:**
 
         - *t*: Time index
 
@@ -504,7 +504,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         This method raises a :class:`ValueError` if the variable is
         time-varying.
 
-        **Arguments:**
+        **Parameters:**
 
         - *f*: Function that operates on the value (default or *None* is
           identity)
@@ -532,7 +532,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
     def values(self, t=None, f=None):
         r"""Return function *f* of the values of the variable.
 
-        **Arguments:**
+        **Parameters:**
 
         - *t*: Time index
 
@@ -823,7 +823,7 @@ class SimRes(Res):
              leg_kwargs=None, **kwargs):
         r"""Create a sequence of bar plots at times.
 
-        **Arguments:**
+        **Parameters:**
 
         - *names*: List of names of the variables to be plotted
 
@@ -1000,7 +1000,7 @@ class SimRes(Res):
         By default, all names are returned.  The names are sorted
         alphabetically.
 
-        **Arguments:**
+        **Parameters:**
 
         - *pattern*: Case-sensitive string used for matching
 
@@ -1120,7 +1120,7 @@ class SimRes(Res):
         The abscissa may be time or any other variable (i.e., scatterplots are
         possible).
 
-        **Arguments:**
+        **Parameters:**
 
         - *ynames1*: Name or list of names of variables for the primary y axis
 
@@ -1336,7 +1336,7 @@ class SimRes(Res):
                hspace=0.1, vspace=0.25, **kwargs):
         r"""Create a figure with one or more Sankey diagrams.
 
-        **Arguments:**
+        **Parameters:**
 
         - *names*: List of names of the flow variables
 
@@ -1443,7 +1443,7 @@ class SimRes(Res):
         :meth:`~pandas.DataFrame.to_hdf`, and
         :meth:`~pandas.DataFrame.to_html`).
 
-        **Arguments:**
+        **Parameters:**
 
         - *names*: String or list of strings of the variable names
 
@@ -1679,7 +1679,7 @@ class SimRes(Res):
     def get_dimension(self, names):
         """Return the dimension(s) of trajectory variable(s).
 
-        **Arguments:**
+        **Parameters:**
 
         - *names*: Name(s) of the variable(s) from which to get the
           dimension(s)
@@ -1706,7 +1706,7 @@ class SimRes(Res):
     def _set_constants(self, record=None):
         """Establish the values of the base constants.
 
-        **Arguments:**
+        **Parameters:**
 
         - *record*: Full Modelica_ model path to the record which contains the
           base units
@@ -1905,7 +1905,7 @@ class SimResList(ResList):
     def append(self, item):
         """Add simulation(s) to the end of the list of simulations.
 
-        **Arguments:**
+        **Parameters:**
 
         - *item*: :class:`SimRes` instance or a file specification
 
@@ -1963,7 +1963,7 @@ class SimResList(ResList):
         By default, all of the common variables are returned.  The names are
         sorted alphabetically.
 
-        **Arguments:**
+        **Parameters:**
 
         - *pattern*: Case-sensitive string used for matching
 
@@ -2030,7 +2030,7 @@ class SimResList(ResList):
         variables that the simulations share.  Each key is a variable name and
         each value is a list of initial values across the simulations.
 
-        **Arguments:**
+        **Parameters:**
 
         - *constants_only*: *True* to include only the variables that do not
           change over time
@@ -2217,7 +2217,7 @@ class SimResList(ResList):
 
         A new figure is created if necessary.
 
-        **Arguments:**
+        **Parameters:**
 
         *\*args* and *\*\*kwargs* are propagated to :meth:`SimRes.plot`
         (then to :func:`modelicares.util.plot` and finally to

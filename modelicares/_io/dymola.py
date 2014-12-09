@@ -80,7 +80,7 @@ class Variable(GenericVariable):
     def values(self):
         """Return function *f* of the values of the variable.
 
-        **Arguments:**
+        **Parameters:**
 
         - *t*: Time index
 
@@ -121,7 +121,7 @@ class Variable(GenericVariable):
     def times(self):
         """Return function *f* of the recorded times of the variable.
 
-        **Arguments:**
+        **Parameters:**
 
         - *t*: Time index
 
@@ -189,7 +189,7 @@ def read(fname, constants_only=False):
     r"""Read variables from a MATLAB\ :sup:`®` file with Dymola\ :sup:`®` or
     OpenModelica results.
 
-    **Arguments:**
+    **Parameters:**
 
     - *fname*: Name of the results file, including the path
 
@@ -232,7 +232,7 @@ def read(fname, constants_only=False):
 def loadsim(fname, constants_only=False):
     r"""Load Dymola\ :sup:`®` or OpenModelica simulation results.
 
-    **Arguments:**
+    **Parameters:**
 
     - *fname*: Name of the results file, including the path
 
@@ -358,7 +358,7 @@ def loadsim(fname, constants_only=False):
 def loadlin(fname):
     r"""Load Dymola\ :sup:`®` or OpenModelica linearization results.
 
-    **Arguments:**
+    **Parameters:**
 
     - *fname*: Name of the results file, including the path
 

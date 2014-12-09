@@ -49,7 +49,7 @@ def number_label(quantity="", unit=None, times=r'\,', per=r'\,/\,',
 
     The unit is formatted with LaTeX_ as needed.
 
-    **Arguments:**
+    **Parameters:**
 
     - *quantity*: String describing the quantity
 
@@ -108,7 +108,7 @@ def quantity_str(number, unit='', use_si=True, format='%g', times=r'\,',
     If an exponent is present, then either a LaTeX-formatted exponential or a
     System International (SI) prefix is applied.
 
-    **Arguments:**
+    **Parameters:**
 
     - *number*: Floating point or integer number
 
@@ -187,7 +187,7 @@ def quantity_str(number, unit='', use_si=True, format='%g', times=r'\,',
 def unit2tex(unit, times=r'\,', roman=False):
     r"""Convert a Modelica_ unit string to LaTeX_.
 
-    **Arguments:**
+    **Parameters:**
 
     - *unit*: Unit string in extended Modelica_ notation
 

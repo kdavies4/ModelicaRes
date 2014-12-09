@@ -114,7 +114,7 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
     a dictionary (:class:`dict`) of command arguments (keyword and value) for
     the Modelica_ tool or environment.
 
-    **Arguments:**
+    **Parameters:**
 
     - *models*: List of model names (including the full model path in Modelica_
       dot notation)
@@ -266,7 +266,7 @@ def read_params(names, fname='dsin.txt'):
     """Read parameter values from an initialization or final values file (e.g.,
     dsin.txt or dsfinal.txt).
 
-    **Arguments:**
+    **Parameters:**
 
     - *names*: Parameter name or list of names (with full model path in
       Modelica_ dot notation)
@@ -433,7 +433,7 @@ def write_params(params, fname='dsin.txt'):
     """Write parameter values to a simulation initialization file (e.g.,
     dsin.txt).
 
-    **Arguments:**
+    **Parameters:**
 
     - *params*: Dictionary of parameters
 

@@ -56,7 +56,7 @@ def _from_names(meth):
         """Method that accepts names or indices to identify system inputs and
         outputs
 
-        **Arguments:**
+        **Parameters:**
 
         - *iu*: Index or name of the input
 
@@ -218,7 +218,7 @@ class LinRes(Res):
     def to_siso(self, iu, iy):
         """Return a SISO system given input and output indices.
 
-        **Arguments:**
+        **Parameters:**
 
         - *iu*: Index or name of the input
 
@@ -250,7 +250,7 @@ class LinRes(Res):
     def to_tf(self, iu, iy):
         """Return a transfer function given input and output names.
 
-        **Arguments:**
+        **Parameters:**
 
         - *iu*: Index or name of the input
 
@@ -278,7 +278,7 @@ class LinRes(Res):
         The Bode plots of a MIMO system are overlayed. This is different than
         MATLAB\ :sup:`®`, which creates an array of subplots.
 
-        **Arguments:**
+        **Parameters:**
 
         - *axes*: Tuple (pair) of axes for the magnitude and phase plots
 
@@ -405,7 +405,7 @@ class LinRes(Res):
         The Nyquist plots of a MIMO system are overlayed. This is different
         than MATLAB\ :sup:`®`, which creates an array of subplots.
 
-        **Arguments:**
+        **Parameters:**
 
         - *ax*: Axes onto which the Nyquist diagram should be plotted
 
@@ -668,7 +668,7 @@ class LinResList(ResList):
     def append(self, item):
         """Add linearization(s) to the end of the list of linearizations.
 
-        **Arguments:**
+        **Parameters:**
 
         - *item*: :class:`LinRes` instance or a file specification
 
@@ -782,7 +782,7 @@ class LinResList(ResList):
         This method calls :meth:`LinRes.bode` from the included instances
         of :class:`LinRes`.
 
-        **Arguments:**
+        **Parameters:**
 
         - *axes*: Tuple (pair) of axes for the magnitude and phase plots
 
@@ -911,7 +911,7 @@ class LinResList(ResList):
         This method calls :meth:`~LinRes.nyquist` from the included instances of
         :class:`LinRes`.
 
-        **Arguments:**
+        **Parameters:**
 
         - *ax*: Axes onto which the Nyquist diagrams should be plotted
 
