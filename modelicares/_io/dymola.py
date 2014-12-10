@@ -1,40 +1,48 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-r"""Classes and functions to load results from Dymola and OpenModelica
+r"""Classes and functions to load Dymola\ :sup:`®`-formatted binary (*.mat) and
+text (*.txt) results
+
+This format is also used by OpenModelica_ and by PyFMI_ via JModelica.org_.
 
 Classes:
 
-- :class:`Variable` - Specialized namedtuple to represent a variable in a model
-  simulated by Dymola or OpenModelica
+- :class:`Variable` - Specialized namedtuple to represent a variable in
+  Dymola\ :sup:`®`-formatted results
 
 - :class:`Samples` - Namedtuple to store the time and value information of
   each variable in the *samples* field of :class:`Variable`
 
 Functions:
 
-- :func:`read` - Read variables from a MATLAB\ :sup:`®` file with
-  Dymola\ :sup:`®` or OpenModelica results.
+- :func:`read` - Read variables from a MATLAB\ :sup:`®` (*.mat) or text (*.txt)
+  file with Dymola\ :sup:`®`-formatted results.
 
-- :func:`loadsim` - Load Dymola\ :sup:`®` or OpenModelica simulation results.
+- :func:`loadsim` - Load Dymola\ :sup:`®`-formatted simulation results.
 
-- :func:`loadlin` - Load Dymola\ :sup:`®` or OpenModelica linearization results.
+- :func:`loadlin` - Load Dymola\ :sup:`®`-formatted linearization results.
 
 Errors are raised under the following conditions:
 
 - **IOError**: The file cannot be accessed.
 
-- **TypeError**: The file does not appear to be from Dymola or OpenModelica.
+- **TypeError**: The file does not use the Dymola\ :sup:`®` format.
 
 - **AssertionError**: The results are not of the expected type (simulation or
-  linearization), the orientation of the data (normal or transposed) is
-  unrecognized, or the format version is not supported.
+  linearization), the orientation of the data (normal or transposed) is unknown,
+  or the format version is not supported.
 
 - **KeyError**: An expected variable is missing.
 
 - **IndexError**: A variable has the wrong shape.
 
-The last three errors occur when the file does appear to be from Dymola or
-OpenModelica but something else is wrong.
+The last three errors occur when the file uses the Dymola\ :sup:`®` format but
+something else is wrong.
+
+
+_OpenModelica: https://www.openmodelica.org/
+_PyFMI: http://www.pyfmi.org/
+_JModelica.org: http://www.jmodelica.org/
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
@@ -49,122 +57,63 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 # Other:
 # pylint: disable=I0011, C0103, C0301
 
+import numpy as np
+import re
+
 from collections import namedtuple
 from itertools import count
-from scipy.io import loadmat
+from scipy.io import loadmat as readmat
 from scipy.io.matlab.mio_utils import chars_to_strings
 from control.matlab import ss
 from six import PY2
 
-from ..simres import (_VarDict, _select, _apply_function, _swap,
-                      Variable as GenericVariable)
+from . import select, VarDict
+from ..util import next_nonblank
+from ..simres import Variable as GenericVariable
+
 
 # Namedtuple to store the time and value information of each variable
 Samples = namedtuple('Samples', ['times', 'values', 'negated'])
 # This is used for the *samples* field of Variable below.
 # The negated field indicates if the values should be negated upon access.
 
+
 # Named tuple to store the data for each variable
-
-
 class Variable(GenericVariable):
 
     """Specialized namedtuple to represent a variable in a model simulated by
-    Dymola or OpenModelica
+    Dymola\ :sup:`®`
     """
     # pylint: disable=I0011, W0221
 
-    @_swap            # We want the times (t) to be the first argument,
-    @_apply_function  # but for efficiency, it's best to
-    @_select          # select the values first.
+    @select
     def values(self):
-        """Return function *f* of the values of the variable.
-
-        **Parameters:**
-
-        - *t*: Time index
-
-             - Default or *None*: All samples are included.
-
-             - *float*: Interpolate to a single time.
-
-             - *list*: Interpolate to a list of times.
-
-             - *tuple*: Extract samples from a range of times.  The structure is
-               signature to the arguments of Python's slice_ function, except
-               that the start and stop values can be floating point numbers.
-               The samples within and up to the limits are included.
-               Interpolation is not used.
-
-                  - (*stop*,): All samples up to *stop* are included.
-
-                       Be sure to include the comma to distinguish this from a
-                       singleton.
-
-                  - (*start*, *stop*): All samples between *start* and *stop*
-                    are included.
-
-                  - (*start*, *stop*, *skip*): Every *skip*th sample is included
-                    between *start* and *stop*.
-
-        - *f*: Function that operates on the vector of values (default or *None*
-          is identity)
+        """Return the values of the variable.
         """
         # The docstring has been copied from modelicares.simres.Variable.values.
         # Keep it updated there.
-        return (-self.samples.values if self.samples.negated else
-                self.samples.values)
+        samples = self.samples
+        return -samples.values if samples.negated else samples.values
 
-    @_swap            # We want the times (t) to be the first argument,
-    @_apply_function  # but for efficiency, it's best to
-    @_select          # select the values first.
+    @select
     def times(self):
-        """Return function *f* of the recorded times of the variable.
-
-        **Parameters:**
-
-        - *t*: Time index
-
-             This may have any of the forms list in :meth:`values`, but the
-             useful ones are:
-
-             - Default or *None*: All times are included.
-
-             - *tuple*: Extract recorded times from a range of times.  The
-               structure is signature to the arguments of Python's slice_
-               function, except that the start and stop values can be floating
-               point numbers.  The times within and up to the limits are
-               included.  Interpolation is not used.
-
-                  - (*stop*,): All times up to *stop* are included.
-
-                       Be sure to include the comma to distinguish this from a
-                       singleton.
-
-                  - (*start*, *stop*): All recorded times between *start* and
-                    *stop* are included.
-
-                  - (*start*, *stop*, *skip*): Every *skip*th recorded time is
-                    included between *start* and *stop*.
-
-        - *f*: Function that operates on the vector of recorded times (default
-          or *None* is identity)
+        """Return the recorded times of the variable.
         """
         # The docstring has been copied from modelicares.simres.Variable.values.
         # Keep it updated there.
         return self.samples.times
 
 if PY2:
-    # For most strings (those besides the description), Unicode is not
+    # For most strings (those besides the description), Unicode isn't
     # necessary.  Unicode support is less integrated in Python 2; Unicode
     # strings are a special case that are represented by u'...' (which is
-    # distracting in the examples).  Therefore, in Python 2, we'll only use
+    # distracting in the examples).  Therefore, in Python 2 we'll only use
     # Unicode for the description strings.
     def get_strings(str_arr):
         """Return a list of strings from a character array.
 
-        Strip the whitespace from the right and return it to the character set it
-        was saved in.
+        Strip the whitespace from the right and return it to the character set
+        it was saved in.
         """
         return [line.rstrip(' \0').encode('latin-1')
                 for line in chars_to_strings(str_arr)]
@@ -181,71 +130,159 @@ else:
         """
         return [line.rstrip(' \0').encode('latin-1').decode('utf-8')
                 for line in chars_to_strings(str_arr)]
-        # Modelica encodes using utf-8 but scipy.io.loadmat decodes using latin-1,
-        # thus the encode ... decode part.
+        # Modelica encodes using utf-8 but scipy.io.loadmat decodes using
+        # latin-1, thus the encode ... decode part.
 
 
-def read(fname, constants_only=False):
-    r"""Read variables from a MATLAB\ :sup:`®` file with Dymola\ :sup:`®` or
-    OpenModelica results.
+def readtxt(file_name, variable_names=None, skip_header=1):
+    r"""Read variables from a  Dymola\ :sup:`®`-formatted text file (*.txt).
 
     **Parameters:**
 
-    - *fname*: Name of the results file, including the path
+    - *file_name*: Name of the results file, including the path and extension
 
-         This may be from a simulation or linearization.
+    - *variable_names*: List of the names of the variables to read
 
-    - *constants_only*: *True* to load only the variables from the first data
-      matrix, if the result is from a simulation
+         Any variable with a name not in this list will be skipped, possibly
+         saving some processing time.  If *variable_names* is *None*, then all
+         variables will be read.
+
+     - *skip_header*: Number of lines to skip at the beginning of the file
 
     **Returns:**
 
-    1. A dictionary of variables
+    1. A dictionary of variable names and values
+    """
+
+    SPLIT_DEFINITION = re.compile('(\w*) *(\w*) *\( *(\d*) *, *(\d*) *\)').match
+    PARSERS = {'int': lambda get, rows:
+                   np.array([np.fromstring(get().split('#')[0], int, sep=' ')
+                             for row in rows]),
+               'float': lambda get, rows:
+                   np.array([np.fromstring(get().split('#')[0], float, sep=' ')
+                             for row in rows]).T,
+               'char': lambda get, rows:
+                   [get().rstrip() for row in rows]}
+
+    with open(file_name) as f:
+
+        # Skip the header.
+        for i in range(skip_header):
+            f.next()
+
+        # Collect the variables and values.
+        data = {}
+        while True:
+
+            # Read and parse the next variable definition.
+            try:
+                line = next_nonblank(f)
+            except StopIteration:
+                break # End of file
+            type_string, name, nrows, ncols = SPLIT_DEFINITION(line).groups()
+
+            # Parse the variable's value, if it is selected
+            rows = range(int(nrows))
+            if variable_names is None or name in variable_names:
+                try:
+                    parse = PARSERS[type_string]
+                except KeyError:
+                    raise KeyError('Unknown variable type: ' + type_string)
+                try:
+                    data[name] = parse(f.next, rows)
+                except StopIteration:
+                    raise ValueError('Unexpected end of file')
+            else:
+                # Skip the current variable.
+                for row in rows:
+                    f.next()
+    return data
+
+def read(fname, constants_only=False):
+    r"""Read variables from a MATLAB\ :sup:`®` (*.mat) or text file (*.txt) with
+    Dymola\ :sup:`®`-formatted results.
+
+    **Parameters:**
+
+    - *fname*: Name of the results file, including the path and extension
+
+         This may be from a simulation or a linearization.
+
+    - *constants_only*: *True* to assume the result is from a simulation and
+      load only the variables from the first data matrix
+
+    **Returns:**
+
+    1. A dictionary of variable names and values
 
     2. A list of strings from the lines of the 'Aclass' matrix
     """
 
     # Load the file.
+    variable_names=['Aclass', 'name', 'names', 'description', 'dataInfo',
+                    'data', 'data_1'] if constants_only else None
     try:
-        if constants_only:
-            mat = loadmat(fname, chars_as_strings=False, appendmat=False,
-                          variable_names=['Aclass', 'class', 'name', 'names',
-                                          'description', 'dataInfo', 'data',
-                                          'data_1', 'ABCD', 'nx', 'xuyName'])
-        else:
-            mat = loadmat(fname, chars_as_strings=False, appendmat=False)
+        data = readmat(fname, variable_names=variable_names,
+                       chars_as_strings=False, appendmat=False)
+        binary = True
+    except ValueError:
+        data = readtxt(fname, variable_names=variable_names)
+        binary = False
     except IOError:
-        raise IOError('"{f}" could not be opened.'
-                      '  Check that it exists.'.format(f=fname))
+        raise IOError('"{}" could not be opened.  '
+                      'Check that it exists.'.format(fname))
 
-    # Check if the file contains the Aclass variable.
+    # Get the Aclass variable and transpose the data if necessary.
     try:
-        Aclass = mat['Aclass']
+        Aclass = data.pop('Aclass')
     except KeyError:
-        raise TypeError('"{f}" does not appear to be a Dymola or OpenModelica '
-                        'result file.  The "Aclass" variable is '
-                        'missing.'.format(f=fname))
+        raise TypeError('"{}" does not appear to use the Dymola format.  '
+                        'The "Aclass" variable is missing.'.format(fname))
+    if binary:
+        Aclass = get_strings(Aclass)
 
-    return mat, get_strings(Aclass)
+        # Determine if the data is transposed.
+        try:
+            transposed = Aclass[3] == 'binTrans'
+        except IndexError:
+            transposed = False
+        else:
+            assert transposed or Aclass[3] == 'binNormal', (
+                'The orientation of the Dymola-formatted results is not '
+                'recognized.  The third line of the "Aclass" variable is "%s", '
+                'but it should be "binNormal" or "binTrans".' % Aclass[3])
+
+        # Undo the transposition and convert character arrays to strings.
+        for name, value in data.items():
+            if value.dtype == '<U1':
+                data[name] = get_strings(value.T if transposed else value)
+            elif transposed:
+                data[name] = value.T
+
+    else:
+        # In a text file, only the data_1, data_2, etc. matrices are transposed.
+        for name, value in data.items():
+            if name.startswith('data_'):
+                data[name] = value.T
+
+    return data, Aclass
 
 
 def loadsim(fname, constants_only=False):
-    r"""Load Dymola\ :sup:`®` or OpenModelica simulation results.
+    r"""Load Dymola\ :sup:`®`-formatted simulation results.
 
     **Parameters:**
 
-    - *fname*: Name of the results file, including the path
-
-         The file extension ('.mat') is optional.
+    - *fname*: Name of the results file, including the path and extension
 
     - *constants_only*: *True* to load only the variables from the first data
       matrix
 
-         The first data matrix usually contains all of the constants,
+         The first data matrix typically contains all of the constants,
          parameters, and variables that don't vary.  If only that information is
          needed, it may save resources to set *constants_only* to *True*.
 
-    **Returns:** An instance of :class:`~modelicares.simres._VarDict`, a
+    **Returns:** An instance of :class:`~modelicares._io.VarDict`, a
     specialized dictionary of variables (instances of :class:`Variable`)
 
     **Example:**
@@ -278,30 +315,14 @@ def loadsim(fname, constants_only=False):
         return description, unit, displayUnit
 
     # Load the file.
-    mat, Aclass = read(fname, constants_only)
+    data, Aclass = read(fname, constants_only)
 
     # Check the type of results.
     if Aclass[0] == 'AlinearSystem':
         raise AssertionError(fname + ' is a linearization result.  Use LinRes '
                              'instead.')
-    else:
-
-        assert Aclass[0] == 'Atrajectory', (fname + ' is not a simulation or '
-                                            'linearization result.')
-
-    # Determine if the data is transposed.
-    try:
-        transposed = Aclass[3] == 'binTrans'
-    except IndexError:
-        transposed = False
-    else:
-        assert transposed or Aclass[3] == 'binNormal', (
-            'The orientation of the Dymola/OpenModelica results is not '
-            'recognized.  The third line of the "Aclass" variable is "%s", but '
-            'it should be "binNormal" or "binTrans".' % Aclass[3])
-
-    # Get the format version.
-    version = Aclass[1]
+    assert Aclass[0] == 'Atrajectory', (fname + ' is not a simulation or '
+                                        'linearization result.')
 
     # Process the name, description, parts of dataInfo, and data_i variables.
     # This section has been optimized for speed.  All time and value data
@@ -309,60 +330,53 @@ def loadsim(fname, constants_only=False):
     # negated variable is carried through so that copies are not necessary.  If
     # changes are made to this code, be sure to compare the performance (e.g.,
     # using %timeit in IPython).
-    if version == '1.0':
-        data = mat['data'].T if transposed else mat['data']
-        times = data[:, 0]
-        names = get_strings(mat['names'].T if transposed else mat['names'])
-        variables = _VarDict({name: Variable(Samples(times, data[:, i], False),
-                                             '', '', '')
-                              for i, name in enumerate(names)})
-    else:
-        assert version == '1.1', ('The version of the Dymola/OpenModelica '
-                                  'result file ({v}) is not '
-                                  'supported.'.format(v=version))
-        names = get_strings(mat['name'].T if transposed else mat['name'])
-        descriptions = get_strings(mat['description'].T if transposed else
-                                   mat['description'])
-        dataInfo = mat['dataInfo'] if transposed else mat['dataInfo'].T
-        data_sets = dataInfo[0, :]
-        sign_cols = dataInfo[1, :]
-        variables = _VarDict()
+    version = Aclass[1]
+    if version == '1.1':
+        names = data['name']
+        descriptions = data['description']
+        dataInfo = data['dataInfo']
+        variables = VarDict()
         for i in count(1):
             try:
-                data = (mat['data_%i' % i].T if transposed else
-                        mat['data_%i' % i])
+                traj = data['data_%i' % i]
             except KeyError:
                 break  # There are no more "data_i" variables.
             else:
-                if data.shape[1] > 1:  # In case the data set is empty.
-                    times = data[:, 0]
-                    variables.update({name:
-                                      Variable(Samples(times,
-                                                       data[:,
-                                                            abs(sign_col) - 1],
-                                                       sign_col < 0),
-                                               *parse(description))
-                                      for (name, description, data_set,
-                                           sign_col)
-                                      in zip(names, descriptions, data_sets,
-                                             sign_cols)
-                                      if data_set == i})
+                try:
+                    times = traj[:, 0]
+                except IndexError:
+                    continue # The data set is empty.
+                variables.update({names[j]:
+                                  Variable(Samples(times,
+                                                   traj[:, abs(sign_col) - 1],
+                                                   sign_col < 0),
+                                           *parse(descriptions[j]))
+                                  for j, [data_set, sign_col]
+                                  in enumerate(dataInfo[:, 0:2])
+                                  if data_set == i})
 
         # Time is from the last data set.
         variables['Time'] = Variable(Samples(times, times, False),
                                      'Time', 's', '')
+        return variables
 
-    return variables
+    elif version == '1.0':
+        traj = data['data']
+        times = traj[:, 0]
+        return VarDict({name: Variable(Samples(times, traj[:, i], False),
+                                       '', '', '')
+                        for i, name in enumerate(data['names'])})
+
+    raise AssertionError("The version of the Dymola-formatted result file ({}) "
+                         "is not supported.".format(version))
 
 
 def loadlin(fname):
-    r"""Load Dymola\ :sup:`®` or OpenModelica linearization results.
+    r"""Load Dymola\ :sup:`®`-formatted linearization results.
 
     **Parameters:**
 
-    - *fname*: Name of the results file, including the path
-
-         The file extension ('.mat') is optional.
+    - *fname*: Name of the results file, including the path and extension
 
     **Returns:**
 
@@ -392,19 +406,18 @@ def loadlin(fname):
     # pylint: disable=I0011, W0621
 
     # Load the file.
-    mat, Aclass = read(fname)
+    data, Aclass = read(fname)
 
     # Check the type of results.
     if Aclass[0] == 'Atrajectory':
         raise AssertionError(fname + ' is a simulation result.  Use SimRes '
                              'instead.')
-    else:
-        assert Aclass[0] == 'AlinearSystem', (fname + ' is not a simulation or'
-                                              ' linearization result.')
+    assert Aclass[0] == 'AlinearSystem', (fname + ' is not a simulation or'
+                                          ' linearization result.')
 
     # Determine the number of states, inputs, and outputs.
-    ABCD = mat['ABCD']
-    nx = mat['nx'][0]
+    ABCD = data['ABCD']
+    nx = data['nx'][0]
     nu = ABCD.shape[1] - nx
     ny = ABCD.shape[0] - nx
 
@@ -416,10 +429,10 @@ def loadlin(fname):
     sys = ss(A, B, C, D)
 
     # Extract the variable names.
-    xuyName = mat['xuyName']
-    sys.state_names = get_strings(xuyName[:nx])
-    sys.input_names = get_strings(xuyName[nx:nx + nu])
-    sys.output_names = get_strings(xuyName[nx + nu:])
+    xuyName = data['xuyName']
+    sys.state_names = xuyName[:nx]
+    sys.input_names = xuyName[nx:nx + nu]
+    sys.output_names = xuyName[nx + nu:]
 
     return sys
 

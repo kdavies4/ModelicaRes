@@ -42,7 +42,6 @@ import numpy as np
 
 from abc import abstractmethod
 from collections import namedtuple, OrderedDict
-from difflib import get_close_matches
 from functools import wraps
 from itertools import cycle
 from matplotlib import rcParams
@@ -51,130 +50,11 @@ from matplotlib.pyplot import figlegend
 from natu.util import flatten_list, multiglob
 from pandas import DataFrame
 from scipy.integrate import trapz as integral
-from scipy.interpolate import interp1d
 from six import string_types
 
 from . import util
 from ._res import Res, ResList
 from .texunit import unit2tex, number_label
-
-
-def _apply_function(meth):
-    """Decorate a method to apply a function to its output
-    """
-    @wraps(meth)
-    def wrapped(self, f=None, *args, **kwargs):
-        """Method that applies a function *f* to its output
-
-        If *f* is *None* (default), no function is applied (i.e., pass
-        through or identity).
-        """
-        return (meth(self, *args, **kwargs) if f is None else
-                f(meth(self, *args, **kwargs)))
-
-    return wrapped
-
-
-def _get_sims(fnames):
-    """Return a list of :class:`SimRes` instances from a list of filenames.
-
-    No errors are given unless no files could be loaded.
-    """
-    sims = []
-    for fname in fnames:
-        try:
-            sims.append(SimRes(fname))
-        except (AssertionError, IndexError, IOError, KeyError, TypeError,
-                ValueError):
-            continue
-    assert len(sims) > 0, "No simulations were loaded."
-    return sims
-
-
-def _select(meth):
-    """Decorate a method to use time-based indexing to select values.
-    """
-    @wraps(meth)
-    def wrapped(self, t=None, *args, **kwargs):
-        """Method that uses time-based indexing to return values
-
-        If *t* is *None* (default), then all values are returned (i.e., pass
-        through or identity).
-        """
-        def get_slice(t):
-            """Return a slice that indexes the variable.
-
-            Argument *t* is a tuple with one of the following forms:
-
-              - (*stop*,): All samples up to *stop* are included.
-
-                   Be sure to include the comma to distinguish this from a
-                   float.
-
-              - (*start*, *stop*): All samples between *start* and *stop* are
-                included.
-
-              - (*start*, *stop*, *skip*): Every *skip*th sample between *start*
-                and *stop* is included.
-            """
-            # Retrieve the start time, stop time, and number of samples to
-            # skip.
-            try:
-                (t1, t2, skip) = t
-            except ValueError:
-                skip = None
-                try:
-                    (t1, t2) = t
-                except ValueError:
-                    t1 = None
-                    (t2,) = t
-            assert t1 is None or t2 is None or t1 <= t2, (
-                "The lower time limit must be less than or equal to the upper "
-                "time limit.")
-
-            # Determine the corresponding indices and return them in a tuple.
-            times = self.times()
-            i1 = None if t1 is None else util.get_indices(times, t1)[1]
-            i2 = None if t2 is None else util.get_indices(times, t2)[0] + 1
-            return slice(i1, i2, skip)
-
-        if t is None:
-            # Return all values.
-            return meth(self, *args, **kwargs)
-        elif isinstance(t, tuple):
-            # Apply a slice with optional start time, stop time, and number
-            # of samples to skip.
-            return meth(self, *args, **kwargs)[get_slice(t)]
-        else:
-            # Interpolate at single time or list of times.
-            meth_at_ = interp1d(self.times(), meth(self, *args, **kwargs))
-            # For some reason, this wraps single values as arrays, so need to
-            # cast back to float.
-            try:
-                # Assume t is a list of times.
-                return [float(meth_at_(time)) for time in t]
-            except TypeError:
-                # t is a single time.
-                return float(meth_at_(t))
-
-    return wrapped
-
-
-def _swap(meth):
-    """Swap the first two arguments of a method and give both a default of
-    *None*.
-
-    This is useful because for computational efficiency it's best to apply the
-    time selection (_select decorator below) before the applying the fuction
-    (_apply_function decorator), but we want time to be the first
-    argument and the function to be the second.
-    """
-    @wraps(meth)
-    def wrapped(self, t=None, f=None):
-        """Look up the variable and pass it to the original method."""
-        return meth(self, f, t)
-
-    return wrapped
 
 
 class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
@@ -226,10 +106,9 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
     descriptions of those methods below.
     """
 
-    def array(self, t=None, ft=None, fv=None):
-        r"""Return an array with function *ft* of the times of the variable as
-        the first column and function *fv* of the values of the variable as the
-        second column.
+    def array(self, t=None):
+        r"""Return an array with the times of the variable as the first column
+        and the values of the variable as the second column.
 
         The times and values are taken at index or slice *i*.  If *i* is *None*,
         then all times and values are returned.
@@ -261,12 +140,6 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
                   - (*start*, *stop*, *skip*): Every *skip*\ th sample is
                     included between *start* and *stop*.
 
-        - *ft*: Function that operates on the vector of times (default or
-          *None* is identity)
-
-        - *fv*: Function that operates on the vector of values (default or
-          *None* is identity)
-
         **Example:**
 
         Load a simulation and retrieve a variable:
@@ -284,10 +157,10 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
 
         .. _slice: https://docs.python.org/2/library/functions.html#slice
         """
-        return np.array([self.times(t=t, f=ft), self.values(t=t, f=fv)]).T
+        return np.array([self.times(t), self.values(t)]).T
 
-    def FV(self, f=None):
-        """Return function *f* of the final value of the variable.
+    def FV(self):
+        """Return the final value of the variable.
 
         **Example:**
 
@@ -301,7 +174,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         >>> C1_v.FV()
         2.4209836
         """
-        return f(self.values()[-1]) if f else self.values()[-1]
+        return self.values()[-1]
 
     @property
     def is_constant(self):
@@ -322,8 +195,8 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         values = self.values()
         return np.array_equal(values[:-1], values[1:])
 
-    def IV(self, f=None):
-        """Return function *f* of the initial value of the variable.
+    def IV(self):
+        """Return the initial value of the variable.
 
         **Example:**
 
@@ -337,10 +210,10 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         >>> C1_v.IV()
         4.0
         """
-        return f(self.values()[0]) if f else self.values()[0]
+        return self.values()[0]
 
-    def max(self, f=None):
-        """Return the maximum value of function *f* of the variable.
+    def max(self):
+        """Return the maximum value of the variable.
 
         **Example:**
 
@@ -354,11 +227,10 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         >>> C1_v.max()
         4.5046349
         """
-        return np.max(self.values(f=f))
+        return np.max(self.values())
 
-    def mean(self, f=None):
-        """Return the time-averaged arithmetic mean value of function *f* of the
-        variable.
+    def mean(self):
+        """Return the time-averaged arithmetic mean value of the variable.
 
         **Example:**
 
@@ -373,11 +245,11 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         0.76859528
         """
         t = self.times()
-        return integral(self.values(f=f), t) / (t[-1] - t[0])
+        return integral(self.values(), t) / (t[-1] - t[0])
 
-    def mean_rectified(self, f=None):
-        """Return the time-averaged rectified arithmetic mean value of function
-        *f* of the variable.
+    def mean_rectified(self):
+        """Return the time-averaged rectified arithmetic mean value of the
+        variable.
 
         **Example:**
 
@@ -392,10 +264,10 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         2.2870927
         """
         t = self.times()
-        return integral(np.abs(self.values(f=f)), t) / (t[-1] - t[0])
+        return integral(np.abs(self.values()), t) / (t[-1] - t[0])
 
-    def min(self, f=None):
-        """Return the minimum value of function *f* of the variable.
+    def min(self):
+        """Return the minimum value of the variable.
 
         **Example:**
 
@@ -409,11 +281,10 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         >>> C1_v.min()
         -3.8189442
         """
-        return np.min(self.values(f=f))
+        return np.min(self.values())
 
-    def RMS(self, f=None):
-        """Return the time-averaged root mean square value of function *f* of
-        the variable.
+    def RMS(self):
+        """Return the time-averaged root mean square value of the variable.
 
         **Example:**
 
@@ -428,11 +299,11 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         2.4569478
         """
         t = self.times()
-        return np.sqrt(integral(self.values(f=f) ** 2, t) / (t[-1] - t[0]))
+        return np.sqrt(integral(self.values() ** 2, t) / (t[-1] - t[0]))
 
-    def RMS_AC(self, f=None):
-        """Return the time-averaged AC-coupled root mean square value of
-        function *f* of the variable.
+    def RMS_AC(self):
+        """Return the time-averaged AC-coupled root mean square value of the
+        variable.
 
         **Example:**
 
@@ -447,13 +318,13 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         3.1022301
         """
         t = self.times()
-        mean = self.mean(f=f)
-        return mean + np.sqrt(integral((self.values(f=f) - mean) ** 2, t)
+        mean = self.mean()
+        return mean + np.sqrt(integral((self.values() - mean) ** 2, t)
                               / (t[-1] - t[0]))
 
     @abstractmethod
-    def times(self, t=None, f=None):
-        """Return function *f* of the recorded times of the variable.
+    def times(self, t=None):
+        """Return the recorded times of the variable.
 
         **Parameters:**
 
@@ -481,9 +352,6 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
                   - (*start*, *stop*, *skip*): Every *skip*th recorded time is
                     included between *start* and *stop*.
 
-        - *f*: Function that operates on the vector of recorded times (default
-          or *None* is identity)
-
         **Example:**
 
         Load a simulation and retrieve a variable:
@@ -498,16 +366,11 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         """
         pass
 
-    def value(self, f=None):
-        """Return function *f* of the value of a constant variable.
+    def value(self):
+        """Return the value of a constant variable.
 
         This method raises a :class:`ValueError` if the variable is
         time-varying.
-
-        **Parameters:**
-
-        - *f*: Function that operates on the value (default or *None* is
-          identity)
 
         **Example:**
 
@@ -523,14 +386,14 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         """
         values = self.values()
         if np.array_equal(values[:-1], values[1:]):
-            return f(values[0]) if f else values[0]
+            return values[0]
         else:
             raise ValueError("The variable is not a constant.  Use values() "
                              "instead of value().")
 
     @abstractmethod
-    def values(self, t=None, f=None):
-        r"""Return function *f* of the values of the variable.
+    def values(self, t=None):
+        r"""Return the values of the variable.
 
         **Parameters:**
 
@@ -559,9 +422,6 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
                   - (*start*, *stop*, *skip*): Every *skip*\ th sample is
                     included between *start* and *stop*.
 
-        - *f*: Function that operates on the vector of values (default or *None*
-          is identity)
-
         **Examples:**
 
         Load a simulation and retrieve a variable.
@@ -582,30 +442,29 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         pass
 
 
-class _VarDict(dict):
+# List of file-loading functions for SimRes
+from ._io.dymola import loadsim as dymola
+LOADERS = [('dymola', dymola)]  # SimRes tries these in order.
+# All of the keys should be in lowercase.
+# This must be below the definition of Variable because that class is required
+# by the loading functions.
+# TODO: Avoid this cyclic import between simres and _io.
 
-    """Special dictionary for simulation variables (instances of
-    :class:`Variable`)
+
+def _get_sims(fnames):
+    """Return a list of :class:`SimRes` instances from a list of filenames.
+
+    No errors are given unless no files could be loaded.
     """
-
-    def __getattr__(self, attr):
-        """Look up a property for each of the variables (e.g., n_constants).
-        """
-        return util.CallList([getattr(variable, attr)
-                              for variable in self.values()])
-
-    def __getitem__(self, key):
-        """Include suggestions in the error message if a variable is missing.
-        """
+    sims = []
+    for fname in fnames:
         try:
-            return dict.__getitem__(self, key)
-        except KeyError:
-            msg = key + ' is not a valid variable name.'
-            close_matches = get_close_matches(key, self.keys())
-            if close_matches:
-                msg += "\n       ".join(["\n\nDid you mean one of these?"]
-                                        + close_matches)
-            raise LookupError(msg)
+            sims.append(SimRes(fname))
+        except (AssertionError, IndexError, IOError, KeyError, TypeError,
+                ValueError):
+            continue
+    assert len(sims) > 0, "No simulations were loaded."
+    return sims
 
 
 class VarList(list):
@@ -676,14 +535,6 @@ class VarList(list):
         The list is callable if the attribute is a method.
         """
         return getattr(variable, attr)
-
-# List of file-loading functions for SimRes
-from ._io.dymola import loadsim as dymola
-LOADERS = [('dymola', dymola)]  # SimRes tries these in order.
-# All of the keys should be in lowercase.
-# This must be below the definition of Variable and _VarDict because those
-# classes are required by the loading functions.
-# TODO: Avoid this cyclic import between simres and _io.
 
 
 class SimRes(Res):
@@ -1595,7 +1446,7 @@ class SimRes(Res):
 
         - :meth:`~Variable.FV` - Return the final value of the variable.
 
-        - :meth:`~Variable.IV` - Return the final value of the variable.
+        - :meth:`~Variable.IV` - Return the initial value of the variable.
 
         - :meth:`~Variable.max` - Return the maximum value of the variable.
 
@@ -1693,7 +1544,7 @@ class SimRes(Res):
 
         **Example:**
 
-           >>> from fcres import SimRes
+           >>> from modelicares import SimRes
 
            >>> sim = SimRes('examples/SaturationPressure.mat')
            >>> sim.get_dimension('environment.p')

@@ -47,6 +47,9 @@
 
 - :func:`match` - Reduce a list of strings to those that match a pattern.
 
+- :func:`next_nonblank` - Advance to the next non-blank line of a file and
+  return that line minus any whitespace on the right.
+
 - :func:`plot` - Plot 1D scalar data as points and/or line segments in 2D
   Cartesian coordinates.
 
@@ -705,6 +708,18 @@ def match(strings, pattern=None, re=False):
         else:
             matcher = lambda name: fnmatchcase(name, pattern)
         return list(filter(matcher, strings))
+
+
+def next_nonblank(f):
+    """Advance to the next non-blank line of file *f* and return that line minus
+    any whitespace on the right.
+
+    This raises :class:`StopIteration` if all of the remaining lines are blank.
+    """
+    line = f.next().rstrip()
+    while not line:
+        line = f.next().rstrip()
+    return line
 
 
 def plot(y, x=None, ax=None, label=None,
