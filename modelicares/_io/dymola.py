@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-r"""Classes and functions to load Dymola\ :sup:`®`-formatted binary (*.mat) and
+r"""Classes and functions to read Dymola\ :sup:`®`-formatted binary (*.mat) and
 text (*.txt) results
 
 This format is also used by OpenModelica_ and by PyFMI_ via JModelica.org_.
@@ -18,9 +18,9 @@ Functions:
 - :func:`read` - Read variables from a MATLAB\ :sup:`®` (*.mat) or text (*.txt)
   file with Dymola\ :sup:`®`-formatted results.
 
-- :func:`loadsim` - Load Dymola\ :sup:`®`-formatted simulation results.
+- :func:`readsim` - Load Dymola\ :sup:`®`-formatted simulation results.
 
-- :func:`loadlin` - Load Dymola\ :sup:`®`-formatted linearization results.
+- :func:`readlin` - Load Dymola\ :sup:`®`-formatted linearization results.
 
 Errors are raised under the following conditions:
 
@@ -62,7 +62,7 @@ import re
 
 from collections import namedtuple
 from itertools import count
-from scipy.io import loadmat as readmat
+from scipy.io import loadmat
 from scipy.io.matlab.mio_utils import chars_to_strings
 from control.matlab import ss
 from six import PY2
@@ -134,7 +134,7 @@ else:
         # latin-1, thus the encode ... decode part.
 
 
-def readtxt(file_name, variable_names=None, skip_header=1):
+def loadtxt(file_name, variable_names=None, skip_header=1):
     r"""Read variables from a  Dymola\ :sup:`®`-formatted text file (*.txt).
 
     **Parameters:**
@@ -209,7 +209,7 @@ def read(fname, constants_only=False):
          This may be from a simulation or a linearization.
 
     - *constants_only*: *True* to assume the result is from a simulation and
-      load only the variables from the first data matrix
+      read only the variables from the first data matrix
 
     **Returns:**
 
@@ -226,7 +226,7 @@ def read(fname, constants_only=False):
                        chars_as_strings=False, appendmat=False)
         binary = True
     except ValueError:
-        data = readtxt(fname, variable_names=variable_names)
+        data = loadtxt(fname, variable_names=variable_names)
         binary = False
     except IOError:
         raise IOError('"{}" could not be opened.  '
@@ -268,14 +268,14 @@ def read(fname, constants_only=False):
     return data, Aclass
 
 
-def loadsim(fname, constants_only=False):
+def readsim(fname, constants_only=False):
     r"""Load Dymola\ :sup:`®`-formatted simulation results.
 
     **Parameters:**
 
     - *fname*: Name of the results file, including the path and extension
 
-    - *constants_only*: *True* to load only the variables from the first data
+    - *constants_only*: *True* to read only the variables from the first data
       matrix
 
          The first data matrix typically contains all of the constants,
@@ -287,7 +287,7 @@ def loadsim(fname, constants_only=False):
 
     **Example:**
 
-    >>> variables = loadsim('examples/ChuaCircuit.mat')
+    >>> variables = readsim('examples/ChuaCircuit.mat')
     >>> variables['L.v'].unit
     'V'
     """
@@ -371,7 +371,7 @@ def loadsim(fname, constants_only=False):
                          "is not supported.".format(version))
 
 
-def loadlin(fname):
+def readlin(fname):
     r"""Load Dymola\ :sup:`®`-formatted linearization results.
 
     **Parameters:**
@@ -397,7 +397,7 @@ def loadlin(fname):
 
     **Example:**
 
-    >>> sys = loadlin('examples/PID.mat')
+    >>> sys = readlin('examples/PID.mat')
     >>> sys.state_names
     ['I.y', 'D.x']
     """

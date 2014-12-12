@@ -443,7 +443,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
 
 
 # List of file-loading functions for SimRes
-from ._io.dymola import loadsim as dymola
+from ._io.dymola import readsim as dymola
 LOADERS = [('dymola', dymola)]  # SimRes tries these in order.
 # All of the keys should be in lowercase.
 # This must be below the definition of Variable because that class is required

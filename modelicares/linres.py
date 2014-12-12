@@ -40,7 +40,7 @@ from ._freqplot import bode_plot, nyquist_plot
 from ._res import Res, ResList
 
 # File loading functions
-from ._io.dymola import loadlin as dymola
+from ._io.dymola import readlin as dymola
 LOADERS = [('dymola', dymola)]  # LinRes tries these in order.
 # All of the keys should be in lowercase.
 

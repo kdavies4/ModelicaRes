@@ -1,21 +1,21 @@
 #!/usr/bin/python
-"""Submodules to load data from various simulation and linearization formats
+"""Submodules to read data from various simulation and linearization formats
 
 Each submodule contains the following functions for a specific results format:
 
-- :func:`loadsim` - Load simulation results.
+- :func:`readsim` - Read simulation results.
 
-- :func:`loadlin` - Load linearization results.
+- :func:`readlin` - Read linearization results.
 
 The first argument of each function is *fname*, the name of the results file
-(including the path).  :func:`loadsim` takes a second argument,
-*constants_only*.  If it is *True* and the format supports it, :func:`loadsim`
-will only load constants.
+(including the path).  :func:`readsim` takes a second argument,
+*constants_only*.  If it is *True* and the format supports it, :func:`readsim`
+will only read constants.
 
-:func:`loadsim` returns an instance of :class:`~modelicares.simres._VarDict`, a
+:func:`readsim` returns an instance of :class:`~modelicares.simres._VarDict`, a
 specialized dictionary of variables.  The keys are variable names and the values
 are instances of :class:`~modelicares.simres.Variable` or a derived class.
-:func:`loadlin` returns an instance of :class:`control.StateSpace`.
+:func:`readlin` returns an instance of :class:`control.StateSpace`.
 
 Errors are raised under the following conditions:
 
