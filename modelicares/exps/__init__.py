@@ -4,10 +4,10 @@
 """Set up and help run Modelica_ simulation experiments.
 
 This module supports two approaches to managing simulations.  The first is to
-create a Modelica_ script (using :func:`write_script`) and run it within
-a Modelica_ environment (see the scripts in *examples/ChuaCircuit/*), which
-translates and simulates the models with the prescribed settings.  The second
-approach is to execute pre-translated models.  The :func:`run_models` method
+create a Dymola\ :sup:`®`-formatted script (\*.mos, using :func:`write_script`)
+and run it with a compatible tool to translate and simulate the models with the prescribed settings (see the scripts in *examples/ChuaCircuit/*).  The second
+approach is to run models that have been translated to executables or
+Functional Mock-up Units (FMUs_). The :func:`run_models` method
 handles this by writing to initialization file(s) (e.g, *dsin.txt*) and
 launching the appropriate model executables.  The advantage of the first
 approach is that formal parameters (those that are hard-coded during
@@ -17,12 +17,11 @@ that are not hard-coded during translation) are changed.
 
 The first step in either case is to create a dictionary to specify model
 parameters and other settings for simulation experiment.  A single model
-parameter may have multiple possible values.  The dictionary is passed to the
-:func:`gen_experiments` function (see that function for a description of the
-dictionary format), which combines the values of all the variables (by
+parameter may have multiple possible values.  The dictionary is passed to
+:func:`gen_experiments`, which combines the values of all the variables (by
 piecewise alignment or permutation) and returns a generator to step through the
-experiments.  Finally, the generator is passed to the :func:`write_script` or
-:func:`run_models` function (see the first paragraph).
+experiments.  Finally, the generator is passed to :func:`write_script` or
+:func:`run_models`.
 
 **Classes:**
 
@@ -57,6 +56,7 @@ experiments.  Finally, the generator is passed to the :func:`write_script` or
 .. _Modelica: http://www.modelica.org/
 .. _Python: http://www.python.org/
 .. _NumPy: http://numpy.scipy.org/
+.. _FMUs: https://www.fmi-standard.org/
 .. _namedtuple: https://docs.python.org/2/library/collections.html#collections.namedtuple
 """
 __author__ = "Kevin Davies"
@@ -222,7 +222,7 @@ def gen_experiments(models=None, params={}, args={}, design=doe.fullfact):
 
 
 def modelica_str(value):
-    """Express a Python_ value as a Modelica_ string
+    """Express a Python_ value as a Modelica_ string.
 
     A Boolean variable (:class:`bool`) becomes 'true' or 'false' (lowercase).
 
