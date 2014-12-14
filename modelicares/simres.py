@@ -556,8 +556,8 @@ class SimRes(Res):
 
          '/' can be used as a path separator in both Windows and Unix/Linux.
 
-    - *constants_only*: *True* to load only the variables from the first
-      data table
+    - *constants_only*: *True* (default) to load only the variables from the
+      first data table
 
          The first data table typically contains all of the constants,
          parameters, and variables that don't vary.  If only that
@@ -567,8 +567,8 @@ class SimRes(Res):
     - *tool*: String indicating the simulation tool that created the file
       and thus the function to be used to load it
 
-         By default, the available functions are tried in order until one
-         works (or none do).
+         By default (*None), the available functions are tried in order until
+         one works (or none do).
 
     **Methods using built-in Python operators and syntax:**
 

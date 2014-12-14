@@ -47,6 +47,8 @@
 
 - :func:`match` - Reduce a list of strings to those that match a pattern.
 
+- :func:`modelica_str` - Express a Python_ value as a Modelica_ string.
+
 - :func:`next_nonblank` - Advance to the next non-blank line of a file and
   return that line minus any whitespace on the right.
 
@@ -75,6 +77,8 @@
 
 
 .. _matplotlib: http://www.matplotlib.org/
+.. _Python: http://www.python.org/
+.. _Modelica: http://www.modelica.org/
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
@@ -708,6 +712,47 @@ def match(strings, pattern=None, re=False):
         else:
             matcher = lambda name: fnmatchcase(name, pattern)
         return list(filter(matcher, strings))
+
+
+def modelica_str(value):
+    """Express a Python_ value as a Modelica_ string.
+
+    A Boolean variable (:class:`bool`) becomes 'true' or 'false' (lowercase).
+
+    For NumPy_ arrays, square brackets are curled.
+
+    **Examples:**
+
+    Booleans:
+
+    >>> # Booleans:
+    >>> modelica_str(True)
+    'true'
+
+    Arrays:
+
+    .. code-block:: python
+
+       >>> import numpy as np
+
+       >>> modelica_str(np.array([[1, 2], [3, 4]]))
+       '{{1, 2}, {3, 4}}'
+
+       >>> modelica_str(np.array([[True, True], [False, False]]))
+       '{{true, true}, {false, false}}'
+    """
+    if isinstance(value, bool):
+        return 'true' if value else 'false'
+    elif isinstance(value, np.ndarray):
+        value = str(value)
+        for old, new in [(r'\[', '{'), (r'\]', '}'), (r'\n', ''),
+                         (' ?True', 'true'), ('False', 'false'), (' +', ', ')]:
+            # Python 2.7 puts an extra space before True when representing an
+            # array.
+            value = re.sub(old, new, value)
+        return value
+    else:
+        return str(value)
 
 
 def next_nonblank(f):
