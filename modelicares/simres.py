@@ -159,6 +159,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         """
         return np.array([self.times(t), self.values(t)]).T
 
+    @property
     def FV(self):
         """Return the final value of the variable.
 
@@ -195,6 +196,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         values = self.values()
         return np.array_equal(values[:-1], values[1:])
 
+    @property
     def IV(self):
         """Return the initial value of the variable.
 
@@ -212,6 +214,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         """
         return self.values()[0]
 
+    @property
     def max(self):
         """Return the maximum value of the variable.
 
@@ -229,6 +232,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         """
         return np.max(self.values())
 
+    @property
     def mean(self):
         """Return the time-averaged arithmetic mean value of the variable.
 
@@ -247,6 +251,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         t = self.times()
         return integral(self.values(), t) / (t[-1] - t[0])
 
+    @property
     def mean_rectified(self):
         """Return the time-averaged rectified arithmetic mean value of the
         variable.
@@ -266,6 +271,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         t = self.times()
         return integral(np.abs(self.values()), t) / (t[-1] - t[0])
 
+    @property
     def min(self):
         """Return the minimum value of the variable.
 
@@ -283,6 +289,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         """
         return np.min(self.values())
 
+    @property
     def RMS(self):
         """Return the time-averaged root mean square value of the variable.
 
@@ -301,6 +308,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         t = self.times()
         return np.sqrt(integral(self.values() ** 2, t) / (t[-1] - t[0]))
 
+    @property
     def RMS_AC(self):
         """Return the time-averaged AC-coupled root mean square value of the
         variable.
@@ -366,6 +374,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         """
         pass
 
+    @property
     def value(self):
         """Return the value of a constant variable.
 
