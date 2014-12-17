@@ -18,8 +18,8 @@ include examples/*.mat
 include examples/*.md
 include examples/*.py
 include examples/dsin.txt
-include examples/matplotlibrc
 include examples/load-csv*
+include examples/matplotlibrc
 include examples/ChuaCircuit/*.md
 include examples/ChuaCircuit/*.py
 include examples/ChuaCircuit/*/*.mat
@@ -29,5 +29,8 @@ include examples/PID/*/*.mat
 include examples/PID/*/dsin.txt
 
 # Test scripts and data files
-include tests/*
-exclude tests/*.pdf
+include tests/*.mat
+include tests/*.md
+include tests/*.py
+include tests/*.txt
+#exclude tests/*.pdf
