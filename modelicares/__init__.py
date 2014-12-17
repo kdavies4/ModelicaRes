@@ -7,9 +7,9 @@ classes from the submodules.  These are:
 
 - To manage simulation experiments (:mod:`~modelicares.exps` submodule):
   :mod:`~modelicares.exps.doe`, :class:`~exps.Experiment`,
-  :func:`~exps.gen_experiments`, :func:`~exps.modelica_str`,
-  :class:`~exps.ParamDict`, :func:`~exps.run_models`,
-  :func:`~exps.write_params`, and :func:`~exps.write_script`
+  :func:`~exps.modelica_str`, :class:`~exps.ParamDict`,
+  :func:`~exps.run_models`, :func:`~exps.write_params`, and
+  :func:`~exps.write_script`
 
 - For simulation results (:mod:`~modelicares.simres` submodule):
   :class:`~simres.SimRes` and :class:`~simres.SimResList`
@@ -50,8 +50,8 @@ from .simres import SimRes, SimResList
 from .linres import LinRes, LinResList
 from .util import (add_arrows, add_hlines, add_vlines, ArrowLine, closeall,
                    figure, load_csv, save, saveall, setup_subplots)
-from .exps import (doe, Experiment, gen_experiments, modelica_str, ParamDict,
-                   read_params, write_params, write_script)
+from .exps import (doe, Experiment, modelica_str, ParamDict, read_params,
+                   write_params)
 # TODO: Add run_models and include in the doc list once implemented.
 
 

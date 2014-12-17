@@ -454,13 +454,15 @@ class ParamDict(dict):
             arrays in Modelica_.
             """
             elements = []
-            for key, value in dictionary.items():
+            for key, value in sorted(dictionary.items()):
                 if isinstance(value, ParamDict):
-                    elements.append('%s%s' % (key, value))
+                    elements.append('%s(%s)' % (key, value)) # Recursive
+                elif isinstance(value, dict):
+                    elements.append('%s(%s)' % (key, ParamDict(value))) # Ditto
                 elif value is not None:
                     value = modelica_str(value)
                     elements.append(key + '=' + value)
-            return '(%s)' % ', '.join(elements) if elements else ''
+            return '%s' % ', '.join(elements) if elements else ''
 
         # This method to build a nested dictionary adapted from DyMat version
         # 0.5 (Joerg Raedler,

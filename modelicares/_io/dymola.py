@@ -222,7 +222,7 @@ def read(fname, constants_only=False):
     variable_names=['Aclass', 'name', 'names', 'description', 'dataInfo',
                     'data', 'data_1'] if constants_only else None
     try:
-        data = readmat(fname, variable_names=variable_names,
+        data = loadmat(fname, variable_names=variable_names,
                        chars_as_strings=False, appendmat=False)
         binary = True
     except ValueError:

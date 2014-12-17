@@ -58,6 +58,8 @@ class Res(object):
     """
     # pylint: disable=I0011, E0213
 
+    #__slots__ = ['fname']
+
     def __init__(self, fname):
         self.fname = os.path.abspath(fname)
 

@@ -29,7 +29,7 @@ from .. import ParamDict
 from ..util import expand_path, flatten_dict
 
 
-class _GenericSimulator(object):
+class _Simulator(object):
     """Base class for all context managers to be used as simulators
 
     **Parameters:**
@@ -46,7 +46,7 @@ class _GenericSimulator(object):
 
         # Start counting the experiments.
         self.n_experiments = 0
-        self._exp_list = open("experiment_list.txt", 'w')
+        self._exp_log = open("experiments.txt", 'w')
 
 
     def __enter__(self):
@@ -59,24 +59,10 @@ class _GenericSimulator(object):
     def __exit__(self, *exc_details):
         """Exit the context of the simulator.
         """
-        self._exp_list.close()
+        self._exp_log.close()
 
 
-    def __getattr__(self, attr):
-        """If an unknown attribute is requested, look for it in the dictionary
-        of simulation options.
-        """
-        return self._options[attr]
-
-
-    def __setattr__(self, attr, value):
-        """If an unknown attribute is set, add it to the dictionary of
-        simulation options.
-        """
-        self._options[attr] = value
-
-
-class dymola_script(object):
+class dymola_script(_Simulator):
 
     """Context manager to write a Dymola\ :sup:`®`-formatted simulation script
 
@@ -157,7 +143,7 @@ class dymola_script(object):
        import Modelica.Utilities.Files.copy;
        import Modelica.Utilities.Files.createDirectory;
        Advanced.TranslationInCommandLog = true "Also include translation log in command log";
-       cd(".../Documents/Modelica");
+       cd("...");
        destination = ".../examples/ChuaCircuit/";
 
        // Experiment 1
@@ -235,7 +221,16 @@ class dymola_script(object):
         for i, result in enumerate(results):
             results[i] = result.replace('%x', exe)
         self._results = results
+        self._command = command
         self._options = options
+
+        # Start counting the experiments.
+        self.n_experiments = 0
+
+        # Start the experiment log.
+        exp_log = open(os.path.join(results_dir, "experiments.txt"), 'w')
+        exp_log.write("Number\nCommand\tOptions\tModel & parameters")
+        self._exp_log = exp_log
 
         # Open the script.
         print("Starting to write the Dymola simulation script...")
@@ -270,22 +265,33 @@ class dymola_script(object):
         #           'ChuaCircuit");\n\n')
 
 
-    def __enter__(self):
-        """Enter the context of the simulator.
+    def __getattr__(self, attr):
+        """If an unknown attribute is requested, look for it in the dictionary
+        of simulation options.
         """
-        # Everything has been done in __init__.
-        return self
+        return self._options[attr]
+
+
+    def __setattr__(self, attr, value):
+        """Add known attributes directly, but unknown attributes go to the
+        dictionary of simulation options.
+        """
+        if attr in ('_command', '_exp_log', '_mos', '_options', '_results',
+                    'n_experiments'):
+            object.__setattr__(self, attr, value) # Traditional method
+        else:
+            self._options[attr] = value
 
 
     def __exit__(self, *exc_details):
         """Exit the context of the simulator.
         """
         # Exit the simulation environment.
-        # Otherwise, the script will hang until it is closed manually.
+        # Otherwise, the script will hang until it's closed manually.
         self._mos.write("exit();\n")
         self._mos.close()
 
-        self._exp_list.close()
+        self._exp_log.close()
         print("Finished writing the Dymola simulation script.")
 
 
@@ -315,28 +321,26 @@ class dymola_script(object):
              Any item with a value of *None* is skipped.
         """
 
-        # Record this simulation experiment in the list of experiments.
-        self.n_experiments += 1
-        entry = '%s:  %s%s' % (n_experiments, model, params)
-        self._exp_list.write(entry)
-        print(entry)
-
         # Write the command to run the model.
+        self.n_experiments += 1
+        n_experiments = self.n_experiments
         mos = self._mos
-        mos.write('// Experiment %i\n' % experiment_count)
+        mos.write('// Experiment %i\n' % n_experiments)
         command = self._command
         options = self._options
         if model:
-            problem = '"%s%s"' % (model, ParamDict(flatten_dict(params)))
+            print params
+            problem = '"%s%s"' % (model, params)
             mos.write('ok = %s%s;\n' % (command, ParamDict(options,
                                                            problem=problem)))
         else:
             mos.write('ok = %s%s;\n' % (command, ParamDict(options)))
+        mos.write('ok = %s;\n' % (command, ParamDict(options)))
 
         # Write the commands to save the results.
         mos.write('if ok then\n')
         mos.write('    savelog();\n')
-        folder = str(self.n_experiments)
+        folder = str(n_experiments)
         mos.write('    createDirectory(destination + "%s");\n' % folder)
         for result in self._results:
             mos.write('    copy("%s", destination + "%s", true);\n' %
@@ -345,6 +349,11 @@ class dymola_script(object):
 
         # Write the command to clear the log file.
         mos.write('clearlog();\n\n')
+
+# TODO number, command, settings, model & parameters
+        # Record this simulation experiment in the list of experiments.
+        self._exp_log.write('%s\t%s%s\t%s' % (n_experiments, model, params, ParamDict(options)))
+        print('%s:  %s%s' % (n_experiments, model, params))
 
 
 class dymosim(object):
@@ -382,7 +391,7 @@ class dymosim(object):
 
         See the top-level class documentation.
         """
-        _GenericSimulator.__init__(self, **options)
+        _Simulator.__init__(self, **options)
         raise NotImplementedError(
             "The dymosim context manager has not yet been implemented.")
 
@@ -519,3 +528,10 @@ class FMI(object):
         .. Warning:: This function has not been implemented yet.
         """
         pass
+
+
+if __name__ == '__main__':
+    # Test the contents of this file.
+
+    import doctest
+    doctest.testmod()

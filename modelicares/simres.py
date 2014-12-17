@@ -635,6 +635,8 @@ class SimRes(Res):
        http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
 
+    #__slots__ = Res.__slots__ + ['_variables', 'tool']
+
     def __init__(self, fname='dsres.mat', constants_only=False, tool=None):
         """Upon initialization, load Modelica_ simulation results from a file.
 
