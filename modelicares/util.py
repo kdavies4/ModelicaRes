@@ -95,6 +95,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 # pylint: disable=I0011, C0103, C0301, E1101, F0401, R0921, W0102, W0621
 
 import os
+import re
 import sys
 import time
 import numpy as np

@@ -202,7 +202,7 @@ class Experiments(object):
         Also note that Python dictionaries do not preserve order (and it is not
         necessary here).
         """
-        params = flatten_dict(params)
+        params = flatten_dict(params) # TODO this is last usage of flatten_dict
         i_options = len(params) + 1
         experiment = lambda x: Experiment(model=x[0],
                                           params=ParamDict(zip(params.keys(),
@@ -456,13 +456,13 @@ class ParamDict(dict):
             elements = []
             for key, value in sorted(dictionary.items()):
                 if isinstance(value, ParamDict):
-                    elements.append('%s(%s)' % (key, value)) # Recursive
+                    elements.append('%s%s' % (key, value)) # Recursive
                 elif isinstance(value, dict):
-                    elements.append('%s(%s)' % (key, ParamDict(value))) # Ditto
+                    elements.append('%s%s' % (key, ParamDict(value))) # Ditto
                 elif value is not None:
                     value = modelica_str(value)
                     elements.append(key + '=' + value)
-            return '%s' % ', '.join(elements) if elements else ''
+            return '(%s)' % ', '.join(elements) if elements else ''
 
         # This method to build a nested dictionary adapted from DyMat version
         # 0.5 (Joerg Raedler,
