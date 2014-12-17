@@ -7,7 +7,9 @@ In general, the context managers are used like this:
 .. code-block:: python
 
    >>> with context_manager() as simulator: # doctest: +SKIP
-   ...     simulator.run(model, params)
+   ...     simulator.run(model1, params1)
+   ...     simulator.run(model2, params2)
+   ...     ...
 
 For more details, see the documentation of the context managers below:
 
@@ -134,7 +136,15 @@ class dymola_script(_Simulator):
        ...                    stopTime=2500) as simulator:
        ...     simulator.run('Modelica.Electrical.Analog.Examples.ChuaCircuit')
 
-    In *examples/ChuaCircuit/run_sims1.mos*:
+    This generates a table in *examples/ChuaCircuit/runs.tsv*:
+
+    ===== ============= ============= ===============================================
+    Run # Command       Options       Model & parameters
+    ===== ============= ============= ===============================================
+    1	  simulateModel stopTime=2500 Modelica.Electrical.Analog.Examples.ChuaCircuit
+    ===== ============= ============= ===============================================
+
+    and the following script in *examples/ChuaCircuit/run_sims1.mos*:
 
     .. code-block:: modelica
 
@@ -177,7 +187,16 @@ class dymola_script(_Simulator):
        ...     simulator.stopTime = 2500
        ...     simulator.run('Modelica.Electrical.Analog.Examples.ChuaCircuit')
 
-    The second run is the same as in Example 1.
+    This generates the following run table:
+
+    ===== ============= ============= ==================
+    Run # Command       Options       Model & parameters
+    ===== ============= ============= ==================
+    1	  simulateModel stopTime=250  Modelica.Electrical.Analog.Examples.ChuaCircuit
+    2	  simulateModel stopTime=2500 Modelica.Electrical.Analog.Examples.ChuaCircuit
+    ===== ============= ============= ==================
+
+    and a corresponding script in *examples/ChuaCircuit/run_sims2.mos*.
 
     **Example 3 (full-factorial design of experiments):**
 

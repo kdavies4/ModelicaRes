@@ -1,4 +1,4 @@
-personal_ws-1.1 en 280 
+personal_ws-1.1 en 255 
 hspace
 cla
 del
@@ -15,7 +15,6 @@ xname
 Booleans
 PyFMI
 tex
-filemap
 dir
 aren
 SciPy
@@ -151,7 +150,6 @@ matplotlibrc
 scatterplots
 ylabel
 xuyName
-fv
 loc
 dirname
 modelicares
@@ -191,7 +189,6 @@ freqs
 tf
 linewidth
 th
-iterable
 dsfinal
 ofat
 ss
@@ -216,7 +213,6 @@ tuple
 linearizeModel
 wx
 linearizations
-subargument
 num
 xy
 arnoutaertgeerts

@@ -200,8 +200,9 @@ def spellcheck():
     # Check the spelling.
     for page in html_files:
         if os.system('aspell --dont-backup --personal={1} --extra-dicts={0} '
-                     '-c {2}'.format(wordfile, extrafile, page)):
-            raise SystemError("aspell (http://aspell.net/) must be installed.")
+                     '-c "{2}"'.format(wordfile, extrafile, page)):
+            raise SystemError("Error on file %s.  Be sure that aspell "
+                              "(http://aspell.net/) is installed." % page)
 
 
 def static():
