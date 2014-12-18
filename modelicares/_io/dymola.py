@@ -61,15 +61,15 @@ import numpy as np
 import re
 
 from collections import namedtuple
+from control.matlab import ss
 from itertools import count
 from scipy.io import loadmat
 from scipy.io.matlab.mio_utils import chars_to_strings
-from control.matlab import ss
 from six import PY2
 
 from . import select, VarDict
-from ..util import next_nonblank
 from ..simres import Variable as GenericVariable
+from ..util import next_nonblank
 
 
 # Namedtuple to store the time and value information of each variable
@@ -155,14 +155,14 @@ def loadtxt(file_name, variable_names=None, skip_header=1):
     """
 
     SPLIT_DEFINITION = re.compile('(\w*) *(\w*) *\( *(\d*) *, *(\d*) *\)').match
-    PARSERS = {'int': lambda get, rows:
-                   np.array([np.fromstring(get().split('#')[0], int, sep=' ')
-                             for row in rows]),
+    PARSERS = {'char': lambda get, rows:
+                   [get().rstrip() for row in rows],
                'float': lambda get, rows:
                    np.array([np.fromstring(get().split('#')[0], float, sep=' ')
                              for row in rows]).T,
-               'char': lambda get, rows:
-                   [get().rstrip() for row in rows]}
+               'int': lambda get, rows:
+                   np.array([np.fromstring(get().split('#')[0], int, sep=' ')
+                             for row in rows])}
 
     with open(file_name) as f:
 
@@ -197,6 +197,7 @@ def loadtxt(file_name, variable_names=None, skip_header=1):
                 for row in rows:
                     f.next()
     return data
+
 
 def read(fname, constants_only=False):
     r"""Read variables from a MATLAB\ :sup:`®` (*.mat) or text file (*.txt) with

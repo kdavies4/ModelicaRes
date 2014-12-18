@@ -3,26 +3,6 @@
 # pylint: disable=I0011, C0301
 """Set up and help run Modelica_ simulation experiments.
 
-This module supports two approaches to managing simulations.  The first is to
-create a Dymola\ :sup:`®`-formatted script (\*.mos, using :func:`write_script`)
-and run it with a compatible tool to translate and simulate the models with the prescribed settings (see the scripts in *examples/ChuaCircuit/*).  The second
-approach is to run models that have been translated to executables or
-Functional Mock-up Units (FMUs_). The :func:`run_models` method
-handles this by writing to initialization file(s) (e.g, *dsin.txt*) and
-launching the appropriate model executables.  The advantage of the first
-approach is that formal parameters (those that are hard-coded during
-translation) can be adjusted.  However, the second approach is faster because it
-does not require a model to be recompiled when only tunable parameters (those
-that are not hard-coded during translation) are changed.
-
-The first step in either case is to create a dictionary to specify model
-parameters and other settings for simulation experiment.  A single model
-parameter may have multiple possible values.  The dictionary is passed to
-:func:`gen_experiments`, which combines the values of all the variables (by
-piecewise alignment or permutation) and returns a generator to step through the
-experiments.  Finally, the generator is passed to :func:`write_script` or
-:func:`run_models`.
-
 **Classes:**
 
 - :class:`ParamDict` - Dictionary that prints its items as nested tuple-based
@@ -30,23 +10,24 @@ experiments.  Finally, the generator is passed to :func:`write_script` or
 
 **Functions:**
 
-- :func:`read_params` - Read parameter values from an initialization or final
-  values file.
+- :func:`read_params` - Read parameter values from a Dymola\ :sup:`®`-formatted
+  initialization or final values file.
 
-- :func:`write_params` - Write parameter values to a simulation initialization
-  file.
+- :func:`write_params` - Write parameter values to a Dymola\ :sup:`®`-formatted
+  initialization file.
 
 **Submodules:**
 
-- :mod:`~modelicares.exps.doe` - Functions for the design of experiments (DOE)`_
+- :mod:`~modelicares.exps.doe` - Functions for the `design of experiments
+  (DOE)`_
 
-- :mod:`~modelicares.exps.doe` - Functions for design of experiments (DOE)
+- :mod:`~modelicares.exps.simulators` - Context managers to be used as
+  simulators
 
 
 .. _Modelica: http://www.modelica.org/
 .. _Python: http://www.python.org/
 .. _NumPy: http://numpy.scipy.org/
-.. _FMUs: https://www.fmi-standard.org/
 .. _design of experiments (DOE): http://en.wikipedia.org/wiki/Design_of_experiments
 """
 __author__ = "Kevin Davies"
@@ -69,12 +50,11 @@ import numpy as np
 from six import string_types
 
 from ..util import modelica_str
-from . import doe
 
 
 def read_params(names, fname='dsin.txt'):
-    """Read parameter values from an initialization or final values file (e.g.,
-    dsin.txt or dsfinal.txt).
+    """Read parameter values from a Dymola\ :sup:`®`-formatted initialization or
+    final values file (e.g., dsin.txt or dsfinal.txt).
 
     **Parameters:**
 
@@ -161,8 +141,8 @@ def read_params(names, fname='dsin.txt'):
 
 
 def write_params(params, fname='dsin.txt'):
-    """Write parameter values to a simulation initialization file (e.g.,
-    dsin.txt).
+    """Write parameter values to a Dymola\ :sup:`®`-formatted initialization
+    file (e.g., dsin.txt).
 
     **Parameters:**
 
