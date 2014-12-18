@@ -1,7 +1,10 @@
 Credits
 =======
 
-The main author is Kevin Davies.  Code has been included from:
+The main author is Kevin Davies.  Arnout Aertgeerts wrote most of the FMI
+context manager (:func:`~modelicares.exps.simulators.fmi`).
+
+Code has also been included from:
 
 - Richard Murray (:mod:`control.freqplot`---part of python-control_),
 - Joerg Raedler (method to expand a Modelica_ variable tree---from DyMat_),
@@ -13,6 +16,7 @@ Thomas Beutlich, Roel De Coninck, Moritz Lauster, Martin Sjölund, Mike Tiller,
 and Michael Wetter.
 
 
+.. _FMI: https://www.fmi-standard.org/
 .. _Modelica: http://www.modelica.org
 .. _python-control: http://sourceforge.net/apps/mediawiki/python-control
 .. _DyMat: http://www.j-raedler.de/projects/dymat

@@ -23,7 +23,11 @@ For more details, see the documentation for the context managers below:
 .. _FMUs: https://www.fmi-standard.org/
 .. _PyFMI: http://www.pyfmi.org/
 """
-
+__author__ = "Kevin Davies and Arnout Aertgeerts"
+__email__ = "kdavies4@gmail.com"
+__copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
+                 "Institute, and Georgia Tech Research Corporation")
+__license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 
 from datetime import date
@@ -412,7 +416,6 @@ class dymosim(object):
 
         See the top-level class documentation.
         """
-        _Simulator.__init__(self, **options)
         raise NotImplementedError(
             "The dymosim context manager has not yet been implemented.")
 
@@ -519,7 +522,7 @@ class dymosim(object):
         pass
 
 
-class FMI(object):
+class fmi(object):
 
     """Context manager to simulate FMUs_ via PyFMI_
 

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # pylint: disable=I0011, C0301
-"""Set up and help run Modelica_ simulation experiments.
+"""Classes and functions to set up and help run Modelica_ simulation experiments
 
 **Classes:**
 
