@@ -13,11 +13,11 @@ In general, the context managers are used like this:
 
 For more details, see the documentation for the context managers below:
 
-- :class:`FMI` - Simulate FMUs_ via PyFMI_
-
 - :class:`dymola_script` - Write a Dymola\ :sup:`®`-formatted script
 
 - :class:`dymosim` - Run executable models from Dymola\ :sup:`®`
+
+- :class:`fmi` - Simulate FMUs_ via PyFMI_
 
 
 .. _FMUs: https://www.fmi-standard.org/
@@ -186,35 +186,24 @@ class dymola_script(object):
        >>> from modelicares import doe
 
        >>> with dymola_script("examples/ChuaCircuit/run_sims3.mos") as simulator: # doctest: +ELLIPSIS
-       ...     experiments = doe.fullfact({'C1.C': [8, 10],
-       ...                                 'C2.C': [80, 100, 120],
-       ...                                 'L.L': [18, 20]})
-       ...     for params in experiments:
+       ...     for params in doe.fullfact({'C1.C': [8, 10], 'L.L': [18, 20]}):
        ...         simulator.run("Modelica.Electrical.Analog.Examples.ChuaCircuit", params=params)
        Starting to write the Dymola script...
        Run 1:  simulateModel(...)
        ...
-       Run 12:  simulateModel(...)
+       Run 4:  simulateModel(...)
        Finished writing the Dymola script.
 
     This generates the following table:
 
-    ===== ============= ======= =============================================================================
+    ===== ============= ======= ==================================================================
     Run # Command       Options Model & parameters
-    ===== ============= ======= =============================================================================
-    1     simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=8), C2(C=80), L(L=18))
-    2     simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=10), C2(C=80), L(L=18))
-    3     simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=8), C2(C=100), L(L=18))
-    4     simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=10), C2(C=100), L(L=18))
-    5     simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=8), C2(C=120), L(L=18))
-    6     simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=10), C2(C=120), L(L=18))
-    7     simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=8), C2(C=80), L(L=20))
-    8     simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=10), C2(C=80), L(L=20))
-    9     simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=8), C2(C=100), L(L=20))
-    10    simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=10), C2(C=100), L(L=20))
-    11    simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=8), C2(C=120), L(L=20))
-    12    simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=10), C2(C=120), L(L=20))
-    ===== ============= ======= =============================================================================
+    ===== ============= ======= ==================================================================
+    1     simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=8), L(L=18))
+    2     simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=10), L(L=18))
+    3     simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=8), L(L=20))
+    4     simulateModel         Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=10), L(L=20))
+    ===== ============= ======= ==================================================================
 
     and a corresponding script in *examples/ChuaCircuit/run_sims3.mos*.
 

@@ -1,7 +1,34 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # pylint: disable=I0011, C0301
-"""Classes and functions to set up and help run Modelica_ simulation experiments
+"""Classes and functions to set up and run Modelica_ simulation experiments
+
+The basic approach is to initiate a simulator and iterate over a `design of
+experiments (DOE)`_. For example,
+
+.. code-block:: python
+
+   >>> from modelicares.exps.simulators import dymola_script
+   >>> from modelicares.exps.doe import fullfact # Full-factorial DOE
+
+   >>> with dymola_script() as simulator: # doctest: +SKIP
+   ...     for params in fullfact({'C1.C': [8, 10], 'L.L': [18, 20]}):
+   ...         simulator.run("Modelica.Electrical.Analog.Examples.ChuaCircuit", params)
+
+This generates a Dymola\ :sup:`®`-formatted script (\*.mos) to simulate the
+following:
+
+===== ==================================================================
+Run # Model & parameters
+===== ==================================================================
+1     Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=8), L(L=18))
+2     Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=10), L(L=18))
+3     Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=8), L(L=20))
+4     Modelica.Electrical.Analog.Examples.ChuaCircuit(C1(C=10), L(L=20))
+===== ==================================================================
+
+Please see the documentation of the items below for more examples, details, and
+options.
 
 **Classes:**
 
@@ -26,8 +53,6 @@
 
 
 .. _Modelica: http://www.modelica.org/
-.. _Python: http://www.python.org/
-.. _NumPy: http://numpy.scipy.org/
 .. _design of experiments (DOE): http://en.wikipedia.org/wiki/Design_of_experiments
 """
 __author__ = "Kevin Davies"
@@ -162,19 +187,20 @@ def write_params(params, fname='dsin.txt'):
 
     **Example:**
 
-    >>> write_params({'Td': 1, 'Ti': 5}, 'examples/dsin.txt')
+    >>> write_params(dict(Ti=5, Td=1), 'examples/dsin.txt')
 
     .. testcleanup::
 
-       >>> write_params({'Td': 0.1, 'Ti': 0.5}, 'examples/dsin.txt')
+       >>> write_params(dict(Ti=0.5, Td=0.1), 'examples/dsin.txt')
 
     This updates the appropriate lines in *examples/dsin.txt*:
 
-    .. code-block:: modelica
+    .. code-block:: python
 
-       -1      10                  0       0                  1  280   # L.L
-       ...
-       -1      15                  0  1.000000000000000E+100  1  280   # C1.C
+       -1      5 ...
+        ...   # Ti
+       -1      1 ...
+        ...   # Td
     """
     # Pre-process the values.
     for key, value in params.items():
@@ -230,29 +256,31 @@ def write_params(params, fname='dsin.txt'):
 
 class ParamDict(dict):
 
-    """Dictionary that prints its items (string mapping) as nested tuple-based
-    modifiers, formatted for Modelica_
+    """Dictionary that prints its items as nested tuple-based modifiers,
+    formatted for Modelica_
 
     Otherwise, this class is the same as :class:`dict`.  The underlying
-    structure is not nested or reformatted---only the informal representation
+    structure is not nested or reformatted---only the string mapping
     (:meth:`__str__`).
 
-    In printing this dictionary (string representation), each key is interpreted
-    as a parameter name (including the full model path in Modelica_ dot
-    notation) and each entry is a parameter value.  The value may be a number
-    (integer or float), Boolean constant (in Python_ format---*True* or *False*,
+    In the string mapping, each key is interpreted as a parameter name
+    (including the full model path in Modelica_ dot notation) and each entry is
+    a parameter value.  The value may be a number (:class:`int` or
+    :class:`float`), Boolean constant (in Python_ format---*True* or *False*,
     not 'true' or 'false'), string, or NumPy_ arrays of these.  Modelica_
     strings must be given with double quotes included (e.g., '"hello"').
-    Enumerations may be used as values (e.g., 'Axis.x').  Values may include
-    functions, but the entire value must be expressed as a Python_ string (e.g.,
-    'fill(true, 2, 2)').  Items with a value of *None* are not shown.
+    Enumerations may be used as values (e.g., 'Axis.x').  Values may be
+    functions or modified classes, but the entire value must be expressed as a
+    Python_ string (e.g., 'fill(true, 2, 2)').  Items with a value of *None* are
+    not shown.
 
     Redeclarations and other prefixes must be included in the key along with the
     name of the instance (e.g., 'redeclare Region regions[n_x, n_y, n_z]').  The
     single quotes must be explicitly included for instance names that contain
     symbols (e.g., "'H+'").
 
-    Note that Python_ dictionaries do not preserve order.
+    Note that Python_ dictionaries do not preserve order.  The keys are printed
+    in alphabetical order.
 
     **Examples:**
 
@@ -262,18 +290,23 @@ class ParamDict(dict):
 
        >>> d = ParamDict({'a': 1, 'b.c': np.array([2, 3]), 'b.d': False,
        ...                'b.e': '"hello"', 'b.f': None})
-       >>> print(d) # doctest: +SKIP
-       (a=1, b(c={2, 3}, e="hello", d=false))
+       >>> print(d)
+       (a=1, b(c={2, 3}, d=false, e="hello"))
 
-    The formal representation (and the internal structure) is not affected:
+    The internal structure and formal representation (:meth:`__repr__`) is not
+    affected:
 
     >>> d # doctest: +SKIP
-    {'a': 1, 'b.c': array([2, 3]), 'b.f': None, 'b.e': '"hello"', 'b.d': False}
+    {'a': 1, 'b.c': array([2, 3]), 'b.d': False, 'b.e': '"hello"', 'b.f': None}
 
     An empty dictionary prints as an empty string (not "()"):
 
     >>> print(ParamDict({}))
     <BLANKLINE>
+
+
+    .. _Python: http://www.python.org/
+    .. _NumPy: http://numpy.scipy.org/
     """
 
     def __str__(self):

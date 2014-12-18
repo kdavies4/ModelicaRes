@@ -36,7 +36,6 @@ args
 fname
 savelog
 netCDF
-tunable
 csv
 boolean
 Gcf
@@ -193,7 +192,6 @@ dsfinal
 ofat
 ss
 googledadb
-piecewise
 latin
 ParamDict
 mul

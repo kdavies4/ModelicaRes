@@ -6,9 +6,8 @@ This module provides convenient access to the most important functions and
 classes from the submodules.  These are:
 
 - To run simulation experiments (:mod:`~modelicares.exps` submodule):
-  :mod:`~modelicares.exps.doe`, :class:`~exps.Experiment`,
-  :class:`~exps.ParamDict`, :func:`~exps.read_params`,
-  :mod:`~modelicares.exps.simulators`, and :func:`~exps.write_params`
+  :mod:`~modelicares.exps.doe`, :class:`~exps.ParamDict`,
+  :func:`~exps.read_params`, and :func:`~exps.write_params`
 
 - To load, analyze, and plot simulation results (:mod:`~modelicares.simres`
   submodule): :class:`~simres.SimRes` and :class:`~simres.SimResList`
@@ -49,8 +48,7 @@ from .simres import SimRes, SimResList
 from .linres import LinRes, LinResList
 from .util import (add_arrows, add_hlines, add_vlines, ArrowLine, closeall,
                    figure, load_csv, save, saveall, setup_subplots)
-from .exps import (doe, Experiment, ParamDict, read_params, simulators,
-                   write_params)
+from .exps import (doe, ParamDict, read_params, write_params)
 # TODO: Add run_models and include in the doc list once implemented.
 
 
