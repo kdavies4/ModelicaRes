@@ -10,6 +10,9 @@
 
 **Functions:**
 
+- :func:`accept_dict` - Decorator to also accept a dictionary as a single
+  positional argument
+
 - :func:`add_arrows` - Overlay arrows with annotations on top of a pre-plotted
   line.
 
@@ -27,8 +30,8 @@
 - :func:`color` - Plot 2D scalar data on a color axis in 2D Cartesian
   coordinates.
 
-- :func:`closeall` - Close all open figures (shortcut to the
-  :func:`destroy_all` from :class:`matplotlib._pylab_helpers.Gcf`).
+- :func:`closeall` - Close all open figures (shortcut to :func:`destroy_all`
+  from :class:`matplotlib._pylab_helpers.Gcf`).
 
 - :func:`expand_path` - Expand a file path by replacing '~' with the user
   directory and make the path absolute.
@@ -136,6 +139,22 @@ except ImportError:
 
 # Function to close all open figures
 closeall = Gcf.destroy_all
+
+
+def accept_dict(func):
+    """Decorator to also accept a dictionary as a single positional argument
+
+    If there is only one positional argument and it is a :class:`dict`, then its
+    contents are passed as keyword arguments into the original function.
+    """
+    @wraps(func)
+    def wrapped(*space, **kwargs):
+        if len(space) == 1 and isinstance(space[0], dict):
+            return func(**space[0])
+        else:
+            return func(*space, **kwargs)
+
+    return wrapped
 
 
 def add_arrows(plot, x_locs=[0], xstar_offset=0, ystar_offset=0,

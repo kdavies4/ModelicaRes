@@ -1,21 +1,20 @@
 #!/usr/bin/python
-"""Functions and classes to set up Modelica_ simulations and load, analyze, and
-plot the results
+"""Functions and classes to run Modelica_ simulation experiments and load,
+analyze, and plot the results
 
 This module provides convenient access to the most important functions and
 classes from the submodules.  These are:
 
-- To manage simulation experiments (:mod:`~modelicares.exps` submodule):
+- To run simulation experiments (:mod:`~modelicares.exps` submodule):
   :mod:`~modelicares.exps.doe`, :class:`~exps.Experiment`,
-  :func:`~exps.modelica_str`, :class:`~exps.ParamDict`,
-  :func:`~exps.run_models`, :func:`~exps.write_params`, and
-  :func:`~exps.write_script`
+  :class:`~exps.ParamDict`, :func:`~exps.read_params`,
+  :mod:`~modelicares.exps.simulators`, and :func:`~exps.write_params`
 
-- For simulation results (:mod:`~modelicares.simres` submodule):
-  :class:`~simres.SimRes` and :class:`~simres.SimResList`
+- To load, analyze, and plot simulation results (:mod:`~modelicares.simres`
+  submodule): :class:`~simres.SimRes` and :class:`~simres.SimResList`
 
-- For linearization results (:mod:`~modelicares.linres` submodule):
-  :class:`~linres.LinRes` and :class:`~linres.LinResList`
+- To load, analyze, and plot linearization results (:mod:`~modelicares.linres`
+  submodule): :class:`~linres.LinRes` and :class:`~linres.LinResList`
 
 - Supporting classes and functions (:mod:`~modelicares.util` submodule):
   :func:`~util.add_arrows`, :func:`~util.add_hlines`, :func:`~util.add_vlines`,
@@ -50,7 +49,7 @@ from .simres import SimRes, SimResList
 from .linres import LinRes, LinResList
 from .util import (add_arrows, add_hlines, add_vlines, ArrowLine, closeall,
                    figure, load_csv, save, saveall, setup_subplots)
-from .exps import (doe, Experiment, modelica_str, ParamDict, read_params,
+from .exps import (doe, Experiment, ParamDict, read_params, simulators,
                    write_params)
 # TODO: Add run_models and include in the doc list once implemented.
 
