@@ -28,12 +28,7 @@ experiments.  Finally, the generator is passed to :func:`write_script` or
 - :class:`ParamDict` - Dictionary that prints its items as nested tuple-based
   modifiers, formatted for Modelica_
 
-- :class:`Experiment` - namedtuple_ to represent a simulation experiment
-
 **Functions:**
-
-- :func:`gen_experiments` - Return a generator for a set of simulation
-  experiments using permutation or simple element-wise grouping.
 
 - :func:`read_params` - Read parameter values from an initialization or final
   values file.
@@ -43,6 +38,8 @@ experiments.  Finally, the generator is passed to :func:`write_script` or
 
 **Submodules:**
 
+- :mod:`~modelicares.exps.doe` - Functions for the design of experiments (DOE)`_
+
 - :mod:`~modelicares.exps.doe` - Functions for design of experiments (DOE)
 
 
@@ -50,7 +47,7 @@ experiments.  Finally, the generator is passed to :func:`write_script` or
 .. _Python: http://www.python.org/
 .. _NumPy: http://numpy.scipy.org/
 .. _FMUs: https://www.fmi-standard.org/
-.. _namedtuple: https://docs.python.org/2/library/collections.html#collections.namedtuple
+.. _design of experiments (DOE): http://en.wikipedia.org/wiki/Design_of_experiments
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
@@ -69,34 +66,11 @@ import os
 import re
 import numpy as np
 
-from collections import namedtuple
 from six import string_types
 
-from ..util import modelica_str, flatten_dict
+from ..util import modelica_str
 from . import doe
 
-
-class Experiment(namedtuple('Experiment', ['model', 'params', 'options'])):
-
-    """namedtuple_ to represent a simulation experiment
-
-    Instances of this class may be used in the *experiments* argument of
-    :func:`write_script` and :func:`run_models`, although there are some
-    differences in the entries (see those functions for details).
-
-    **Example:**
-
-    >>> experiment = Experiment('ChuaCircuit', params={'L.L': 18}, options={})
-    >>> experiment.model
-    'ChuaCircuit'
-    """
-    pass
-
-
-class Experiments(object):
-
-    """**
-    """
 
 def read_params(names, fname='dsin.txt'):
     """Read parameter values from an initialization or final values file (e.g.,

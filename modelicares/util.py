@@ -36,8 +36,6 @@
 - :func:`expand_path` - Expand a file path by replacing '~' with the user
   directory and make the path absolute.
 
-- :func:`flatten_dict` - Flatten a nested dictionary.
-
 - :func:`figure` - Create a figure and set its label.
 
 - :func:`get_indices` - Return the pair of indices that bound a target value in
@@ -427,40 +425,6 @@ def basename(fname):
 
     Unlike :func:`os.path.basename`, this function strips the file extension."""
     return os.path.splitext(os.path.basename(fname))[0]
-
-
-def flatten_dict(d, parent_key='', separator='.'):
-    """Flatten a nested dictionary.
-
-    **Parameters:**
-
-    - *d*: Dictionary (may be nested to an arbitrary depth)
-
-    - *parent_key*: Key of the parent dictionary, if any
-
-    - *separator*: String or character that joins elements of the keys or path
-      names
-
-    **Example:**
-
-    >>> flatten_dict(dict(a=1, b=dict(c=2, d='hello'))) # doctest: +SKIP
-    {'a': 1, 'b.c': 2, 'b.d': 'hello'}
-
-    .. testcleanup::
-
-       >>> assert flatten_dict(dict(a=1, b=dict(c=2, d='hello'))) == {'a': 1, 'b.c': 2, 'b.d': 'hello'}
-    """
-    # From
-    # http://stackoverflow.com/questions/6027558/flatten-nested-python-dictionaries-compressing-keys,
-    # 11/5/2012
-    items = []
-    for key, value in d.items():
-        new_key = parent_key + separator + key if parent_key else key
-        if isinstance(value, MutableMapping):
-            items.extend(flatten_dict(value, new_key).items())
-        else:
-            items.append((new_key, value))
-    return dict(items)
 
 
 def _gen_offset_factor(label, tick_lo, tick_up, eagerness=0.325):
