@@ -19,3 +19,6 @@ matplotlibrc
 
 # Other .gitignore files (this one already included)
 .gitignore
+
+#IDE
+.idea/*

@@ -379,6 +379,10 @@ class dymosim(object):
 
     **Initialization parameters (defaults in parentheses):**
 
+    - *working_dir* Directory containing the dymosim executables.
+
+    - *results_dir* Directory where to store the result files of the simulation.
+
     - *results* (['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x',
       'dymolalg.txt']): List of files to copy to the results folder
 
@@ -391,7 +395,7 @@ class dymosim(object):
     **Example:**
 
     >>> from modelicares import doe
-    >>> from modelicares.exps.simulators import dymola_executable
+    >>> from modelicares.exps.simulators import dymosim
 
     >>> with dymola_executable() as simulator:
     ...     for experiment in doe.ofat(TODO):
@@ -399,12 +403,28 @@ class dymosim(object):
     """
 
     def __init__(self,
-                 results=['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymolalg.txt'],
+                 working_dir=None,
+                 results_dir=None,
+                 results=['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x', 'dymolalg.txt'],
                  **options):
         """Upon initialization, establish some settings.
 
         See the top-level class documentation.
         """
+
+        if working_dir is None:
+            working_dir = os.getcwd()
+        else:
+            working_dir = expand_path(working_dir)
+        results_dir = os.path.dirname(results_dir)
+        exe = '.exe' if os.name == 'nt' else ''
+        for i, result in enumerate(results):
+            results[i] = result.replace('%x', exe)
+
+        self._results = results
+        self._working_dir = working_dir
+        self._results_dir = results_dir
+
         raise NotImplementedError(
             "The dymosim context manager has not yet been implemented.")
 
