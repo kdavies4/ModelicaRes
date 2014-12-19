@@ -426,6 +426,9 @@ class dymosim(object):
         self._working_dir = working_dir
         self._results_dir = results_dir
 
+        # Start counting the run() calls.
+        self.n_runs = 0
+
     def run(self, model, start_time, stop_time, params={}):
         r"""Run and save the results of a single experiment.
 
@@ -529,6 +532,7 @@ class dymosim(object):
                 resultFile="ChuaCircuit%i" % i)
                 for i, params in zip(count(1), product(Ls, C1s, C2s))]
         """
+        self.n_runs += 1
 
         from . import write_params
 
@@ -541,14 +545,16 @@ class dymosim(object):
         write_params(params, dsin_path)
 
         # Prepare the simulation configuration
+        file_name, file_extension = os.path.splitext(os.path.join(self._results_dir, self._results[2]))
+        result = file_name + str(self.n_runs) + file_extension
+
         arguments = {
             "dymosim": model,
             "dsin": self._results[0],
-            "result": os.path.join(self._results_dir, self._results[2])
+            "result": result
         }
 
         command = ''.join([arguments['dymosim'], ' -s ', arguments['dsin'], ' ', arguments['result']])
-        print command
 
         # Run the simulation (on Windows subprocess can only be called using a relative path so we need to change the
         # cwd)
