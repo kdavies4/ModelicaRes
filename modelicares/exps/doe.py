@@ -82,23 +82,18 @@ def aslisted(*space):
 
     **Example 1 (lists as positional arguments):**
 
-    .. code-block:: python
-
-       >>> from modelicares import doe
-
-       >>> for x in doe.aslisted([0, 1], [0, 1], [0, 1, 2]):
-       ...     print(x)
-       (0, 0, 0)
-       (1, 1, 1)
+    >>> for x in aslisted([0, 1], [0, 1], [0, 1, 2]):
+    ...     print(x)
+    (0, 0, 0)
+    (1, 1, 1)
 
     **Example 2 (lists as keyword arguments):**
 
     .. code-block:: python
 
-       >>> from modelicares import doe
        >>> from modelicares.exps import ParamDict
 
-       >>> for x in doe.aslisted(a=[0, 1], b=[0, 1], c=[0, 1, 2]):
+       >>> for x in aslisted(a=[0, 1], b=[0, 1], c=[0, 1, 2]):
        ...     print(ParamDict(x)) # ParamDict makes the output easier to read.
        (a=0, b=0, c=0)
        (a=1, b=1, c=1)
@@ -107,10 +102,9 @@ def aslisted(*space):
 
     .. code-block:: python
 
-       >>> from modelicares import doe
        >>> from modelicares.exps import ParamDict
 
-       >>> for x in doe.aslisted(dict(a=[0, 1], b=[0, 1], c=[0, 1, 2])):
+       >>> for x in aslisted(dict(a=[0, 1], b=[0, 1], c=[0, 1, 2])):
        ...     print(ParamDict(x)) # ParamDict makes the output easier to read.
        (a=0, b=0, c=0)
        (a=1, b=1, c=1)
@@ -119,7 +113,7 @@ def aslisted(*space):
      to represent a hierarchy using this approach in conjunction with
      :class:`~modelicares.exps.ParamDict`:
 
-     >>> for x in doe.aslisted({'a': [0, 1], 'b.c': [0, 1], 'b.d': [0, 1, 2]}):
+     >>> for x in aslisted({'a': [0, 1], 'b.c': [0, 1], 'b.d': [0, 1, 2]}):
      ...     print(ParamDict(x))
      (a=0, b(c=0, d=0))
      (a=1, b(c=1, d=1))
@@ -134,24 +128,20 @@ def fullfact(*space):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import doe
-
-       >>> for x in doe.fullfact([0, 1], [0, 1], [0, 1, 2]):
-       ...     print(x)
-       (0, 0, 0)
-       (0, 0, 1)
-       (0, 0, 2)
-       (0, 1, 0)
-       (0, 1, 1)
-       (0, 1, 2)
-       (1, 0, 0)
-       (1, 0, 1)
-       (1, 0, 2)
-       (1, 1, 0)
-       (1, 1, 1)
-       (1, 1, 2)
+    >>> for x in fullfact([0, 1], [0, 1], [0, 1, 2]):
+    ...     print(x)
+    (0, 0, 0)
+    (0, 0, 1)
+    (0, 0, 2)
+    (0, 1, 0)
+    (0, 1, 1)
+    (0, 1, 2)
+    (1, 0, 0)
+    (1, 0, 1)
+    (1, 0, 2)
+    (1, 1, 0)
+    (1, 1, 1)
+    (1, 1, 2)
 
     It is also possible to call this function with keyword arguments or with a
     dictionary as a positional argument, like in examples 2 and 3 for
@@ -170,17 +160,13 @@ def ofat(*space):
 
     **Example:**
 
-    .. code-block:: python
-
-       >>> from modelicares import doe
-
-       >>> for x in doe.ofat([0, 1], [0, 1], [0, 1, 2]):
-       ...     print(x)
-       (0, 0, 0)
-       (1, 0, 0)
-       (0, 1, 0)
-       (0, 0, 1)
-       (0, 0, 2)
+    >>> for x in ofat([0, 1], [0, 1], [0, 1, 2]):
+    ...     print(x)
+    (0, 0, 0)
+    (1, 0, 0)
+    (0, 1, 0)
+    (0, 0, 1)
+    (0, 0, 2)
 
     It is also possible to call this function with keyword arguments or with a
     dictionary as a positional argument, like in examples 2 and 3 for

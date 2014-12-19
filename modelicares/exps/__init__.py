@@ -73,7 +73,6 @@ import re
 import numpy as np
 
 from six import string_types
-
 from ..util import modelica_str
 
 
@@ -93,19 +92,20 @@ def read_params(names, fname='dsin.txt'):
 
     **Example:**
 
-    >>> read_params(['Td', 'Ti'], 'examples/dsin.txt')
-    [0.1, 0.5]
+    >>> read_params(['Ti', 'Td'], 'examples/dsin.txt')
+    [0.5, 0.1]
     """
-    # Aliases for some regular subexpressions
+    # Some regular subexpressions
     u = r'\d+'  # Unsigned integer
     i = '[+-]?' + u  # Integer
-    f = i + r'(?:\.' + u + ')?(?:[Ee][+-]?' + u + ')?'  # Floating point number
+    f = i + r'(?:\.' + u + ')?(?:[Ee][+-]?' + u + ')?'  # Float
 
     # Possible regular expressions for a parameter specification (with '%s' for
-    # the parameter name)
-    patterns = [  # Dymola 1- or 2-line parameter specification
-        (r'^\s*%s\s+(%s)\s+%s\s+%s\s+%s\s+%s\s*#\s*%s\s*$'
-         % (i, f, f, f, u, u, '%s')),
+    # the parameter name and parentheses around the value)
+    patterns = [
+        # For Dymola 1- or 2-line parameter specification:
+        r'^\s*{i}\s+({f})\s+{f}\s+{f}\s+{u}\s+{u}\s*#\s*%s\s*$'.format(i=i, f=f,
+                                                                       u=u),
         # From Dymola:
         # column 1: Type of initial value
         #           = -2: special case: for continuing simulation
@@ -135,9 +135,13 @@ def read_params(names, fname='dsin.txt'):
         #           = 0: real.
         #           = 1: boolean.
         #           = 2: integer.
+
+        # For Dymola experiment parameters, method tuning parameters, and output
+        # parameters:
+        r'^\s*({i})\s*#\s*%s\s'.format(i=i),
+        r'^\s*({f})\s*#\s*%s\s'.format(f=f),
     ]
-    # These are tried in order until there is a match.  The group or pair of
-    # parentheses contains the parameter value.
+    # These are tried in order until there's a match.
 
     # Read the file.
     with open(fname, 'r') as src:
@@ -145,7 +149,8 @@ def read_params(names, fname='dsin.txt'):
 
     # Read the parameters.
     def _read_param(name):
-        """Read a single parameter"""
+        """Read a single parameter.
+        """
         namere = re.escape(name)  # Escape the dots, square brackets, etc.
         for pattern in patterns:
             try:
@@ -162,7 +167,7 @@ def read_params(names, fname='dsin.txt'):
     if isinstance(names, string_types):
         return _read_param(names)
     else:
-        return [_read_param(name) for name in names]
+        return map(_read_param, names)
 
 
 def write_params(params, fname='dsin.txt'):
@@ -213,24 +218,26 @@ def write_params(params, fname='dsin.txt'):
             "Strings cannot be used as values in the simulation initialization "
             "file.")
 
-    # Aliases for some regular subexpressions
+    # Some regular subexpressions
     u = r'\d+'  # Unsigned integer
     i = '[+-]?' + u  # Integer
-    f = i + r'(?:\.' + u + ')?(?:[Ee][+-]' + u + ')?'  # Floating point number
+    f = i + r'(?:\.' + u + ')?(?:[Ee][+-]' + u + ')?'  # Float
 
     # Possible regular expressions for a parameter specification (with '%s' for
-    # the parameter name)
-    patterns = [  # Dymola 1- or 2-line parameter specification
-        (r'(^\s*%s\s+)%s(\s+%s\s+%s\s+%s\s+%s\s*#\s*%s\s*$)'
-         % (i, f, f, f, u, u, '%s')),
-        r'(^\s*)' + i + r'(\s*#\s*%s)',
-        r'(^\s*)' + f + r'(\s*#\s*%s)',
+    # the parameter name and two pairs of parentheses: around everything before
+    # the value and around everything after the value)
+    patterns = [
+        # For Dymola 1- or 2-line parameter specification:
+        r'(^\s*{i}\s+)'.format(i=i) + f
+                  + r'(\s+{f}\s+{f}\s+{u}\s+{u}\s*#\s*%s\s*$)'.format(f=f, u=u),
         # See read_params() for a description of the columns.
+
+        # For Dymola experiment parameters, method tuning parameters, and output
+        # parameters:
+        r'(^\s*)' + i + r'(\s*#\s*%s\s)',
+        r'(^\s*)' + f + r'(\s*#\s*%s\s)',
     ]
-    # These are tried in order until there is a match.  The first group or pair
-    # of parentheses contains the text before the parameter value and the
-    # second contains the text after it (minus one space on both sides for
-    # clarity).
+    # These are tried in order until there's a match.
 
     # Read the file.
     with open(fname, 'r') as src:
@@ -238,11 +245,11 @@ def write_params(params, fname='dsin.txt'):
 
     # Set the parameters.
     for name, value in params.items():
-        namere = re.escape(name)  # Escape the dots, square brackets, etc.
+        namere = re.escape(name) # Escape the dots, square brackets, etc.
         for pattern in patterns:
             text, num = re.subn(pattern % namere, r'\g<1>%s\2' % value, text, 1,
                                 re.MULTILINE)
-            if num == 1:
+            if num: # Found a match
                 break
         else:
             raise AssertionError(
