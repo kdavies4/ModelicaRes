@@ -31,6 +31,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import sys
 import subprocess
+import pyfmi
 
 from datetime import date
 from . import ParamDict
@@ -373,6 +374,9 @@ class dymola_script(object):
         print('Run %s:  %s' % (n_runs, call))
 
 
+from . import write_params, read_params
+
+
 class dymosim(object):
 
     """Context manager to run executable models from Dymola\ :sup:`®`
@@ -534,8 +538,6 @@ class dymosim(object):
         """
         self.n_runs += 1
 
-        from . import write_params
-
         # Add the start and stop values to the params dictionary
         params['StartTime'] = start_time
         params['StopTime'] = stop_time
@@ -570,7 +572,6 @@ class dymosim(object):
         p.communicate()
 
     def continue_run(self, model, duration, params={}):
-        from . import read_params
 
         # Use dsfinal.txt as the input for the next simulation
         dsin = self._results[0]
@@ -598,27 +599,81 @@ class fmi(object):
 
     .. code-block:: python
 
-       >>> from modelicares.exps.simulators import FMI
+       >>> from modelicares.exps.simulators import fmi
 
-       >>> with FMI(stopTime=2500) as simulator:
+       >>> with fmi(stopTime=2500) as simulator:
        ...     simulator.run('examples/ChuaCircuit.fmu')
 
     For more complicated scenarios, use the same form as in examples 2 and 3
     in the :class:`dymola_script` documentation.
     """
 
-    def __init__(self, *args, **kwargs):
-        raise NotImplementedError(
-            "The FMI context manager hasn't been implemented yet.")
+    def __init__(self,
+                 working_dir=None,
+                 results_dir=None,
+                 result=['file', 'fmu'],
+                 **options):
+        """Upon initialization, establish some settings.
 
+        See the top-level class documentation.
+        """
 
-    def run(self, model, params={}):
+        if working_dir is None:
+            working_dir = os.getcwd()
+        else:
+            working_dir = expand_path(working_dir)
+
+        self._working_dir = working_dir
+        self._results_dir = results_dir
+        self._result = result
+
+        # Start counting the run() calls.
+        self.n_runs = 0
+
+    def load(self, model):
+        """
+        Load the FMU for continued simulation in the continue_run method.
+        """
+        fmu = pyfmi.load_fmu(model)
+        fmu.initialize()
+
+        return fmu
+
+    def run(self, model, start_time, stop_time, params={}):
         r"""Run and save the results of a single experiment.
 
         .. Warning:: This function has not been implemented yet.
         """
-        pass
 
+        fmu = self.load(model)
+
+        options = fmu.simulate_options()
+        options['initialize'] = False
+        if self._result != 'fmu':
+            options['result_file_name'] = self._result + str(self.n_runs) + '.txt'
+
+        else:
+            options['result_file_name'] = model + str(self.n_runs) + '.txt'
+
+        return fmu.simulate(
+            start_time=int(start_time),
+            final_time=int(stop_time),
+            options=options
+        )
+
+    def continue_run(self, fmu, duration, params={}):
+        start_time = 0
+
+        options = fmu.simulate_options()
+        options['initialize'] = False
+        if self._result:
+            options['result_file_name'] = self._result
+
+        return fmu.simulate(
+            start_time=start_time,
+            final_time=int(start_time+duration),
+            options=options
+        )
 
 if __name__ == '__main__':
     # Test the contents of this file.
