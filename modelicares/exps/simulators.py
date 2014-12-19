@@ -29,6 +29,8 @@ __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
                  "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
+import sys
+import subprocess
 
 from datetime import date
 from . import ParamDict
@@ -416,7 +418,6 @@ class dymosim(object):
             working_dir = os.getcwd()
         else:
             working_dir = expand_path(working_dir)
-        results_dir = os.path.dirname(results_dir)
         exe = '.exe' if os.name == 'nt' else ''
         for i, result in enumerate(results):
             results[i] = result.replace('%x', exe)
@@ -425,11 +426,7 @@ class dymosim(object):
         self._working_dir = working_dir
         self._results_dir = results_dir
 
-        raise NotImplementedError(
-            "The dymosim context manager has not yet been implemented.")
-
-
-    def run(self, model, params={}):
+    def run(self, model, start_time, stop_time, params={}):
         r"""Run and save the results of a single experiment.
 
         .. Warning:: This function has not been implemented yet.
@@ -441,6 +438,10 @@ class dymosim(object):
 
              If *model* is *None*, then the model is not included in the
              command.  Dymola\ :sup:`®` will use the last translated model.
+
+        - *start_time*: The starting time of the simulation.
+
+        - *stop_time*: The stop of the simulation.
 
         - *params*: Dictionary of parameter names and values to be set within
           the model
@@ -528,7 +529,39 @@ class dymosim(object):
                 resultFile="ChuaCircuit%i" % i)
                 for i, params in zip(count(1), product(Ls, C1s, C2s))]
         """
-        pass
+
+        from . import write_params
+
+        # Add the start and stop values to the params dictionary
+        params['StartTime'] = start_time
+        params['StopTime'] = stop_time
+
+        # Write the parameters in the provided dsin.txt file.
+        dsin_path = os.path.join(self._working_dir, self._results[0])
+        write_params(params, dsin_path)
+
+        # Prepare the simulation configuration
+        arguments = {
+            "dymosim": model,
+            "dsin": self._results[0],
+            "result": os.path.join(self._results_dir, self._results[2])
+        }
+
+        command = ''.join([arguments['dymosim'], ' -s ', arguments['dsin'], ' ', arguments['result']])
+        print command
+
+        # Run the simulation (on Windows subprocess can only be called using a relative path so we need to change the
+        # cwd)
+        cwd = os.getcwd()
+        os.chdir(self._working_dir)
+
+        p = subprocess.Popen(command, stdout=subprocess.PIPE)
+
+        for c in iter(lambda: p.stdout.read(1), ''):
+            sys.stdout.write(c)
+
+        os.chdir(cwd)
+        p.communicate()
 
 
 class fmi(object):

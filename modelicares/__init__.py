@@ -48,7 +48,7 @@ from .simres import SimRes, SimResList
 from .linres import LinRes, LinResList
 from .util import (add_arrows, add_hlines, add_vlines, ArrowLine, closeall,
                    figure, load_csv, save, saveall, setup_subplots)
-from .exps import (doe, ParamDict, read_params, write_params)
+from .exps import (doe, ParamDict, read_params, write_params, simulators)
 # TODO: Add run_models and include in the doc list once implemented.
 
 

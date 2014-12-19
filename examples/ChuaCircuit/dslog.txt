@@ -1,0 +1,29 @@
+Log-file of program dymosim.exe
+(generated: Fri Dec 19 13:06:27 2014)
+
+dymosim.exe started
+Runtime license not available, trying to check out the Dymola Standard license instead.
+
+... "dsin.txt" loading (dymosim input file)
+... "dymola\dsres.mat" creating (simulation result file)
+
+Integration started at T = 0 using integration method LSODAR
+(Multi-step solver for stiff and non-stiff ODE's with root finder (lsodar of ODEPACK))
+Integration terminated successfully at T = 100
+   CPU-time for integration      : 0.003 seconds
+   CPU-time for one GRID interval: 0.03 milli-seconds
+   Number of result points       : 101
+   Number of GRID   points       : 101
+   Number of (successful) steps  : 14
+   Number of F-evaluations       : 29
+   Number of H-evaluations       : 114
+   Number of Jacobian-evaluations: 0
+   Number of (model) time events : 0
+   Number of (U) time events     : 0
+   Number of state    events     : 0
+   Number of step     events     : 0
+   Minimum integration stepsize  : 2.97
+   Maximum integration stepsize  : 12.2
+   Maximum integration order     : 4
+Calling terminal section
+... "dsfinal.txt" creating (final states)
