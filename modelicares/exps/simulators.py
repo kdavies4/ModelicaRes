@@ -155,29 +155,40 @@ class dymola_script(object):
 
     **Example 2 (simulating with different options):**
 
-    The command options can also be set after establishing the context:
+    The command options can also be modified or removed after establishing the
+    context:
 
     .. code-block:: python
 
        >>> from modelicares.exps.simulators import dymola_script
 
-       >>> with dymola_script("examples/ChuaCircuit/run_sims2.mos") as simulator: # doctest: +ELLIPSIS
-       ...     simulator.stopTime = 250
+       >>> with dymola_script("examples/ChuaCircuit/run_sims2.mos", stopTime=250) as simulator: # doctest: +ELLIPSIS
+       ...     simulator.run('Modelica.Electrical.Analog.Examples.ChuaCircuit', stopTime=2500)
        ...     simulator.run('Modelica.Electrical.Analog.Examples.ChuaCircuit')
-       ...     simulator.stopTime = 2500
+       ...     del simulator.stopTime
+       ...     simulator.run('Modelica.Electrical.Analog.Examples.ChuaCircuit')
+       ...     simulator.stopTime = 25
        ...     simulator.run('Modelica.Electrical.Analog.Examples.ChuaCircuit')
        Starting to write the Dymola script...
        Run 1:  simulateModel(...)
        Run 2:  simulateModel(...)
+       ...
        Finished writing the Dymola script.
+
+    Initially the stop time is set at 250 s, but in the first run it is
+    temporarily overwritten to 2500 s.  In the second run, it falls back to its
+    initial setting.  The stop time is removed before the third run and then set
+    to 25 s for the final run.
 
     This generates the following table:
 
     ===== ============= ============= ===============================================
     Run # Command       Options       Model & parameters
     ===== ============= ============= ===============================================
-    1     simulateModel stopTime=250  Modelica.Electrical.Analog.Examples.ChuaCircuit
-    2     simulateModel stopTime=2500 Modelica.Electrical.Analog.Examples.ChuaCircuit
+    1     simulateModel stopTime=2500 Modelica.Electrical.Analog.Examples.ChuaCircuit
+    2     simulateModel stopTime=250  Modelica.Electrical.Analog.Examples.ChuaCircuit
+    3     simulateModel               Modelica.Electrical.Analog.Examples.ChuaCircuit
+    4     simulateModel stopTime=25   Modelica.Electrical.Analog.Examples.ChuaCircuit
     ===== ============= ============= ===============================================
 
     and a corresponding script in *examples/ChuaCircuit/run_sims2.mos*.
@@ -280,6 +291,11 @@ class dymola_script(object):
         # Start counting the run() calls.
         self.n_runs = 0
 
+    def __delattr__(self, attr):
+        """Delete a command option.
+        """
+        del self._options[attr]
+
     def __getattr__(self, attr):
         """If an unknown attribute is requested, look for it in the dictionary
         of command options.
@@ -313,7 +329,7 @@ class dymola_script(object):
         self._run_log.close()
         print("Finished writing the Dymola script.")
 
-    def run(self, model=None, params={}):
+    def run(self, model=None, params={}, **options):
         """Write commands to run and save the results of a single experiment.
 
         **Parameters:**
@@ -337,6 +353,12 @@ class dymola_script(object):
              ``params={'redeclare package Medium': 'Modelica.Media.Air.MoistAir'}``).
 
              Any item with a value of *None* is skipped.
+
+        - *\*\*options*: Additional keyword arguments for the command chosen
+          upon initialization (see the top-level documentation of
+          :class:`dymola_script`)
+
+             These are updated only for the current run.
         """
 
         # Increment the number of runs and retrieve some attributes.
@@ -344,12 +366,13 @@ class dymola_script(object):
         n_runs = self.n_runs
         mos = self._mos
         command = self._command
-        options = self._options
+        opts = self._options.copy()
+        opts.update(options)
 
         # Write the command to run the model.
         mos.write('// Run %i\n' % n_runs)
         problem = '"%s%s"' % (model, ParamDict(params)) if model else None
-        call = '%s%s' % (command, ParamDict(options, problem=problem))
+        call = '%s%s' % (command, ParamDict(opts, problem=problem))
         mos.write('ok = %s;\n' % call)
 
         # Write commands to save the results and clear Dymola's log file.
@@ -366,7 +389,7 @@ class dymola_script(object):
         # Add an entry to the run log.
         self._run_log.write('\t'.join([str(n_runs),
                                        command,
-                                       str(ParamDict(options))[1:-1],
+                                       str(ParamDict(opts))[1:-1],
                                        problem[1:-1] if problem else ''])
                             + '\n')
         print('Run %s:  %s' % (n_runs, call))
@@ -395,12 +418,14 @@ class dymosim(object):
 
     **Example:**
 
-    >>> from modelicares import doe
-    >>> from modelicares.exps.simulators import dymosim
+    .. code-block:: python
 
-    >>> with dymola_executable() as simulator:
-    ...     for experiment in doe.ofat(TODO):
-    ...         simulator.run(*experiment)
+       >>> from modelicares import doe
+       >>> from modelicares.exps.simulators import dymosim
+
+       >>> with dymola_executable() as simulator:
+       ...     for experiment in doe.ofat(TODO):
+       ...         simulator.run(*experiment)
     """
 
     def __init__(self, working_dir=None, results_dir=None,

@@ -26,8 +26,8 @@ outerProduct
 div
 IconMap
 simspecs
-cos
 fcd
+cos
 Bezier
 versionBuild
 src
@@ -97,8 +97,8 @@ noEvent
 subpackages
 MWorks
 defaultComponentName
-af
 ba
+af
 rpls
 defaultPrefixes
 YYYY
