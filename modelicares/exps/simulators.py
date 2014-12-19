@@ -28,14 +28,18 @@ __email__ = "kdavies4@gmail.com"
 __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
                  "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
+
 import os
 import sys
 import subprocess
 import pyfmi
 
 from datetime import date
-from . import ParamDict
+from . import ParamDict, read_params, write_params
 from ..util import expand_path
+
+# File extension for an executable
+EXE = '.exe' if os.name == 'nt' else ''
 
 
 class dymola_script(object):
@@ -231,9 +235,8 @@ class dymola_script(object):
         else:
             working_dir = expand_path(working_dir)
         results_dir = os.path.dirname(fname)
-        exe = '.exe' if os.name == 'nt' else ''
         for i, result in enumerate(results):
-            results[i] = result.replace('%x', exe)
+            results[i] = result.replace('%x', EXE)
         self._results = results
         self._command = command
         self._options = options
@@ -277,13 +280,11 @@ class dymola_script(object):
         # Start counting the run() calls.
         self.n_runs = 0
 
-
     def __getattr__(self, attr):
         """If an unknown attribute is requested, look for it in the dictionary
         of command options.
         """
         return self._options[attr]
-
 
     def __setattr__(self, attr, value):
         """Add known attributes directly, but unknown attributes go to the
@@ -295,13 +296,11 @@ class dymola_script(object):
         else:
             self._options[attr] = value
 
-
     def __enter__(self):
         """Enter the context of the simulator.
         """
         # Everything has been done in __init__, so just do this:
         return self
-
 
     def __exit__(self, *exc_details):
         """Exit the context of the simulator.
@@ -313,7 +312,6 @@ class dymola_script(object):
 
         self._run_log.close()
         print("Finished writing the Dymola script.")
-
 
     def run(self, model=None, params={}):
         """Write commands to run and save the results of a single experiment.
@@ -374,14 +372,9 @@ class dymola_script(object):
         print('Run %s:  %s' % (n_runs, call))
 
 
-from . import write_params, read_params
-
-
 class dymosim(object):
 
     """Context manager to run executable models from Dymola\ :sup:`®`
-
-    .. Warning:: This context manager has not been implemented yet.
 
     **Initialization parameters (defaults in parentheses):**
 
@@ -398,6 +391,8 @@ class dymosim(object):
          is Windows and '' otherwise.  The result folders are named by the
          run number and placed within the folder contains the script (*fname*).
 
+    - *\*\*options*: Additional keyword arguments for *command*
+
     **Example:**
 
     >>> from modelicares import doe
@@ -408,24 +403,22 @@ class dymosim(object):
     ...         simulator.run(*experiment)
     """
 
-    def __init__(self,
-                 working_dir=None,
-                 results_dir=None,
-                 results=['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x', 'dymolalg.txt'],
+    def __init__(self, working_dir=None, results_dir=None,
+                 results=['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x',
+                          'dymolalg.txt'],
                  **options):
         """Upon initialization, establish some settings.
 
         See the top-level class documentation.
         """
 
+        # Preprocess the arguments.
         if working_dir is None:
             working_dir = os.getcwd()
         else:
             working_dir = expand_path(working_dir)
-        exe = '.exe' if os.name == 'nt' else ''
         for i, result in enumerate(results):
-            results[i] = result.replace('%x', exe)
-
+            results[i] = result.replace('%x', EXE)
         self._results = results
         self._working_dir = working_dir
         self._results_dir = results_dir
@@ -435,8 +428,6 @@ class dymosim(object):
 
     def run(self, model, start_time, stop_time, params={}):
         r"""Run and save the results of a single experiment.
-
-        .. Warning:: This function has not been implemented yet.
 
         **Parameters:**
 
