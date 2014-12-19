@@ -11,6 +11,15 @@ MANIFEST
 doc/examples
 *.egg-info
 
+# Dymola-generated files
+buildlog.txt
+dsmodel.c
+dslog.txt
+failure
+request
+status
+success
+
 # Backup files
 .ipynb_checkpoints
 
@@ -20,5 +29,5 @@ matplotlibrc
 # Other .gitignore files (this one already included)
 .gitignore
 
-#IDE
+# IDE
 .idea/*
