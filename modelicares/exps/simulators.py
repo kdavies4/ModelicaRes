@@ -611,7 +611,8 @@ class fmi(object):
     def __init__(self,
                  working_dir=None,
                  results_dir=None,
-                 result=['file', 'fmu'],
+                 result=None,
+                 fmu_options={},
                  **options):
         """Upon initialization, establish some settings.
 
@@ -625,7 +626,8 @@ class fmi(object):
 
         self._working_dir = working_dir
         self._results_dir = results_dir
-        self._result = result
+        self._result = os.path.join(results_dir, result)
+        self._fmu_options = fmu_options
 
         # Start counting the run() calls.
         self.n_runs = 0
@@ -644,36 +646,42 @@ class fmi(object):
 
         .. Warning:: This function has not been implemented yet.
         """
+        self.n_runs += 1
 
         fmu = self.load(model)
 
         options = fmu.simulate_options()
-        options['initialize'] = False
-        if self._result != 'fmu':
-            options['result_file_name'] = self._result + str(self.n_runs) + '.txt'
 
+        for key, value in self._fmu_options:
+            options[key] = value
+
+        options['initialize'] = False
+        if self._result:
+            options['result_file_name'] = self._result + str(self.n_runs) + '.txt'
         else:
             options['result_file_name'] = model + str(self.n_runs) + '.txt'
 
-        return fmu.simulate(
+        return (fmu.simulate(
             start_time=int(start_time),
             final_time=int(stop_time),
             options=options
-        )
+        ), fmu)
 
     def continue_run(self, fmu, duration, params={}):
-        start_time = 0
+        start_time = fmu.time
 
         options = fmu.simulate_options()
         options['initialize'] = False
         if self._result:
-            options['result_file_name'] = self._result
+            options['result_file_name'] = self._result + str(self.n_runs) + '.txt'
+        else:
+            options['result_file_name'] = fmu.get_name() + str(self.n_runs) + '.txt'
 
-        return fmu.simulate(
+        return (fmu.simulate(
             start_time=start_time,
             final_time=int(start_time+duration),
             options=options
-        )
+        ), fmu)
 
 if __name__ == '__main__':
     # Test the contents of this file.

@@ -1,5 +1,5 @@
 Log-file of program dymosim.exe
-(generated: Fri Dec 19 14:06:50 2014)
+(generated: Fri Dec 19 17:00:05 2014)
 
 dymosim.exe started
 Runtime license not available, trying to check out the Dymola Standard license instead.
@@ -10,8 +10,8 @@ Runtime license not available, trying to check out the Dymola Standard license i
 Integration started at T = 0 using integration method LSODAR
 (Multi-step solver for stiff and non-stiff ODE's with root finder (lsodar of ODEPACK))
 Integration terminated successfully at T = 100
-   CPU-time for integration      : 0.002 seconds
-   CPU-time for one GRID interval: 0.02 milli-seconds
+   CPU-time for integration      : 0.001 seconds
+   CPU-time for one GRID interval: 0.01 milli-seconds
    Number of result points       : 101
    Number of GRID   points       : 101
    Number of (successful) steps  : 14
