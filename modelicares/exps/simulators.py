@@ -569,6 +569,24 @@ class dymosim(object):
         os.chdir(cwd)
         p.communicate()
 
+    def continue_run(self, model, duration, params={}):
+        from . import read_params
+
+        # Use dsfinal.txt as the input for the next simulation
+        dsin = self._results[0]
+        self._results[0] = 'dsfinal.txt'
+
+        dsfinal_path = os.path.join(self._working_dir, self._results[0])
+
+        # Set the new stop time
+        start_time = read_params('StartTime', dsfinal_path)
+        stop_time = start_time + duration
+
+        self.run(model, start_time, stop_time, params)
+
+        # Reset the original dsin file
+        self._results[0] = dsin
+
 
 class fmi(object):
 
