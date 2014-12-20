@@ -79,7 +79,7 @@ import re
 import numpy as np
 
 from six import string_types
-from ..util import modelica_str, read_values, write_values
+from ..util import flatten_dict, modelica_str, read_values, write_values
 
 # Some regular subexpressions
 U = r'\d+'  # Unsigned integer
@@ -199,10 +199,10 @@ def write_options(options, fname='dsin.txt'):
     PATTERNS = [
         # For Dymola experiment parameters, method tuning parameters, and output
         # parameters:
-        r'(^\s*)' + i + r'(\s*#\s*%s\s)',
-        r'(^\s*)' + f + r'(\s*#\s*%s\s)',
+        r'(^\s*)' + I + r'(\s*#\s*%s\s)',
+        r'(^\s*)' + F + r'(\s*#\s*%s\s)',
     ]
-    write_values(params, fname, PATTERNS)
+    write_values(options, fname, PATTERNS)
 
 def write_params(params, fname='dsin.txt'):
     """Write model parameters and initial values to a Dymola\ :sup:`®`-formatted
@@ -244,6 +244,7 @@ def write_params(params, fname='dsin.txt'):
         ...   # Td
     """
     # Pre-process the values.
+    params = flatten_dict(params)
     for key, value in params.items():
         if isinstance(value, bool):
             params[key] = 1 if value else 0
@@ -256,7 +257,7 @@ def write_params(params, fname='dsin.txt'):
 
     PATTERNS = [
         # For Dymola 1- or 2-line parameter specification:
-        r'(^\s*{I}\s+)'.format(I=I) + f
+        r'(^\s*{I}\s+)'.format(I=I) + F
                   + r'(\s+{F}\s+{F}\s+{U}\s+{U}\s*#\s*%s\s*$)'.format(F=F, U=U),
         # See read_params() for a description of the columns.
     ]

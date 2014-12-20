@@ -1,8 +1,9 @@
 Credits
 =======
 
-The main author is Kevin Davies.  Arnout Aertgeerts wrote most of the FMI
-context manager (:func:`~modelicares.exps.simulators.fmi`).
+The main author is Kevin Davies.  Arnout Aertgeerts wrote the core of the FMI_
+and dymosim context managers (:func:`~modelicares.exps.simulators.fmi` and
+:func:`~modelicares.exps.simulators.dymosim`).
 
 Code has also been included from:
 

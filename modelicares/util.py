@@ -38,6 +38,8 @@
 
 - :func:`figure` - Create a figure and set its label.
 
+- :func:`flatten_dict` - Flatten a nested dictionary.
+
 - :func:`get_indices` - Return the pair of indices that bound a target value in
   a monotonically increasing vector.
 
@@ -57,6 +59,9 @@
   Cartesian coordinates.
 
 - :func:`quiver` - Plot 2D vector data as arrows in 2D Cartesian coordinates.
+
+- :func:`run_in_dir` - Run a system command in a given working directory and
+  print the output.
 
 - :func:`read_values` - Read integers or floats from a formatted text file.
 
@@ -87,7 +92,8 @@
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
-__credits__ = ["Jason Grout", "Jason Heeris", "Joerg Raedler"]
+__credits__ = ["Arnout Aertgeerts", "Jason Grout", "Jason Heeris",
+               "Joerg Raedler"]
 __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
                  "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
@@ -99,13 +105,13 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 # Other:
 # pylint: disable=I0011, C0103, C0301, E1101, F0401, R0921, W0102, W0621
 
+import matplotlib.pyplot as plt
+import numpy as np
 import os
-import re
+import re as regexp
+import subprocess
 import sys
 import time
-import numpy as np
-import matplotlib.pyplot as plt
-import re as regexp
 
 from collections import MutableMapping
 from decimal import Decimal
@@ -311,23 +317,11 @@ def add_vlines(ax=None, positions=[0], labels=[], **kwargs):
                 horizontalalignment='center', verticalalignment='center')
 
 
-class CallList(list):
+def basename(fname):
+    """Return the base filename from *fname*.
 
-    """List that when called returns a list of the results from calling its
-    elements.
-
-    **Example:**
-
-    >>> f = lambda x: lambda y: x*y
-    >>> l = CallList([f(2), f(3)])
-    >>> l(5)
-    [10, 15]
-    """
-
-    def __call__(self, *args, **kwargs):
-        """Return a list of the results from calling the elements of the list.
-        """
-        return [item(*args, **kwargs) for item in self]
+    Unlike :func:`os.path.basename`, this function strips the file extension."""
+    return os.path.splitext(os.path.basename(fname))[0]
 
 
 def cast_sametype(meth):
@@ -424,11 +418,38 @@ def figure(label='', *args, **kwargs):
     return fig
 
 
-def basename(fname):
-    """Return the base filename from *fname*.
+def flatten_dict(d, parent_key='', separator='.'):
+    """Flatten a nested dictionary.
 
-    Unlike :func:`os.path.basename`, this function strips the file extension."""
-    return os.path.splitext(os.path.basename(fname))[0]
+    **Parameters:**
+
+    - *d*: Dictionary (may be nested to an arbitrary depth)
+
+    - *parent_key*: Key of the parent dictionary, if any
+
+    - *separator*: String or character that joins elements of the keys or path
+      names
+
+    **Example:**
+
+    >>> flatten_dict(dict(a=1, b=dict(c=2, d='hello'))) # doctest: +SKIP
+    {'a': 1, 'b.c': 2, 'b.d': 'hello'}
+
+    .. testcleanup::
+
+       >>> assert flatten_dict(dict(a=1, b=dict(c=2, d='hello'))) == {'a': 1, 'b.c': 2, 'b.d': 'hello'}
+    """
+    # From
+    # http://stackoverflow.com/questions/6027558/flatten-nested-python-dictionaries-compressing-keys,
+    # 11/5/2012
+    items = []
+    for key, value in d.items():
+        new_key = parent_key + separator + key if parent_key else key
+        if isinstance(value, MutableMapping):
+            items.extend(flatten_dict(value, new_key).items())
+        else:
+            items.append((new_key, value))
+    return dict(items)
 
 
 def _gen_offset_factor(label, tick_lo, tick_up, eagerness=0.325):
@@ -737,7 +758,7 @@ def modelica_str(value):
                          (' ?True', 'true'), ('False', 'false'), (' +', ', ')]:
             # Python 2.7 puts an extra space before True when representing an
             # array.
-            value = re.sub(old, new, value)
+            value = regexp.sub(old, new, value)
         return value
     else:
         return str(value)
@@ -924,10 +945,11 @@ def read_values(names, fname, patterns):
     def _read_value(name):
         """Read a single value.
         """
-        namere = re.escape(name)  # Escape the dots, square brackets, etc.
+        namere = regexp.escape(name)  # Escape the dots, square brackets, etc.
         for pattern in patterns:
             try:
-                match = re.search(pattern % namere, text, re.MULTILINE).group(1)
+                match = regexp.search(pattern % namere, text,
+                                      regexp.MULTILINE).group(1)
             except AttributeError:
                 continue  # Try the next pattern.
             try:
@@ -942,13 +964,42 @@ def read_values(names, fname, patterns):
         else:
             # pylint: disable=I0011, W0120
             raise KeyError(
-                "Variable %s does not exist or is not formatted as expected in "
+                "Variable %s doesn't exist or isn't formatted as expected in "
                 "%s." % (name, fname))
 
     if isinstance(names, string_types):
         return _read_value(names)
     else:
         return map(_read_value, names)
+
+
+def run_in_dir(args, working_dir=''):
+    """Run a system command in a given working directory and print the output.
+
+    **Parameters:**
+
+    - *args*: List of program arguments or a single string
+
+    - *working_dir*: Working directory (string), absolute or relative to the
+      current directory
+    """
+    # This function is based on code from Arnout Aertgeerts.
+
+    # On Windows, subprocess must be called using a relative path so we need
+    # to change the cwd.
+    if working_dir:
+        cwd = os.getcwd()
+        os.chdir(working_dir)
+
+    # Run the command and print the output.
+    process = subprocess.Popen(args, stdout=subprocess.PIPE)
+    for line in iter(lambda: process.stdout.read(1), ''):
+        sys.stdout.write(line)
+
+    # Return to the original directory and wait for the process to finish.
+    if working_dir:
+        os.chdir(cwd)
+    process.communicate()
 
 
 def save(formats=['pdf', 'png'], fname=None, fig=None):
@@ -1408,11 +1459,14 @@ def tree(strings, separator='.', container=dict):
 
 
 def write_values(data, fname, patterns):
-    """Write integers or floats to a formatted text file.
+    """Write values to a formatted text file.
 
     **Parameters:**
 
     - *data*: Dictionary of variable names and values
+
+         The string representation of each value will be used in the file,
+         except any item with a value of *None* will be skipped.
 
     - *fname*: Name of the file (may include the file path)
 
@@ -1430,16 +1484,17 @@ def write_values(data, fname, patterns):
 
     # Set the values.
     for name, value in data.items():
-        namere = re.escape(name) # Escape the dots, square brackets, etc.
-        for pattern in patterns:
-            text, num = re.subn(pattern % namere, r'\g<1>%s\2' % value, text, 1,
-                                re.MULTILINE)
-            if num: # Found a match
-                break
-        else:
-            raise KeyError(
-                "Variable %s does not exist or is not formatted as expected "
-                "in %s." % (name, fname))
+        if value is not None:
+            namere = regexp.escape(name) # Escape the dots, square brackets, etc.
+            for pattern in patterns:
+                text, num = regexp.subn(pattern % namere, r'\g<1>%s\2' % value,
+                                        text, 1, regexp.MULTILINE)
+                if num: # Found a match
+                    break
+            else:
+                raise KeyError(
+                    "Variable %s does not exist or is not formatted as expected "
+                    "in %s." % (name, fname))
 
     # Re-write the file.
     with open(fname, 'w') as src:
@@ -1558,6 +1613,26 @@ class ArrowLine(Line2D):
         else:
             rgb_face = colorConverter.to_rgb(facecolor)
         return rgb_face
+
+
+class CallList(list):
+
+    """List that when called returns a list of the results from calling its
+    elements.
+
+    **Example:**
+
+    >>> f = lambda x: lambda y: x*y
+    >>> l = CallList([f(2), f(3)])
+    >>> l(5)
+    [10, 15]
+    """
+
+    def __call__(self, *args, **kwargs):
+        """Return a list of the results from calling the elements of the list.
+        """
+        return [item(*args, **kwargs) for item in self]
+
 
 # Getch classes based on
 # http://code.activestate.com/recipes/134892-getch-like-unbuffered-character-reading-from-stdin/,
