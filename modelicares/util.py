@@ -58,6 +58,8 @@
 
 - :func:`quiver` - Plot 2D vector data as arrows in 2D Cartesian coordinates.
 
+- :func:`read_values` - Read integers or floats from a formatted text file.
+
 - :func:`save` - Save the current figures as images in a format or list of
   formats.
 
@@ -75,6 +77,8 @@
 - :func:`si_prefix` - Return the SI prefix for a power of 1000.
 
 - :func:`tree` - Return a tree of strings as a nested dictionary.
+
+- :func:`write_values` - Write integers or floats to a formatted text file.
 
 
 .. _matplotlib: http://www.matplotlib.org/
@@ -896,6 +900,57 @@ def quiver(ax, u, v, x=None, y=None, pad=0.05, pivot='middle', **kwargs):
     return p
 
 
+def read_values(names, fname, patterns):
+    """Read integers or floats from a formatted text file.
+
+    **Parameters:**
+
+    - *names*: Variable name or list of names
+
+    - *fname*: Name of the file (may include the file path)
+
+    - *patterns*: List of possible multi-line regular expressions for a variable
+      specification
+
+         Each expression must contain '%s' for the variable name and parentheses
+         around the value.  The expressions are tried in order until there is a
+         match.
+    """
+    # Read the file.
+    with open(fname, 'r') as src:
+        text = src.read()
+
+    # Extract the values.
+    def _read_value(name):
+        """Read a single value.
+        """
+        namere = re.escape(name)  # Escape the dots, square brackets, etc.
+        for pattern in patterns:
+            try:
+                match = re.search(pattern % namere, text, re.MULTILINE).group(1)
+            except AttributeError:
+                continue  # Try the next pattern.
+            try:
+                return int(match)
+            except ValueError:
+                try:
+                    return float(match)
+                except ValueError:
+                    raise ValueError(
+                        'The value of %s ("%s") could not be represented as a '
+                        'float or an int.' % (name, match))
+        else:
+            # pylint: disable=I0011, W0120
+            raise KeyError(
+                "Variable %s does not exist or is not formatted as expected in "
+                "%s." % (name, fname))
+
+    if isinstance(names, string_types):
+        return _read_value(names)
+    else:
+        return map(_read_value, names)
+
+
 def save(formats=['pdf', 'png'], fname=None, fig=None):
     """Save a figure in an image format or list of formats.
 
@@ -1350,6 +1405,45 @@ def tree(strings, separator='.', container=dict):
             branch = branch[element]
         branch[elements[-1]] = string
     return root
+
+
+def write_values(data, fname, patterns):
+    """Write integers or floats to a formatted text file.
+
+    **Parameters:**
+
+    - *data*: Dictionary of variable names and values
+
+    - *fname*: Name of the file (may include the file path)
+
+    - *patterns*: List of possible multi-line regular expressions for a variable
+      specification
+
+         Each expression must contain '%s' for the variable name and two pairs
+         of parentheses: 1) around everything before the value and 2) around
+         everything after the value.  The expressions are tried in order until
+         there is a match.
+    """
+    # Read the file.
+    with open(fname, 'r') as src:
+        text = src.read()
+
+    # Set the values.
+    for name, value in data.items():
+        namere = re.escape(name) # Escape the dots, square brackets, etc.
+        for pattern in patterns:
+            text, num = re.subn(pattern % namere, r'\g<1>%s\2' % value, text, 1,
+                                re.MULTILINE)
+            if num: # Found a match
+                break
+        else:
+            raise KeyError(
+                "Variable %s does not exist or is not formatted as expected "
+                "in %s." % (name, fname))
+
+    # Re-write the file.
+    with open(fname, 'w') as src:
+        src.write(text)
 
 
 # From http://old.nabble.com/Arrows-using-Line2D-and-shortening-lines-td19104579.html,

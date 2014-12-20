@@ -401,9 +401,9 @@ class dymosim(object):
 
     **Initialization parameters (defaults in parentheses):**
 
-    - *working_dir* Directory containing the dymosim executables.
+    - *working_dir*: Directory containing the dymosim executables
 
-    - *results_dir* Directory where to store the result files of the simulation.
+    - *results_dir*: Directory where to store the result files of the simulation
 
     - *results* (['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x',
       'dymolalg.txt']): List of files to copy to the results folder
@@ -414,7 +414,7 @@ class dymosim(object):
          is Windows and '' otherwise.  The result folders are named by the
          run number and placed within the folder contains the script (*fname*).
 
-    - *\*\*options*: Additional keyword arguments for *command*
+    - *\*\*options*: Additional keyword arguments for TODO
 
     **Example:**
 
@@ -423,7 +423,7 @@ class dymosim(object):
        >>> from modelicares import doe
        >>> from modelicares.exps.simulators import dymosim
 
-       >>> with dymola_executable() as simulator:
+       >>> with dymosim() as simulator:
        ...     for experiment in doe.ofat(TODO):
        ...         simulator.run(*experiment)
     """
@@ -447,11 +447,12 @@ class dymosim(object):
         self._results = results
         self._working_dir = working_dir
         self._results_dir = results_dir
+        self._options = options
 
         # Start counting the run() calls.
         self.n_runs = 0
 
-    def run(self, model, start_time, stop_time, params={}):
+    def run(self, model, params={}, **options):
         r"""Run and save the results of a single experiment.
 
         **Parameters:**
@@ -462,9 +463,12 @@ class dymosim(object):
              If *model* is *None*, then the model is not included in the
              command.  Dymola\ :sup:`®` will use the last translated model.
 
-        - *start_time*: The starting time of the simulation.
 
-        - *stop_time*: The stop of the simulation.
+        - *\*\*options*: TODO
+
+        - *StartTime*: The starting time of the simulation.
+
+        - *StopTime*: The stop of the simulation.
 
         - *params*: Dictionary of parameter names and values to be set within
           the model
@@ -551,18 +555,29 @@ class dymosim(object):
     simspecs = [SimSpec(model + "(L(L=%s), C1(C=%s), C2(C=%s))" % params,
                 resultFile="ChuaCircuit%i" % i)
                 for i, params in zip(count(1), product(Ls, C1s, C2s))]
+
+.. warning::
+If any model parameters have the same name as "Experiment parameters", "Method tuning parameters", or "Output parameters" in the Dymola input file, then those ... TODO
+
+ parameters
         """
         self.n_runs += 1
 
-        # Add the start and stop values to the params dictionary
-        params['StartTime'] = start_time
-        params['StopTime'] = stop_time
+        # Update the params dictionary with the simulation options.
+        # Make a copy to avoid unexpected changes to the argument.
+        params = params.copy(params)
+
+        opts = self._options.copy()
+        opts.update(options)
+
+
+        params.update(options)
 
         # Write the parameters in the provided dsin.txt file.
         dsin_path = os.path.join(self._working_dir, self._results[0])
         write_params(params, dsin_path)
 
-        # Prepare the simulation configuration
+        # Prepare the simulation configuration.
         file_name, file_extension = os.path.splitext(os.path.join(self._results_dir, self._results[2]))
         result = file_name + str(self.n_runs) + file_extension
 
@@ -572,20 +587,21 @@ class dymosim(object):
             "result": result
         }
 
-        command = ''.join([arguments['dymosim'], ' -s ', arguments['dsin'], ' ', arguments['result']])
+        command = arguments['dymosim'] + ' -s ' + arguments['dsin'] + ' ' + arguments['result']
 
-        # Run the simulation (on Windows subprocess can only be called using a relative path so we need to change the
-        # cwd)
+        # Run the simulation.
+        # On Windows, subprocess must be called using a relative path so we need
+        # to change the cwd.
         cwd = os.getcwd()
         os.chdir(self._working_dir)
 
-        p = subprocess.Popen(command, stdout=subprocess.PIPE)
+        process = subprocess.Popen(command, stdout=subprocess.PIPE)
 
-        for c in iter(lambda: p.stdout.read(1), ''):
+        for c in iter(lambda: process.stdout.read(1), ''):
             sys.stdout.write(c)
 
         os.chdir(cwd)
-        p.communicate()
+        process.communicate()
 
     def continue_run(self, model, duration, params={}):
 

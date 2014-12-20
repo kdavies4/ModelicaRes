@@ -37,11 +37,17 @@ options.
 
 **Functions:**
 
+- :func:`read_options` - Read simulation options from a
+  Dymola\ :sup:`®`-formatted initialization or final values file.
+
 - :func:`read_params` - Read parameter values from a Dymola\ :sup:`®`-formatted
   initialization or final values file.
 
-- :func:`write_params` - Write parameter values to a Dymola\ :sup:`®`-formatted
-  initialization file.
+- :func:`write_options` - Write simulation options to a
+  Dymola\ :sup:`®`-formatted initialization file.
+
+- :func:`write_params` - Write model parameters and initial values to a
+  Dymola\ :sup:`®`-formatted initialization file.
 
 **Submodules:**
 
@@ -73,8 +79,35 @@ import re
 import numpy as np
 
 from six import string_types
-from ..util import modelica_str
+from ..util import modelica_str, read_values, write_values
 
+# Some regular subexpressions
+U = r'\d+'  # Unsigned integer
+I = '[+-]?' + U  # Integer
+F = I + r'(?:\.' + U + ')?(?:[Ee][+-]' + U + ')?'  # Float
+
+def read_options(names, fname='dsin.txt'):
+    """Read simulation options from a Dymola\ :sup:`®`-formatted initialization
+    or final values file (e.g., dsin.txt or dsfinal.txt).
+
+    **Parameters:**
+
+    - *names*: Parameter name or list of names
+
+    - *fname*: Name of the file (may include the file path)
+
+    **Example:**
+
+    >>> read_options('StopTime', 'examples/dsin.txt')
+    1
+    """
+    PATTERNS = [
+        # For Dymola experiment parameters, method tuning parameters, and output
+        # parameters:
+        r'^\s*({I})\s*#\s*%s\s'.format(I=I),
+        r'^\s*({F})\s*#\s*%s\s'.format(F=F),
+    ]
+    return read_values(names, fname, PATTERNS)
 
 def read_params(names, fname='dsin.txt'):
     """Read parameter values from a Dymola\ :sup:`®`-formatted initialization or
@@ -95,17 +128,11 @@ def read_params(names, fname='dsin.txt'):
     >>> read_params(['Ti', 'Td'], 'examples/dsin.txt')
     [0.5, 0.1]
     """
-    # Some regular subexpressions
-    u = r'\d+'  # Unsigned integer
-    i = '[+-]?' + u  # Integer
-    f = i + r'(?:\.' + u + ')?(?:[Ee][+-]?' + u + ')?'  # Float
 
-    # Possible regular expressions for a parameter specification (with '%s' for
-    # the parameter name and parentheses around the value)
-    patterns = [
+    PATTERNS = [
         # For Dymola 1- or 2-line parameter specification:
-        r'^\s*{i}\s+({f})\s+{f}\s+{f}\s+{u}\s+{u}\s*#\s*%s\s*$'.format(i=i, f=f,
-                                                                       u=u),
+        r'^\s*{I}\s+({F})\s+{F}\s+{F}\s+{U}\s+{U}\s*#\s*%s\s*$'.format(I=I, F=F,
+                                                                       U=U),
         # From Dymola:
         # column 1: Type of initial value
         #           = -2: special case: for continuing simulation
@@ -135,58 +162,67 @@ def read_params(names, fname='dsin.txt'):
         #           = 0: real.
         #           = 1: boolean.
         #           = 2: integer.
-
-        # For Dymola experiment parameters, method tuning parameters, and output
-        # parameters:
-        r'^\s*({i})\s*#\s*%s\s'.format(i=i),
-        r'^\s*({f})\s*#\s*%s\s'.format(f=f),
     ]
-    # These are tried in order until there's a match.
+    return read_values(names, fname, PATTERNS)
 
-    # Read the file.
-    with open(fname, 'r') as src:
-        text = src.read()
-
-    # Read the parameters.
-    def _read_param(name):
-        """Read a single parameter.
-        """
-        namere = re.escape(name)  # Escape the dots, square brackets, etc.
-        for pattern in patterns:
-            try:
-                return float(re.search(pattern % namere, text,
-                                       re.MULTILINE).group(1))
-            except AttributeError:
-                pass  # Try the next pattern.
-        else:
-            # pylint: disable=I0011, W0120
-            raise AssertionError(
-                "Parameter %s does not exist or is not formatted as expected "
-                "in %s." % (name, fname))
-
-    if isinstance(names, string_types):
-        return _read_param(names)
-    else:
-        return map(_read_param, names)
-
-
-def write_params(params, fname='dsin.txt'):
-    """Write parameter values to a Dymola\ :sup:`®`-formatted initialization
+def write_options(options, fname='dsin.txt'):
+    """Write simulation options to a Dymola\ :sup:`®`-formatted initialization
     file (e.g., dsin.txt).
+
+    The options include those listed as "Experiment parameters", "Method tuning
+    parameters", and "Output parameters" in the initialization file.  To write
+    model parameters or variables with tunable initial values, use
+    :func:`write_params`.
 
     **Parameters:**
 
-    - *params*: Dictionary of parameters
+    - *options*: Dictionary of simulation options
 
-         Each key is a parameter name (including the full model path in
-         Modelica_ dot notation) and each entry is a parameter value.  The
-         parameter name includes array indices (if any) in Modelica_
-         representation (1-based indexing).  The values must be representable
-         as scalar numbers (integer or floating point).  *True* and *False*
-         (not 'true' and 'false') are automatically mapped to 1 and 0.
-         Enumerations must be given explicitly as the unsigned integer
-         equivalent.  Strings, functions, redeclarations, etc. are not
-         supported.
+         Each key is a name of an option and each entry its value.
+
+    - *fname*: Name of the file (may include the file path)
+
+    **Example:**
+
+    >>> write_options(dict(StopTime=1000), 'examples/dsin.txt')
+
+    .. testcleanup::
+
+       >>> write_options(dict(StopTime=1), 'examples/dsin.txt')
+
+    This updates the appropriate line in *examples/dsin.txt*:
+
+    .. code-block:: python
+
+       1000                # StopTime     Time at which integration stops
+    """
+    PATTERNS = [
+        # For Dymola experiment parameters, method tuning parameters, and output
+        # parameters:
+        r'(^\s*)' + i + r'(\s*#\s*%s\s)',
+        r'(^\s*)' + f + r'(\s*#\s*%s\s)',
+    ]
+    write_values(params, fname, PATTERNS)
+
+def write_params(params, fname='dsin.txt'):
+    """Write model parameters and initial values to a Dymola\ :sup:`®`-formatted
+    initialization file (e.g., dsin.txt).
+
+    To write simulation options instead, use :func:`write_options`.
+
+    **Parameters:**
+
+    - *params*: Dictionary of model parameters or variables with tunable initial
+      values
+
+         Each key is a parameter or variable name (including the full model path
+         in Modelica_ dot notation) and each entry is a value.  The name
+         includes array indices (if any) in Modelica_ representation (1-based
+         indexing).  The values must be representable as scalar numbers (integer
+         or floating point).  *True* and *False* (not 'true' and 'false') are
+         automatically mapped to 1 and 0.  Enumerations must be given explicitly
+         as the unsigned integer equivalent.  Strings, functions,
+         redeclarations, etc. are not supported.
 
     - *fname*: Name of the file (may include the file path)
 
@@ -218,47 +254,13 @@ def write_params(params, fname='dsin.txt'):
             "Strings cannot be used as values in the simulation initialization "
             "file.")
 
-    # Some regular subexpressions
-    u = r'\d+'  # Unsigned integer
-    i = '[+-]?' + u  # Integer
-    f = i + r'(?:\.' + u + ')?(?:[Ee][+-]' + u + ')?'  # Float
-
-    # Possible regular expressions for a parameter specification (with '%s' for
-    # the parameter name and two pairs of parentheses: around everything before
-    # the value and around everything after the value)
-    patterns = [
+    PATTERNS = [
         # For Dymola 1- or 2-line parameter specification:
-        r'(^\s*{i}\s+)'.format(i=i) + f
-                  + r'(\s+{f}\s+{f}\s+{u}\s+{u}\s*#\s*%s\s*$)'.format(f=f, u=u),
+        r'(^\s*{I}\s+)'.format(I=I) + f
+                  + r'(\s+{F}\s+{F}\s+{U}\s+{U}\s*#\s*%s\s*$)'.format(F=F, U=U),
         # See read_params() for a description of the columns.
-
-        # For Dymola experiment parameters, method tuning parameters, and output
-        # parameters:
-        r'(^\s*)' + i + r'(\s*#\s*%s\s)',
-        r'(^\s*)' + f + r'(\s*#\s*%s\s)',
     ]
-    # These are tried in order until there's a match.
-
-    # Read the file.
-    with open(fname, 'r') as src:
-        text = src.read()
-
-    # Set the parameters.
-    for name, value in params.items():
-        namere = re.escape(name) # Escape the dots, square brackets, etc.
-        for pattern in patterns:
-            text, num = re.subn(pattern % namere, r'\g<1>%s\2' % value, text, 1,
-                                re.MULTILINE)
-            if num: # Found a match
-                break
-        else:
-            raise AssertionError(
-                "Parameter %s does not exist or is not formatted as expected "
-                "in %s." % (name, fname))
-
-    # Re-write the file.
-    with open(fname, 'w') as src:
-        src.write(text)
+    write_values(params, fname, PATTERNS)
 
 
 class ParamDict(dict):
