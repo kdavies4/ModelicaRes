@@ -1,7 +1,7 @@
 {
  "metadata": {
   "name": "",
-  "signature": "sha256:c3358625deb0a5836b1803cbc91cd6f30dd9c00af6869c3a0207d618890d81c6"
+  "signature": "sha256:2f98d3c3f094212b999eedf25d7eade1bbb2ad381bfeb14c1e475486c98c1c2a"
  },
  "nbformat": 3,
  "nbformat_minor": 0,
@@ -13,21 +13,20 @@
      "collapsed": false,
      "input": [
       "import sys\n",
+      "import pyfmi\n",
       "sys.path.append('C:\\\\Users\\\\u0098668\\\\Documents\\\\Modelica\\\\ModelicaRes')"
      ],
      "language": "python",
      "metadata": {},
      "outputs": [],
-     "prompt_number": 1
+     "prompt_number": 7
     },
     {
      "cell_type": "code",
      "collapsed": false,
      "input": [
       "from modelicares.exps.simulators import dymosim, fmi\n",
-      "\n",
-      "dymo_simulator = dymosim(results_dir='ChuaCircuit/results')\n",
-      "fmu_simulator = fmi(results_dir='ChuaCircuit/results-fmu')"
+      "simulator = dymosim(results_dir='ChuaCircuit/results')"
      ],
      "language": "python",
      "metadata": {},
@@ -38,60 +37,19 @@
      "cell_type": "code",
      "collapsed": false,
      "input": [
-      "fmu_simulator.run('ChuaCircuit/CSCVode.fmu', StopTime=1)\n",
-      "fmu_simulator.continue_run(1)"
+      "fmu = pyfmi.load_fmu('ChuaCircuit/ChuaCircuit.fmu')\n",
+      "fmu.set(['L.v', 'L.i'], [1,1])"
      ],
      "language": "python",
      "metadata": {},
-     "outputs": [
-      {
-       "output_type": "stream",
-       "stream": "stdout",
-       "text": [
-        "Simulation interval    : 0.0 - 1 seconds.\n",
-        "Elapsed simulation time: 0.125187942175 seconds.\n",
-        "Simulation interval    : 1.0 - 2.0 seconds."
-       ]
-      },
-      {
-       "output_type": "stream",
-       "stream": "stdout",
-       "text": [
-        "\n",
-        "Elapsed simulation time: 0.11829748567 seconds.\n"
-       ]
-      }
-     ],
-     "prompt_number": 5
+     "outputs": [],
+     "prompt_number": 13
     },
     {
      "cell_type": "code",
      "collapsed": false,
      "input": [
-      "fmu_simulator.memory_result"
-     ],
-     "language": "python",
-     "metadata": {},
-     "outputs": [
-      {
-       "metadata": {},
-       "output_type": "pyout",
-       "prompt_number": 6,
-       "text": [
-        "{1: {1: <pyfmi.fmi_algorithm_drivers.FMIResult at 0x2261530>,\n",
-        "  2: <pyfmi.fmi_algorithm_drivers.FMIResult at 0x36a1e90>},\n",
-        " 2: {1: <pyfmi.fmi_algorithm_drivers.FMIResult at 0x97d7d10>,\n",
-        "  2: <pyfmi.fmi_algorithm_drivers.FMIResult at 0x97d7cd0>}}"
-       ]
-      }
-     ],
-     "prompt_number": 6
-    },
-    {
-     "cell_type": "code",
-     "collapsed": false,
-     "input": [
-      "dymo_simulator.run('ChuaCircuit/dymosim', StartTime=0, StopTime=1)"
+      "simulator.run('ChuaCircuit/dymosim', StartTime=0, StopTime=101)"
      ],
      "language": "python",
      "metadata": {},
@@ -108,36 +66,80 @@
         "\r\n",
         "Integration started at T = 0 using integration method LSODAR\r\n",
         "(Multi-step solver for stiff and non-stiff ODE's with root finder (lsodar of ODEPACK))\r\n",
-        "Integration terminated successfully at T = 1\r\n",
+        "Integration terminated successfully at T = 101\r\n",
         "   CPU-time for integration      : 0.001 seconds\r\n",
         "   CPU-time for one GRID interval: 0.01 milli-seconds\r\n",
         "   Number of result points       : 101\r\n",
         "   Number of GRID   points       : 101\r\n",
-        "   Number of (successful) steps  : 3\r\n",
-        "   Number of F-evaluations       : 7\r\n",
-        "   Number of H-evaluations       : 103\r\n",
+        "   Number of (successful) steps  : 14\r\n",
+        "   Number of F-evaluations       : 29\r\n",
+        "   Number of H-evaluations       : 114\r\n",
         "   Number of Jacobian-evaluations: 0\r\n",
         "   Number of (model) time events : 0\r\n",
         "   Number of (U) time events     : 0\r\n",
         "   Number of state    events     : 0\r\n",
         "   Number of step     events     : 0\r\n",
-        "   Minimum integration stepsize  : 1\r\n",
-        "   Maximum integration stepsize  : 1\r\n",
-        "   Maximum integration order     : 2\r\n",
+        "   Minimum integration stepsize  : 2.97\r\n",
+        "   Maximum integration stepsize  : 12.2\r\n",
+        "   Maximum integration order     : 4\r\n",
         "Calling terminal section\r\n",
         "... \"c:\\Users\\u0098668\\Documents\\Modelica\\ModelicaRes\\examples\\ChuaCircuit\\results\\2\\dsfinal.txt\" creating (final states)\r\n"
        ]
       }
      ],
-     "prompt_number": 8
+     "prompt_number": 4
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "simulator._paths()"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [
+      {
+       "metadata": {},
+       "output_type": "pyout",
+       "prompt_number": 6,
+       "text": [
+        "('ChuaCircuit',\n",
+        " 'dymosim',\n",
+        " 'dymosim.exe',\n",
+        " 'c:\\\\Users\\\\u0098668\\\\Documents\\\\Modelica\\\\ModelicaRes\\\\examples\\\\ChuaCircuit\\\\results\\\\2',\n",
+        " 'c:\\\\Users\\\\u0098668\\\\Documents\\\\Modelica\\\\ModelicaRes\\\\examples\\\\ChuaCircuit\\\\results\\\\2\\\\dsin2.txt')"
+       ]
+      }
+     ],
+     "prompt_number": 6
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "fmuSimulator = fmi(results_dir='Results', result='fmu')"
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": [],
+     "prompt_number": 3
+    },
+    {
+     "cell_type": "code",
+     "collapsed": false,
+     "input": [
+      "(res, fmu) = fmuSimulator.run('districtheating.fmu', 0, 100) "
+     ],
+     "language": "python",
+     "metadata": {},
+     "outputs": []
     },
     {
      "cell_type": "code",
      "collapsed": false,
      "input": [
       "for i in range(0, 3):\n",
-      "    fmu_simulator.continue_run(1)\n",
-      "    dymo_simulator.continue_run(1)"
+      "    fmuSimulator.continue_run(fmu, 100)"
      ],
      "language": "python",
      "metadata": {},
@@ -146,132 +148,76 @@
        "output_type": "stream",
        "stream": "stdout",
        "text": [
-        "Simulation interval    : 5.0 - 6.0 seconds.\n",
-        "Elapsed simulation time: 0.114221474335 seconds.\n",
-        "d"
-       ]
-      },
-      {
-       "output_type": "stream",
-       "stream": "stdout",
-       "text": [
-        "ymosim.exe started\r\n",
-        "Runtime license not available, trying to check out the Dymola Standard license instead.\r\n",
-        "\r\n",
-        "... \"c:\\Users\\u0098668\\Documents\\Modelica\\ModelicaRes\\examples\\ChuaCircuit\\results\\2\\dsin2.txt\" loading (dymosim input file)\r\n",
-        "... starting from known values.\r\n",
-        "... \"c:\\Users\\u0098668\\Documents\\Modelica\\ModelicaRes\\examples\\ChuaCircuit\\results\\2\\dsres2.mat\" creating (simulation result file)\r\n",
-        "\r\n",
-        "Integration started at T = 1 using integration method LSODAR\r\n",
-        "(Multi-step solver for stiff and non-stiff ODE's with root finder (lsodar of ODEPACK))\r\n",
-        "Integration terminated successfully at T = 2\r\n",
-        "   CPU-time for integration      : 0.001 seconds\r\n",
-        "   CPU-time for one GRID interval: 0.01 milli-seconds\r\n",
-        "   Number of result points       : 101\r\n",
-        "   Number of GRID   points       : 101\r\n",
-        "   Number of (successful) steps  : 3\r\n",
-        "   Number of F-evaluations       : 7\r\n",
-        "   Number of H-evaluations       : 101\r\n",
-        "   Number of Jacobian-evaluations: 0\r\n",
-        "   Number of (model) time events : 0\r\n",
-        "   Number of (U) time events     : 0\r\n",
-        "   Number of state    events     : 0\r\n",
-        "   Number of step     events     : 0\r\n",
-        "   Minimum integration stepsize  : 0.01\r\n",
-        "   Maximum integration stepsize  : 0.98\r\n",
-        "   Maximum integration order     : 2\r\n",
-        "Calling terminal section\r\n",
-        "... \"c:\\Users\\u0098668\\Documents\\Modelica\\ModelicaRes\\examples\\ChuaCircuit\\results\\2\\dsfinal.txt\" creating (final states)\r\n",
-        "Simulation interval    : 6.0 - 7.0 seconds."
-       ]
-      },
-      {
-       "output_type": "stream",
-       "stream": "stdout",
-       "text": [
+        "Final Run Statistics: bouncingBall \n",
         "\n",
-        "Elapsed simulation time: 0.140038975921 seconds.\n",
-        "d"
-       ]
-      },
-      {
-       "output_type": "stream",
-       "stream": "stdout",
-       "text": [
-        "ymosim.exe started\r\n",
-        "Runtime license not available, trying to check out the Dymola Standard license instead.\r\n",
-        "\r\n",
-        "... \"c:\\Users\\u0098668\\Documents\\Modelica\\ModelicaRes\\examples\\ChuaCircuit\\results\\2\\dsin3.txt\" loading (dymosim input file)\r\n",
-        "... starting from known values.\r\n",
-        "... \"c:\\Users\\u0098668\\Documents\\Modelica\\ModelicaRes\\examples\\ChuaCircuit\\results\\2\\dsres3.mat\" creating (simulation result file)\r\n",
-        "\r\n",
-        "Integration started at T = 2 using integration method LSODAR\r\n",
-        "(Multi-step solver for stiff and non-stiff ODE's with root finder (lsodar of ODEPACK))\r\n",
-        "Integration terminated successfully at T = 3\r\n",
-        "   CPU-time for integration      : 0.001 seconds\r\n",
-        "   CPU-time for one GRID interval: 0.01 milli-seconds\r\n",
-        "   Number of result points       : 101\r\n",
-        "   Number of GRID   points       : 101\r\n",
-        "   Number of (successful) steps  : 3\r\n",
-        "   Number of F-evaluations       : 7\r\n",
-        "   Number of H-evaluations       : 102\r\n",
-        "   Number of Jacobian-evaluations: 0\r\n",
-        "   Number of (model) time events : 0\r\n",
-        "   Number of (U) time events     : 0\r\n",
-        "   Number of state    events     : 0\r\n",
-        "   Number of step     events     : 0\r\n",
-        "   Minimum integration stepsize  : 0.01\r\n",
-        "   Maximum integration stepsize  : 0.98\r\n",
-        "   Maximum integration order     : 2\r\n",
-        "Calling terminal section\r\n",
-        "... \"c:\\Users\\u0098668\\Documents\\Modelica\\ModelicaRes\\examples\\ChuaCircuit\\results\\2\\dsfinal.txt\" creating (final states)\r\n",
-        "Simulation interval    : 7.0 - 8.0 seconds."
-       ]
-      },
-      {
-       "output_type": "stream",
-       "stream": "stdout",
-       "text": [
+        " Number of steps                                 : 12\n",
+        " Number of function evaluations                  : 20\n",
+        " Number of Jacobian evaluations                  : 1\n",
+        " Number of function eval. due to Jacobian eval.  : 2\n",
+        " Number of error test failures                   : 1\n",
+        " Number of nonlinear iterations                  : 16\n",
+        " Number of nonlinear convergence failures        : 0\n",
+        " Number of state function evaluations            : 13\n",
         "\n",
-        "Elapsed simulation time: 0.227465984884 seconds.\n",
-        "d"
-       ]
-      },
-      {
-       "output_type": "stream",
-       "stream": "stdout",
-       "text": [
-        "ymosim.exe started\r\n",
-        "Runtime license not available, trying to check out the Dymola Standard license instead.\r\n",
-        "\r\n",
-        "... \"c:\\Users\\u0098668\\Documents\\Modelica\\ModelicaRes\\examples\\ChuaCircuit\\results\\2\\dsin4.txt\" loading (dymosim input file)\r\n",
-        "... starting from known values.\r\n",
-        "... \"c:\\Users\\u0098668\\Documents\\Modelica\\ModelicaRes\\examples\\ChuaCircuit\\results\\2\\dsres4.mat\" creating (simulation result file)\r\n",
-        "\r\n",
-        "Integration started at T = 3 using integration method LSODAR\r\n",
-        "(Multi-step solver for stiff and non-stiff ODE's with root finder (lsodar of ODEPACK))\r\n",
-        "Integration terminated successfully at T = 4\r\n",
-        "   CPU-time for integration      : 0.001 seconds\r\n",
-        "   CPU-time for one GRID interval: 0.01 milli-seconds\r\n",
-        "   Number of result points       : 101\r\n",
-        "   Number of GRID   points       : 101\r\n",
-        "   Number of (successful) steps  : 3\r\n",
-        "   Number of F-evaluations       : 7\r\n",
-        "   Number of H-evaluations       : 102\r\n",
-        "   Number of Jacobian-evaluations: 0\r\n",
-        "   Number of (model) time events : 0\r\n",
-        "   Number of (U) time events     : 0\r\n",
-        "   Number of state    events     : 0\r\n",
-        "   Number of step     events     : 0\r\n",
-        "   Minimum integration stepsize  : 0.01\r\n",
-        "   Maximum integration stepsize  : 0.98\r\n",
-        "   Maximum integration order     : 2\r\n",
-        "Calling terminal section\r\n",
-        "... \"c:\\Users\\u0098668\\Documents\\Modelica\\ModelicaRes\\examples\\ChuaCircuit\\results\\2\\dsfinal.txt\" creating (final states)\r\n"
+        "Solver options:\n",
+        "\n",
+        " Solver                   : CVode\n",
+        " Linear multistep method  : BDF\n",
+        " Nonlinear solver         : Newton\n",
+        " Maximal order            : 5\n",
+        " Tolerances (absolute)    : 1e-06\n",
+        " Tolerances (relative)    : 0.0001\n",
+        "\n",
+        "Simulation interval    : 100.0 - 200.0 seconds.\n",
+        "Elapsed simulation time: 0.00106973444929 seconds.\n",
+        "Final Run Statistics: bouncingBall \n",
+        "\n",
+        " Number of steps                                 : 11\n",
+        " Number of function evaluations                  : 19\n",
+        " Number of Jacobian evaluations                  : 1\n",
+        " Number of function eval. due to Jacobian eval.  : 2\n",
+        " Number of error test failures                   : 1\n",
+        " Number of nonlinear iterations                  : 15\n",
+        " Number of nonlinear convergence failures        : 0\n",
+        " Number of state function evaluations            : 12\n",
+        "\n",
+        "Solver options:\n",
+        "\n",
+        " Solver                   : CVode\n",
+        " Linear multistep method  : BDF\n",
+        " Nonlinear solver         : Newton\n",
+        " Maximal order            : 5\n",
+        " Tolerances (absolute)    : 1e-06\n",
+        " Tolerances (relative)    : 0.0001\n",
+        "\n",
+        "Simulation interval    : 200.0 - 300.0 seconds.\n",
+        "Elapsed simulation time: 0.000993550409135 seconds.\n",
+        "Final Run Statistics: bouncingBall \n",
+        "\n",
+        " Number of steps                                 : 10\n",
+        " Number of function evaluations                  : 18\n",
+        " Number of Jacobian evaluations                  : 1\n",
+        " Number of function eval. due to Jacobian eval.  : 2\n",
+        " Number of error test failures                   : 1\n",
+        " Number of nonlinear iterations                  : 14\n",
+        " Number of nonlinear convergence failures        : 0\n",
+        " Number of state function evaluations            : 11\n",
+        "\n",
+        "Solver options:\n",
+        "\n",
+        " Solver                   : CVode\n",
+        " Linear multistep method  : BDF\n",
+        " Nonlinear solver         : Newton\n",
+        " Maximal order            : 5\n",
+        " Tolerances (absolute)    : 1e-06\n",
+        " Tolerances (relative)    : 0.0001\n",
+        "\n",
+        "Simulation interval    : 300.0 - 400.0 seconds.\n",
+        "Elapsed simulation time: 0.000941050526535 seconds.\n"
        ]
       }
      ],
-     "prompt_number": 11
+     "prompt_number": 34
     },
     {
      "cell_type": "code",

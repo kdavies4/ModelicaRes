@@ -37,7 +37,7 @@ import pyfmi
 from datetime import date
 from shutil import copy, move
 from . import ParamDict, read_options, read_params, write_options, write_params
-from ..util import expand_path, run_in_dir
+from ..util import expand_path, run_in_dir, dict_to_lists
 
 # OS-dependent strings
 EXE = '.exe' if os.name == 'nt' else '' # File extension for an executable
@@ -578,6 +578,7 @@ class dymosim(object):
         Also write to the log file.
         """
         # Determine the file locations.
+
         dsres_path = os.path.join(results_dir, 'dsres%i.mat' % self._n_periods)
         dsfinal_path = os.path.join(results_dir, 'dsfinal.txt')
 
@@ -746,81 +747,224 @@ class fmi(object):
     in the :class:`dymola_script` documentation.
     """
 
-    def __init__(self,
-                 working_dir=None,
-                 results_dir=None,
-                 result=None,
-                 fmu_options={},
-                 **options):
+    def __init__(self, results_dir='', results=[], **options):
         """Upon initialization, establish some settings.
 
         See the top-level class documentation.
         """
 
-        if working_dir is None:
-            working_dir = os.getcwd()
-        else:
-            working_dir = expand_path(working_dir)
+        # Pre-process and store the arguments.
+        self._results_dir = expand_path(results_dir)
+        self._options = options
+        self._results = results
 
-        self._working_dir = working_dir
-        self._results_dir = results_dir
-        self._result = os.path.join(results_dir, result)
-        self._fmu_options = fmu_options
+        # Dictionary for in memory results. If the option result_handling='memory' is set, no output txt files will be
+        # written
+        self.memory_result = {}
+
+        # Start the run log.
+        run_log = open(os.path.join(results_dir, "runs.tsv"), 'w')
+        run_log.write("Run #\tPeriod #\tOptions\tExecutable\tInitial values & parameters\n")
+        self._run_log = run_log
 
         # Start counting the run() calls.
         self.n_runs = 0
 
-    def load(self, model):
+    def __delattr__(self, attr):
+        """Delete a command option.
+        """
+        del self._options[attr]
+
+    def __getattr__(self, attr):
+        """If an unknown attribute is requested, look for it in the dictionary
+        of command options.
+        """
+        return self._options[attr]
+
+    def __setattr__(self, attr, value):
+        """Add known attributes directly, but unknown attributes go to the
+        dictionary of command options.
+        """
+        if attr in ('_results_dir', '_results', '_options',
+                    'n_runs', '_n_periods', '_run_log', '_current_model'):
+            object.__setattr__(self, attr, value) # Traditional method
+        else:
+            self._options[attr] = value
+
+    def __enter__(self):
+        """Enter the context of the simulator.
+        """
+        # Everything has been done in __init__, so just do this:
+        return self
+
+    def __exit__(self, *exc_details):
+        """Exit the context of the simulator.
+        """
+        self._run_log.close()
+
+    def _paths(self, model=None):
+        """Given a fmu's path (*model*, without extension) and the internal
+        state, return a tuple of:
+        1. the fmu's directory
+        2. the .fmu file
+        3. the results directory
+
+        Also, confirm that the fmu exists.
+
+        Save the model.  If *model* is None, use the last model.
+        """
+
+        # Determine some paths and directories.
+        if model is None:
+            model = self._current_model
+        else:
+            self._current_model = model
+        model_dir, fmu_path = os.path.split(model)
+        results_dir = os.path.join(self._results_dir, str(self.n_runs))
+
+        # Locate the FMU.
+        assert os.path.isfile(model), (
+            'The FMU (%s) cannot be found in the "%s" folder.'
+            % (fmu_path, os.path.abspath(model_dir)))
+
+        return model_dir, fmu_path, results_dir
+
+    def load(self, fmu_path, results_dir):
         """
         Load the FMU for continued simulation in the continue_run method.
         """
 
-        fmu = pyfmi.load_fmu(model)
-        fmu.initialize()
+        if 'log_level' in self._options:
+            self.fmu = pyfmi.load_fmu(fmu_path, log_level=self.log_level)
+        else:
+            self.fmu = pyfmi.load_fmu(fmu_path)
 
-        return fmu
+        # Initialize the fmu
+        self.fmu.setup_experiment()
+        self.fmu.initialize()
 
-    def run(self, model, start_time, stop_time, params={}):
+        # Copy the log file to the result directory
+        log = self.fmu.get_name() + '_log.txt'
+        source = os.path.join(os.getcwd(), log)
+        destination = os.path.join(results_dir, 'log%i.txt' % self._n_periods)
+        move(source, destination)
+
+    def _run(self, params, options, model_dir, results_dir):
+        """Write the given model parameters and initial values (*params*) and
+        simulation options (*options*) to the fmu and save the results to *results_dir*.
+        The start and stop times are given in the same way as in the dymosim simulator.
+
+        Also write to the log file.
+        """
+        # Determine the file locations.
+        dsres_path = os.path.join(results_dir, 'dsres%i.txt' % self._n_periods)
+
+        # Write the simulation options.
+        simulation_options = self.fmu.simulate_options()
+
+        for key, value in simulation_options.iteritems():
+            # Set the simulator options
+            if key in self._options:
+                simulation_options[key] = self._options[key]
+            # Overwrite simulator options with the options of the run method if given
+            if key in options:
+                simulation_options[key] = options[key]
+
+        simulation_options['initialize'] = False
+        simulation_options['result_file_name'] = dsres_path
+
+        # Set start and stop times to be consistent across different simulators
+        if 'StartTime' in options:
+            start_time = options['StartTime']
+        else:
+            start_time = self.fmu.get_default_experiment_start_time()
+        if 'StopTime' in options:
+            stop_time = options['StopTime']
+        else:
+            stop_time = self.fmu.get_default_experiment_stop_time()
+
+        # Set the simulation pa rameters
+        keys, values = dict_to_lists(params)
+        self.fmu.set(keys, values)
+
+        # Run the model.
+        self.memory_result[self.n_runs][self._n_periods] = self.fmu.simulate(
+            start_time=start_time,
+            final_time=stop_time,
+            options=simulation_options
+        )
+
+        # Add an entry to the run log.
+        self._run_log.write('\t'.join([str(self.n_runs),
+                                       str(self._n_periods),
+                                       str(ParamDict(options))[1:-1],
+                                       self.fmu.get_name(),
+                                       str(ParamDict(params))[1:-1]])
+                            + '\n')
+
+    def run(self, model='model.fmu', params={}, **options):
         r"""Run and save the results of a single experiment.
 
-        .. Warning:: This function has not been implemented yet.
+        **Parameters:**
+
+        - *model*: String representing the directory and base name of the fmu
+
+             If *model* is *None*, then the previous model will be used.
+
+        - *params*: Dictionary of names and values of parameters and variables
+          with tunable initial values to be set within the model
+
+             The keys or variable names in this dictionary must indicate the
+             hierarchy within the model---either in Modelica_ dot ('.') notation
+             or via nested dictionaries.  Due to the format of the
+             initialization files, arrays must be broken into scalars by
+             indicating the indices (Modelica_ 1-based indexing) in the key
+             along with the variable name.  Also, enumerations and Booleans must
+             be given as their unsigned integer equivalents (e.g., 0 for
+             *False*).  Strings and prefixes are not supported.
+
+             Any item with a value of *None* is skipped.
+
+       - *\*\*options*: Adjustments to the simulation settings of an fmu and the start and stop times
+
+             Any option with a value of *None* will be skipped.
+
+             These are applied only for the current run.  They override the
+             options given at initialization or set via attribute access.
+
+        Please see the example in the top-level documentation of
+        :class:`fmi`.
         """
+        # Increment the number of runs, reset the number of periods.
         self.n_runs += 1
+        self._n_periods = 1
+        self.memory_result[self.n_runs] = {}
 
-        fmu = self.load(model)
+        # Determine the file locations.
+        model_dir, fmu_path, results_dir = self._paths(model)
 
-        options = fmu.simulate_options()
+        # Create the results folder
+        if not os.path.isdir(results_dir):
+            os.makedirs(results_dir)
 
-        for key, value in self._fmu_options:
-            options[key] = value
+        # Load the fmu, write the parameters and options, run the model, and save the results.
+        self.load(os.path.join(model_dir, fmu_path), results_dir)
+        self._run(params, options, model_dir, results_dir)
 
-        options['initialize'] = False
-        if self._result:
-            options['result_file_name'] = self._result + str(self.n_runs) + '.txt'
-        else:
-            options['result_file_name'] = model + str(self.n_runs) + '.txt'
+    def continue_run(self, duration, params={}):
+        # Increment the number of periods.
+        self._n_periods += 1
 
-        return (fmu.simulate(
-            start_time=int(start_time),
-            final_time=int(stop_time),
-            options=options
-        ), fmu)
+        # Determine the file locations.
+        model_dir, fmu_path, results_dir = self._paths()
 
-    def continue_run(self, fmu, duration, params={}):
-        start_time = fmu.time
+        start_time = self.fmu.time
+        options = {
+            'StartTime': start_time,
+            'StopTime': start_time + duration
+        }
 
-        options = fmu.simulate_options()
-        options['initialize'] = False
-        if self._result:
-            options['result_file_name'] = self._result + str(self.n_runs) + '.txt'
-        else:
-            options['result_file_name'] = fmu.get_name() + str(self.n_runs) + '.txt'
-
-        return (fmu.simulate(
-            start_time=start_time,
-            final_time=int(start_time+duration),
-            options=options
-        ), fmu)
+        self._run(params, options, model_dir, results_dir)
 
 if __name__ == '__main__':
     # Test the contents of this file.

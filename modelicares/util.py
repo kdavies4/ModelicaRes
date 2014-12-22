@@ -369,6 +369,17 @@ def color(ax, c, *args, **kwargs):
     return ax.imshow(c, *args, **kwargs)
 
 
+def dict_to_lists(dic):
+    keys = []
+    values = []
+
+    for key, value in dic.iteritems():
+        keys.append(key)
+        values.append(value)
+
+    return keys, values
+
+
 def expand_path(path):
     r"""Expand a file path by replacing '~' with the user directory and making
     the path absolute.
