@@ -713,9 +713,9 @@ class dymosim(object):
 
              Any item with a value of *None* is skipped.
 
-       - *\*\*options*: Adjustments to the simulation settings under "Experiment
-         parameters", "Method tuning parameters", and "Output parameters" in the
-         initialization file
+        - *\*\*options*: Adjustments to the simulation settings under
+          "Experiment parameters", "Method tuning parameters", and "Output
+          parameters" in the initialization file
 
              Any option with a value of *None* will be skipped.
 
@@ -766,16 +766,16 @@ class dymosim(object):
              By default, the parameters remain as they were in the last
              :meth:`run`.  See that method for details on *params*.
 
-       - *\*\*options*: Adjustments to the simulation settings under "Experiment
-         parameters", "Method tuning parameters", and "Output parameters" in the
-         initialization file
+        - *\*\*options*: Adjustments to the simulation settings under
+          "Experiment parameters", "Method tuning parameters", and "Output
+          parameters" in the initialization file
 
-            By default, the options remain as they were in the last :meth:`run`.
-            See that method for details.
+             By default, the options remain as they were in the last
+             :meth:`run`. See that method for details.
 
-            StartTime and StopTime are ignored because they are determined
-            automatically from *duration* and the stop time of the last
-            simulation.
+             StartTime and StopTime are ignored because they are determined
+             automatically from *duration* and the stop time of the last
+             simulation.
 
         .. warning::
 
@@ -924,8 +924,9 @@ class fmi(object):
 
     def _run(self, params, options, model_dir, results_dir):
         """Write the given model parameters and initial values (*params*) and
-        simulation options (*options*) to the fmu and save the results to *results_dir*.
-        The start and stop times are given in the same way as in the dymosim simulator.
+        *results_dir*. simulation options (*options*) to the fmu and save the
+        results to the start and stop times are given in the same way as in the
+        dymosim simulator.
 
         Also write to the log file.
         """
@@ -998,7 +999,8 @@ class fmi(object):
 
              Any item with a value of *None* is skipped.
 
-       - *\*\*options*: Adjustments to the simulation settings of an fmu and the start and stop times
+        - *\*\*options*: Adjustments to the simulation settings of an fmu and
+          the start and stop times
 
              Any option with a value of *None* will be skipped.
 

@@ -1,4 +1,4 @@
-personal_ws-1.1 en 198 
+personal_ws-1.1 en 205 
 banananana
 JModelica
 MapleSim
@@ -33,12 +33,14 @@ versionBuild
 src
 overline
 horizontalAlignment
+tunable
 LateInline
 atan
 endinput
 dsin
 DocumentationClass
 AssertionLevel
+integrators
 choicesFromPackage
 asin
 ensureTranslated
@@ -54,6 +56,7 @@ tsv
 subPlot
 versionDate
 pdfTeX
+MaxFixedStep
 acos
 fmu
 choicesInPackage
@@ -65,6 +68,7 @@ pathnames
 meth
 SystemModeler
 connectorSizing
+subfolders
 stdout
 usr
 lineThickness
@@ -97,6 +101,7 @@ noEvent
 subpackages
 MWorks
 defaultComponentName
+nInterval
 ba
 af
 rpls
@@ -129,6 +134,7 @@ FV
 protected
 rowspan
 io
+SimResSequence
 ltypes
 missingInnerMessage
 fillPattern
@@ -197,3 +203,4 @@ pathname
 Sjölund
 OrderedDict
 startAngle
+subfolder
