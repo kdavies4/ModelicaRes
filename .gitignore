@@ -20,5 +20,14 @@ matplotlibrc
 # Other .gitignore files (this one already included)
 .gitignore
 
-#IDE
+# IDE
 .idea/*
+
+# Simulation generated files
+*log.txt
+status
+success
+failure
+request
+dsmodel.c
+dymosim.exp

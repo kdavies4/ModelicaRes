@@ -412,6 +412,7 @@ class dymosim(object):
                  working_dir=None,
                  results_dir=None,
                  results=['dsin.txt', 'dslog.txt', 'dsres.mat', 'dymosim%x', 'dymolalg.txt'],
+                 output=False,
                  **options):
         """Upon initialization, establish some settings.
 
@@ -429,6 +430,7 @@ class dymosim(object):
         self._results = results
         self._working_dir = working_dir
         self._results_dir = results_dir
+        self._output = output
 
         # Start counting the run() calls.
         self.n_runs = 0
@@ -564,9 +566,9 @@ class dymosim(object):
         os.chdir(self._working_dir)
 
         p = subprocess.Popen(command, stdout=subprocess.PIPE)
-
-        for c in iter(lambda: p.stdout.read(1), ''):
-            sys.stdout.write(c)
+        if self._output:
+            for c in iter(lambda: p.stdout.read(1), ''):
+                sys.stdout.write(c)
 
         os.chdir(cwd)
         p.communicate()
@@ -636,8 +638,9 @@ class fmi(object):
         """
         Load the FMU for continued simulation in the continue_run method.
         """
-        fmu = pyfmi.load_fmu(model)
-        fmu.initialize()
+        fmu = pyfmi.load_fmu(model, log_level=5)
+        # Simulate the fmu for easy initialization
+        fmu.simulate(start_time=0, final_time=0)
 
         return fmu
 
@@ -649,13 +652,13 @@ class fmi(object):
         self.n_runs += 1
 
         fmu = self.load(model)
-
         options = fmu.simulate_options()
 
         for key, value in self._fmu_options:
             options[key] = value
-
+        # Impossible to initialize an FMU twice
         options['initialize'] = False
+
         if self._result:
             options['result_file_name'] = self._result + str(self.n_runs) + '.txt'
         else:
@@ -668,6 +671,7 @@ class fmi(object):
         ), fmu)
 
     def continue_run(self, fmu, duration, params={}):
+        self.n_runs += 1
         start_time = fmu.time
 
         options = fmu.simulate_options()
