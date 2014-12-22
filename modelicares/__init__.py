@@ -44,7 +44,7 @@ __version__ = None
 #
 # These will be available directly from modelicares; others must be loaded from
 # their submodules.
-from .simres import SimRes, SimResList
+from .simres import SimRes, SimResList, SimResSequence
 from .linres import LinRes, LinResList
 from .util import (add_arrows, add_hlines, add_vlines, ArrowLine, closeall,
                    figure, load_csv, save, saveall, setup_subplots)

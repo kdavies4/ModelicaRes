@@ -637,7 +637,7 @@ class SimRes(Res):
 
     #__slots__ = Res.__slots__ + ['_variables', 'tool']
 
-    def __init__(self, fname='dsres.mat', constants_only=False, tool=None):
+    def __init__(self, fname='dsres.mat', constants_only=False, tool=None, sequence={}):
         """Upon initialization, load Modelica_ simulation results from a file.
 
         See the top-level class documentation.
@@ -667,7 +667,10 @@ class SimRes(Res):
                 raise LookupError('"%s" is not one of the available tools '
                                   '("%s").' % (tool,
                                                '", "'.join(list(loaderdict))))
-        self._variables = load(fname, constants_only)
+        if not sequence:
+            self._variables = load(fname, constants_only)
+        else:
+            self._variables = sequence
 
         # Remember the tool and filename.
         self.tool = tool
@@ -1611,6 +1614,7 @@ class SimRes(Res):
 
         # **Add others or link to natu.
 
+
 class SimResList(ResList):
 
     r"""Special list of simulation results (:class:`SimRes` instances)
@@ -2188,6 +2192,48 @@ class SimResList(ResList):
         all_names = set.union(*sets)
         unique_names = all_names
         return {name: [name in sim for sim in self] for name in unique_names}
+
+
+class SimResSequence(SimRes):
+    def __init__(self, *args):
+        """
+        Initialize as a list of :class:`SimRes` instances, loading files as
+        necessary.
+
+        See the top-level class documentation.
+        """
+
+        simlist = SimResList(*args)
+        simlist.sort()
+
+        variables = {}
+        names = simlist.names
+        sequence = simlist[0]._variables
+
+        # Append the values and times with the other SimRes objects
+        for n in names:
+            variables[n] = {
+                'times': np.array([]),
+                'values': np.array([])
+            }
+
+            for v in simlist._variables:
+                variables[n]['times'] = np.append(
+                    variables[n]['times'],
+                    v[n].samples.times)
+                variables[n]['values'] = np.append(
+                    variables[n]['values'],
+                    v[n].samples.values)
+
+            sequence[n] = sequence[n]._replace(
+                samples=sequence[n].samples._replace(
+                    times=variables[n]['times']))
+            sequence[n] = sequence[n]._replace(
+                samples=sequence[n].samples._replace(
+                    values=variables[n]['values']))
+
+        super(SimResSequence, self).__init__(sequence=sequence)
+
 
 if __name__ == '__main__':
     # Test the contents of this file.
