@@ -476,7 +476,7 @@ class dymosim(object):
 
        >>> from modelicares.exps.simulators import dymosim
 
-       >>> with dymola_script(StopTime=2500) as simulator: # doctest: +ELLIPSIS
+       >>> with dymosim(StopTime=2500) as simulator: # doctest: +ELLIPSIS
        ...     simulator.run('examples/ChuaCircuit/dymosim')
 
     Notice that this is similar to Example 1 of :class:`dymola_script`.
