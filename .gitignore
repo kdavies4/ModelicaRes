@@ -11,6 +11,15 @@ MANIFEST
 doc/examples
 *.egg-info
 
+# Dymola-generated files
+buildlog.txt
+dsmodel.c
+dslog.txt
+failure
+request
+status
+success
+
 # Backup files
 .ipynb_checkpoints
 
@@ -22,12 +31,3 @@ matplotlibrc
 
 # IDE
 .idea/*
-
-# Simulation generated files
-*log.txt
-status
-success
-failure
-request
-dsmodel.c
-dymosim.exp
