@@ -484,7 +484,7 @@ class dymosim(object):
     this one.
     """
 
-    def __init__(self, command='-s', results_dir='', results=['dslog.txt'],
+    def __init__(self, command='-s', results_dir='', results=['dslog.txt'], output=False,
                  **options):
         """Upon initialization, establish some settings.
 
@@ -495,6 +495,7 @@ class dymosim(object):
         self._command = command
         self._results_dir = expand_path(results_dir)
         self._results = results
+        self._output = output
         self._options = options
 
         # Start the run log.
@@ -520,7 +521,7 @@ class dymosim(object):
         """Add known attributes directly, but unknown attributes go to the
         dictionary of command options.
         """
-        if attr in ('_command', '_results_dir', '_results', '_options',
+        if attr in ('_command', '_results_dir', '_results', '_options', '_output',
                     'n_runs', '_n_periods', '_run_log', '_current_model'):
             object.__setattr__(self, attr, value) # Traditional method
         else:
@@ -592,7 +593,7 @@ class dymosim(object):
 
         # Run the model.
         run_in_dir([EXEC_PREFIX + executable, self._command, '-f', dsfinal_path,
-                    dsin_path, dsres_path], model_dir)
+                    dsin_path, dsres_path], model_dir, output=self._output)
 
         # Copy the other results.
         for result in self._results:

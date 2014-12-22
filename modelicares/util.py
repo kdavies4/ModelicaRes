@@ -984,7 +984,7 @@ def read_values(names, fname, patterns):
         return map(_read_value, names)
 
 
-def run_in_dir(args, working_dir=''):
+def run_in_dir(args, working_dir='', output=False):
     """Run a system command in a given working directory and print the output.
 
     **Parameters:**
@@ -1002,10 +1002,11 @@ def run_in_dir(args, working_dir=''):
         cwd = os.getcwd()
         os.chdir(working_dir)
 
-    # Run the command and print the output.
+    # Run the command and print the output if output is True.
     process = subprocess.Popen(args, stdout=subprocess.PIPE)
-    for line in iter(lambda: process.stdout.read(1), ''):
-        sys.stdout.write(line)
+    if output:
+        for line in iter(lambda: process.stdout.read(1), ''):
+            sys.stdout.write(line)
 
     # Return to the original directory and wait for the process to finish.
     if working_dir:
