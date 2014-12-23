@@ -142,9 +142,9 @@ class VarDict(dict):
     """
 
     def __getattr__(self, attr):
-        """Look up a property for each of the variables (e.g., n_constants).
+        """Look up a property across all of the variables (e.g., is_constant).
         """
-        return CallList([getattr(variable, attr) for variable in self.values()])
+        return getattr(CallList(self.values()), attr)
 
     def __getitem__(self, key):
         """Include suggestions in the error message if a variable is missing.

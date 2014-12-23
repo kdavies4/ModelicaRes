@@ -1632,13 +1632,40 @@ class CallList(list):
     """List that when called returns a list of the results from calling its
     elements.
 
-    **Example:**
+    Also, when an unknown attribute (property or method) is requested, this
+    class returns a callable list containing that attribute of its elements.
+
+    **Examples:**
+
+    Calling the list:
 
     >>> f = lambda x: lambda y: x*y
     >>> l = CallList([f(2), f(3)])
     >>> l(5)
     [10, 15]
+
+    Calling a method of the elements in the list:
+
+    >>> l = CallList(['abc', 'abcdef'])
+    >>> l.lstrip('a')
+    ['bc', 'bcdef']
+
+    Retrieving a property of the elements in the list:
+
+    .. code-block:: python
+
+       >>> from numpy import array
+
+       >>> l = CallList([array([0]), array([0, 0])])
+       >>> l.shape
+       [(1,), (2,)]
     """
+
+    def __getattr__(self, attr):
+        """Return a callable list containing the requested attribute from the
+        elements of the list.
+        """
+        return CallList([getattr(item, attr) for item in self])
 
     def __call__(self, *args, **kwargs):
         """Return a list of the results from calling the elements of the list.
