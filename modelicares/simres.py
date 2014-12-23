@@ -453,7 +453,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
 
 # List of file-loading functions for SimRes
 from ._io.dymola import readsim as dymola
-LOADERS = [('dymola', dymola)]  # SimRes tries these in order.
+READERS = [('dymola', dymola)]  # SimRes tries these in order.
 # All of the keys should be in lowercase.
 # This must be below the definition of Variable because that class is required
 # by the loading functions.
@@ -635,40 +635,40 @@ class SimRes(Res):
        http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
 
-    #__slots__ = Res.__slots__ + ['_variables', 'tool']
+    #__slots__ = ['_variables', 'tool']
 
     def __init__(self, fname='dsres.mat', constants_only=False, tool=None, sequence={}):
-        """Upon initialization, load Modelica_ simulation results from a file.
+        """Upon initialization, read Modelica_ simulation results from a file.
 
         See the top-level class documentation.
         """
 
-        # Load the file.
+        # Read the file.
         fname = os.path.normpath(fname) # Allow '/' as path sep in Windows.
         if tool is None:
-            # Load the file and store the variables.
-            for tool, load in LOADERS[:-1]:
+            # Read the file and store the variables.
+            for tool, read in READERS[:-1]:
                 try:
-                    self._variables = load(fname, constants_only)
+                    self._variables = read(fname, constants_only)
                 except IOError:
                     raise
                 except Exception as exception:
-                    print("The %s loader gave the following error message:\n%s"
+                    print("The %s reader gave the following error message:\n%s"
                           % (tool, exception.args[0]))
                     continue
                 else:
                     break
-            tool, load = LOADERS[-1]
+            tool, read = READERS[-1]
         else:
-            loaderdict = dict(LOADERS)
+            readerdict = dict(READERS)
             try:
-                load = loaderdict[tool.lower()]
+                read = readerdict[tool.lower()]
             except KeyError:
                 raise LookupError('"%s" is not one of the available tools '
                                   '("%s").' % (tool,
-                                               '", "'.join(list(loaderdict))))
+                                               '", "'.join(list(readerdict))))
         if not sequence:
-            self._variables = load(fname, constants_only)
+            self._variables = read(fname, constants_only)
         else:
             self._variables = sequence
 
@@ -1742,7 +1742,7 @@ class SimResList(ResList):
 
         See the top-level class documentation.
         """
-        if not args:
+        if not args: # Empty list
             super(SimResList, self).__init__([])
 
         elif isinstance(args[0], string_types):  # Filenames or directories

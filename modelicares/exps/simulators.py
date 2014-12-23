@@ -408,75 +408,11 @@ class dymola_script(object):
                             + '\n')
         print('Run %s:  %s' % (n_runs, call))
 
-    # TODO: Finish this function and un-protect it.  The major issue is that
-    # it's impossible to access stopTime programmatically in Dymola.  Therefore,
-    # it's impossible to set the stopTime based on duration.  Also, we need to
-    # number the result files by the period number (_n_periods) for both this
-    # method and run() like in the class dymosim below.
-    def _continue_run(self, duration, params={}, **options):
-        """Continue the last simulation (using the same model).
+    # TODO: Consider adding a continue_run method.  The major issue is that
+    # it's impossible to access stopTime programmatically in Dymola (due to
+    # problems with assignment from Dymola's getExperiment() function).
+    # Therefore, it's impossible to set the new stopTime based on duration.
 
-        **Parameters:**
-
-        - *duration*: Number of additional seconds to simulate
-
-        - *params*: Dictionary of names and values of parameters to be adjusted
-          within the model
-
-             By default, the parameters remain as they were in the last
-             :meth:`run`.  See that method for details on *params*.
-
-        - *\*\*options*: Adjustments to the simulation settings under
-          "Experiment parameters", "Method tuning parameters", and "Output
-          parameters" in the initialization file
-
-             By default, the options remain as they were in the last
-             :meth:`run`.  See that method for details.
-
-             startTime and stopTime are ignored because they are determined
-             automatically from *duration* and the stop time of the last
-             simulation.
-
-        .. warning::
-
-           Be careful not to use *params* to adjust initial values.  Otherwise,
-           the new simulation will not continue where the last one left off.
-        """
-        assert self._command == 'simulateModel', (
-            "continue_run can only be used with the simulateModel command.")
-
-        # Increment the number of periods.
-        self._n_periods += 1
-
-        # Write the command to run the model.
-        mos = self._mos
-        mos.write('// Run %i, continued\n' % n_runs)
-
-        # Set the new stop time.
-        opts = self._options.copy()
-        opts.update(options)
-        options.pop('startTime')
-        options.pop('stopTime')
-        mos.write("startTime, stopTime = getExperiment();")
-        # The line above won't work in Dymola 2015 FD01.  getExperiment should
-        # return startTime, stopTime, and other settings, but it's impossible
-        # to programmatically access anything but startTime.
-        mos.write("startTime = stopTime;")
-        mos.write("stopTime = startTime + %s;" % duration)
-
-        mos.write('importInitial(dest + "dsfinal.txt");')
-        problem = '"%s%s"' % (model, ParamDict(params)) if model else None
-        call = '%s%s' % (command, ParamDict(opts, problem=problem))
-        mos.write('ok = simulate(startTime=startTime, stopTime=stopTime);\n' % call)
-
-        # Determine the file locations.
-        model_dir, __, exe, results_dir, dsin_path = self._paths()
-
-        # The new initialization file is the old final values file.
-        move(os.path.join(results_dir, 'dsfinal.txt'), dsin_path)
-
-        # Write the parameters and options, run the model, and save the results.
-        self._run(exe, params, options, model_dir, results_dir, dsin_path)
 
 class dymosim(object):
 

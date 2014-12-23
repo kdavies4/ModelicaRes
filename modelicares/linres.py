@@ -41,7 +41,7 @@ from ._res import Res, ResList
 
 # File loading functions
 from ._io.dymola import readlin as dymola
-LOADERS = [('dymola', dymola)]  # LinRes tries these in order.
+READERS = [('dymola', dymola)]  # LinRes tries these in order.
 # All of the keys should be in lowercase.
 
 
@@ -155,8 +155,8 @@ class LinRes(Res):
 
          - :attr:`output_names`: List of names of the outputs (*y*)
 
-    - :attr:`tool` - String indicating the function used to load the results (named
-      after the corresponding Modelica_ tool)
+    - :attr:`tool` - String indicating the function used to read the results
+      (named after the corresponding Modelica_ tool)
 
     **Example:**
 
@@ -166,38 +166,38 @@ class LinRes(Res):
     """
 
     def __init__(self, fname='dslin.mat', tool=None):
-        """Upon initialization, load Modelica_ linearization results from a
+        """Upon initialization, read Modelica_ linearization results from a
         file.
 
         See the top-level class documentation.
         """
 
-        # Load the file.
+        # Read the file.
         fname = os.path.normpath(fname) # Allow '/' as path sep in Windows.
         if tool is None:
-            # Load the file and store the data.
-            for tool, load in LOADERS[:-1]:
+            # Read the file and store the data.
+            for tool, read in READERS[:-1]:
                 try:
-                    self.sys = load(fname)
+                    self.sys = read(fname)
                 except IOError:
                     raise
                 except Exception as exception:
-                    print("The %s loader gave the following error message:\n%s"
+                    print("The %s reader gave the following error message:\n%s"
                           % (tool, exception.args[0]))
-                    print("Trying the next loader...")
+                    print("Trying the next reader...")
                     continue
                 else:
                     break
-            tool, load = LOADERS[-1]
+            tool, read = READERS[-1]
         else:
-            loaderdict = dict(LOADERS)
+            readerdict = dict(READERS)
             try:
-                load = loaderdict[tool.lower()]
+                read = readerdict[tool.lower()]
             except KeyError:
                 raise LookupError('"%s" is not one of the available tools '
                                   '("%s").' % (tool,
-                                               '", "'.join(list(loaderdict))))
-        self.sys = load(fname)
+                                               '", "'.join(list(readerdict))))
+        self.sys = read(fname)
 
         # Remember the tool and filename.
         self.tool = tool
