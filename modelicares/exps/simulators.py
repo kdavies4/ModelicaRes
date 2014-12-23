@@ -916,8 +916,9 @@ class fmi(object):
         else:
             self.fmu = pyfmi.load_fmu(fmu_path)
 
-        # Initialize the fmu
-        #self.fmu.setup_experiment()
+        # Initialize the fmu, only call setup_experiment for FMUs 2.0
+        if self.fmu.get_version() == '2.0':
+            self.fmu.setup_experiment()
         self.fmu.initialize()
 
         # Copy the log file to the result directory
@@ -961,9 +962,8 @@ class fmi(object):
         else:
             stop_time = self.fmu.get_default_experiment_stop_time()
 
-        # Set the simulation pa rameters
-        keys, values = dict_to_lists(params)
-        self.fmu.set(keys, values)
+        # Set the simulation parameters
+        self.fmu.set(zip(params))
 
         # Run the model.
         self.memory_result[self.n_runs][self._n_periods] = self.fmu.simulate(
