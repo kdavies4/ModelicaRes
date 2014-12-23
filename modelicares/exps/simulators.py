@@ -32,7 +32,6 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import sys
 import subprocess
-import pyfmi
 
 from datetime import date
 from shutil import copy, move
@@ -909,6 +908,8 @@ class fmi(object):
         """
         Load the FMU for continued simulation in the continue_run method.
         """
+
+        import pyfmi
 
         if 'log_level' in self._options:
             self.fmu = pyfmi.load_fmu(fmu_path, log_level=self.log_level)
