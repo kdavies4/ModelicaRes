@@ -19,6 +19,7 @@ failure
 request
 status
 success
+Model_internal.mat
 
 # Backup files
 .ipynb_checkpoints

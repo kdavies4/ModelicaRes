@@ -824,7 +824,7 @@ class fmi(object):
     in the :class:`dymola_script` documentation.
     """
 
-    def __init__(self, results_dir='', results=[], **options):
+    def __init__(self, results_dir='', **options):
         """Upon initialization, establish some settings.
 
         See the top-level class documentation.
@@ -833,7 +833,6 @@ class fmi(object):
         # Pre-process and store the arguments.
         self._results_dir = expand_path(results_dir)
         self._options = options
-        self._results = results
 
         # Dictionary for in memory results. If the option result_handling='memory' is set, no output txt files will be
         # written
@@ -917,15 +916,30 @@ class fmi(object):
             self.fmu = pyfmi.load_fmu(fmu_path)
 
         # Initialize the fmu, only call setup_experiment for FMUs 2.0
-        if self.fmu.get_version() == '2.0':
+        try:
             self.fmu.setup_experiment()
+            version = 2
+        except AttributeError:
+            version = 1
+
         self.fmu.initialize()
 
         # Copy the log file to the result directory
-        log = self.fmu.get_name() + '_log.txt'
+        log = ''
+        if version == 1:
+            log = self.fmu.get_identifier()
+        if version == 2:
+            log = self.fmu.get_name()
+        log += '_log.txt'
         source = os.path.join(os.getcwd(), log)
         destination = os.path.join(results_dir, 'log%i.txt' % self._n_periods)
         move(source, destination)
+
+    def move_mat_file(self):
+        model_dir, fmu_path, results_dir = self._paths()
+        source = os.path.join(os.getcwd(), 'Model_internal.mat')
+        destination = os.path.join(results_dir, 'result.mat')
+        copy(source, destination)
 
     def _run(self, params, options, model_dir, results_dir):
         """Write the given model parameters and initial values (*params*) and
@@ -963,7 +977,7 @@ class fmi(object):
             stop_time = self.fmu.get_default_experiment_stop_time()
 
         # Set the simulation parameters
-        self.fmu.set(zip(params))
+        self.fmu.set(params.keys(), params.values())
 
         # Run the model.
         self.memory_result[self.n_runs][self._n_periods] = self.fmu.simulate(
