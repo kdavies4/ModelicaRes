@@ -5,8 +5,11 @@
 - :class:`SimRes` - Class to load, analyze, and plot results from a Modelica_
   simulation
 
-- :class:`SimResList` - Special list of simulation results (:class:`SimRes`
-  instances)
+- :class:`SimResSequence` - Class to load, analyze, and plot results from a
+  sequence of continued Modelica_ simulations
+
+- :class:`SimResList` - Special list of simulation results (:class:`SimRes` or
+  :class:`SimResSequence` instances)
 
 - :class:`Variable` - Special namedtuple_ to represent a variable in a
   simulation, with methods to retrieve and perform calculations on its values
@@ -40,7 +43,6 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import numpy as np
 
-from abc import abstractmethod
 from collections import namedtuple, OrderedDict
 from functools import wraps
 from itertools import cycle
@@ -50,15 +52,113 @@ from matplotlib.pyplot import figlegend
 from natu.util import flatten_list, multiglob
 from pandas import DataFrame
 from scipy.integrate import trapz as integral
+from scipy.interpolate import interp1d
 from six import string_types
 
 from . import util
+from ._io import VarDict
 from ._res import Res, ResList
 from .texunit import unit2tex, number_label
 
 
-class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
-                                                 'unit', 'displayUnit'])):
+def _select(meth):
+    """Decorate a method to use time-based indexing to select values.
+    """
+    @wraps(meth, assigned=('__module__', '__name__')) # without __doc__
+    def wrapped(self, t=None):
+        """
+        **Parameters:**
+
+        - *t*: Time index
+
+             - Default or *None*: All samples are included.
+
+             - *float*: Interpolate to a single time.
+
+             - *list*: Interpolate to a list of times.
+
+             - *tuple*: Extract samples from a range of times.  The structure is
+               signature to the arguments of Python's slice_ function, except
+               that the start and stop values can be floating point numbers.
+               The samples within and up to the limits are included.
+               Interpolation is not used.
+
+                  - (*stop*,): All samples up to *stop* are included.
+
+                       Be sure to include the comma to establish this as a
+                       tuple.
+
+                  - (*start*, *stop*): All samples between *start* and *stop*
+                    are included.
+
+                  - (*start*, *stop*, *skip*): Every *skip*th sample between
+                    *start* and *stop* is included.
+        """
+        def get_slice(t):
+            """Return a slice that indexes the variable.
+
+            Argument *t* is a tuple with one of the following forms:
+
+              - (*stop*,): All samples up to *stop* are included.
+
+                   Be sure to include the comma to establish this as a tuple.
+
+              - (*start*, *stop*): All samples between *start* and *stop* are
+                included.
+
+              - (*start*, *stop*, *skip*): Every *skip*th sample between *start*
+                and *stop* is included.
+            """
+            # Retrieve the start time, stop time, and number of samples to
+            # skip.
+            try:
+                t1, t2, skip = t
+            except ValueError:
+                skip = None
+                try:
+                    t1, t2 = t
+                except ValueError:
+                    t1 = None
+                    t2, = t
+            assert t1 is None or t2 is None or t1 <= t2, (
+                "The lower time limit must be less than or equal to the upper "
+                "time limit.")
+
+            # Determine the corresponding indices and return them in a tuple.
+            times = self.times()
+            i1 = None if t1 is None else util.get_indices(times, t1)[1]
+            i2 = None if t2 is None else util.get_indices(times, t2)[0] + 1
+            return slice(i1, i2, skip)
+
+        if t is None:
+            # Return all values.
+            return meth(self)
+        elif isinstance(t, tuple):
+            # Apply a slice with optional start time, stop time, and number
+            # of samples to skip.
+            return meth(self)[get_slice(t)]
+        else:
+            # Interpolate at single time or list of times.
+            meth_at_ = interp1d(self.times(), meth(self))
+            # For some reason, this wraps single values as arrays, so need to
+            # cast back to float.
+            try:
+                # Assume t is a list of times.
+                return [float(meth_at_(time)) for time in t]
+            except TypeError:
+                # t is a single time.
+                return float(meth_at_(t)) # Cast the singleton array as a float.
+
+    wrapped.__doc__ = meth.__doc__ + wrapped.__doc__
+    return wrapped
+
+
+# Default class to store time and value information of a variable
+Samples = namedtuple('Samples', ['times', 'values'])
+
+
+class Variable(namedtuple('VariableTuple', ['samples', 'description', 'unit',
+                                            'displayUnit'])):
 
     """Special namedtuple_ to represent a variable in a simulation, with
     methods to retrieve and perform calculations on its values
@@ -330,8 +430,8 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         return mean + np.sqrt(integral((self.values() - mean) ** 2, t)
                               / (t[-1] - t[0]))
 
-    @abstractmethod
-    def times(self, t=None):
+    @_select
+    def times(self):
         """Return the recorded times of the variable.
 
         **Parameters:**
@@ -372,7 +472,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         >>> C1_v.times(t=(0, 20))
         array([  0.,   5.,  10.,  15.,  20.], dtype=float32)
         """
-        pass
+        return self.samples.times
 
     @property
     def value(self):
@@ -400,8 +500,8 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
             raise ValueError("The variable is not a constant.  Use values() "
                              "instead of value().")
 
-    @abstractmethod
-    def values(self, t=None):
+    @_select
+    def values(self):
         r"""Return the values of the variable.
 
         **Parameters:**
@@ -448,7 +548,7 @@ class Variable(namedtuple('VariableNamedTuple', ['samples', 'description',
         >>> C1_v.values(t=[2.5, 17.5])
         [3.941368936561048, 3.7467045785160735]
         """
-        pass
+        return self.samples.values
 
 
 # List of file-loading functions for SimRes
@@ -489,9 +589,9 @@ class VarList(list):
     This class is typically not instantiated directly by the user, but instances
     are returned when indexing multiple variables from a simulation result
     (:meth:`~SimRes.__call__` method of a :class:`SimRes` instance) or a single
-    variable from multiple simulations (:meth:`~SimResList.__getitem__` method of
-    a :class:`SimResList`).  In the case of indexing multiple variables from a
-    simulation result, this list may be nested.
+    variable from multiple simulations (:meth:`~SimResList.__getitem__` method
+    of a :class:`SimResList`).  In the case of indexing multiple variables from
+    a simulation result, this list may be nested.
 
     **Examples:**
 
@@ -635,9 +735,7 @@ class SimRes(Res):
        http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
 
-    #__slots__ = ['_variables', 'tool']
-
-    def __init__(self, fname='dsres.mat', constants_only=False, tool=None, sequence={}):
+    def __init__(self, fname='dsres.mat', constants_only=False, tool=None):
         """Upon initialization, read Modelica_ simulation results from a file.
 
         See the top-level class documentation.
@@ -667,10 +765,7 @@ class SimRes(Res):
                 raise LookupError('"%s" is not one of the available tools '
                                   '("%s").' % (tool,
                                                '", "'.join(list(readerdict))))
-        if not sequence:
-            self._variables = read(fname, constants_only)
-        else:
-            self._variables = sequence
+        self._variables = read(fname, constants_only)
 
         # Remember the tool and filename.
         self.tool = tool
@@ -1493,7 +1588,8 @@ class SimRes(Res):
 
         - :attr:`displayUnit` - The Modelica_ variable's *displayUnit* attribute
 
-        - :attr:`is_constant` - *True*, if the variable does not change over time
+        - :attr:`is_constant` - *True*, if the variable does not change over
+          time
 
         **Examples:**
 
@@ -2196,47 +2292,74 @@ class SimResList(ResList):
 
 class SimResSequence(SimRes):
 
-    """TODO
+    """Class to load, analyze, and plot results from a sequence of continued
+    Modelica_ simulations of the same model
+
+    **Initialization signatures:**
+
+    - :class:`SimResList`\(*sims*), where sims is a list of :class:`SimRes`
+      instances:  Casts the list into a :class:`SimResSequence`
+
+    - :class:`SimResSequence`\(*filespec*), where *filespec* is a filename or
+      directory, possibly with wildcards a la `glob
+      <https://docs.python.org/2/library/glob.html>`_:  Returns a
+      :class:`SimResSequence` loaded from the matching or contained files
+
+         The filename or directory must include the absolute path or be
+         resolved to the current directory.
+
+         An error is only raised if no files can be loaded.
+
+    - :class:`SimResSequence`\(*filespec1*, *filespec2*, ...): Loads all files
+      matching or contained by *filespec1*, *filespec2*, etc. as above.
+
+         Each file will be opened once at most; duplicate filename matches are
+         ignored.
+
+    The simulations are sorted by the initial time.
+
+    This class has all of the methods and properties of :class:`SimRes`.
+    However, :attr:`fname`, :attr:`fbase`, and :attr:`dirname` are only those of
+    the first simulation in the sequence.  Use :attr:`fname` to get a list of
+    all of the filenames relative to the highest directory that the simulations
+    share.
+
+    The :attr:`description`, :attr:`unit`, and :attr:`displayUnit` of each
+    variable is taken from the first simulation.  It is assumed but not checked
+    that these are the same for all of the simulations.
     """
 
     def __init__(self, *args):
-        """
-        Initialize as a list of :class:`SimRes` instances, loading files as
-        necessary.
+        """Initialize the sequence of continued simulations.
 
         See the top-level class documentation.
         """
+        # Load and sort the simulations by start time.
+        sims = SimResList(*args)
+        sims.sort(key=lambda sim: sim['Time'].IV)
 
-        simlist = SimResList(*args)
-        simlist.sort()
+        # Check for overlap.
+        times = sims['Time']
+        if np.any(times.FV[0:-1] > times.IV[1:]):
+            raise ValueError("The simulations overlap.")
 
-        variables = {}
-        names = simlist.names
-        sequence = simlist[0]._variables
+        # Retrieve the times and values of each variable from the simulations.
+        # Take the description, unit, and display unit of each variable from the
+        # first simulation.
+        def get_variable(name):
+            entries = sims[name]
+            first = entries[0]
+            return Variable(Samples(np.concatenate(entries.times()),
+                                    np.concatenate(entries.values())),
+                            first.description, first.unit, first.displayUnit)
+        self._variables = VarDict({name: get_variable(name)
+                                   for name in sims.names})
 
-        # Append the values and times with the other SimRes objects
-        for n in names:
-            variables[n] = {
-                'times': np.array([]),
-                'values': np.array([])
-            }
-
-            for v in simlist._variables:
-                variables[n]['times'] = np.append(
-                    variables[n]['times'],
-                    v[n].samples.times)
-                variables[n]['values'] = np.append(
-                    variables[n]['values'],
-                    v[n].samples.values)
-
-            sequence[n] = sequence[n]._replace(
-                samples=sequence[n].samples._replace(
-                    times=variables[n]['times']))
-            sequence[n] = sequence[n]._replace(
-                samples=sequence[n].samples._replace(
-                    values=variables[n]['values']))
-
-        super(SimResSequence, self).__init__(sequence=sequence)
+        # Set the other attributes.
+        sim0 = sims[0]
+        self.tool = sim0.tool if len(set(sims.tool)) == 1 else "multiple tools"
+        self.fname = sim0.fname
+        self.fnames = sims.fnames
 
 
 if __name__ == '__main__':

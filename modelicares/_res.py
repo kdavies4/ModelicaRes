@@ -58,8 +58,6 @@ class Res(object):
     """
     # pylint: disable=I0011, E0213
 
-    #__slots__ = ['fname']
-
     def __init__(self, fname):
         self.fname = os.path.abspath(fname)
 
@@ -175,7 +173,7 @@ class ResList(list):
         return list.__rmul__(self, n)
 
     @property
-    def basedir(self):
+    def dirname(self):
         """Highest common directory that the result files share
         """
         fnames = [fname.rpartition(os.sep)[0] for fname in self.fname]
@@ -183,11 +181,11 @@ class ResList(list):
 
     @property
     def fnames(self):
-        """Filenames of the result files, resolved to *basedir*
+        """Filenames of the result files, resolved to *dirname*
 
         The get the absolute paths of the result files, use *fname* (singular).
         """
-        start = len(self.basedir) + 1
+        start = len(self.dirname) + 1
         return [res.fname[start:] for res in self]
 
     @assert_sametype

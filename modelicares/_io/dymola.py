@@ -7,11 +7,8 @@ This format is also used by OpenModelica_ and by PyFMI_ via JModelica.org_.
 
 Classes:
 
-- :class:`Variable` - Specialized namedtuple to represent a variable in
-  Dymola\ :sup:`®`-formatted results
-
-- :class:`Samples` - Namedtuple to store the time and value information of
-  each variable in the *samples* field of :class:`Variable`
+- :class:`Samples` - Specialized namedtuple to store the time and value
+  information of a variable from Dymola\ :sup:`®`-formatted simulation results
 
 Functions:
 
@@ -67,41 +64,30 @@ from scipy.io import loadmat
 from scipy.io.matlab.mio_utils import chars_to_strings
 from six import PY2
 
-from . import select, VarDict
-from ..simres import Variable as GenericVariable
+from . import VarDict
+from ..simres import Variable
 from ..util import next_nonblank
 
 
-# Namedtuple to store the time and value information of each variable
-Samples = namedtuple('Samples', ['times', 'values', 'negated'])
-# This is used for the *samples* field of Variable below.
-# The negated field indicates if the values should be negated upon access.
+class Samples(namedtuple('SamplesTuple', ['times', 'signed_values',
+                                          'negated'])):
+
+   """Specialized namedtuple to store the time and value information of a
+   variable from Dymola\ :sup:`®`-formatted simulation results
+
+   The negated field indicates if the values should be negated upon access.  By
+   keeping the sign separate, the same savings that Dymola\ :sup:`®` achieves in
+   file size is achieved in active memory.  It stems from the fact that many
+   Modelica_ variables have opposite sign due to flow balances.
 
 
-# Named tuple to store the data for each variable
-class Variable(GenericVariable):
-
-    """Specialized namedtuple to represent a variable in a model simulated by
-    Dymola\ :sup:`®`
-    """
-    # pylint: disable=I0011, W0221
-
-    @select
-    def values(self):
-        """Return the values of the variable.
-        """
-        # The docstring has been copied from modelicares.simres.Variable.values.
-        # Keep it updated there.
-        samples = self.samples
-        return -samples.values if samples.negated else samples.values
-
-    @select
-    def times(self):
-        """Return the recorded times of the variable.
-        """
-        # The docstring has been copied from modelicares.simres.Variable.values.
-        # Keep it updated there.
-        return self.samples.times
+   .. _Modelica: http://www.modelica.org/
+   """
+   @property
+   def values(self):
+       """The values of the variable
+       """
+       return -self.signed_values if self.negated else self.signed_values
 
 if PY2:
     # For most strings (those besides the description), Unicode isn't
@@ -284,7 +270,8 @@ def readsim(fname, constants_only=False):
          needed, it may save resources to set *constants_only* to *True*.
 
     **Returns:** An instance of :class:`~modelicares._io.VarDict`, a
-    specialized dictionary of variables (instances of :class:`Variable`)
+    specialized dictionary of variables (instances of
+    :class:`~modelicares.simres.Variable`)
 
     **Example:**
 
