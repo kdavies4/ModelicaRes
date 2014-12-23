@@ -500,6 +500,8 @@ class dymosim(object):
          executable.  The path is relative to the directory of the model (see
          :meth:`run`).
 
+    - *debug* (*False*): If *True*, print the dymosim messages.
+
     - *\*\*options*: Adjustments to the simulation settings under "Experiment
       parameters", "Method tuning parameters", and "Output parameters" in the
       initialization file (e.g., dsin.txt)
@@ -556,8 +558,8 @@ class dymosim(object):
     this one.
     """
 
-    def __init__(self, command='-s', results_dir='', results=['dslog.txt'], output=False,
-                 **options):
+    def __init__(self, command='-s', results_dir='', results=['dslog.txt'],
+                 debug=False, **options):
         """Upon initialization, establish some settings.
 
         See the top-level class documentation.
@@ -567,12 +569,13 @@ class dymosim(object):
         self._command = command
         self._results_dir = expand_path(results_dir)
         self._results = results
-        self._output = output
+        self._debug = debug
         self._options = options
 
         # Start the run log.
         run_log = open(os.path.join(results_dir, "runs.tsv"), 'w')
-        run_log.write("Run #\tPeriod #\tOptions\tExecutable\tInitial values & parameters\n")
+        run_log.write("Run #\tPeriod #\tOptions\tExecutable\tInitial values & "
+                      "parameters\n")
         self._run_log = run_log
 
         # Start counting the run() calls.
@@ -593,8 +596,9 @@ class dymosim(object):
         """Add known attributes directly, but unknown attributes go to the
         dictionary of command options.
         """
-        if attr in ('_command', '_results_dir', '_results', '_options', '_output',
-                    'n_runs', '_n_periods', '_run_log', '_current_model'):
+        if attr in ('_command', '_results_dir', '_results', '_options',
+                    '_debug', 'n_runs', '_n_periods', '_run_log',
+                    '_current_model'):
             object.__setattr__(self, attr, value) # Traditional method
         else:
             self._options[attr] = value
@@ -665,7 +669,7 @@ class dymosim(object):
 
         # Run the model.
         run_in_dir([EXEC_PREFIX + executable, self._command, '-f', dsfinal_path,
-                    dsin_path, dsres_path], model_dir, output=self._output)
+                    dsin_path, dsres_path], model_dir, output=self._debug)
 
         # Copy the other results.
         for result in self._results:
@@ -913,7 +917,7 @@ class fmi(object):
             self.fmu = pyfmi.load_fmu(fmu_path)
 
         # Initialize the fmu
-        self.fmu.setup_experiment()
+        #self.fmu.setup_experiment()
         self.fmu.initialize()
 
         # Copy the log file to the result directory

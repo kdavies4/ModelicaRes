@@ -1,4 +1,4 @@
-2014-12-23 02:52:42Z
+2014-12-23 03:08:06Z
 
 Kevin Davies
 
@@ -6,7 +6,7 @@ This is an unreleased copy of ModelicaRes.
 It may contain additional features, but it may also contain bugs since it was
 probably not fully tested.
 
-For a released copy, please see the
+For a released copy, please see the 
 [main project page](http://kdavies4.github.io/ModelicaRes/),
 [PyPI](https://pypi.python.org/pypi/ModelicaRes), or the release tags in the
 [GitHub repository](https://github.com/kdavies4/ModelicaRes).

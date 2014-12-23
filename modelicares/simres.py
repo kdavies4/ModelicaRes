@@ -2195,6 +2195,10 @@ class SimResList(ResList):
 
 
 class SimResSequence(SimRes):
+
+    """TODO
+    """
+
     def __init__(self, *args):
         """
         Initialize as a list of :class:`SimRes` instances, loading files as
