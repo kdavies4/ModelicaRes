@@ -408,10 +408,10 @@ class dymola_script(object):
                             + '\n')
         print('Run %s:  %s' % (n_runs, call))
 
-    # TODO: Consider adding a continue_run method.  The major issue is that
-    # it's impossible to access stopTime programmatically in Dymola (due to
-    # problems with assignment from Dymola's getExperiment() function).
-    # Therefore, it's impossible to set the new stopTime based on duration.
+    # TODO: Consider adding a continue_run method.  The major issue is that it's
+    # impossible to access stopTime programmatically in Dymola (due to problems
+    # with assignment from Dymola's getExperiment() function). Therefore, it's
+    # impossible to set the new stopTime based on duration.
 
 
 class dymosim(object):
@@ -560,7 +560,7 @@ class dymosim(object):
 
         Also, confirm that the executable exists.
 
-        Save the model.  If *model* is None, use the last model.
+        Save the model.  If *model* is *None*, then use the last model.
         """
 
         # Determine some paths and directories.
@@ -710,7 +710,7 @@ class dymosim(object):
           parameters" in the initialization file
 
              By default, the options remain as they were in the last
-             :meth:`run`. See that method for details.
+             :meth:`run`.  See that method for details.
 
              StartTime and StopTime are ignored because they are determined
              automatically from *duration* and the stop time of the last
@@ -744,7 +744,7 @@ class fmi(object):
 
     """Context manager to simulate FMUs_ via PyFMI_
 
-    .. Warning:: This context manager has not been implemented yet.
+    .. Warning:: This context manager has not been implemented yet. TODO
 
     **Example:**
 
@@ -755,7 +755,7 @@ class fmi(object):
        >>> with fmi(stopTime=2500) as simulator:
        ...     simulator.run('examples/ChuaCircuit.fmu')
 
-    For more complicated scenarios, use the same form as in examples 2 and 3
+    For more complicated scenarios, use the same form as in Examples 2 and 3
     in the :class:`dymola_script` documentation.
     """
 
@@ -769,13 +769,14 @@ class fmi(object):
         self._results_dir = expand_path(results_dir)
         self._options = options
 
-        # Dictionary for in memory results. If the option result_handling='memory' is set, no output txt files will be
-        # written
+        # Dictionary for in memory results.  If the option
+        # result_handling='memory' is set, no output txt files will be written.
         self.memory_result = {}
 
         # Start the run log.
         run_log = open(os.path.join(results_dir, "runs.tsv"), 'w')
-        run_log.write("Run #\tPeriod #\tOptions\tExecutable\tInitial values & parameters\n")
+        run_log.write("Run #\tPeriod #\tOptions\tExecutable\tInitial values & "
+                      "parameters\n")
         self._run_log = run_log
 
         # Start counting the run() calls.
@@ -796,8 +797,8 @@ class fmi(object):
         """Add known attributes directly, but unknown attributes go to the
         dictionary of command options.
         """
-        if attr in ('_results_dir', '_results', '_options',
-                    'n_runs', '_n_periods', '_run_log', '_current_model'):
+        if attr in ('_results_dir', '_options', 'n_runs', '_n_periods',
+                    '_run_log', '_current_model', 'memory_result', 'fmu'):
             object.__setattr__(self, attr, value) # Traditional method
         else:
             self._options[attr] = value
@@ -814,35 +815,31 @@ class fmi(object):
         self._run_log.close()
 
     def _paths(self, model=None):
-        """Given a fmu's path (*model*, without extension) and the internal
-        state, return a tuple of:
-        1. the fmu's directory
-        2. the .fmu file
-        3. the results directory
+        """Given a FMU's path (*model*) and the internal state, return a tuple
+        of:
+        1. the FMU's directory
+        2. the results directory
 
-        Also, confirm that the fmu exists.
+        Also, confirm that the FMU exists.
 
-        Save the model.  If *model* is None, use the last model.
+        Save the model.  If *model* is *None*, then use the last model.
         """
 
-        # Determine some paths and directories.
+        # Locate the model.
         if model is None:
             model = self._current_model
         else:
             self._current_model = model
-        model_dir, fmu_path = os.path.split(model)
-        results_dir = os.path.join(self._results_dir, str(self.n_runs))
-
-        # Locate the FMU.
         assert os.path.isfile(model), (
-            'The FMU (%s) cannot be found in the "%s" folder.'
-            % (fmu_path, os.path.abspath(model_dir)))
+            'The FMU (%s) cannot be found.' % os.path.abspath(model))
 
-        return model_dir, fmu_path, results_dir
+        # Return the directories.
+        model_dir = os.path.dirname(model)
+        results_dir = os.path.join(self._results_dir, str(self.n_runs))
+        return model_dir, results_dir
 
     def load(self, fmu_path, results_dir):
-        """
-        Load the FMU for continued simulation in the continue_run method.
+        """Load the FMU for continued simulation in :meth:`continue_run`.
         """
 
         import pyfmi
@@ -873,16 +870,18 @@ class fmi(object):
         move(source, destination)
 
     def move_mat_file(self):
-        model_dir, fmu_path, results_dir = self._paths()
+        """TODO
+        """
+        results_dir = self._paths()[1]
         source = os.path.join(os.getcwd(), 'Model_internal.mat')
         destination = os.path.join(results_dir, 'result.mat')
         copy(source, destination)
 
     def _run(self, params, options, model_dir, results_dir):
         """Write the given model parameters and initial values (*params*) and
-        *results_dir*. simulation options (*options*) to the fmu and save the
-        results to the start and stop times are given in the same way as in the
-        dymosim simulator.
+        *results_dir*.  TODO Send the simulation options (*options*) to the FMU and
+        save the results to the start and stop times are given in the same way
+        as in :class:`dymosim`.
 
         Also write to the log file.
         """
@@ -965,35 +964,58 @@ class fmi(object):
         Please see the example in the top-level documentation of
         :class:`fmi`.
         """
-        # Increment the number of runs, reset the number of periods.
+        # Increment the number of runs and reset the number of periods.
         self.n_runs += 1
         self._n_periods = 1
         self.memory_result[self.n_runs] = {}
 
         # Determine the file locations.
-        model_dir, fmu_path, results_dir = self._paths(model)
+        model_dir, results_dir = self._paths(model)
 
         # Create the results folder
         if not os.path.isdir(results_dir):
             os.makedirs(results_dir)
 
         # Load the fmu, write the parameters and options, run the model, and save the results.
-        self.load(os.path.join(model_dir, fmu_path), results_dir)
+        self.load(model, results_dir)
         self._run(params, options, model_dir, results_dir)
 
-    def continue_run(self, duration, params={}):
+    def continue_run(self, duration, params={}, **options):
+        """Continue the last run (using the same model).
+
+        **Parameters:**
+
+        - *duration*: Number of additional seconds to simulate
+
+        - *params*: Dictionary of names and values of parameters to be adjusted
+          within the model
+
+             By default, the parameters remain as they were in the last
+             :meth:`run`.  See that method for details on *params*.
+
+        - *\*\*options*: Adjustments to the simulation settings under
+          "Experiment parameters", "Method tuning parameters", and "Output
+          parameters" in the initialization file
+
+             By default, the options remain as they were in the last
+             :meth:`run`.  See that method for details.
+
+             StartTime and StopTime are ignored because they are determined
+             automatically from *duration* and the stop time of the last
+             simulation.
+        """
         # Increment the number of periods.
         self._n_periods += 1
 
         # Determine the file locations.
-        model_dir, fmu_path, results_dir = self._paths()
+        model_dir, results_dir = self._paths()
 
+        # Run the simulation with the proper start and stop times.
         start_time = self.fmu.time
         options = {
             'StartTime': start_time,
             'StopTime': start_time + duration
         }
-
         self._run(params, options, model_dir, results_dir)
 
 if __name__ == '__main__':
