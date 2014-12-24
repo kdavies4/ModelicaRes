@@ -508,6 +508,8 @@ class dymosim(object):
         self._options = options
 
         # Start the run log.
+        if not os.path.isdir(results_dir):
+            os.makedirs(results_dir)
         run_log = open(os.path.join(results_dir, "runs.tsv"), 'w')
         run_log.write("Run #\tPeriod #\tOptions\tExecutable\tInitial values & "
                       "parameters\n")
