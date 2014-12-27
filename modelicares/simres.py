@@ -73,15 +73,15 @@ def _select(meth):
 
              - Default or *None*: All samples are included.
 
-             - *float*: Interpolate to a single time.
+             - *float*: Interpolate to a single time in seconds.
 
-             - *list*: Interpolate to a list of times.
+             - *list*: Interpolate to a list of times in seconds.
 
-             - *tuple*: Extract samples from a range of times.  The structure is
-               signature to the arguments of Python's slice_ function, except
-               that the start and stop values can be floating point numbers.
-               The samples within and up to the limits are included.
-               Interpolation is not used.
+             - *tuple*: Extract samples from a range of times in seconds.  The
+               structure is similar to the arguments of Python's slice_
+               function, except that the start and stop values can be floating
+               point numbers. The samples within and up to the limits are
+               included.  Interpolation is not used.
 
                   - (*stop*,): All samples up to *stop* are included.
 
@@ -153,19 +153,22 @@ def _select(meth):
     return wrapped
 
 
-# Default class to store time and value information of a variable
+# Default class to store time and value information of a variable (for samples
+# field of Variable below).
 Samples = namedtuple('Samples', ['times', 'values'])
 
 
-class Variable(namedtuple('VariableTuple', ['samples', 'description', 'unit',
-                                            'displayUnit'])):
+class Variable(namedtuple('VariableTuple', ['samples', 'dimension',
+                                            'displayUnit', 'description'])):
 
-    """Special namedtuple_ to represent a variable in a simulation, with
-    methods to retrieve and perform calculations on its values
+    """Special namedtuple_ to represent a variable in a simulation, with methods
+    to retrieve and perform calculations on its values
 
     This class is usually not instantiated directly by the user, but instances
     are returned when indexing a variable name from a simulation result
     (:class:`SimRes` instance).
+
+    If *dimension* and *displayUnit* are not known, use *None*.
 
     **Examples:**
 
@@ -178,16 +181,6 @@ class Variable(namedtuple('VariableTuple', ['samples', 'description', 'unit',
 
     >>> T.description # doctest: +SKIP
     'Temperature of HeatPort'
-
-    Get the variable's unit:
-
-    >>> T.unit
-    'K'
-
-    Get the variable's display unit:
-
-    >>> T.displayUnit
-    'degC'
 
     Determine if the variable is constant:
 
@@ -650,7 +643,7 @@ class SimRes(Res):
 
     """Class to load, analyze, and plot results from a Modelica_ simulation
 
-    **Initialization arguments:**
+    **Initialization parameters:**
 
     - *fname*: Name of the file (including the directory if necessary)
 
@@ -923,7 +916,7 @@ class SimRes(Res):
             app.SetTopWindow(frame)
             app.MainLoop()
 
-        # TODO: Fix multithreading so that the browser can run in the background.
+        # TODO: Fix multithreading so that the browser runs in the background.
         # import threading
         # thread = threading.Thread(target=_do_work)
         # thread.setDaemon(True)
@@ -1090,7 +1083,20 @@ class SimRes(Res):
 
              If *ylabel1* is *None* (default) and all of the variables have the
              same Modelica_ description string, then it will be used as the
-             label.  Use '' for no label.
+             label.  Use '' for no label.  The units will be automatically
+             noted, so they shouldn't be included here.
+
+        - *yunit1*: String representing the unit to be used for the primary y
+          axis
+
+             Modelica_-formatted unit strings are accepted (i.e., numerical
+             exponents directly following each unit where necessary and with
+             '.' for multiplication).
+
+             Some file formats do not record units.  If units are not recorded,
+             then unit conversion is performed assuming that the basis of the
+             units in :mod:`natu.units` (SI_ by default; see the `natu module
+             <TODO>`_) matches that of the results.
 
         - *f1*: Dictionary of labels and functions for additional traces to be
           plotted on the primary y axis
@@ -1114,9 +1120,9 @@ class SimRes(Res):
              If *ax1* is not provided, then axes will be created in a new
              figure.
 
-        - *ynames2*, *ylabel2*, *f2*, *legends2*, *leg2_kwargs*, and *ax2*:
-          Similar to *ynames1*, *ylabel1*, *f1*, *legends1*, *leg1_kwargs*, and
-          *ax1* but for the secondary y axis
+        - *ynames2*, *ylabel2*, *yunit2*, *f2*, *legends2*, *leg2_kwargs*, and
+          *ax2*: Similar to *ynames1*, *ylabel1*, *yunit1*, *f1*, *legends1*,
+          *leg1_kwargs*, and *ax1* but for the secondary y axis
 
         - *xname*: Name of the x-axis variable
 
@@ -1124,6 +1130,10 @@ class SimRes(Res):
 
              If *xlabel* is *None* (default), the variable's Modelica_
              description string will be applied.  Use '' for no label.
+
+        - *xunit*: String representing the unit to be used for the x axis
+
+             This follows the same format as *yunit1* and *yunit2*.
 
         - *title*: Title for the figure
 
@@ -1830,8 +1840,6 @@ class SimResList(ResList):
        ['.../examples/ChuaCircuit/1', '.../examples/ChuaCircuit/2']
     """
 
-    # TODO: Add browse method to plot common variables across all simulations.
-
     def __init__(self, *args):
         """Initialize as a list of :class:`SimRes` instances, loading files as
         necessary.
@@ -2351,7 +2359,9 @@ class SimResSequence(SimRes):
             first = entries[0]
             return Variable(Samples(np.concatenate(entries.times()),
                                     np.concatenate(entries.values())),
-                            first.description, first.unit, first.displayUnit)
+                            first.dimension,
+                            first.displayUnit,
+                            first.description)
         self._variables = VarDict({name: get_variable(name)
                                    for name in sims.names})
 

@@ -7,6 +7,7 @@ See README.md for instructions.
 # pylint: disable=C0103
 
 import re
+import versioneer
 
 from glob import glob
 from os import path
@@ -14,18 +15,19 @@ from setuptools import setup
 
 here = path.abspath(path.dirname(__file__))
 
-with open(path.join(here, 'modelicares', '__init__.py')) as f:
-    hit = re.search('__version__ *= *["'"'"'](.*)["'"'"']', f.read())
-    try:
-        version = hit.group(1)
-    except AttributeError:
-        version = None
+versioneer.VCS = 'git'
+versioneer.versionfile_source = 'modelicares/_version.py'
+versioneer.versionfile_build = 'modelicares/_version.py'
+versioneer.tag_prefix = 'v' # Tags are like 1.2.0
+versioneer.parentdir_prefix = 'ModelicaRes-'
+version = versioneer.get_version()
 
 with open(path.join(here, 'doc/long-description.txt')) as f:
     long_description = f.read()
 
 setup(name='ModelicaRes',
-      version=version if version else '0',
+      version=version,
+      cmdclass=versioneer.get_cmdclass(),
       description="Set up, plot, and analyze Modelica simulations in Python",
       long_description=long_description,
       author='Kevin Davies',
@@ -36,7 +38,7 @@ setup(name='ModelicaRes',
                 'experiment matplotlib pandas'),
       url='http://kdavies4.github.io/ModelicaRes/',
       download_url=('https://github.com/kdavies4/ModelicaRes/archive/v%s.zip'
-                    % version if version else ''),
+                    % version),
       classifiers=[
           'Development Status :: 4 - Beta',
           'Intended Audience :: Science/Research',

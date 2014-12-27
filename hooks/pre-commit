@@ -52,38 +52,3 @@ then
 	echo
 	exit 1
 fi
-
-# ------------------------------------------------------------------------------
-# If there isn't a version number in modelicares/__init__.py, add a markdown
-# file in the base folder.
-
-file="UNRELEASED.md"
-
-# Get the last version.
-commit=$(git rev-list --tags --max-count=1)
-lastversion=$(git describe --tags $commit)
-# This is simpler but doesn't always return the latest tag:
-# lastversion=$(git describe --abbrev=0 --tags)
-
-n_matches=$(grep -c '__version__ *= *None' modelicares/__init__.py)
-
-if [[ $n_matches == 1 ]]; then
-
-    echo $(date -u +"%Y-%m-%d %H:%M:%SZ") > $file
-    echo >> $file
-    echo $(git config user.name) >> $file
-    echo >> $file
-    echo "This is an unreleased copy of ModelicaRes." >> $file
-    echo "It may contain additional features, but it may also contain bugs since it was" >> $file
-    echo "probably not fully tested." >> $file
-    echo >> $file
-    echo "For a released copy, please see the " >> $file
-    echo "[main project page](http://kdavies4.github.io/ModelicaRes/)," >> $file
-    echo "[PyPI](https://pypi.python.org/pypi/ModelicaRes), or the release tags in the" >> $file
-    echo "[GitHub repository](https://github.com/kdavies4/ModelicaRes)." >> $file
-    echo "The last version was $lastversion." >> $file
-
-    git add $file
-else
-    git rm --ignore-unmatch $file
-fi

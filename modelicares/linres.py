@@ -102,7 +102,7 @@ class LinRes(Res):
     """Class for Modelica_-based linearization results and methods to analyze
     those results
 
-    **Initialization arguments:**
+    **Initialization parameters:**
 
     - *fname*: Name of the file (including the directory if necessary)
 

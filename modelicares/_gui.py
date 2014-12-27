@@ -85,7 +85,7 @@ class Browser(wx.Frame):
     """Class to browse the variables of a simulation (used in
     :meth:`simres.SimRes.browse`)
 
-    **Initialization arguments:**
+    **Initialization parameters:**
 
     - *parent*: Parent frame
 

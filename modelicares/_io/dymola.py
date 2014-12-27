@@ -60,6 +60,7 @@ import re
 from collections import namedtuple
 from control.matlab import ss
 from itertools import count
+#from natu import units as U
 from scipy.io import loadmat
 from scipy.io.matlab.mio_utils import chars_to_strings
 from six import PY2
@@ -331,6 +332,7 @@ def readsim(fname, constants_only=False):
                 break  # There are no more "data_i" variables.
             else:
                 try:
+                    #times = U.s*traj[:, 0]
                     times = traj[:, 0]
                 except IndexError:
                     continue # The data set is empty.
@@ -344,19 +346,85 @@ def readsim(fname, constants_only=False):
                                   if data_set == i})
 
         # Time is from the last data set.
+        #s = U.s
+#        variables['Time'] = Variable(Samples(times, times*s._value, False),
+#                                     s.dimension, s.display, 'Time')
         variables['Time'] = Variable(Samples(times, times, False),
-                                     'Time', 's', '')
+                                     's', '', 'Time')
         return variables
 
     elif version == '1.0':
         traj = data['data']
         times = traj[:, 0]
         return VarDict({name: Variable(Samples(times, traj[:, i], False),
-                                       '', '', '')
+                                       None, None, '')
                         for i, name in enumerate(data['names'])})
 
-    raise AssertionError("The version of the Dymola-formatted result file ({}) "
-                         "is not supported.".format(version))
+    raise AssertionError("The version of the Dymola-formatted result file (%s) "
+                         "isn't supported.")
+
+# times are in seconds.
+# values include the values of the units.
+
+    # Factor in the unit's values and record the dimension instead of unit
+    if False:
+    #if not units_included:
+
+        if unit:
+            unit_dict = CompoundUnit(unit.replace('.', '*'))
+            unit = U._units(**unit_dict)
+            dimension = unit.dimension
+            try:
+                if unit._value <> 1.0:
+                    signed_values *= unit._value
+            except AttributeError:
+                # Must be a LambdaUnit
+                if negated:
+                    signed_values = -signed_values
+                    negated = False
+                get_value = lambda n: unit._toquantity(n)._value
+                signed_values = np.array(map(get_value, signed_values))
+
+            # Relink all other variables with same column and unit
+
+            if displayUnit:
+                display_unit = CompoundUnit(displayUnit.replace('.', '*'))
+            else:
+                display_unit = unit_dict
+        else:
+            dimension = CompoundDimension()
+
+"""
+Variable(Samples(times, signed_values, negated), dimension, display_unit,
+         description)
+
+displayUnit -> display_unit
+display -> display_unit
+
+
+ If
+
+
+All in one:
+No dup of dimensions and units
+If quantities disabled, then dimensions and units not tracked, but can still plot in various units
+Quicker to retrieve
+If quantities enabled and units unknown, then use floats for values, but can''t do unit conversion
+
+Separate:
+Quicker to load (prob only slightly)
+If quantities disabled, then retrieved values have no dimensions or units, but can assume SI units and proper dimensions to do unit conversion
+
+variable extends quantity? No
+- Good: Variable is a Quantity
+- Good: Both have dimension and display unit
+- Good: _value property is the raw data with units included
+- Good: values, FV, mean, etc. methods return quantities
+- *Bad: variable has times, but quantity doesn''t
+- *Bad: quantity can be used as a mathematical entity, but variable can't
+"""
+
+
 
 
 def readlin(fname):

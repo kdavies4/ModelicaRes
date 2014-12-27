@@ -502,7 +502,8 @@ class dymosim(object):
 
         # Pre-process and store the arguments.
         self._command = command
-        self._results_dir = expand_path(results_dir)
+        results_dir = expand_path(results_dir)
+        self._results_dir = results_dir
         self._results = results
         self._debug = debug
         self._options = options
@@ -618,7 +619,7 @@ class dymosim(object):
         # Add an entry to the run log.
         self._run_log.write('\t'.join([str(self.n_runs),
                                        str(self._n_periods),
-                                       str(ParamDict(options))[1:-1],
+                                       str(ParamDict(opts))[1:-1],
                                        executable,
                                        str(ParamDict(params))[1:-1]])
                             + '\n')

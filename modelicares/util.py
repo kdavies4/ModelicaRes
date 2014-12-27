@@ -485,7 +485,7 @@ def _gen_offset_factor(label, tick_lo, tick_up, eagerness=0.325):
 
     3. Exponent of 1000 which can be factored from the number (pow1000)
     """
-    # TODO: Utilize matplotlib's support for units?
+    # TODO: Use matplotlib's support for units?
 
     def _label_offset_factor(label, offset_factor, offset_pow1000, pow1000):
         """Format an offset and factor into a LaTeX string and add to it an

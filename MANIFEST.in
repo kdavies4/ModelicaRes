@@ -33,3 +33,7 @@ include tests/*.mat
 include tests/*.md
 include tests/*.py
 include tests/*.txt
+
+# For version labeling
+include versioneer.py
+include modelicares/_version.py

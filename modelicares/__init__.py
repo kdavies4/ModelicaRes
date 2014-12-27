@@ -31,7 +31,10 @@ __email__ = "kdavies4@gmail.com"
 __copyright__ = ("Copyright 2012-2014, Kevin Davies, Hawaii Natural Energy "
                  "Institute, and Georgia Tech Research Corporation")
 __license__ = "BSD-compatible (see LICENSE.txt)"
-__version__ = None
+
+from ._version import get_versions
+__version__ = get_versions()['version']
+del get_versions
 
 # Standard pylint settings for this project:
 # pylint: disable=I0011, C0302, C0325, R0903, R0904, R0912, R0913, R0914, R0915
@@ -49,7 +52,6 @@ from .linres import LinRes, LinResList
 from .util import (add_arrows, add_hlines, add_vlines, ArrowLine, closeall,
                    figure, load_csv, save, saveall, setup_subplots)
 from .exps import (doe, ParamDict, read_params, write_params, simulators)
-# TODO: Add run_models and include in the doc list once implemented.
 
 
 def load(*args):
