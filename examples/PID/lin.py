@@ -38,6 +38,6 @@ write_script(EXPERIMENTS, working_dir=WORKING_DIR, packages=PACKAGES,
 # Ask Dymola to run the script.
 # For Linux:
 os.system('dymola ' + FNAME)
-# TODO: Add support for Windows.
+# TODO: Support Windows.
 # For Windows:
 # os.system(r'C:\Program files\Dymola\bin\Dymola.exe ' + FNAME)

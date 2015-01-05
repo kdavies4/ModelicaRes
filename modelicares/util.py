@@ -1303,8 +1303,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
     else:
         return ax, n_cols
 
-# TODO: Remove the "_" prefix and add it to the list once this is finished.
-
+# TODO: Remove the "_" prefix and add this to the list above once it's finished.
 
 def _shift_scale_c(cbar, vmin, vmax, eagerness=0.325):
     """"If helpful, apply an offset and a factor to the colorbar.

@@ -10,6 +10,7 @@ MANIFEST
 *.mos
 doc/examples
 *.egg-info
+*.tsv
 
 # Dymola-generated files
 buildlog.txt

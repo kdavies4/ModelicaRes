@@ -47,7 +47,7 @@ if RUN:
     # Ask Dymola to run the script.
     # For Linux:
     os.system('dymola ' + FNAME)
-    # TODO: Add support for Windows.
+    # TODO: Support Windows.
     # For Windows:
     # os.system(r'C:\Program files\Dymola\bin\Dymola.exe ' + FNAME)
 else:
