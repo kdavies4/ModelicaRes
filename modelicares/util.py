@@ -5,6 +5,9 @@
 
 - :class:`ArrowLine` - A matplotlib_ subclass to draw an arrowhead on a line
 
+- :class:`CallDict` - Dictionary that when called returns a dictionary of the
+  results from calling its entries
+
 - :class:`CallList` - List that when called returns a list of the results from
   calling its elements
 
@@ -1632,6 +1635,69 @@ class ArrowLine(Line2D):
         return rgb_face
 
 
+class CallDict(dict):
+
+    """Dictionary that when called returns a dictionary of the results from
+    calling its entries
+
+    Also, when an unknown attribute (property or method) is requested, this
+    class returns a callable dictionary containing that attribute of its values.
+
+    **Examples:**
+
+    Calling the dictionary:
+
+    >>> f = lambda x: lambda y: x*y
+    >>> d = CallDict(a=f(2), b=f(3))
+    >>> d(5) # doctest: +SKIP
+    {'a': 10, 'b': 15}
+
+    .. testcleanup::
+
+       >>> d(5) == {'a': 10, 'b': 15}
+       True
+
+    Calling a method of the values in the dictionary:
+
+    >>> d = CallDict({1: 'abc', 2: 'abcdef'})
+    >>> d.lstrip('a') # doctest: +SKIP
+    {1: 'bc', 2: 'bcdef'}
+
+    .. testcleanup::
+
+       >>> d.lstrip('a') == {1: 'bc', 2: 'bcdef'}
+       True
+
+    Retrieving a property of the values in the dictionary:
+
+    .. code-block:: python
+
+       >>> from numpy import array
+
+       >>> d = CallDict(a=array([0]), b=array([0, 0]))
+       >>> d.shape # doctest: +SKIP
+       {'a': (1,), 'b': (2,)}
+
+    .. testcleanup::
+
+       >>> d.shape == {'a': (1,), 'b': (2,)}
+       True
+    """
+
+    def __getattr__(self, attr):
+        """Return a callable dictionary containing the keys from this dictionary
+        and the requested attribute from its values.
+        """
+        return CallDict({key: getattr(value, attr)
+                         for key, value in self.items()})
+
+    def __call__(self, *args, **kwargs):
+        """Return a dictionary containing the keys of this dictionary and the
+        results from calling its values.
+        """
+        return {key: value(*args, **kwargs) for key, value in self.items()}
+
+
 class CallList(list):
 
     """List that when called returns a list of the results from calling its
@@ -1668,12 +1734,12 @@ class CallList(list):
 
     def __getattr__(self, attr):
         """Return a callable list containing the requested attribute from the
-        elements of the list.
+        elements of this list.
         """
         return CallList([getattr(item, attr) for item in self])
 
     def __call__(self, *args, **kwargs):
-        """Return a list of the results from calling the elements of the list.
+        """Return a list of the results from calling the elements of this list.
         """
         return [item(*args, **kwargs) for item in self]
 

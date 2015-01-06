@@ -43,7 +43,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 import os
 import numpy as np
 
-from collections import namedtuple, OrderedDict
+from collections import namedtuple
 from functools import wraps
 from itertools import cycle
 from matplotlib import rcParams
@@ -550,7 +550,8 @@ READERS = [('dymola', dymola)]  # SimRes tries these in order.
 # All of the keys should be in lowercase.
 # This must be below the definition of Variable because that class is required
 # by the loading functions.
-# TODO: Avoid this cyclic import between simres and _io.
+# TODO: Avoid this cyclic import--readsim requires Variable, which is defined
+# here so that it's included in the documentation.
 
 
 def _get_sims(fnames):
@@ -724,6 +725,19 @@ class SimRes(Res):
     .. _pandas DataFrame:
        http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
+
+    def __getattr__(self, attr):
+        """TODO doc
+        TODO add to advanced notebook
+        """
+        values = (getattr(value, attr) for value in self._variables.values())
+        try:
+            return util.CallDict(zip(self._variables.keys(), values))
+        except ValueError:
+            if attr == 'value' and len(self) <> self.n_constants:
+                raise ValueError("The variables aren't all constants.  "
+                                 "Use values() instead of value.")
+            raise
 
     def __init__(self, fname='dsres.mat', constants_only=False, tool=None):
         """Upon initialization, read Modelica_ simulation results from a file.
