@@ -710,9 +710,6 @@ class SimRes(Res):
 
     - :attr:`names` - List of all the variable names
 
-    - :attr:`nametree` - Tree of variable names that reflects the model
-      hierarchy
-
     - :attr:`tool` - String indicating the function used to load the results
       (named after the corresponding Modelica_ tool)
 
@@ -1024,26 +1021,6 @@ class SimRes(Res):
         if as_tree:
             return util.tree(names, names, container=OrderedDict)
         return names
-
-    @property
-    def nametree(self):
-        r"""Tree of variable names based on the model hierarchy
-
-        The tree is a nested ordered dictionary.  The keys are the Modelica_
-        class instances (including the index if there are arrays) and the values
-        are the subclasses.  The value at the end of each branch is the full
-        variable name.  All entries are sorted alphabetically.
-
-        To create a filtered tree, use :meth:`find` with *as_tree*\=\ *True*.
-
-        **Example:**
-
-        >>> sim = SimRes('examples/ChuaCircuit.mat')
-        >>> sim.nametree # doctest: +ELLIPSIS
-        OrderedDict([('C1', OrderedDict([('C', 'C1.C'), ('der(v)', 'C1.der(v)'), ..., ('Time', 'Time')])
-        """
-        names = self.names
-        return util.tree(names, names, container=OrderedDict)
 
     @property
     def n_constants(self):
@@ -1822,9 +1799,6 @@ class SimResList(ResList):
     - :attr:`names` - List of names of variables that are present in all of the
       simulations
 
-    - :attr:`nametree` - Tree of the common variable names of the simulations
-      based on the model hierarchy
-
     - Also, the properties of :class:`SimRes` (:attr:`~SimRes.dirname`,
       :attr:`~SimRes.fbase`, :attr:`~SimRes.fname`, :attr:`~SimRes.n_constants`,
       and :attr:`~SimRes.tool`) can be retrieved as a list across all of the
@@ -2061,27 +2035,6 @@ class SimResList(ResList):
         """
         names = set.intersection(*[set(sim.names) for sim in self])
         return sorted(names)
-
-    @property
-    def nametree(self):
-        """Tree of the common variable names in the simulations based on the
-        model hierarchy
-
-        The tree is a nested ordered dictionary.  The keys are the Modelica_
-        class instances (including the index if there are arrays) and the values
-        are the subclasses.  The value at the end of each branch is the full
-        variable name.  All entries are sorted alphabetically.
-
-        To create a filtered tree, use :meth:`find` with *as_tree*=*True*.
-
-        **Example:**
-
-        >>> sims = SimResList('examples/ChuaCircuit/*/')
-        >>> sims.nametree # doctest: +ELLIPSIS
-        OrderedDict([('C1', OrderedDict([('C', 'C1.C'), ('der(v)', 'C1.der(v)'), ..., ('Time', 'Time')])
-        """
-        names = self.names
-        return util.tree(names, names, container=OrderedDict)
 
     def __contains__(self, item):
         """Return *True* if a variable is present in all of the simulation

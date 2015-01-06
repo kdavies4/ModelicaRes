@@ -5,6 +5,21 @@ The releases are numbered according to the `Semantic Versioning Specification`_.
 
 TBD (in `GitHub <https://github.com/kdavies4/ModelicaRes>`_ only) -- Updates:
 
+   - Removed :attr:`nametree` from :class:~modelicares.simres.SimRes` and
+     :class:~modelicares.simres.SimResList`.  To get the same result as
+     ``sim.nametree`` in the previous release, do this:
+
+     .. code-block:: python
+
+        >>> from collections import OrderedDict
+        >>> from modelicares.util import tree
+
+        >>> name = sim.names
+        >>> tree(names, names, container=OrderedDict) # doctest: +SKIP
+
+   - Renamed first parameter of :func:`~modelicares.util.tree` from *strings* to
+     *keys*.  Inserted *values* as the second parameter.  To get the original
+     functionality of ``tree(keys)``, use ``tree(keys, keys)``.
    - '/' may now be used as a path separator in Windows (and Unix/Linux).
    - Removed :func:`~modelicares.util.delayed_exit`,
      :func:`~modelicares.util.flatten_list`,
