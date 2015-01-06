@@ -944,7 +944,7 @@ class SimRes(Res):
         """
         return sorted(self._variables)
 
-    def find(self, pattern=None, re=False, constants_only=False, as_tree=False):
+    def find(self, pattern=None, re=False, constants_only=False):
         r"""Find variable names that match a pattern.
 
         By default, all names are returned.  The names are sorted
@@ -989,11 +989,6 @@ class SimRes(Res):
         - *constants_only*: *True* to include only the variables that do not
           change over time
 
-        - *as_tree*: *True* if the variable names should be returned as a nested
-          dictionary representing the model hierarchy (otherwise, simple list)
-
-             See :attr:`nametree` regarding the structure of the tree.
-
         **Example:**
 
         .. code-block:: python
@@ -1014,13 +1009,8 @@ class SimRes(Res):
         if constants_only:
             names = [name for name in names if self[name].is_constant]
 
-        # Filter the list.
-        names = util.match(names, pattern, re)
-
-        # Return the list directly or as a tree.
-        if as_tree:
-            return util.tree(names, names, container=OrderedDict)
-        return names
+        # Return the filtered list.
+        return util.match(names, pattern, re)
 
     @property
     def n_constants(self):
@@ -1903,7 +1893,7 @@ class SimResList(ResList):
             fnames = multiglob(item)
             self.extend(SimResList(_get_sims(fnames)))
 
-    def find(self, pattern=None, re=False, constants_only=False, as_tree=False):
+    def find(self, pattern=None, re=False, constants_only=False):
         r"""Find the names of variables that are present in all of the
         simulations and that match a pattern.
 
@@ -1949,11 +1939,6 @@ class SimResList(ResList):
         - *constants_only*: *True* to include only the variables that do not
           change over time
 
-        - *as_tree*: *True* if the variable names should be returned as a nested
-          dictionary representing the model hierarchy (otherwise, simple list)
-
-             See :attr:`nametree` regarding the structure of the tree.
-
         **Example:**
 
         .. code-block:: python
@@ -1964,15 +1949,12 @@ class SimResList(ResList):
            >>> sorted(sims.find('^[^.]*.v$', re=True))
            ['C1.v', 'C2.v', 'G.v', 'L.v', 'Nr.v', 'Ro.v']
         """
-        # Get a sorted list of all the variables or just the constants.
+        # Get a set of all the variables or just the constants.
         names = set.intersection(*[set(sim.find(pattern, re, constants_only))
                                    for sim in self])
-        names = sorted(names)
 
-        # Return the list directly or as a tree.
-        if as_tree:
-            return util.tree(names, names, container=OrderedDict)
-        return names
+        # Return the set as a sorted list.
+        return sorted(names)
 
     def get_unique_IVs(self, constants_only=False, tolerance=1e-10):
         """Return a dictionary of initial values that are different among the

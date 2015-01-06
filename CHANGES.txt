@@ -6,8 +6,9 @@ The releases are numbered according to the `Semantic Versioning Specification`_.
 TBD (in `GitHub <https://github.com/kdavies4/ModelicaRes>`_ only) -- Updates:
 
    - Removed :attr:`nametree` from :class:~modelicares.simres.SimRes` and
-     :class:~modelicares.simres.SimResList`.  To get the same result as
-     ``sim.nametree`` in the previous release, do this:
+     :class:~modelicares.simres.SimResList` since it probably is not very useful
+     on its own.  To get the same result as ``sim.nametree`` in the previous
+     release, do this:
 
      .. code-block:: python
 
