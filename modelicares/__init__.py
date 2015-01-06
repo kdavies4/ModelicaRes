@@ -18,8 +18,8 @@ classes from the submodules.  These are:
 - Supporting classes and functions (:mod:`~modelicares.util` submodule):
   :func:`~util.add_arrows`, :func:`~util.add_hlines`, :func:`~util.add_vlines`,
   :class:`~util.ArrowLine`, :func:`~util.closeall`, :func:`~util.figure`,
-  :func:`~util.load_csv`, :func:`~util.save`, :func:`~util.saveall`, and
-  :func:`~util.setup_subplots`
+  :func:`~util.load_csv`, :class:`~util.ParamDict`, :func:`~util.save`,
+  :func:`~util.saveall`, and :func:`~util.setup_subplots`
 
 There is also a local function:
 
@@ -50,8 +50,8 @@ del get_versions
 from .simres import SimRes, SimResList, SimResSequence
 from .linres import LinRes, LinResList
 from .util import (add_arrows, add_hlines, add_vlines, ArrowLine, closeall,
-                   figure, load_csv, save, saveall, setup_subplots)
-from .exps import (doe, ParamDict, read_params, write_params, simulators)
+                   figure, load_csv, ParamDict, save, saveall, setup_subplots)
+from .exps import doe, read_params, write_params, simulators
 
 
 def load(*args):

@@ -91,7 +91,7 @@ def aslisted(*space):
 
     .. code-block:: python
 
-       >>> from modelicares.exps import ParamDict
+       >>> from modelicares import ParamDict
 
        >>> for x in aslisted(a=[0, 1], b=[0, 1], c=[0, 1, 2]):
        ...     print(ParamDict(x)) # ParamDict makes the output easier to read.
@@ -102,7 +102,7 @@ def aslisted(*space):
 
     .. code-block:: python
 
-       >>> from modelicares.exps import ParamDict
+       >>> from modelicares import ParamDict
 
        >>> for x in aslisted(dict(a=[0, 1], b=[0, 1], c=[0, 1, 2])):
        ...     print(ParamDict(x)) # ParamDict makes the output easier to read.

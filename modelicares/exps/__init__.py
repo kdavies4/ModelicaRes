@@ -30,11 +30,6 @@ Run # Model & parameters
 Please see the documentation of the items below for more examples, details, and
 options.
 
-**Classes:**
-
-- :class:`ParamDict` - Dictionary that prints its items as nested tuple-based
-  modifiers, formatted for Modelica_
-
 **Functions:**
 
 - :func:`read_options` - Read simulation options from a
@@ -79,7 +74,7 @@ import re
 import numpy as np
 
 from six import string_types
-from ..util import flatten_dict, modelica_str, read_values, write_values
+from ..util import flatten_dict, read_values, write_values
 
 # Some regular subexpressions
 U = r'\d+'  # Unsigned integer
@@ -262,101 +257,6 @@ def write_params(params, fname='dsin.txt'):
         # See read_params() for a description of the columns.
     ]
     write_values(params, fname, PATTERNS)
-
-
-class ParamDict(dict):
-
-    """Dictionary that prints its items as nested tuple-based modifiers,
-    formatted for Modelica_
-
-    Otherwise, this class is the same as :class:`dict`.  The underlying
-    structure is not nested or reformatted---only the string mapping
-    (:meth:`__str__`).
-
-    In the string mapping, each key is interpreted as a parameter name
-    (including the full model path in Modelica_ dot notation) and each entry is
-    a parameter value.  The value may be a number (:class:`int` or
-    :class:`float`), Boolean constant (in Python_ format---*True* or *False*,
-    not 'true' or 'false'), string, or NumPy_ arrays of these.  Modelica_
-    strings must be given with double quotes included (e.g., '"hello"').
-    Enumerations may be used as values (e.g., 'Axis.x').  Values may be
-    functions or modified classes, but the entire value must be expressed as a
-    Python_ string (e.g., 'fill(true, 2, 2)').  Items with a value of *None* are
-    not shown.
-
-    Redeclarations and other prefixes must be included in the key along with the
-    name of the instance (e.g., 'redeclare Region regions[n_x, n_y, n_z]').  The
-    single quotes must be explicitly included for instance names that contain
-    symbols (e.g., "'H+'").
-
-    Note that Python_ dictionaries do not preserve order.  The keys are printed
-    in alphabetical order.
-
-    **Examples:**
-
-    .. code-block:: python
-
-       >>> import numpy as np
-
-       >>> d = ParamDict({'a': 1, 'b.c': np.array([2, 3]), 'b.d': False,
-       ...                'b.e': '"hello"', 'b.f': None})
-       >>> print(d)
-       (a=1, b(c={2, 3}, d=false, e="hello"))
-
-    The internal structure and formal representation (:meth:`__repr__`) is not
-    affected:
-
-    >>> d # doctest: +SKIP
-    {'a': 1, 'b.c': array([2, 3]), 'b.d': False, 'b.e': '"hello"', 'b.f': None}
-
-    An empty dictionary prints as an empty string (not "()"):
-
-    >>> print(ParamDict({}))
-    <BLANKLINE>
-
-
-    .. _Python: http://www.python.org/
-    .. _NumPy: http://numpy.scipy.org/
-    """
-
-    def __str__(self):
-        """Map the :class:`ParamDict` instance to a string using tuple-based
-        modifiers formatted for Modelica_.
-        """
-        def _str(dictionary):
-            """Return a string representation of a dictionary in the form of
-            tuple-based modifiers (e.g., (a=1, b(c={2, 3}, d=false))).
-
-            Substitutions are made to properly represent Boolean variables and
-            arrays in Modelica_.
-            """
-            elements = []
-            for key, value in sorted(dictionary.items()):
-                if isinstance(value, ParamDict):
-                    elements.append('%s%s' % (key, value)) # Recursive
-                elif isinstance(value, dict):
-                    elements.append('%s%s' % (key, ParamDict(value))) # Ditto
-                elif value is not None:
-                    value = modelica_str(value)
-                    elements.append(key + '=' + value)
-            return '(%s)' % ', '.join(elements) if elements else ''
-
-        # This method to build a nested dictionary adapted from DyMat version
-        # 0.5 (Joerg Raedler,
-        # http://www.j-raedler.de/2011/09/dymat-reading-modelica-results-with-python/,
-        # BSD License).
-        root = ParamDict()
-        for name in self.keys():
-            branch = root
-            elements = name.split('.')
-            for element in elements[:-1]:
-                if element not in branch:
-                    branch[element] = ParamDict()
-                branch = branch[element]
-            branch[elements[-1]] = self.__getitem__(name)
-
-        return _str(root)
-
 
 if __name__ == '__main__':
     # Test the contents of this file.

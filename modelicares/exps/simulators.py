@@ -35,8 +35,8 @@ import subprocess
 
 from datetime import date
 from shutil import copy, move
-from . import ParamDict, read_options, read_params, write_options, write_params
-from ..util import expand_path, run_in_dir, dict_to_lists
+from . import read_options, read_params, write_options, write_params
+from ..util import ParamDict, expand_path, run_in_dir, dict_to_lists
 
 # OS-dependent strings
 EXE = '.exe' if os.name == 'nt' else '' # File extension for an executable
