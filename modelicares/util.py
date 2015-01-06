@@ -84,7 +84,7 @@
 
 - :func:`si_prefix` - Return the SI prefix for a power of 1000.
 
-- :func:`tree` - Return a tree of strings as a nested dictionary.
+- :func:`tree` - Return a nested dictionary generated from keys and values.
 
 - :func:`write_values` - Write integers or floats to a formatted text file.
 
@@ -1429,31 +1429,34 @@ def si_prefix(pow1000):
                          "the SI prefixes (1e-24 to 1e24)." % 3 * pow1000)
 
 
-def tree(strings, separator='.', container=dict):
-    """Return a tree of strings as a nested dictionary.
-
-    The levels of hierarchy in each string are marked with *separator*.
-    The keys in the dictionary are the sub-branch names.  The value at the
-    end of each branch is the full string.
+def tree(keys, values, separator='.', container=dict):
+    """Return a nested dictionary generated from *keys* and *values*.
 
     **Parameters:**
 
-    - *strings*: List of strings
+    - *keys*: List of keys
 
-    - *separator*: String that marks a level of hierarchy
+    - *values*: List of values corresponding to the keys
+
+         These are used as the values of the innermost dictionary or
+         dictionaries.
+
+    - *separator*: String that marks a level of hierarchy within each key
 
     - *container*: Dictionary-like class used for the results
 
-          To keep the order of the list for the tree, use :class:`collections.OrderedDict`.
+         To keep the order of the list for the tree, use
+         :class:`collections.OrderedDict`.  To print the tree as nested
+         tuple-based modifiers formatted for Modelica_, use :class:`ParamDict`.
 
     **Example:**
 
-    >>> tree(['a.b.c', 'd.e', 'd.f']) # doctest: +SKIP
-    {'a': {'b': {'c': 'a.b.c'}}, 'd': {'e': 'd.e', 'f': 'd.f'}}
+    >>> tree(['a.b.c', 'd.e', 'd.f'], [1, 2, 3]) # doctest: +SKIP
+    {'a': {'b': {'c': 1}}, 'd': {'e': 2, 'f': 3}}
 
     .. testcleanup::
 
-       >>> tree(['a.b.c', 'd.e', 'd.f']) == {'a': {'b': {'c': 'a.b.c'}}, 'd': {'e': 'd.e', 'f': 'd.f'}}
+       >>> tree(['a.b.c', 'd.e', 'd.f'], [1, 2, 3]) == {'a': {'b': {'c': 1}}, 'd': {'e': 2, 'f': 3}}
        True
     """
     # This function has been copied and modified from DyMat version 0.5
@@ -1461,14 +1464,14 @@ def tree(strings, separator='.', container=dict):
     # http://www.j-raedler.de/2011/09/dymat-reading-modelica-results-with-python/,
     # BSD License).
     root = container()
-    for string in strings:
+    for key, value in zip(keys, values):
         branch = root
-        elements = string.split(separator)
+        elements = key.split(separator)
         for element in elements[:-1]:
             if element not in branch:
                 branch[element] = container()
             branch = branch[element]
-        branch[elements[-1]] = string
+        branch[elements[-1]] = value
     return root
 
 
@@ -1726,7 +1729,6 @@ class ParamDict(dict):
     <BLANKLINE>
 
 
-    .. _Python: http://www.python.org/
     .. _NumPy: http://numpy.scipy.org/
     """
 
@@ -1752,21 +1754,7 @@ class ParamDict(dict):
                     elements.append(key + '=' + value)
             return '(%s)' % ', '.join(elements) if elements else ''
 
-        # This method to build a nested dictionary adapted from DyMat version
-        # 0.5 (Joerg Raedler,
-        # http://www.j-raedler.de/2011/09/dymat-reading-modelica-results-with-python/,
-        # BSD License).
-        root = ParamDict()
-        for name in self.keys():
-            branch = root
-            elements = name.split('.')
-            for element in elements[:-1]:
-                if element not in branch:
-                    branch[element] = ParamDict()
-                branch = branch[element]
-            branch[elements[-1]] = self.__getitem__(name)
-
-        return _str(root)
+        return _str(tree(self.keys(), self.values(), container=ParamDict))
 
 
 # Getch classes based on

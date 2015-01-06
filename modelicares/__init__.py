@@ -6,8 +6,8 @@ This module provides convenient access to the most important functions and
 classes from the submodules.  These are:
 
 - To run simulation experiments (:mod:`~modelicares.exps` submodule):
-  :mod:`~modelicares.exps.doe`, :class:`~exps.ParamDict`,
-  :func:`~exps.read_params`, and :func:`~exps.write_params`
+  :mod:`~modelicares.exps.doe`, :func:`~exps.read_params`, and
+  :func:`~exps.write_params`
 
 - To load, analyze, and plot simulation results (:mod:`~modelicares.simres`
   submodule): :class:`~simres.SimRes` and :class:`~simres.SimResList`

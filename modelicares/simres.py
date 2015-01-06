@@ -1021,7 +1021,9 @@ class SimRes(Res):
         names = util.match(names, pattern, re)
 
         # Return the list directly or as a tree.
-        return util.tree(names, container=OrderedDict) if as_tree else names
+        if as_tree:
+            return util.tree(names, names, container=OrderedDict)
+        return names
 
     @property
     def nametree(self):
@@ -1040,7 +1042,8 @@ class SimRes(Res):
         >>> sim.nametree # doctest: +ELLIPSIS
         OrderedDict([('C1', OrderedDict([('C', 'C1.C'), ('der(v)', 'C1.der(v)'), ..., ('Time', 'Time')])
         """
-        return util.tree(self.names, container=OrderedDict)
+        names = self.names
+        return util.tree(names, names, container=OrderedDict)
 
     @property
     def n_constants(self):
@@ -1993,7 +1996,9 @@ class SimResList(ResList):
         names = sorted(names)
 
         # Return the list directly or as a tree.
-        return util.tree(names, container=OrderedDict) if as_tree else names
+        if as_tree:
+            return util.tree(names, names, container=OrderedDict)
+        return names
 
     def get_unique_IVs(self, constants_only=False, tolerance=1e-10):
         """Return a dictionary of initial values that are different among the
@@ -2075,7 +2080,8 @@ class SimResList(ResList):
         >>> sims.nametree # doctest: +ELLIPSIS
         OrderedDict([('C1', OrderedDict([('C', 'C1.C'), ('der(v)', 'C1.der(v)'), ..., ('Time', 'Time')])
         """
-        return util.tree(self.names, container=OrderedDict)
+        names = self.names
+        return util.tree(names, names, container=OrderedDict)
 
     def __contains__(self, item):
         """Return *True* if a variable is present in all of the simulation
