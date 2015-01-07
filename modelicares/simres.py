@@ -666,23 +666,33 @@ class SimRes(Res):
 
     **Methods using built-in Python operators and syntax:**
 
-    - :meth:`__call__` - Access a list of variables by their names (invoked as
-      ``sim(<list of variable names>)``).
+    - :meth:`__call__` (invoked as ``sim(names)``, where ``names`` is a list of
+      variable names) - Access a list of variables by their names.
 
          The return value has attributes to retrieve information about all of
          the variables in the list at once (values, units, etc.).
 
-    - :meth:`__contains__` - Return *True* if a variable is present in the
-      simulation results (invoked as ``<variable name> in sim``).
+    - :meth:`__contains__` (invoked as ``name in sim``, where ``name`` is a
+      string containing the name of a variable) - Return *True* if a variable is
+      present in the simulation results.
 
-    - :meth:`__getitem__` - Access a variable by name (invoked as
-      ``sim[<variable name>]``).
+    - :meth:`__getattr__` (invoked as ``sim.attribute``, where ``attribute`` is
+      the literal name of an attribute) - Return a dictionary containing the
+      variable names as keys and the requested attribute of the variables as the
+      values.
+
+         If the attribute is a method, it is possible to call the dictionary.
+         The result of the call is a new dictionary containing the variable
+         names as keys and the return values as the values.
+
+    - :meth:`__getitem__` (invoked as ``sim[name]``, where ``name`` is a string
+      containing the name of a variable) - Access a :class:`Variable` by name.
 
          The return value has attributes to retrieve information about the
          variable (values, unit, etc.).
 
-    - :meth:`__len__` - Return the number of variables in the simulation
-      (invoked as ``len(sim)``).
+    - :meth:`__len__` (invoked as ``len(sim)``) - Return the number of variables
+      loaded from the simulation.
 
     **Other methods:**
 
@@ -714,30 +724,58 @@ class SimRes(Res):
     - :attr:`tool` - String indicating the function used to load the results
       (named after the corresponding Modelica_ tool)
 
-    **Example:**
+    **Examples:**
 
-    >>> sim = SimRes('examples/ChuaCircuit.mat')
-    >>> print(sim) # doctest: +ELLIPSIS
-    Modelica simulation results from .../examples/ChuaCircuit.mat
+    .. code-block:: python
+
+       >>> # Loading a simulation:
+       >>> sim = SimRes('examples/ChuaCircuit.mat')
+       >>> print(sim) # doctest: +ELLIPSIS
+       Modelica simulation results from .../examples/ChuaCircuit.mat
+
+       >>> # Looking up a property across all variables:
+       >>> sim.IV # doctest: +SKIP +ELLIPSIS
+       {...
+        'C1.v': 4.0,
+       ...
+        'C2.v': 0.0,
+       ...
+        'L.L': 18.0,
+       ...}
+
+       >>> # Calling a method across all variables and simulations:
+       >>> sim.values(t=10) # doctest: +SKIP +ELLIPSIS
+       {...
+        'C1.v': 3.8029...,
+       ...
+        'C2.v': 0.2115...,
+       ...
+        'L.L': 18.0,
+       ...}
+
+    .. testcleanup::
+
+       >>> IVs = sim.IV
+       >>> IVs['C1.v']
+       4.0
+       >>> IVs['C2.v']
+       0.0
+       >>> IVs['L.L']
+       18.0
+
+       >>> values = sim.values(t=10)
+       >>> IVs['C1.v'] # doctest: +ELLIPSIS
+       3.8029...
+       >>> IVs['C2.v'] # doctest: +ELLIPSIS
+       0.2115...
+       >>> IVs['L.L']
+       18.0
 
 
     .. _Python: http://www.python.org/
     .. _pandas DataFrame:
        http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
     """
-
-    def __getattr__(self, attr):
-        """TODO doc
-        TODO add to advanced notebook
-        """
-        values = (getattr(value, attr) for value in self._variables.values())
-        try:
-            return util.CallDict(zip(self._variables.keys(), values))
-        except ValueError:
-            if attr == 'value' and len(self) <> self.n_constants:
-                raise ValueError("The variables aren't all constants.  "
-                                 "Use values() instead of value.")
-            raise
 
     def __init__(self, fname='dsres.mat', constants_only=False, tool=None):
         """Upon initialization, read Modelica_ simulation results from a file.
@@ -1068,7 +1106,7 @@ class SimRes(Res):
              If *ylabel1* is *None* (default) and all of the variables have the
              same Modelica_ description string, then it will be used as the
              label.  Use '' for no label.  The units will be automatically
-             noted, so they shouldn't be included here.
+             noted, so they should not be included here.
 
         - *yunit1*: String representing the unit to be used for the primary y
           axis
@@ -1538,8 +1576,25 @@ class SimRes(Res):
         """
         return name in self._variables
 
+    def __getattr__(self, attr):
+        """Return a dictionary containing the variable names as keys and the
+        requested attribute of the variables as the values.
+
+        If the attribute is a method, it is possible to call the dictionary.
+        The result of the call is a new dictionary containing the variable names
+        as keys and the return values as the values.
+        """
+        values = (getattr(value, attr) for value in self._variables.values())
+        try:
+            return util.CallDict(zip(self._variables.keys(), values))
+        except ValueError:
+            if attr == 'value' and len(self) <> self.n_constants:
+                raise ValueError("The variables aren't all constants.  "
+                                 "Use values() instead of value.")
+            raise
+
     def __getitem__(self, name):
-        """Access a variable by name.
+        """Access a :class:`Variable` by name.
 
         This method returns a :class:`Variable` instance, which has the
         following methods to retrieve information about the variable:
@@ -1607,7 +1662,7 @@ class SimRes(Res):
                 raise
 
     def __len__(self):
-        """Return the number of variables in the simulation.
+        """Return the number of variables loaded from the simulation.
 
         This includes the time variable.
 
@@ -1775,13 +1830,25 @@ class SimResList(ResList):
       (accepts a :class:`SimRes` instance, directory, or filename).
 
     - :meth:`__getitem__` - Retrieve a simulation using an index, simulations
-      using a slice, or a variable across the list of simulations using a
-      variable name.
+      using a slice, or a :class:`Variable` across the list of simulations using
+      a variable name.
 
     - :meth:`__contains__` - Return *True* if:
 
          - a simulation is in the list of simulations or
          - a variable name is present in all of the simulations in the list.
+
+    **Methods using built-in Python operators and syntax:**
+
+    - :meth:`__getattr__` (invoked as ``sims.<attribute>``) - Return a
+      dictionary containing the common variable names as keys.  The values are
+      lists of the requested attribute of the common variables across the
+      simulations in the list of simulations.
+
+         If the attribute is a method, it is possible to call the dictionary.
+         The result of the call is a new dictionary containing the common
+         variable names as keys.  The values are lists of the return values
+         across the simulations in the list of simulations.
 
     **Additional methods:**
 
@@ -1808,17 +1875,56 @@ class SimResList(ResList):
       and :attr:`~SimRes.tool`) can be retrieved as a list across all of the
       simulations; see the example below.
 
-    **Example:**
+    **Examples:**
 
-    >>> sims = SimResList('examples/ChuaCircuit/*/')
-    >>> sims.dirname # doctest: +SKIP
-    ['.../examples/ChuaCircuit/1', '.../examples/ChuaCircuit/2']
+    .. code-block:: python
+
+       >>> # Loading simulations:
+       >>> sims = SimResList('examples/ChuaCircuit/*/')
+       >>> sims.dirname # doctest: +SKIP
+       ['.../examples/ChuaCircuit/1', '.../examples/ChuaCircuit/2']
+
+       >>> # Looking up a property across all variables and simulations:
+       >>> sims.IV # doctest: +SKIP +ELLIPSIS
+       {...
+        'C1.v': [4.0, 4.0],
+       ...
+        'C2.v': [0.0, 0.0],
+       ...
+        'L.L': [15.0, 21.0],
+       ...}
+
+       >>> # Calling a method across all variables and simulations:
+       >>> sims.values(t=10) # doctest: +SKIP +ELLIPSIS
+       {...
+        'C1.v': [3.8028..., 3.8029...]
+       ...
+        'C2.v': [0.2111..., 0.2118...]
+       ...
+        'L.L': [15.0, 21.0],
+       ...}
 
     .. testcleanup::
 
        >>> sims.sort()
        >>> sims.dirname # doctest: +ELLIPSIS
        ['.../examples/ChuaCircuit/1', '.../examples/ChuaCircuit/2']
+
+       >>> IVs = sims.IV
+       >>> IVs['C1.v']
+       [4.0, 4.0]
+       >>> IVs['C2.v']
+       [0.0, 0.0]
+       >>> IVs['L.L']
+       [15.0, 21.0]
+
+       >>> values = sims.values(t=10)
+       >>> IVs['C1.v'] # doctest: +ELLIPSIS
+       [3.8028..., 3.8029...]
+       >>> IVs['C2.v'] # doctest: +ELLIPSIS
+       [0.2111..., 0.2118...]
+       >>> IVs['L.L']
+       [15.0, 21.0]
     """
 
     def __init__(self, *args):
@@ -2059,6 +2165,27 @@ class SimResList(ResList):
             return all(item in sim for sim in self)
         else:
             return list.__contains__(self, item)
+
+    def __getattr__(self, attr):
+        """Return a dictionary containing the common variable names as keys.
+        The values are lists of the requested attribute of the common variables
+        across the simulations in the list of simulations.
+
+        If the attribute is a method, it is possible to call the dictionary.
+        The result of the call is a new dictionary containing the common
+        variable names as keys.  The values are lists of the return values
+        across the simulations in the list of simulations.
+        """
+        names = self.names
+        values = (util.CallList([getattr(sim[name], attr) for sim in self])
+                  for name in names)
+        try:
+            return util.CallDict(zip(names, values))
+        except ValueError:
+            if attr == 'value':
+                raise ValueError("The variables aren't all constants.  "
+                                 "Use values() instead of value.")
+            raise
 
     def __getitem__(self, i):
         """Return a list of results of a variable across all of the simulations
