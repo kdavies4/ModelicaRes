@@ -65,13 +65,11 @@ from scipy.io import loadmat
 from scipy.io.matlab.mio_utils import chars_to_strings
 from six import PY2
 
-from . import VarDict
 from ..simres import Variable
 from ..util import next_nonblank
 
 
-class Samples(namedtuple('SamplesTuple', ['times', 'signed_values',
-                                          'negated'])):
+class Samples(namedtuple('Samples', ['times', 'signed_values', 'negated'])):
 
    """Specialized namedtuple to store the time and value information of a
    variable from Dymola\ :sup:`®`-formatted simulation results
@@ -270,8 +268,7 @@ def readsim(fname, constants_only=False):
          parameters, and variables that don't vary.  If only that information is
          needed, it may save resources to set *constants_only* to *True*.
 
-    **Returns:** An instance of :class:`~modelicares._io.VarDict`, a
-    specialized dictionary of variables (instances of
+    **Returns:** A dictionary of variables (instances of
     :class:`~modelicares.simres.Variable`)
 
     **Example:**
@@ -324,7 +321,7 @@ def readsim(fname, constants_only=False):
         names = data['name']
         descriptions = data['description']
         dataInfo = data['dataInfo']
-        variables = VarDict()
+        variables = {}
         for i in count(1):
             try:
                 traj = data['data_%i' % i]
@@ -356,9 +353,9 @@ def readsim(fname, constants_only=False):
     elif version == '1.0':
         traj = data['data']
         times = traj[:, 0]
-        return VarDict({name: Variable(Samples(times, traj[:, i], False),
-                                       None, None, '')
-                        for i, name in enumerate(data['names'])})
+        return {name:
+                Variable(Samples(times, traj[:, i], False), None, None, '')
+                for i, name in enumerate(data['names'])}
 
     raise AssertionError("The version of the Dymola-formatted result file (%s) "
                          "isn't supported.")

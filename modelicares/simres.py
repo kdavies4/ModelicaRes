@@ -44,6 +44,7 @@ import os
 import numpy as np
 
 from collections import namedtuple
+from difflib import get_close_matches
 from functools import wraps
 from itertools import cycle
 from matplotlib import rcParams
@@ -56,9 +57,8 @@ from scipy.interpolate import interp1d
 from six import string_types
 
 from . import util
-from ._io import VarDict
 from ._res import Res, ResList
-from .texunit import unit2tex, number_label
+from .texunit import unit2tex, number_label # TODO missing! use natu
 
 
 def _select(meth):
@@ -158,8 +158,8 @@ def _select(meth):
 Samples = namedtuple('Samples', ['times', 'values'])
 
 
-class Variable(namedtuple('VariableTuple', ['samples', 'dimension',
-                                            'displayUnit', 'description'])):
+class Variable(namedtuple('Variable', ['samples', 'dimension', 'displayUnit',
+                                       'description'])):
 
     """Special namedtuple_ to represent a variable in a simulation, with methods
     to retrieve and perform calculations on its values
@@ -640,7 +640,7 @@ class VarList(list):
         return getattr(variable, attr)
 
 
-class SimRes(Res, VarDict):
+class SimRes(Res, dict):
 
     """Class to load, analyze, and plot results from a Modelica_ simulation
 
@@ -861,8 +861,8 @@ contains
            False
 
 
-        len
-Return the number of variables loaded from the simulation.
+len
+        Return the number of variables loaded from the simulation.
 
         This includes the time variable.
 
@@ -1647,10 +1647,23 @@ Return the number of variables loaded from the simulation.
             else:
                 return [entries(name) for name in names]  # Recursion
 
-        if isinstance(names, string_types):
-            return self[names]
-        else:
-            return VarList(entries(names))
+        assert not isinstance(names, string_types), (
+            "Use square brackets (__getitem__ method) to retrieve a single "
+            "variable.")
+        return VarList(entries(names))
+
+    def __getitem__(self, key):
+        """Include suggestions in the error message if a variable is missing.
+        """
+        try:
+            return dict.__getitem__(self, key)
+        except KeyError:
+            msg = key + ' is not a valid variable name.'
+            close_matches = get_close_matches(key, self.keys())
+            if close_matches:
+                msg += "\n       ".join(["\n\nDid you mean one of these?"]
+                                        + close_matches)
+            raise LookupError(msg)
 
     def __getattr__(self, attr):
         """Return a dictionary containing the variable names as keys and the
