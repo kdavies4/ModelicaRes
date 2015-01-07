@@ -1,8 +1,6 @@
 #!/usr/bin/python
 """This submodule contains a class and an associated wrapper to handle groups of
-Modelica_ results.
-
-.. _Modelica: http://www.modelica.org/
+model results.
 """
 __author__ = "Kevin Davies"
 __email__ = "kdavies4@gmail.com"
@@ -54,7 +52,7 @@ def compare_fnames(meth):
 
 class Res(object):
 
-    """Base class for a Modelica_ result
+    """Base class for a model result
     """
     # pylint: disable=I0011, E0213
 
@@ -68,7 +66,7 @@ class Res(object):
         return fname1 == fname2
 
     @compare_fnames
-    def _ne__(fname1, fname2):
+    def __ne__(fname1, fname2):
         """Return self != other.
         """
         return fname1 != fname2
@@ -121,7 +119,7 @@ class Res(object):
 
 class ResList(list):
 
-    """Base class for a list of Modelica_ results
+    """Base class for a list of model results
     """
 
     @cast_sametype
@@ -190,7 +188,7 @@ class ResList(list):
 
     @assert_sametype
     def extend(self, other):
-        """Extend the list by appending elements from an iterable of Modelica_
+        """Extend the list by appending elements from an iterable of model
         results (:class:`SimRes` or :class:`LinRes` instances, as applicable).
         """
         list.extend(self, other)

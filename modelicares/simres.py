@@ -640,7 +640,7 @@ class VarList(list):
         return getattr(variable, attr)
 
 
-class SimRes(Res):
+class SimRes(Res, VarDict):
 
     """Class to load, analyze, and plot results from a Modelica_ simulation
 
@@ -775,6 +775,103 @@ class SimRes(Res):
     .. _Python: http://www.python.org/
     .. _pandas DataFrame:
        http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
+
+
+
+
+getitem:
+Access a :class:`Variable` by name.
+
+        This method returns a :class:`Variable` instance, which has the
+        following methods to retrieve information about the variable:
+
+        - :meth:`~Variable.array` - Return an array of times and values for the
+          variable.
+
+        - :meth:`~Variable.FV` - Return the final value of the variable.
+
+        - :meth:`~Variable.IV` - Return the initial value of the variable.
+
+        - :meth:`~Variable.max` - Return the maximum value of the variable.
+
+        - :meth:`~Variable.mean` - Return the time-averaged value of the
+          variable.
+
+        - :meth:`~Variable.mean_rectified` - Return the time-averaged absolute
+          value of the variable.
+
+        - :meth:`~Variable.min` - Return the minimum value of the variable.
+
+        - :meth:`~Variable.RMS` - Return the time-averaged root mean square
+          value of the variable.
+
+        - :meth:`~Variable.RMS_AC` - Return the time-averaged AC-coupled root
+          mean square value of the variable.
+
+        - :meth:`~Variable.times` - Return the sample times of the variable.
+
+        - :meth:`~Variable.value` - Return the value of the variable if it is
+          a constant (otherwise, error).
+
+        - :meth:`~Variable.values` - Return the values of the variable.
+
+        and these properties:
+
+        - :attr:`description` - The Modelica_ variable's description string
+
+        - :attr:`unit` - The Modelica_ variable's *unit* attribute
+
+        - :attr:`displayUnit` - The Modelica_ variable's *displayUnit* attribute
+
+        - :attr:`is_constant` - *True*, if the variable does not change over
+          time
+
+        **Examples:**
+
+        .. code-block:: python
+
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+
+           >>> sim['L.v'].unit
+           'V'
+
+           >>> sim['L.v'].values(t=(10,25)) # doctest: +NORMALIZE_WHITESPACE
+           array([ 0.2108,  0.3046,  0.3904,  0.468 ], dtype=float32)
+
+
+
+contains
+   Return *True* if a variable is present in the simulation results.
+
+        **Arguments**:
+
+        - *name*: Name of variable
+
+        **Example**:
+
+        .. code-block:: python
+
+           >>> sim = SimRes('examples/ChuaCircuit.mat')
+
+           >>> # 'L.v' is a valid variable name:
+           >>> 'L.v' in sim
+           True
+           >>> # but 'x' is not:
+           >>> 'x' in sim
+           False
+
+
+        len
+Return the number of variables loaded from the simulation.
+
+        This includes the time variable.
+
+        **Example:**
+
+        >>> sim = SimRes('examples/ChuaCircuit.mat')
+        >>> print("There are %i variables in the %s simulation." %
+        ...       (len(sim), sim.fbase))
+        There are 62 variables in the ChuaCircuit simulation.
     """
 
     def __init__(self, fname='dsres.mat', constants_only=False, tool=None):
@@ -789,7 +886,7 @@ class SimRes(Res):
             # Read the file and store the variables.
             for tool, read in READERS[:-1]:
                 try:
-                    self._variables = read(fname, constants_only)
+                    variables = read(fname, constants_only)
                 except IOError:
                     raise
                 except Exception as exception:
@@ -807,7 +904,8 @@ class SimRes(Res):
                 raise LookupError('"%s" is not one of the available tools '
                                   '("%s").' % (tool,
                                                '", "'.join(list(readerdict))))
-        self._variables = read(fname, constants_only)
+        variables = read(fname, constants_only)
+        self.update(variables)
 
         # Remember the tool and filename.
         self.tool = tool
@@ -994,7 +1092,7 @@ class SimRes(Res):
            >>> sorted(sim.names) # doctest: +ELLIPSIS
            ['C1.C', 'C1.der(v)', 'C1.i', 'C1.n.i', ..., 'Time']
         """
-        return sorted(self._variables)
+        return sorted(self)
 
     def find(self, pattern=None, re=False, constants_only=False):
         r"""Find variable names that match a pattern.
@@ -1081,7 +1179,7 @@ class SimRes(Res):
            ...       (sim.n_constants, sim.fbase))
            There are 23 constants in the ChuaCircuit simulation.
         """
-        return sum(self._variables.is_constant)
+        return sum(self.is_constant)
 
     def plot(self, ynames1=[], ylabel1=None, f1={}, legends1=[],
              leg1_kwargs={'loc': 'best'}, ax1=None,
@@ -1545,36 +1643,14 @@ class SimRes(Res):
             nested) list of variable names.
             """
             if isinstance(names, string_types):
-                return self._variables[names]
+                return self[names]
             else:
                 return [entries(name) for name in names]  # Recursion
 
         if isinstance(names, string_types):
-            return self._variables[names]
+            return self[names]
         else:
             return VarList(entries(names))
-
-    def __contains__(self, name):
-        """Return *True* if a variable is present in the simulation results.
-
-        **Arguments**:
-
-        - *name*: Name of variable
-
-        **Example**:
-
-        .. code-block:: python
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-
-           >>> # 'L.v' is a valid variable name:
-           >>> 'L.v' in sim
-           True
-           >>> # but 'x' is not:
-           >>> 'x' in sim
-           False
-        """
-        return name in self._variables
 
     def __getattr__(self, attr):
         """Return a dictionary containing the variable names as keys and the
@@ -1584,96 +1660,14 @@ class SimRes(Res):
         The result of the call is a new dictionary containing the variable names
         as keys and the return values as the values.
         """
-        values = (getattr(value, attr) for value in self._variables.values())
+        values = (getattr(value, attr) for value in self.values())
         try:
-            return util.CallDict(zip(self._variables.keys(), values))
+            return util.CallDict(zip(self.keys(), values))
         except ValueError:
             if attr == 'value' and len(self) <> self.n_constants:
                 raise ValueError("The variables aren't all constants.  "
                                  "Use values() instead of value.")
             raise
-
-    def __getitem__(self, name):
-        """Access a :class:`Variable` by name.
-
-        This method returns a :class:`Variable` instance, which has the
-        following methods to retrieve information about the variable:
-
-        - :meth:`~Variable.array` - Return an array of times and values for the
-          variable.
-
-        - :meth:`~Variable.FV` - Return the final value of the variable.
-
-        - :meth:`~Variable.IV` - Return the initial value of the variable.
-
-        - :meth:`~Variable.max` - Return the maximum value of the variable.
-
-        - :meth:`~Variable.mean` - Return the time-averaged value of the
-          variable.
-
-        - :meth:`~Variable.mean_rectified` - Return the time-averaged absolute
-          value of the variable.
-
-        - :meth:`~Variable.min` - Return the minimum value of the variable.
-
-        - :meth:`~Variable.RMS` - Return the time-averaged root mean square
-          value of the variable.
-
-        - :meth:`~Variable.RMS_AC` - Return the time-averaged AC-coupled root
-          mean square value of the variable.
-
-        - :meth:`~Variable.times` - Return the sample times of the variable.
-
-        - :meth:`~Variable.value` - Return the value of the variable if it is
-          a constant (otherwise, error).
-
-        - :meth:`~Variable.values` - Return the values of the variable.
-
-        and these properties:
-
-        - :attr:`description` - The Modelica_ variable's description string
-
-        - :attr:`unit` - The Modelica_ variable's *unit* attribute
-
-        - :attr:`displayUnit` - The Modelica_ variable's *displayUnit* attribute
-
-        - :attr:`is_constant` - *True*, if the variable does not change over
-          time
-
-        **Examples:**
-
-        .. code-block:: python
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-
-           >>> sim['L.v'].unit
-           'V'
-
-           >>> sim['L.v'].values(t=(10,25)) # doctest: +NORMALIZE_WHITESPACE
-           array([ 0.2108,  0.3046,  0.3904,  0.468 ], dtype=float32)
-        """
-        try:
-            return self._variables[name]
-        except TypeError:
-            if isinstance(name, list):
-                raise TypeError("To access a list of variables, use the call "
-                                "method (parentheses instead of brackets).")
-            else:
-                raise
-
-    def __len__(self):
-        """Return the number of variables loaded from the simulation.
-
-        This includes the time variable.
-
-        **Example:**
-
-        >>> sim = SimRes('examples/ChuaCircuit.mat')
-        >>> print("There are %i variables in the %s simulation." %
-        ...       (len(sim), sim.fbase))
-        There are 62 variables in the ChuaCircuit simulation.
-        """
-        return len(self._variables)
 
     def __str__(self):
         """Return an informal description of the :class:`SimRes` instance.
@@ -2444,8 +2438,7 @@ class SimResSequence(SimRes):
                             first.dimension,
                             first.displayUnit,
                             first.description)
-        self._variables = VarDict({name: get_variable(name)
-                                   for name in sims.names})
+        self.update({name: get_variable(name) for name in sims.names})
 
         # Set the other attributes.
         sim0 = sims[0]
