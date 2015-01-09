@@ -611,7 +611,7 @@ class LinResList(ResList):
 
     **Properties:**
 
-    - :attr:`basedir` - Highest common directory that the result files share
+    - :attr:`dirname` - Highest common directory that the result files share
 
     - Also, the properties of :class:`LinRes` (:attr:`basename`,
       :attr:`dirname`, :attr:`fname`, :attr:`sys`, and :attr:`tool`) can be
@@ -748,11 +748,11 @@ class LinResList(ResList):
             return ("List of linearization results (LinRes instance) from\n"
                     + self[0].fname)
         else:
-            basedir = self.basedir
+            dirname = self.dirname
             string = ("List of linearization results (LinRes instances) from "
                       "the following files")
             string += ("\nin the %s directory:\n   "
-                       % basedir if basedir else ":\n   ")
+                       % dirname if dirname else ":\n   ")
             string += "\n   ".join(self.fnames)
             return string
 
@@ -761,7 +761,7 @@ class LinResList(ResList):
 
         If *labels* is *None*, then no label will be used.  If it is an empty
         string (''), then the filenames will be used (resolved to the
-        *basedir*).
+        *dirname*).
         """
         if labels is None:
             try:

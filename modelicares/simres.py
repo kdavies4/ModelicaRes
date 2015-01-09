@@ -58,7 +58,7 @@ from six import string_types
 
 from . import util
 from ._res import Res, ResList
-from .texunit import unit2tex, number_label # TODO missing! use natu
+from .texunit import unit2tex, number_label # TODO missing! Use natu.
 
 
 def _select(meth):
@@ -489,9 +489,8 @@ class Variable(namedtuple('Variable', ['samples', 'dimension', 'displayUnit',
         values = self.values()
         if np.array_equal(values[:-1], values[1:]):
             return values[0]
-        else:
-            raise ValueError("The variable is not a constant.  Use values() "
-                             "instead of value().")
+        raise ValueError("The variable is not a constant.  Use values() "
+                         "instead of value().")
 
     @_select
     def values(self):
@@ -664,17 +663,126 @@ class SimRes(Res, dict):
          By default (*None), the available functions are tried in order until
          one works (or none do).
 
-    **Methods using built-in Python operators and syntax:**
+    **Methods:**
 
-    - :meth:`__call__` (invoked as ``sim(names)``, where ``names`` is a list of
-      variable names) - Access a list of variables by their names.
-
-         The return value has attributes to retrieve information about all of
-         the variables in the list at once (values, units, etc.).
+    A :class:`SimRes` instance is a special dictionary with variable names as
+    keys and corresponding :class:`Variable` instances as values.  The following
+    built-in dictionary methods may be used:
 
     - :meth:`__contains__` (invoked as ``name in sim``, where ``name`` is a
       string containing the name of a variable) - Return *True* if a variable is
       present in the simulation results.
+
+         **Example:**
+
+         .. code-block:: python
+
+            >>> sim = SimRes('examples/ChuaCircuit.mat')
+
+            >>> # 'L.v' is a valid variable name:
+            >>> 'L.v' in sim
+            True
+            >>> # but 'x' is not:
+            >>> 'x' in sim
+            False
+
+    - :meth:`__getitem__` (invoked as ``sim[name]``, where ``name`` is a string
+      containing the name of a variable) - Access a :class:`Variable` by name.
+
+         This method returns a :class:`Variable` instance, which has the
+         following properties:
+
+         - :attr:`~Variable.description` - The Modelica_ variable's description
+           string
+
+         - :attr:`~Variable.displayUnit` - The Modelica_ variable's
+           *displayUnit* attribute
+
+         - :meth:`~Variable.FV` - Return the final value of the variable.
+
+         - :meth:`~Variable.IV` - Return the initial value of the variable.
+
+         - :attr:`~Variable.is_constant` - *True*, if the variable does not
+           change over time
+
+         - :meth:`~Variable.max` - Return the maximum value of the variable.
+
+         - :meth:`~Variable.mean` - Return the time-averaged value of the
+           variable.
+
+         - :meth:`~Variable.mean_rectified` - Return the time-averaged absolute
+           value of the variable.
+
+         - :meth:`~Variable.min` - Return the minimum value of the variable.
+
+         - :meth:`~Variable.RMS` - Return the time-averaged root mean square
+           value of the variable.
+
+         - :meth:`~Variable.RMS_AC` - Return the time-averaged AC-coupled root
+           mean square value of the variable.
+
+         - :attr:`~Variable.unit` - The Modelica_ variable's *unit* attribute
+
+         - :meth:`~Variable.value` - Return the value of the variable if it is
+           a constant (otherwise, error).
+
+         The following methods are also available:
+
+         - :meth:`~Variable.array` - Return an array of times and values for the
+           variable.
+
+         - :meth:`~Variable.times` - Return the sample times of the variable.
+
+         - :meth:`~Variable.values` - Return the values of the variable.
+
+         **Examples:**
+
+         .. code-block:: python
+
+            >>> sim = SimRes('examples/ChuaCircuit.mat')
+
+            >>> sim['L.v'].unit
+            'V'
+
+            >>> sim['L.v'].values(t=(10, 25)) # doctest: +NORMALIZE_WHITESPACE
+            array([ 0.2108,  0.3046,  0.3904,  0.468 ], dtype=float32)
+
+    - :meth:`__iter__` (used via ``list(sim)``, ``sorted(sim)``,
+      ``for name in sim``, etc.) - Return an iterable of the names of the
+      variables loaded from the simulation.
+
+    - :meth:`__len__` (invoked as ``len(sim)``) - Return the number of variables
+      loaded from the simulation.
+
+         This includes the time variable.
+
+         **Example:**
+
+         >>> sim = SimRes('examples/ChuaCircuit.mat')
+         >>> print("There are %i variables in the %s simulation." %
+         ...       (len(sim), sim.fbase))
+         There are 62 variables in the ChuaCircuit simulation.
+
+    - :meth:`items` (invoked as ``sim.items()`): Return a list (Python 2.x) or
+      iterable view (Python 3.x) of tuples of variable names and corresponding
+      :class:`Variable` instances.
+
+    - :meth:`keys` (invoked as ``sim.keys()`): Return a list (Python 2.x) or
+      iterable view (Python 3.x) of variable names.
+
+    - :meth:`values` (invoked as ``sim.values()`): Return a list (Python 2.x) or
+      iterable view (Python 3.x) of :class:`Variable` instances corresponding to
+      the keys.
+
+    These methods may also be used:
+
+    - :meth:`__call__` (invoked as ``sim(names)``, where ``names`` is a list of
+      variable names) - Access a list of variables by their names.
+
+         Like :meth:`__getitem__` above, the return value has attributes and
+         methods to retrieve information
+         about all of the variables in the list at once (values, times, IV,
+         etc.).
 
     - :meth:`__getattr__` (invoked as ``sim.attribute``, where ``attribute`` is
       the literal name of an attribute) - Return a dictionary containing the
@@ -684,15 +792,6 @@ class SimRes(Res, dict):
          If the attribute is a method, it is possible to call the dictionary.
          The result of the call is a new dictionary containing the variable
          names as keys and the return values as the values.
-
-    - :meth:`__getitem__` (invoked as ``sim[name]``, where ``name`` is a string
-      containing the name of a variable) - Access a :class:`Variable` by name.
-
-         The return value has attributes to retrieve information about the
-         variable (values, unit, etc.).
-
-    - :meth:`__len__` (invoked as ``len(sim)``) - Return the number of variables
-      loaded from the simulation.
 
     **Other methods:**
 
@@ -775,103 +874,6 @@ class SimRes(Res, dict):
     .. _Python: http://www.python.org/
     .. _pandas DataFrame:
        http://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame
-
-
-
-
-getitem:
-Access a :class:`Variable` by name.
-
-        This method returns a :class:`Variable` instance, which has the
-        following methods to retrieve information about the variable:
-
-        - :meth:`~Variable.array` - Return an array of times and values for the
-          variable.
-
-        - :meth:`~Variable.FV` - Return the final value of the variable.
-
-        - :meth:`~Variable.IV` - Return the initial value of the variable.
-
-        - :meth:`~Variable.max` - Return the maximum value of the variable.
-
-        - :meth:`~Variable.mean` - Return the time-averaged value of the
-          variable.
-
-        - :meth:`~Variable.mean_rectified` - Return the time-averaged absolute
-          value of the variable.
-
-        - :meth:`~Variable.min` - Return the minimum value of the variable.
-
-        - :meth:`~Variable.RMS` - Return the time-averaged root mean square
-          value of the variable.
-
-        - :meth:`~Variable.RMS_AC` - Return the time-averaged AC-coupled root
-          mean square value of the variable.
-
-        - :meth:`~Variable.times` - Return the sample times of the variable.
-
-        - :meth:`~Variable.value` - Return the value of the variable if it is
-          a constant (otherwise, error).
-
-        - :meth:`~Variable.values` - Return the values of the variable.
-
-        and these properties:
-
-        - :attr:`description` - The Modelica_ variable's description string
-
-        - :attr:`unit` - The Modelica_ variable's *unit* attribute
-
-        - :attr:`displayUnit` - The Modelica_ variable's *displayUnit* attribute
-
-        - :attr:`is_constant` - *True*, if the variable does not change over
-          time
-
-        **Examples:**
-
-        .. code-block:: python
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-
-           >>> sim['L.v'].unit
-           'V'
-
-           >>> sim['L.v'].values(t=(10,25)) # doctest: +NORMALIZE_WHITESPACE
-           array([ 0.2108,  0.3046,  0.3904,  0.468 ], dtype=float32)
-
-
-
-contains
-   Return *True* if a variable is present in the simulation results.
-
-        **Arguments**:
-
-        - *name*: Name of variable
-
-        **Example**:
-
-        .. code-block:: python
-
-           >>> sim = SimRes('examples/ChuaCircuit.mat')
-
-           >>> # 'L.v' is a valid variable name:
-           >>> 'L.v' in sim
-           True
-           >>> # but 'x' is not:
-           >>> 'x' in sim
-           False
-
-
-len
-        Return the number of variables loaded from the simulation.
-
-        This includes the time variable.
-
-        **Example:**
-
-        >>> sim = SimRes('examples/ChuaCircuit.mat')
-        >>> print("There are %i variables in the %s simulation." %
-        ...       (len(sim), sim.fbase))
-        There are 62 variables in the ChuaCircuit simulation.
     """
 
     def __init__(self, fname='dsres.mat', constants_only=False, tool=None):
@@ -1644,8 +1646,7 @@ len
             """
             if isinstance(names, string_types):
                 return self[names]
-            else:
-                return [entries(name) for name in names]  # Recursion
+            return [entries(name) for name in names]  # Recursion
 
         assert not isinstance(names, string_types), (
             "Use square brackets (__getitem__ method) to retrieve a single "
@@ -1721,7 +1722,9 @@ len
         return self._get(names, lambda name: self._traj[name].unit)
 
     def _set_constants(self, record=None):
-        """Establish the values of the base constants.
+        """TODO use natu, integrate this.
+
+        Establish the values of the base constants.
 
         **Parameters:**
 
@@ -1763,8 +1766,6 @@ len
             k_Aprime = self.value(record + 'k_Aprime')
         self.U.update(R_inf=R_inf, c=c, k_J=k_J, R_K=R_K, k_F=k_F, R=R,
                       k_Aprime=k_Aprime)
-
-        # **Add others or link to natu.
 
 
 class SimResList(ResList):
@@ -1869,7 +1870,7 @@ class SimResList(ResList):
 
     **Properties:**
 
-    - :attr:`basedir` - Highest common directory that the result files share
+    - :attr:`dirname` - Highest common directory that the result files share
 
     - :attr:`unique_names` - Return a dictionary of variable names that are not
       in all of the simulations.
@@ -2124,7 +2125,7 @@ class SimResList(ResList):
         """
         unique_IVs = {}
         for name in self.find(constants_only=constants_only):
-            IVs = self[name].IV()
+            IVs = self[name].IV
             if max(IVs) - min(IVs) > tolerance:
                 unique_IVs[name] = IVs
         return unique_IVs
@@ -2142,7 +2143,7 @@ class SimResList(ResList):
         >>> sims.names # doctest: +ELLIPSIS
         ['C1.C', 'C1.der(v)', 'C1.i', 'C1.n.i', ..., 'Time']
         """
-        names = set.intersection(*[set(sim.names) for sim in self])
+        names = set.intersection(*[set(sim) for sim in self])
         return sorted(names)
 
     def __contains__(self, item):
@@ -2170,10 +2171,9 @@ class SimResList(ResList):
         """
         if isinstance(item, string_types):
             return all(item in sim for sim in self)
-        else:
-            return list.__contains__(self, item)
+        return list.__contains__(self, item)
 
-    def __getattr__(self, attr):
+    def __getatt2r__(self, attr):
         """Return a dictionary containing the common variable names as keys.
         The values are lists of the requested attribute of the common variables
         across the simulations in the list of simulations.
@@ -2226,9 +2226,8 @@ class SimResList(ResList):
         elif isinstance(i, string_types):
             # Return a list containing the variable from each simulation.
             return VarList([sim[i] for sim in self])
-        else:
-            # Return a single simulation (SimRes instance).
-            return list.__getitem__(self, i)
+        # Return a single simulation (SimRes instance).
+        return list.__getitem__(self, i)
 
     def __str__(self):
         """Return str(self).
@@ -2258,14 +2257,13 @@ class SimResList(ResList):
         elif len(self) == 1:
             return ("List of simulation results (SimRes instance) from\n"
                     + self[0].fname)
-        else:
-            basedir = self.basedir
-            string = ("List of simulation results (SimRes instances) from the "
-                      "following files")
-            string += ("\nin the %s directory:\n   "
-                       % basedir if basedir else ":\n   ")
-            string += "\n   ".join(self.fnames)
-            return string
+        dirname = self.dirname
+        string = ("List of simulation results (SimRes instances) from the "
+                  "following files")
+        string += ("\nin the %s directory:\n   "
+                   % dirname if dirname else ":\n   ")
+        string += "\n   ".join(self.fnames)
+        return string
 
     def plot(self, *args, **kwargs):
         r"""Plot data from selected variables over all of the simulations in 2D
