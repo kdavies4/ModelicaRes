@@ -174,7 +174,7 @@ class ResList(list):
     def dirname(self):
         """Highest common directory that the result files share
         """
-        fnames = [fname.rpartition(os.sep)[0] for fname in self.fname]
+        fnames = [item.fname.rpartition(os.sep)[0] for item in self]
         return os.path.commonprefix(fnames).rstrip(os.sep)
 
     @property

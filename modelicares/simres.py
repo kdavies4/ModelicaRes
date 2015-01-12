@@ -2173,7 +2173,7 @@ class SimResList(ResList):
             return all(item in sim for sim in self)
         return list.__contains__(self, item)
 
-    def __getatt2r__(self, attr):
+    def __getattr__(self, attr):
         """Return a dictionary containing the common variable names as keys.
         The values are lists of the requested attribute of the common variables
         across the simulations in the list of simulations.

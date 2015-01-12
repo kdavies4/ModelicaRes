@@ -205,8 +205,8 @@ def read(fname, constants_only=False):
     """
 
     # Load the file.
-    variable_names=['Aclass', 'name', 'names', 'description', 'dataInfo',
-                    'data', 'data_1'] if constants_only else None
+    variable_names = ['Aclass', 'name', 'names', 'description', 'dataInfo',
+                      'data', 'data_1'] if constants_only else None
     try:
         data = loadmat(fname, variable_names=variable_names,
                        chars_as_strings=False, appendmat=False)
