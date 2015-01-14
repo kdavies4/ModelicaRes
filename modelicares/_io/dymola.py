@@ -63,6 +63,7 @@ from itertools import count
 from natu import units as U
 from natu.exponents import Exponents
 from natu.units import s as second
+from natu.core import dimension, value
 from scipy.io import loadmat
 from scipy.io.matlab.mio_utils import chars_to_strings
 from six import PY2
@@ -285,12 +286,12 @@ def readsim(fname, constants_only=False):
         """Parse the a variable description string into unit, displayUnit, and
         description.
 
-        Convert the unit into a :class:`natu.core.Unit`.  Convert the display 
-        unit into an :class:`natu.exponents.Exponents` instance.  If the display 
-        unit is not specified, use the unit instead. 
+        Convert the unit into a :class:`natu.core.Unit`.  Convert the display
+        unit into an :class:`natu.exponents.Exponents` instance.  If the display
+        unit is not specified, use the unit instead.
         """
         description = description.rstrip(']')
-        displayUnit = ''
+        displayUnit = None
         try:
             description, unit = description.rsplit('[', 1)
         except ValueError:
@@ -300,7 +301,7 @@ def readsim(fname, constants_only=False):
             try:
                 unit, displayUnit = unit.rsplit('|', 1)
             except ValueError:
-                pass  # (displayUnit = '')
+                pass  # (displayUnit = None)
 
         display_unit = displayUnit if displayUnit else unit
         unit = U._units(**Exponents(unit))
@@ -334,46 +335,46 @@ def readsim(fname, constants_only=False):
         # Extract the trajectories.
         trajectories = []
         for i in count(1):
-            try: 
+            try:
                 trajectories.append(data['data_%i' % i])
             except KeyError:
                 break
-            if second._value <> 1.0:
+            if value(second) <> 1.0:
                 # Apply the value of the unit second.
-                trajectories[-1][:, 0] *= second._value
+                trajectories[-1][:, 0] *= value(second)
 
         # Create the variables.
         variables = []
-        for description, [data_set, sign_col] \
-            in zip(data['description'], data['dataInfo'][:, 0:2]):
+        for description, [data_set, sign_col] in zip(data['description'],
+                                                     data['dataInfo'][:, 0:2]):
             unit, display_unit, description = parse_description(description)
-            dimension = unit.dimension
             negated = sign_col < 0
             traj = trajectories[data_set - 1]
-            signed_values =  traj[:, (-sign_col if negated else sign_col) - 1]                
+            signed_values =  traj[:, (-sign_col if negated else sign_col) - 1]
             times = traj[:, 0]
             try:
-                if unit._value <> 1.0:
-                    signed_values *= unit._value
+                if value(unit) <> 1.0:
+                    signed_values *= value(unit)
             except AttributeError:
-                # Must be a LambdaUnit
+                # The unit is a LambdaUnit.
                 if negated:
                     signed_values = -signed_values
                     negated = False
                 get_value = np.vectorize(lambda n: unit._toquantity(n)._value)
                 signed_values = get_value(signed_values)
-            variables.append(Variable(Samples(times, signed_values, negated), 
-                                      dimension, display_unit, description))
+            variables.append(Variable(Samples(times, signed_values, negated),
+                                      dimension(unit), display_unit,
+                                      description))
         variables = dict(zip(names, variables))
 
         # Time is from the last data set.
         variables['Time'] = Variable(Samples(times, times, False),
-                                     second.dimension, 's', 'Time')
+                                     dimension(second), 's', 'Time')
         return variables
 
     elif version == '1.0':
         traj = data['data']
-        times = traj[:, 0]*s._value
+        times = traj[:, 0]*value(second)
         return {name:
                 Variable(Samples(times, traj[:, i], False), None, None, '')
                 for i, name in enumerate(data['names'])}
@@ -386,30 +387,6 @@ def readsim(fname, constants_only=False):
        #            'environment.baseUnits.k_J', 'environment.baseUnits.R_K',
        #            'environment.baseUnits.k_F', 'environment.baseUnits.R',
        #            'environment.baseUnits.k_Aprime']))
-
-"""TODO
-Variable(Samples(times, signed_values, negated), dimension, display_unit,
-         description)
-
-All in one:
-No dup of dimensions and units
-If quantities disabled, then dimensions and units not tracked, but can still plot in various units
-Quicker to retrieve
-If quantities enabled and units unknown, then use floats for values, but can''t do unit conversion
-display unit must be the same for all
-
-Separate:
-Quicker to load (prob only slightly)
-If quantities disabled, then retrieved values have no dimensions or units, but can assume SI units and proper dimensions to do unit conversion
-
-variable extends quantity? No
-- Good: Variable is a Quantity
-- Good: Both have dimension and display unit
-- Good: _value property is the raw data with units included
-- Good: values, FV, mean, etc. methods return quantities
-- *Bad: variable has times, but quantity doesn't
-- *Bad: quantity can be used as a mathematical entity, but variable can't
-"""
 
 def readlin(fname):
     r"""Load Dymola\ :sup:`®`-formatted linearization results.

@@ -41,7 +41,6 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 # pylint: disable=I0011, C0103, E0611, E1101, R0801, R0921, W0102
 
 import os
-import natu.units as U
 import numpy as np
 
 from collections import namedtuple
@@ -51,7 +50,8 @@ from itertools import cycle
 from matplotlib import rcParams
 from matplotlib.cbook import iterable
 from matplotlib.pyplot import figlegend
-from natu.core import Quantity
+from natu import units as U
+from natu import core
 from natu.exponents import Exponents
 from natu.util import flatten_list, multiglob
 from pandas import DataFrame
@@ -65,7 +65,20 @@ from .texunit import unit2tex, number_label # TODO missing! Use natu.
 
 # Use Modelica formatting for dimensions and units.
 from natu import config
-config.default_format = 'M' 
+config.default_format = 'M'
+
+def _interp1d(x, y, *args, **kwargs):
+    """1D interpolation for quantities
+    """
+    interp = interp1d(core.value(x), y, *args, **kwargs)
+    #x_dimension = core.dimension(x)
+
+    def new_interpolator(xnew):
+        #assert core.dimension(xnew) == x_dimension, (
+        #    "The abscissa doesn't have the correct dimension.")
+        return core.merge(interp(core.value(xnew)), y)
+
+    return new_interpolator
 
 def _select(meth):
     """Decorate a method to use time-based indexing to select values.
@@ -79,15 +92,17 @@ def _select(meth):
 
              - Default or *None*: All samples are included.
 
-             - *float*: Interpolate to a single time in seconds.
+             - :class:`float`: Interpolate to a single time.
 
-             - *list*: Interpolate to a list of times in seconds.
+             - :class:`list` or :class:`numpy.array`: Interpolate to a sequence
+               of times (returned as a :class:`list` or :class:`numpy.array`,
+               respectively).
 
-             - *tuple*: Extract samples from a range of times in seconds.  The
-               structure is similar to the arguments of Python's slice_
-               function, except that the start and stop values can be floating
-               point numbers. The samples within and up to the limits are
-               included.  Interpolation is not used.
+             - *tuple*: Extract samples from a range of times.  The structure is
+               similar to the arguments of Python's slice_ function, except that
+               the start and stop values can be floating point numbers.  The
+               samples within and up to the limits are included.  There is no
+               interpolation.
 
                   - (*stop*,): All samples up to *stop* are included.
 
@@ -99,6 +114,10 @@ def _select(meth):
 
                   - (*start*, *stop*, *skip*): Every *skip*th sample between
                     *start* and *stop* is included.
+
+             If a unit of time is not used to define the time(s), then the
+             time(s) are interpreted using the unit system used by :mod:`natu`
+             (SI by default).
         """
         def get_slice(t):
             """Return a slice that indexes the variable.
@@ -136,8 +155,6 @@ def _select(meth):
             i2 = None if t2 is None else util.get_indices(times, t2)[0] + 1
             return slice(i1, i2, skip)
 
-# TODO: fix the handling of units below.
-
         if t is None:
             # Return all values.
             return meth(self)
@@ -146,18 +163,16 @@ def _select(meth):
             # of samples to skip.
             return meth(self)[get_slice(t)]
         else:
-            # Interpolate at single time or list of times.
-            meth_at_ = interp1d(self.times(), meth(self))
+            # Interpolate at a single time or list of times.
+            meth_at_ = _interp1d(self.times(), meth(self))
             # For some reason, this wraps single values as arrays, so need to
             # cast back to float.
             try:
                 # Assume t is a list of times.
-                return list(meth_at_(t))
-            except TypeError:
+                return type(t)(map(meth_at_, t))
+            except (AttributeError, TypeError):
                 # t is a single time.
-                # Cast the singleton array as a float.
-                return Quantity(float(meth_at_(t)), self._dimension, 
-                                self._display_unit) 
+                return meth_at_(t)
 
     wrapped.__doc__ = meth.__doc__ + wrapped.__doc__
     return wrapped
@@ -170,7 +185,7 @@ Samples = namedtuple('Samples', ['times', 'values'])
 
 class Variable(object):
 
-    """Class to represent a variable in a simulation, with methods to retrieve 
+    """Class to represent a variable in a simulation, with methods to retrieve
     and perform calculations on its values
 
     This class is usually not instantiated directly by the user, but instances
@@ -178,23 +193,23 @@ class Variable(object):
     (:class:`SimRes` instance).
 
     **Properties:**
-    
+
     - *dimension* - The physical dimensionality of the variable
 
          The factors and exponents are formatted as for Modelica_ unit strings.
          This property is read-only.
 
     - *display_unit* - Display unit for the variable's values
-   
-         This property is settable using a Modelica_-formatted unit string 
-         (e.g., 'm/s2').  SI units and prefixes are recognized, as well 
-         `other units defined in natu 
-         <http://kdavies4.github.io/natu/definitions.html>`_.  An error is 
-         raised if the physical dimension of the display unit does not match 
+
+         This property is settable using a Modelica_-formatted unit string
+         (e.g., 'm/s2').  SI units and prefixes are recognized, as well
+         `other units defined in natu
+         <http://kdavies4.github.io/natu/definitions.html>`_.  An error is
+         raised if the physical dimension of the display unit does not match
          *dimension*
 
     - *description* - String describing the variable
-   
+
          This property is settable.
 
     If *dimension* and *display_unit* are unknown, use *None*.
@@ -220,7 +235,7 @@ class Variable(object):
 
        >>> assert T.description == 'Temperature of HeatPort'
 
-    Besides the properties above, there are methods to retrieve times, values, 
+    Besides the properties above, there are methods to retrieve times, values,
     and functions of the times and values (:meth:`array`, :meth:`FV`,
     :meth:`IV`, :meth:`max`, :meth:`mean`, :meth:`mean_rectified`, :meth:`min`,
     :meth:`RMS`, :meth:`RMS_AC`, :meth:`times`, :meth:`value`, :meth:`values`).
@@ -247,7 +262,7 @@ class Variable(object):
     @property
     def display_unit(self):
         """Display unit"""
-        return format(self._display_unit, 'M')
+        return self._display_unit
 
     @display_unit.setter
     def display_unit(self, unit):
@@ -525,7 +540,7 @@ class Variable(object):
         >>> C1_v.times(t=(0, 20))
         array([  0.,   5.,  10.,  15.,  20.], dtype=float32)
         """
-        return self._samples.times
+        return core.Quantity(self._samples.times, U.s.dimension, 's')
 
     @property
     def value(self):
@@ -600,8 +615,8 @@ class Variable(object):
         >>> C1_v.values(t=[2.5, 17.5])
         [3.941368936561048, 3.7467045785160735]
         """
-        return Quantity(self._samples.values, self._dimension, 
-                        self._display_unit)
+        return core.Quantity(self._samples.values, self._dimension,
+                             self._display_unit)
 
 
 # List of file-loading functions for SimRes
@@ -760,7 +775,7 @@ class SimRes(Res, dict):
            *displayUnit* attribute as an :class:`natu.exponents.Exponents`
            instance
 
-               The Modelica_ variable's *unit* attribute is used if 
+               The Modelica_ variable's *unit* attribute is used if
                *displayUnit* is not specified.
 
          - :meth:`~Variable.FV` - Return the final value of the variable.
@@ -2484,8 +2499,8 @@ class SimResSequence(SimRes):
     all of the filenames relative to the highest directory that the simulations
     share.
 
-    The :attr:`description` and :attr:`display_unit` of each variable is taken 
-    from the first simulation.  It is assumed but not checked that these are the 
+    The :attr:`description` and :attr:`display_unit` of each variable is taken
+    from the first simulation.  It is assumed but not checked that these are the
     same for all of the simulations.
     """
 

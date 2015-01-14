@@ -53,11 +53,12 @@ extensions = ['sphinx.ext.autodoc',
 # Mappings to other packages
 # TODO: Fix numpy link.
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/', None),
-    'matplotlib': ('http://matplotlib.org/1.3.1', None),
-    'pandas': ('http://pandas.pydata.org/pandas-docs/stable/', None),
-    'numpy': ('http://docs.scipy.org/doc/numpy/', None),
     'control': ('http://python-control.sourceforge.net/manual/', None),
+    'matplotlib': ('http://matplotlib.org/1.3.1', None),
+    'natu': ('http://kdavies4.github.io/natu/', None),
+    'numpy': ('http://docs.scipy.org/doc/numpy/', None),
+    'pandas': ('http://pandas.pydata.org/pandas-docs/stable/', None),
+    'python': ('https://docs.python.org/', None),
 }
 
 # Add any paths that contain templates here, relative to this directory.
