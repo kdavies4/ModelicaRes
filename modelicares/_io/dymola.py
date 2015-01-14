@@ -60,7 +60,9 @@ import re
 from collections import namedtuple
 from control.matlab import ss
 from itertools import count
-# TODO from natu import units as U
+from natu import units as U
+from natu.exponents import Exponents
+from natu.units import s as second
 from scipy.io import loadmat
 from scipy.io.matlab.mio_utils import chars_to_strings
 from six import PY2
@@ -87,6 +89,7 @@ class Samples(namedtuple('Samples', ['times', 'signed_values', 'negated'])):
        """The values of the variable
        """
        return -self.signed_values if self.negated else self.signed_values
+
 
 if PY2:
     # For most strings (those besides the description), Unicode isn't
@@ -253,7 +256,6 @@ def read(fname, constants_only=False):
 
     return data, Aclass
 
-
 def readsim(fname, constants_only=False):
     r"""Load Dymola\ :sup:`®`-formatted simulation results.
 
@@ -279,9 +281,13 @@ def readsim(fname, constants_only=False):
     """
     # This does the task of mfiles/traj/tload.m from the Dymola installation.
 
-    def parse(description):
-        """Parse the variable description string into description, unit, and
-        displayUnit.
+    def parse_description(description):
+        """Parse the a variable description string into unit, displayUnit, and
+        description.
+
+        Convert the unit into a :class:`natu.core.Unit`.  Convert the display 
+        unit into an :class:`natu.exponents.Exponents` instance.  If the display 
+        unit is not specified, use the unit instead. 
         """
         description = description.rstrip(']')
         displayUnit = ''
@@ -290,15 +296,19 @@ def readsim(fname, constants_only=False):
         except ValueError:
             unit = ''
         else:
+            unit = unit.replace('.', '*').replace('Ohm', 'ohm')
             try:
                 unit, displayUnit = unit.rsplit('|', 1)
             except ValueError:
                 pass  # (displayUnit = '')
+
+        display_unit = displayUnit if displayUnit else unit
+        unit = U._units(**Exponents(unit))
         description = description.rstrip()
         if PY2:
             description = description.decode('utf-8')
 
-        return description, unit, displayUnit
+        return unit, display_unit, description
 
     # Load the file.
     data, Aclass = read(fname, constants_only)
@@ -313,64 +323,35 @@ def readsim(fname, constants_only=False):
     # Process the name, description, parts of dataInfo, and data_i variables.
     # This section has been optimized for speed.  All time and value data
     # remains linked to the memory location where it is loaded by scipy.  The
-    # negated variable is carried through so that copies are not necessary.  If
+    # negated variable is carried through so that copies aren't necessary.  If
     # changes are made to this code, be sure to compare the performance (e.g.,
     # using %timeit in IPython).
     version = Aclass[1]
     if version == '1.1':
         names = data['name']
-        descriptions = data['description']
-        dataInfo = data['dataInfo']
-        variables = {}
+        units_included = 'environment.baseUnits.c' in names
+
+        # Extract the trajectories.
+        trajectories = []
         for i in count(1):
-            try:
-                traj = data['data_%i' % i]
+            try: 
+                trajectories.append(data['data_%i' % i])
             except KeyError:
-                break  # There are no more "data_i" variables.
-            else:
-                try:
-                    #times = U.s*traj[:, 0]
-                    times = traj[:, 0]
-                except IndexError:
-                    continue # The data set is empty.
-                variables.update({names[j]:
-                                  Variable(Samples(times,
-                                                   traj[:, abs(sign_col) - 1],
-                                                   sign_col < 0),
-                                           *parse(descriptions[j]))
-                                  for j, [data_set, sign_col]
-                                  in enumerate(dataInfo[:, 0:2])
-                                  if data_set == i})
+                break
+            if second._value <> 1.0:
+                # Apply the value of the unit second.
+                trajectories[-1][:, 0] *= second._value
 
-        # Time is from the last data set.
-        #s = U.s
-#        variables['Time'] = Variable(Samples(times, times*s._value, False),
-#                                     s.dimension, s.display, 'Time')
-        variables['Time'] = Variable(Samples(times, times, False),
-                                     's', '', 'Time')
-        return variables
-
-    elif version == '1.0':
-        traj = data['data']
-        times = traj[:, 0]
-        return {name:
-                Variable(Samples(times, traj[:, i], False), None, None, '')
-                for i, name in enumerate(data['names'])}
-
-    raise AssertionError("The version of the Dymola-formatted result file (%s) "
-                         "isn't supported.")
-
-# times are in seconds.
-# values include the values of the units.
-
-    # Factor in the unit's values and record the dimension instead of unit
-    if False:
-    #if not units_included:
-
-        if unit:
-            unit_dict = CompoundUnit(unit.replace('.', '*'))
-            unit = U._units(**unit_dict)
+        # Create the variables.
+        variables = []
+        for description, [data_set, sign_col] \
+            in zip(data['description'], data['dataInfo'][:, 0:2]):
+            unit, display_unit, description = parse_description(description)
             dimension = unit.dimension
+            negated = sign_col < 0
+            traj = trajectories[data_set - 1]
+            signed_values =  traj[:, (-sign_col if negated else sign_col) - 1]                
+            times = traj[:, 0]
             try:
                 if unit._value <> 1.0:
                     signed_values *= unit._value
@@ -379,34 +360,43 @@ def readsim(fname, constants_only=False):
                 if negated:
                     signed_values = -signed_values
                     negated = False
-                get_value = lambda n: unit._toquantity(n)._value
-                signed_values = np.array(map(get_value, signed_values))
+                get_value = np.vectorize(lambda n: unit._toquantity(n)._value)
+                signed_values = get_value(signed_values)
+            variables.append(Variable(Samples(times, signed_values, negated), 
+                                      dimension, display_unit, description))
+        variables = dict(zip(names, variables))
 
-            # Relink all other variables with same column and unit
+        # Time is from the last data set.
+        variables['Time'] = Variable(Samples(times, times, False),
+                                     second.dimension, 's', 'Time')
+        return variables
 
-            if displayUnit:
-                display_unit = CompoundUnit(displayUnit.replace('.', '*'))
-            else:
-                display_unit = unit_dict
-        else:
-            dimension = CompoundDimension()
+    elif version == '1.0':
+        traj = data['data']
+        times = traj[:, 0]*s._value
+        return {name:
+                Variable(Samples(times, traj[:, i], False), None, None, '')
+                for i, name in enumerate(data['names'])}
 
-"""
+    raise AssertionError("The version of the Dymola-formatted result file (%s) "
+                         "isn't supported.")
+
+       # TODO: assert these equal to natu:
+       #            'environment.baseUnits.R_inf', 'environment.baseUnits.c',
+       #            'environment.baseUnits.k_J', 'environment.baseUnits.R_K',
+       #            'environment.baseUnits.k_F', 'environment.baseUnits.R',
+       #            'environment.baseUnits.k_Aprime']))
+
+"""TODO
 Variable(Samples(times, signed_values, negated), dimension, display_unit,
          description)
-
-displayUnit -> display_unit
-display -> display_unit
-
-
- If
-
 
 All in one:
 No dup of dimensions and units
 If quantities disabled, then dimensions and units not tracked, but can still plot in various units
 Quicker to retrieve
 If quantities enabled and units unknown, then use floats for values, but can''t do unit conversion
+display unit must be the same for all
 
 Separate:
 Quicker to load (prob only slightly)
@@ -417,12 +407,9 @@ variable extends quantity? No
 - Good: Both have dimension and display unit
 - Good: _value property is the raw data with units included
 - Good: values, FV, mean, etc. methods return quantities
-- *Bad: variable has times, but quantity doesn''t
+- *Bad: variable has times, but quantity doesn't
 - *Bad: quantity can be used as a mathematical entity, but variable can't
 """
-
-
-
 
 def readlin(fname):
     r"""Load Dymola\ :sup:`®`-formatted linearization results.

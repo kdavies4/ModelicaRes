@@ -15,14 +15,13 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 # pylint: disable=I0011, E1101, E1121
 
 import wx
-import .util
 
 from collections import OrderedDict
 from matplotlib import rcParams
 from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 from matplotlib.figure import Figure
 from six import string_types
-
+from .util import tree
 
 class PreviewPanel(wx.Panel):
 
@@ -123,8 +122,8 @@ class Browser(wx.Frame):
         self.tree = wx.TreeCtrl(panel_left, 1, wx.DefaultPosition, (-1, -1),
                                 wx.TR_HIDE_ROOT | wx.TR_HAS_BUTTONS)
         names = sim.names
-        tree = util.tree(names, names, container=OrderedDict)
-        _build_tree(tree, self.tree.AddRoot(sim.fbase))
+        tr = util.tree(names, names, container=OrderedDict)
+        _build_tree(tr, self.tree.AddRoot(sim.fbase))
 
         # Bind events and finish.
         self.tree.Bind(wx.EVT_TREE_BEGIN_DRAG, self.OnDragInit)

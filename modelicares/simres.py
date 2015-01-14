@@ -41,6 +41,7 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 # pylint: disable=I0011, C0103, E0611, E1101, R0801, R0921, W0102
 
 import os
+import natu.units as U
 import numpy as np
 
 from collections import namedtuple
@@ -50,6 +51,8 @@ from itertools import cycle
 from matplotlib import rcParams
 from matplotlib.cbook import iterable
 from matplotlib.pyplot import figlegend
+from natu.core import Quantity
+from natu.exponents import Exponents
 from natu.util import flatten_list, multiglob
 from pandas import DataFrame
 from scipy.integrate import trapz as integral
@@ -60,6 +63,9 @@ from . import util
 from ._res import Res, ResList
 from .texunit import unit2tex, number_label # TODO missing! Use natu.
 
+# Use Modelica formatting for dimensions and units.
+from natu import config
+config.default_format = 'M' 
 
 def _select(meth):
     """Decorate a method to use time-based indexing to select values.
@@ -130,6 +136,8 @@ def _select(meth):
             i2 = None if t2 is None else util.get_indices(times, t2)[0] + 1
             return slice(i1, i2, skip)
 
+# TODO: fix the handling of units below.
+
         if t is None:
             # Return all values.
             return meth(self)
@@ -144,10 +152,12 @@ def _select(meth):
             # cast back to float.
             try:
                 # Assume t is a list of times.
-                return [float(meth_at_(time)) for time in t]
+                return list(meth_at_(t))
             except TypeError:
                 # t is a single time.
-                return float(meth_at_(t)) # Cast the singleton array as a float.
+                # Cast the singleton array as a float.
+                return Quantity(float(meth_at_(t)), self._dimension, 
+                                self._display_unit) 
 
     wrapped.__doc__ = meth.__doc__ + wrapped.__doc__
     return wrapped
@@ -158,17 +168,36 @@ def _select(meth):
 Samples = namedtuple('Samples', ['times', 'values'])
 
 
-class Variable(namedtuple('Variable', ['samples', 'dimension', 'displayUnit',
-                                       'description'])):
+class Variable(object):
 
-    """Special namedtuple_ to represent a variable in a simulation, with methods
-    to retrieve and perform calculations on its values
+    """Class to represent a variable in a simulation, with methods to retrieve 
+    and perform calculations on its values
 
     This class is usually not instantiated directly by the user, but instances
     are returned when indexing a variable name from a simulation result
     (:class:`SimRes` instance).
 
-    If *dimension* and *displayUnit* are not known, use *None*.
+    **Properties:**
+    
+    - *dimension* - The physical dimensionality of the variable
+
+         The factors and exponents are formatted as for Modelica_ unit strings.
+         This property is read-only.
+
+    - *display_unit* - Display unit for the variable's values
+   
+         This property is settable using a Modelica_-formatted unit string 
+         (e.g., 'm/s2').  SI units and prefixes are recognized, as well 
+         `other units defined in natu 
+         <http://kdavies4.github.io/natu/definitions.html>`_.  An error is 
+         raised if the physical dimension of the display unit does not match 
+         *dimension*
+
+    - *description* - String describing the variable
+   
+         This property is settable.
+
+    If *dimension* and *display_unit* are unknown, use *None*.
 
     **Examples:**
 
@@ -191,13 +220,44 @@ class Variable(namedtuple('Variable', ['samples', 'dimension', 'displayUnit',
 
        >>> assert T.description == 'Temperature of HeatPort'
 
-    Besides the properties in the above, there are methods to retrieve times,
-    values, and functions of the times and values (:meth:`array`, :meth:`FV`,
+    Besides the properties above, there are methods to retrieve times, values, 
+    and functions of the times and values (:meth:`array`, :meth:`FV`,
     :meth:`IV`, :meth:`max`, :meth:`mean`, :meth:`mean_rectified`, :meth:`min`,
     :meth:`RMS`, :meth:`RMS_AC`, :meth:`times`, :meth:`value`, :meth:`values`).
     Please see the summary in :meth:`SimRes.__getitem__` or the full
     descriptions of those methods below.
+
+
+    .. _SI: https://en.wikipedia.org/wiki/SI
     """
+
+    __slots__ = ['_samples', '_dimension', '_display_unit', 'description']
+
+    def __init__(self, samples, dimension, display_unit, description=""):
+        self._samples = samples
+        self._dimension = dimension
+        self.display_unit = display_unit
+        self.description = description
+
+    @property
+    def dimension(self):
+        """Physical dimension of the variable"""
+        return format(self._dimension, 'M')
+
+    @property
+    def display_unit(self):
+        """Display unit"""
+        return format(self._display_unit, 'M')
+
+    @display_unit.setter
+    def display_unit(self, unit):
+        """Set the display unit"""
+        display_unit = Exponents(unit.replace('.', '*'))
+        dimension = U._units(**display_unit).dimension
+        assert dimension == self._dimension, (
+            "The dimensionality of the display unit is %s but must be %s."
+            % (dimension, self._dimension))
+        self._display_unit = display_unit
 
     def array(self, t=None):
         r"""Return an array with the times of the variable as the first column
@@ -465,7 +525,7 @@ class Variable(namedtuple('Variable', ['samples', 'dimension', 'displayUnit',
         >>> C1_v.times(t=(0, 20))
         array([  0.,   5.,  10.,  15.,  20.], dtype=float32)
         """
-        return self.samples.times
+        return self._samples.times
 
     @property
     def value(self):
@@ -540,7 +600,8 @@ class Variable(namedtuple('Variable', ['samples', 'dimension', 'displayUnit',
         >>> C1_v.values(t=[2.5, 17.5])
         [3.941368936561048, 3.7467045785160735]
         """
-        return self.samples.values
+        return Quantity(self._samples.values, self._dimension, 
+                        self._display_unit)
 
 
 # List of file-loading functions for SimRes
@@ -695,8 +756,12 @@ class SimRes(Res, dict):
          - :attr:`~Variable.description` - The Modelica_ variable's description
            string
 
-         - :attr:`~Variable.displayUnit` - The Modelica_ variable's
-           *displayUnit* attribute
+         - :attr:`~Variable.display_unit` - The Modelica_ variable's
+           *displayUnit* attribute as an :class:`natu.exponents.Exponents`
+           instance
+
+               The Modelica_ variable's *unit* attribute is used if 
+               *displayUnit* is not specified.
 
          - :meth:`~Variable.FV` - Return the final value of the variable.
 
@@ -2419,9 +2484,9 @@ class SimResSequence(SimRes):
     all of the filenames relative to the highest directory that the simulations
     share.
 
-    The :attr:`description`, :attr:`unit`, and :attr:`displayUnit` of each
-    variable is taken from the first simulation.  It is assumed but not checked
-    that these are the same for all of the simulations.
+    The :attr:`description` and :attr:`display_unit` of each variable is taken 
+    from the first simulation.  It is assumed but not checked that these are the 
+    same for all of the simulations.
     """
 
     def __init__(self, *args):
@@ -2447,7 +2512,7 @@ class SimResSequence(SimRes):
             return Variable(Samples(np.concatenate(entries.times()),
                                     np.concatenate(entries.values())),
                             first.dimension,
-                            first.displayUnit,
+                            first.display_unit,
                             first.description)
         self.update({name: get_variable(name) for name in sims.names})
 
