@@ -274,59 +274,6 @@ class Variable(object):
             % (dimension, self._dimension))
         self._display_unit = display_unit
 
-    def array(self, t=None):
-        r"""Return an array with the times of the variable as the first column
-        and the values of the variable as the second column.
-
-        The times and values are taken at index or slice *i*.  If *i* is *None*,
-        then all times and values are returned.
-
-        **Parameters:**
-
-        - *t*: Time index
-
-             - Default or *None*: All samples are included.
-
-             - *float*: Interpolate (linearly) to a single time.
-
-             - *list*: Interpolate (linearly) to a list of times.
-
-             - *tuple*: Extract samples from a range of times.  The structure is
-               similar to the arguments of Python's slice_ function, except that
-               the start and stop values can be floating point numbers.  The
-               samples within and up to the limits are included.  Interpolation
-               is not used.
-
-                  - (*stop*,): All samples up to *stop* are included.
-
-                       Be sure to include the comma to distinguish this tuple
-                       from a float.
-
-                  - (*start*, *stop*): All samples between *start* and *stop*
-                    are included.
-
-                  - (*start*, *stop*, *skip*): Every *skip*\ th sample is
-                    included between *start* and *stop*.
-
-        **Example:**
-
-        Load a simulation and retrieve a variable:
-
-        >>> sim = SimRes('examples/ChuaCircuit.mat')
-        >>> C1_v = sim['C1.v']
-
-        Get the recorded times and values between 0 and 10 s as an array:
-
-        >>> C1_v.array(t=(0, 10)) # doctest: +NORMALIZE_WHITESPACE
-        array([[  0.    ,   4.    ],
-               [  5.    ,   3.8827],
-               [ 10.    ,   3.8029]], dtype=float32)
-
-
-        .. _slice: https://docs.python.org/2/library/functions.html#slice
-        """
-        return np.array([self.times(t), self.values(t)]).T
-
     @property
     def FV(self):
         """Return the final value of the variable.
@@ -807,9 +754,6 @@ class SimRes(Res, dict):
            a constant (otherwise, error).
 
          The following methods are also available:
-
-         - :meth:`~Variable.array` - Return an array of times and values for the
-           variable.
 
          - :meth:`~Variable.times` - Return the sample times of the variable.
 
