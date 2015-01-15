@@ -41,7 +41,6 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 # pylint: disable=I0011, C0103, E0611, E1101, R0801, R0921, W0102
 
 import os
-import numpy as np
 
 from collections import namedtuple
 from difflib import get_close_matches
@@ -50,22 +49,33 @@ from itertools import cycle
 from matplotlib import rcParams
 from matplotlib.cbook import iterable
 from matplotlib.pyplot import figlegend
-from natu import units as U
 from natu import core
-from natu.exponents import Exponents
+from natu import numpy as np
+from natu import units as U
+from natu.core import Quantity
 from natu.util import flatten_list, multiglob
 from pandas import DataFrame
-from scipy.integrate import trapz as integral
+from scipy.integrate import trapz
 from scipy.interpolate import interp1d
 from six import string_types
 
 from . import util
 from ._res import Res, ResList
-from .texunit import unit2tex, number_label # TODO missing! Use natu.
+from .texunit import unit2tex, number_label # TODOunit  Use natu.
 
 # Use Modelica formatting for dimensions and units.
 from natu import config
 config.default_format = 'M'
+
+def _integral(y, x):
+    """Quantity-aware integration
+    """
+    integral = trapz(core.value(y), core.value(x))
+    if U._use_quantities:
+        return Quantity.quick_new(integral,
+                                  core.dimension(x) + core.dimension(y),
+                                  core.display_unit(x) + core.display_unit(y))
+    return integral
 
 def _interp1d(x, y, *args, **kwargs):
     """1D interpolation for quantities
@@ -267,12 +277,12 @@ class Variable(object):
     @display_unit.setter
     def display_unit(self, unit):
         """Set the display unit"""
-        display_unit = Exponents(unit.replace('.', '*'))
-        dimension = U._units(**display_unit).dimension
+        display_unit = core.UnitExponents(unit.replace('.', '*'))
+        dimension = core.dimension(U._units(**display_unit))
         assert dimension == self._dimension, (
             "The dimensionality of the display unit is %s but must be %s."
             % (dimension, self._dimension))
-        self._display_unit = display_unit
+        self._display_unit = core.unitspace.simplify(display_unit)
 
     @property
     def FV(self):
@@ -364,7 +374,7 @@ class Variable(object):
         0.76859528
         """
         t = self.times()
-        return integral(self.values(), t) / (t[-1] - t[0])
+        return _integral(self.values(), t) / (t[-1] - t[0])
 
     @property
     def mean_rectified(self):
@@ -384,7 +394,7 @@ class Variable(object):
         2.2870927
         """
         t = self.times()
-        return integral(np.abs(self.values()), t) / (t[-1] - t[0])
+        return _integral(np.abs(self.values()), t) / (t[-1] - t[0])
 
     @property
     def min(self):
@@ -421,7 +431,7 @@ class Variable(object):
         2.4569478
         """
         t = self.times()
-        return np.sqrt(integral(self.values() ** 2, t) / (t[-1] - t[0]))
+        return np.sqrt(_integral(self.values() ** 2, t) / (t[-1] - t[0]))
 
     @property
     def RMS_AC(self):
@@ -441,8 +451,8 @@ class Variable(object):
         3.1022301
         """
         t = self.times()
-        mean = self.mean()
-        return mean + np.sqrt(integral((self.values() - mean) ** 2, t)
+        mean = self.mean
+        return mean + np.sqrt(_integral((self.values() - mean) ** 2, t)
                               / (t[-1] - t[0]))
 
     @_select
@@ -487,7 +497,9 @@ class Variable(object):
         >>> C1_v.times(t=(0, 20))
         array([  0.,   5.,  10.,  15.,  20.], dtype=float32)
         """
-        return core.Quantity(self._samples.times, U.s.dimension, 's')
+        if U._use_quantities:
+            return Quantity(self._samples.times, core.dimension(U.s), 's')
+        return self._samples.times
 
     @property
     def value(self):
@@ -511,8 +523,7 @@ class Variable(object):
         values = self.values()
         if np.array_equal(values[:-1], values[1:]):
             return values[0]
-        raise ValueError("The variable is not a constant.  Use values() "
-                         "instead of value().")
+        raise ValueError("The value varies.  Use values() instead of value().")
 
     @_select
     def values(self):
@@ -562,9 +573,10 @@ class Variable(object):
         >>> C1_v.values(t=[2.5, 17.5])
         [3.941368936561048, 3.7467045785160735]
         """
-        return core.Quantity(self._samples.values, self._dimension,
-                             self._display_unit)
-
+        if U._use_quantities:
+            return Quantity.quick_new(self._samples.values, self._dimension,
+                                      self._display_unit)
+        return self._samples.values
 
 # List of file-loading functions for SimRes
 from ._io.dymola import readsim as dymola
@@ -907,7 +919,7 @@ class SimRes(Res, dict):
         """
 
         # Read the file.
-        fname = os.path.normpath(fname) # Allow '/' as path sep in Windows.
+        fname = util.cleanpath(fname)
         if tool is None:
             # Read the file and store the variables.
             for tool, read in READERS[:-1]:
@@ -927,9 +939,8 @@ class SimRes(Res, dict):
             try:
                 read = readerdict[tool.lower()]
             except KeyError:
-                raise LookupError('"%s" is not one of the available tools '
-                                  '("%s").' % (tool,
-                                               '", "'.join(list(readerdict))))
+                raise LookupError("%s isn't one of the available tools (%s)."
+                                  % (tool, ', '.join(list(readerdict))))
         variables = read(fname, constants_only)
         self.update(variables)
 
@@ -1232,18 +1243,6 @@ class SimRes(Res, dict):
              label.  Use '' for no label.  The units will be automatically
              noted, so they should not be included here.
 
-        - *yunit1*: String representing the unit to be used for the primary y
-          axis
-
-             Modelica_-formatted unit strings are accepted (i.e., numerical
-             exponents directly following each unit where necessary and with
-             '.' for multiplication).
-
-             Some file formats do not record units.  If units are not recorded,
-             then unit conversion is performed assuming that the basis of the
-             units in :mod:`natu.units` (SI_ by default; see the `natu module
-             <TODO>`_) matches that of the results.
-
         - *f1*: Dictionary of labels and functions for additional traces to be
           plotted on the primary y axis
 
@@ -1266,9 +1265,9 @@ class SimRes(Res, dict):
              If *ax1* is not provided, then axes will be created in a new
              figure.
 
-        - *ynames2*, *ylabel2*, *yunit2*, *f2*, *legends2*, *leg2_kwargs*, and
-          *ax2*: Similar to *ynames1*, *ylabel1*, *yunit1*, *f1*, *legends1*,
-          *leg1_kwargs*, and *ax1* but for the secondary y axis
+        - *ynames2*, *ylabel2*, *f2*, *legends2*, *leg2_kwargs*, and *ax2*:
+          Similar to *ynames1*, *ylabel1*, *f1*, *legends1*, *leg1_kwargs*, and
+          *ax1* but for the secondary y axis
 
         - *xname*: Name of the x-axis variable
 
@@ -1276,10 +1275,6 @@ class SimRes(Res, dict):
 
              If *xlabel* is *None* (default), the variable's Modelica_
              description string will be applied.  Use '' for no label.
-
-        - *xunit*: String representing the unit to be used for the x axis
-
-             This follows the same format as *yunit1* and *yunit2*.
 
         - *title*: Title for the figure
 
@@ -1333,7 +1328,7 @@ class SimRes(Res, dict):
                         print("The y-axis variable descriptions are different. "
                               " The first has been used as the axis label. "
                               " Please check it and provide ylabel1 or ylabel2"
-                              " if necessary.")
+                              " to override it if necessary.")
                 if legends == []:
                     legends = ynames + list(funcs)
                 if incl_prefix:
@@ -1342,21 +1337,30 @@ class SimRes(Res, dict):
                     legends = ([leg + ' (%s)' % suffix for leg in legends]
                                if use_paren else
                                [leg + suffix for leg in legends])
-                units = self(ynames).unit
-                if len(set(units)) == 1:
-                    # The  units are the same, so show the 1st one on the axis.
+                variables = self(ynames)
+                dimensions = variables.dimension
+                if len(ynames) == 1 or dimensions[1:] == dimensions[:-1]:
+                    # The variables have the same dimension; use the first
+                    # variable's display unit.
+                    display_unit = variables[0]._display_unit
                     if ylabel != "":
-                        ylabel = number_label(ylabel, units[0])
+                        ylabel = number_label(ylabel, display_unit)
+                    display_units = [U._units(**display_unit)]*len(variables)
                 else:
                     # Show the units in the legend.
                     if legends:
-                        for i, unit in enumerate(units):
+                        for i, unit in enumerate(variables._display_unit):
                             legends[i] = number_label(legends[i], unit)
                     else:
-                        legends = [number_label(entry, unit) for entry, unit in
-                                   zip(ynames, units)] + list(funcs)
+                        legends = [number_label(name, unit) for name, unit in
+                                   zip(ynames, variables._display_unit)]
+                        legends += list(funcs)
+                    display_units = [U._units(**unit)
+                                     for unit in variables._display_unit]
+            else:
+                display_units = []
 
-            return ylabel, legends
+            return ylabel, legends, display_units
 
         # Process the inputs.
         ynames1 = flatten_list(ynames1)
@@ -1378,22 +1382,24 @@ class SimRes(Res, dict):
             # With Dymola 7.4, the description of the time variable will be
             # "Time in", which isn't good.
         if xlabel != "":
-            xlabel = number_label(xlabel, self[xname].unit)
+            xlabel = number_label(xlabel, self[xname].display_unit)
 
         # Generate the y-axis labels and sets of legend entries.
-        ylabel1, legends1 = ystrings(ynames1, ylabel1, legends1, f1)
-        ylabel2, legends2 = ystrings(ynames2, ylabel2, legends2, f2)
+        ylabel1, legends1, units1 = ystrings(ynames1, ylabel1, legends1, f1)
+        ylabel2, legends2, units2 = ystrings(ynames2, ylabel2, legends2, f2)
 
         # Retrieve the data.
-        all_times = self['Time'].values()
+        time = self['Time']
+        all_times = time.values()
+        time_unit = U._units(**time._display_unit)
         yvars1 = self(ynames1)
         yvars2 = self(ynames2)
         if xname == 'Time':
-            y1 = yvars1.values()
+            y1 = [value / unit for value, unit in zip(yvars1.values(), units1)]
             if f1:
                 y1_all = yvars1.values(all_times)
                 y1 += [f(y1_all) for f in f1.values()]
-            y2 = yvars2.values()
+            y2 = [value / unit for value, unit in zip(yvars2.values(), units2)]
             if f2:
                 y2_all = yvars2.values(all_times)
                 y2 += [f(y2_all) for f in f2.values()]
@@ -1407,11 +1413,11 @@ class SimRes(Res, dict):
 
         # Plot the data.
         if ynames2:
-            y2times = (yvars2.times() + [all_times] * len(f2)
-                       if xname == 'Time' else x)
+            y2times = ([time / time_unit for time in yvars2.times()]
+                       + [all_times] * len(f2) if xname == 'Time' else x)
         if ynames1:
-            y1times = (yvars1.times() + [all_times] * len(f1)
-                       if xname == 'Time' else x)
+            y1times = ([time / time_unit for time in yvars1.times()]
+                       + [all_times] * len(f1) if xname == 'Time' else x)
             if ynames2:
                 # Use solid lines for the primary axis and dotted lines for the
                 # secondary.
@@ -1471,9 +1477,8 @@ class SimRes(Res, dict):
 
         - *subtitles*: List of titles for each subplot
 
-             If not provided, "t = x s" will be used, where x is the time
-             of each entry.  "(initial)" or "(final)" is appended if
-             applicable.
+             If not provided, "t = x s" will be used, where x is the time of
+             each entry.  "(initial)" or "(final)" is appended if applicable.
 
         - *label*: Label for the figure
 
@@ -1525,7 +1530,7 @@ class SimRes(Res, dict):
 
         # Set up the subplots.
         if not subtitles:
-            unit = unit2tex(self('Time').unit)
+            unit = unit2tex(self('Time').unit) # TODO: Use natu for time.
             subtitles = ["t = %s %s" % (time, unit) for time in times]
             for i, time in enumerate(times):
                 if time == start_time:
@@ -1683,7 +1688,7 @@ class SimRes(Res, dict):
         try:
             return dict.__getitem__(self, key)
         except KeyError:
-            msg = key + ' is not a valid variable name.'
+            msg = key + " isn't a valid variable name."
             close_matches = get_close_matches(key, self.keys())
             if close_matches:
                 msg += "\n       ".join(["\n\nDid you mean one of these?"]
@@ -1744,52 +1749,6 @@ class SimRes(Res, dict):
            [[['m/(l.T2)', 'l2.m/(N.T2)']]]
         """
         return self._get(names, lambda name: self._traj[name].unit)
-
-    def _set_constants(self, record=None):
-        """TODO use natu, integrate this.
-
-        Establish the values of the base constants.
-
-        **Parameters:**
-
-        - *record*: Full Modelica_ model path to the record which contains the
-          base units
-
-             If *record* is *None* (default), then the base constants are set so
-             that the values of the SI base units are one.
-
-        There are no return values.  All other constants and units are dependent
-        on the base constants which are set here.  See the `QCalc package`_ and
-        in particular the `QCalc.Units.UnitSystem`_ record.
-
-        .. _QCalc package: http://kdavies4.github.io/QCalc
-        .. _QCalc.Units.UnitSystem: http://kdavies4.github.io/QCalc/QCalc_Units.html#QCalc.Units.UnitSystem
-        """
-        # Mathematical constants
-        from math import acos
-        pi = 2*acos(0)
-        self.U = dict(pi=pi)
-
-        # Base physical constants
-        if record:
-            record += '.'
-            R_inf = self.value(record + 'R_inf')
-            c = self.value(record + 'c')
-            k_J = self.value(record + 'k_J')
-            R_K = self.value(record + 'R_K')
-            k_F = self.value(record + 'k_F')
-            R = self.value(record + 'R')
-            k_Aprime = self.value(record + 'k_Aprime')
-        else:
-            R_inf = self.value(record + 'R_inf')
-            c = self.value(record + 'c')
-            k_J = self.value(record + 'k_J')
-            R_K = self.value(record + 'R_K')
-            k_F = self.value(record + 'k_F')
-            R = self.value(record + 'R')
-            k_Aprime = self.value(record + 'k_Aprime')
-        self.U.update(R_inf=R_inf, c=c, k_J=k_J, R_K=R_K, k_F=k_F, R=R,
-                      k_Aprime=k_Aprime)
 
 
 class SimResList(ResList):

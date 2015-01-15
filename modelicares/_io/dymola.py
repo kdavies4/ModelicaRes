@@ -60,10 +60,10 @@ import re
 from collections import namedtuple
 from control.matlab import ss
 from itertools import count
+from natu import core
 from natu import units as U
 from natu.exponents import Exponents
 from natu.units import s as second
-from natu.core import dimension, value
 from scipy.io import loadmat
 from scipy.io.matlab.mio_utils import chars_to_strings
 from six import PY2
@@ -122,6 +122,14 @@ else:
         # Modelica encodes using utf-8 but scipy.io.loadmat decodes using
         # latin-1, thus the encode ... decode part.
 
+
+def _apply_unit(number, unit):
+    """Apply the value of a unit to a number (in place).
+    """
+    unit_value = core.value(unit)
+    if unit_value <> 1.0:
+        # Apply the unit.
+        number *= unit_value
 
 def loadtxt(file_name, variable_names=None, skip_header=1):
     r"""Read variables from a  Dymola\ :sup:`®`-formatted text file (*.txt).
@@ -283,15 +291,14 @@ def readsim(fname, constants_only=False):
     # This does the task of mfiles/traj/tload.m from the Dymola installation.
 
     def parse_description(description):
-        """Parse the a variable description string into unit, displayUnit, and
-        description.
+        """Parse the a variable description string into description, unit, and
+        displayUnit.
 
-        Convert the unit into a :class:`natu.core.Unit`.  Convert the display
-        unit into an :class:`natu.exponents.Exponents` instance.  If the display
-        unit is not specified, use the unit instead.
+        If the display unit is not specified, use the unit instead.  Convert the
+        unit into an :class:`natu.exponents.Exponents` instance.
         """
         description = description.rstrip(']')
-        displayUnit = None
+        displayUnit = ''
         try:
             description, unit = description.rsplit('[', 1)
         except ValueError:
@@ -302,24 +309,21 @@ def readsim(fname, constants_only=False):
                 unit, displayUnit = unit.rsplit('|', 1)
             except ValueError:
                 pass  # (displayUnit = None)
-
-        display_unit = displayUnit if displayUnit else unit
-        unit = U._units(**Exponents(unit))
         description = description.rstrip()
         if PY2:
             description = description.decode('utf-8')
 
-        return unit, display_unit, description
+        return description, unit, displayUnit
 
     # Load the file.
     data, Aclass = read(fname, constants_only)
 
     # Check the type of results.
     if Aclass[0] == 'AlinearSystem':
-        raise AssertionError(fname + ' is a linearization result.  Use LinRes '
-                             'instead.')
-    assert Aclass[0] == 'Atrajectory', (fname + ' is not a simulation or '
-                                        'linearization result.')
+        raise AssertionError(fname + " is a linearization result.  Use LinRes "
+                             "instead.")
+    assert Aclass[0] == 'Atrajectory', (fname + " isn't a simulation or "
+                                        "linearization result.")
 
     # Process the name, description, parts of dataInfo, and data_i variables.
     # This section has been optimized for speed.  All time and value data
@@ -330,7 +334,7 @@ def readsim(fname, constants_only=False):
     version = Aclass[1]
     if version == '1.1':
         names = data['name']
-        units_included = 'environment.baseUnits.c' in names
+        units_included = 'unitSystem.c' in names
 
         # Extract the trajectories.
         trajectories = []
@@ -338,38 +342,58 @@ def readsim(fname, constants_only=False):
             try:
                 trajectories.append(data['data_%i' % i])
             except KeyError:
-                break
-            if value(second) <> 1.0:
-                # Apply the value of the unit second.
-                trajectories[-1][:, 0] *= value(second)
+                break # No more data sets
+            if not units_included:
+                value = _apply_unit(trajectories[-1][:, 0], second)
 
         # Create the variables.
         variables = []
-        for description, [data_set, sign_col] in zip(data['description'],
-                                                     data['dataInfo'][:, 0:2]):
-            unit, display_unit, description = parse_description(description)
+        for name, description, [data_set, sign_col] \
+            in zip(names, data['description'], data['dataInfo'][:, 0:2]):
+            description, unit_str, displayUnit = parse_description(description)
             negated = sign_col < 0
             traj = trajectories[data_set - 1]
             signed_values =  traj[:, (-sign_col if negated else sign_col) - 1]
             times = traj[:, 0]
-            try:
-                if value(unit) <> 1.0:
-                    signed_values *= value(unit)
-            except AttributeError:
-                # The unit is a LambdaUnit.
-                if negated:
-                    signed_values = -signed_values
-                    negated = False
-                get_value = np.vectorize(lambda n: unit._toquantity(n)._value)
-                signed_values = get_value(signed_values)
-            variables.append(Variable(Samples(times, signed_values, negated),
-                                      dimension(unit), display_unit,
-                                      description))
+            if unit_str == ':#(type=Integer)':
+                variables.append(Variable(Samples(times,
+                                                  signed_values.astype(int),
+                                                  False),
+                                          core.Exponents(''), '', description))
+            elif unit_str == ':#(type=Boolean)':
+                variables.append(Variable(Samples(times,
+                                                  signed_values.astype(bool),
+                                                  False),
+                                          core.Exponents(''), '', description))
+            else:
+                if units_included and name <> "Time":
+                    # The dimension is entered in Modelica as the unit.
+                    dimension = core.Exponents(unit_str)
+                    display_unit = displayUnit # Use defaults if no display unit
+                else:
+                    display_unit = displayUnit if displayUnit else unit_str
+                    unit = U._units(**core.Exponents(unit_str))
+                    try:
+                        _apply_unit(signed_values, unit)
+                    except AttributeError:
+                        # The unit is a LambdaUnit.
+                        if negated:
+                            signed_values = -signed_values
+                            negated = False
+                        get_value = np.vectorize(lambda n:
+                                                 unit._toquantity(n)._value)
+                        signed_values = get_value(signed_values)
+                    dimension = core.Exponents(core.dimension(unit))
+                print dimension, display_unit, name, description
+                variables.append(Variable(Samples(times,
+                                                  signed_values,
+                                                  negated),
+                                          dimension, display_unit, description))
         variables = dict(zip(names, variables))
 
         # Time is from the last data set.
-        variables['Time'] = Variable(Samples(times, times, False),
-                                     dimension(second), 's', 'Time')
+        #variables['Time'] = Variable(Samples(times, times, False),
+        #                             core.dimension(second), 's', 'Time')
         return variables
 
     elif version == '1.0':
@@ -382,7 +406,7 @@ def readsim(fname, constants_only=False):
     raise AssertionError("The version of the Dymola-formatted result file (%s) "
                          "isn't supported.")
 
-       # TODO: assert these equal to natu:
+       # TODOunit: assert these equal to natu:
        #            'environment.baseUnits.R_inf', 'environment.baseUnits.c',
        #            'environment.baseUnits.k_J', 'environment.baseUnits.R_K',
        #            'environment.baseUnits.k_F', 'environment.baseUnits.R',
@@ -427,10 +451,10 @@ def readlin(fname):
 
     # Check the type of results.
     if Aclass[0] == 'Atrajectory':
-        raise AssertionError(fname + ' is a simulation result.  Use SimRes '
-                             'instead.')
-    assert Aclass[0] == 'AlinearSystem', (fname + ' is not a simulation or'
-                                          ' linearization result.')
+        raise AssertionError(fname + " is a simulation result.  Use SimRes "
+                             "instead.")
+    assert Aclass[0] == 'AlinearSystem', (fname + " isn't a simulation or "
+                                          "linearization result.")
 
     # Determine the number of states, inputs, and outputs.
     ABCD = data['ABCD']

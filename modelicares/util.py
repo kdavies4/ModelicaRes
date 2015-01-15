@@ -1,5 +1,5 @@
 # !/usr/bin/python # pylint: disable=I0011, C0302
-"""Classes and functions to help plot and interpret experimental data
+r"""Classes and functions to help plot and interpret experimental data
 
 **Classes:**
 
@@ -39,8 +39,8 @@
 - :func:`closeall` - Close all open figures (shortcut to :func:`destroy_all`
   from :class:`matplotlib._pylab_helpers.Gcf`).
 
-- :func:`expand_path` - Expand a file path by replacing '~' with the user
-  directory and make the path absolute.
+- :func:`cleanpath` - Clean up a file path by replacing '~' with the user
+  directory, making the path absolute, and replacing '/' with '\' on Windows.
 
 - :func:`figure` - Create a figure and set its label.
 
@@ -386,19 +386,19 @@ def dict_to_lists(dic):
     return keys, values
 
 
-def expand_path(path):
-    r"""Expand a file path by replacing '~' with the user directory and making
-    the path absolute.
+def cleanpath(path):
+    r"""Clean up a file path by replacing '~' with the user directory, making
+    the path absolute, and replacing '/' with '\' on Windows.
 
     **Example:**
 
-    >>> expand_path('~/Documents') # doctest: +ELLIPSIS
+    >>> cleanpath('~/Documents') # doctest: +ELLIPSIS
     '...Documents'
 
     where ... is '/home/user/' on Linux or 'C:\Users\user\' on Windows (and
     "user" is the user id).
     """
-    return os.path.abspath(os.path.expanduser(path))
+    return os.path.abspath(os.path.expanduser(os.path.normpath(path)))
 
 
 def figure(label='', *args, **kwargs):

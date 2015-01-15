@@ -36,7 +36,7 @@ import subprocess
 from datetime import date
 from shutil import copy, move
 from . import read_options, read_params, write_options, write_params
-from ..util import ParamDict, expand_path, run_in_dir, dict_to_lists
+from ..util import ParamDict, cleanpath, run_in_dir, dict_to_lists
 
 # OS-dependent strings
 EXE = '.exe' if os.name == 'nt' else '' # File extension for an executable
@@ -246,9 +246,9 @@ class dymola_script(object):
         """
 
         # Pre-process and store the arguments.
-        fname = expand_path(fname)
+        fname = cleanpath(fname)
         self._command = command
-        working_dir = expand_path(working_dir)
+        working_dir = cleanpath(working_dir)
         results_dir = os.path.dirname(fname)
         for i, result in enumerate(results):
             results[i] = result.replace('%x', EXE)
@@ -502,7 +502,7 @@ class dymosim(object):
 
         # Pre-process and store the arguments.
         self._command = command
-        results_dir = expand_path(results_dir)
+        results_dir = cleanpath(results_dir)
         self._results_dir = results_dir
         self._results = results
         self._debug = debug
@@ -769,7 +769,7 @@ class fmi(object):
         """
 
         # Pre-process and store the arguments.
-        self._results_dir = expand_path(results_dir)
+        self._results_dir = cleanpath(results_dir)
         self._options = options
 
         # Dictionary for in memory results.  If the option

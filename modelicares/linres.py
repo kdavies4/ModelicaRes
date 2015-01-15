@@ -173,7 +173,7 @@ class LinRes(Res):
         """
 
         # Read the file.
-        fname = os.path.normpath(fname) # Allow '/' as path sep in Windows.
+        fname = util.cleanpath(fname)
         if tool is None:
             # Read the file and store the data.
             for tool, read in READERS[:-1]:

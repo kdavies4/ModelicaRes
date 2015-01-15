@@ -24,6 +24,8 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 # Other:
 # pylint: disable=I0011, C0103, W0622
 
+# TODO: Move some of this functionality to natu.
+
 import re
 
 from .util import si_prefix, get_pow1000
@@ -93,13 +95,12 @@ def number_label(quantity="", unit=None, times=r'\,', per=r'\,/\,',
 
     .. _Modelica: http://www.modelica.org/
     """
-    if unit in ['dB', 'degC', 'degF', 'Pag', 'kPag']:
-        return "%s in $%s$" % (quantity, unit2tex(unit, times, roman))
-    if unit and unit != '1':
-        return quantity + '$' + per + unit2tex(unit, times, roman) + '$'
-    else:
+    if not unit:
         return quantity
-
+    if set(unit).intersection({'Np', 'B', 'dB', 'degC', 'degF', 'Pag', 'kPag',
+                               'psig'}):
+        return quantity + " in ${:L}$".format(unit)
+    return quantity + '${}{:L}$'.format(per, unit)
 
 def quantity_str(number, unit='', use_si=True, format='%g', times=r'\,',
                  roman=True):
