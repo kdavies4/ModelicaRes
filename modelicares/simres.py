@@ -49,7 +49,7 @@ from itertools import cycle
 from matplotlib import rcParams
 from matplotlib.cbook import iterable
 from matplotlib.pyplot import figlegend
-from natu import core
+from natu import core as nc
 from natu import numpy as np
 from natu import units as U
 from natu.core import Quantity
@@ -61,7 +61,7 @@ from six import string_types
 
 from . import util
 from ._res import Res, ResList
-from .texunit import unit2tex, number_label # TODOunit  Use natu.
+from .texunit import unit2tex, number_label # TODO Use natu.
 
 # Use Modelica formatting for dimensions and units.
 from natu import config
@@ -70,23 +70,23 @@ config.default_format = 'M'
 def _integral(y, x):
     """Quantity-aware integration
     """
-    integral = trapz(core.value(y), core.value(x))
+    integral = trapz(nc.value(y), nc.value(x))
     if U._use_quantities:
         return Quantity.quick_new(integral,
-                                  core.dimension(x) + core.dimension(y),
-                                  core.display_unit(x) + core.display_unit(y))
+                                  nc.dimension(x) + nc.dimension(y),
+                                  nc.display_unit(x) + nc.display_unit(y))
     return integral
 
 def _interp1d(x, y, *args, **kwargs):
     """1D interpolation for quantities
     """
-    interp = interp1d(core.value(x), y, *args, **kwargs)
-    #x_dimension = core.dimension(x)
+    interp = interp1d(nc.value(x), y, *args, **kwargs)
+    #x_dimension = nc.dimension(x)
 
     def new_interpolator(xnew):
-        #assert core.dimension(xnew) == x_dimension, (
+        #assert nc.dimension(xnew) == x_dimension, (
         #    "The abscissa doesn't have the correct dimension.")
-        return core.merge(interp(core.value(xnew)), y)
+        return nc.merge(interp(nc.value(xnew)), y)
 
     return new_interpolator
 
@@ -267,7 +267,7 @@ class Variable(object):
     @property
     def dimension(self):
         """Physical dimension of the variable"""
-        return format(self._dimension, 'M')
+        return self._dimension
 
     @property
     def display_unit(self):
@@ -277,12 +277,12 @@ class Variable(object):
     @display_unit.setter
     def display_unit(self, unit):
         """Set the display unit"""
-        display_unit = core.UnitExponents(unit.replace('.', '*'))
-        dimension = core.dimension(U._units(**display_unit))
+        display_unit = nc.UnitExponents(unit.replace('.', '*'))
+        dimension = nc.dimension(U._units(**display_unit))
         assert dimension == self._dimension, (
             "The dimensionality of the display unit is %s but must be %s."
             % (dimension, self._dimension))
-        self._display_unit = core.unitspace.simplify(display_unit)
+        self._display_unit = nc.unitspace.simplify(display_unit)
 
     @property
     def FV(self):
@@ -498,7 +498,7 @@ class Variable(object):
         array([  0.,   5.,  10.,  15.,  20.], dtype=float32)
         """
         if U._use_quantities:
-            return Quantity(self._samples.times, core.dimension(U.s), 's')
+            return Quantity(self._samples.times, nc.dimension(U.s), 's')
         return self._samples.times
 
     @property

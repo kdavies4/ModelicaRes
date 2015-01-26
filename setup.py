@@ -55,13 +55,14 @@ setup(name='ModelicaRes',
       ],
       provides=['modelicares'],
       packages=['modelicares', 'modelicares.exps', 'modelicares._io'],
+      package_data={'modelicares': ['display.ini']},
       scripts=glob('bin/*'),
       install_requires=['numpy', 'matplotlib>=1.3.1', 'natu', 'pandas',
                         'control', 'six'],
       requires=['numpy', 'scipy (>=0.10.0)', 'matplotlib (>=1.3.1)', 'natu',
                 'pandas', 'control', 'six'],
       platforms='any',
-      zip_safe=True,
+      zip_safe=False, # because display.ini must be accessed
       test_suite = 'tests.test_suite',
      )
 # ModelicaRes may run with scipy as early as 0.7.0.  However, the control

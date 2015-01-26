@@ -60,7 +60,7 @@ import re
 from collections import namedtuple
 from control.matlab import ss
 from itertools import count
-from natu import core
+from natu import core as nc
 from natu import units as U
 from natu.exponents import Exponents
 from natu.units import s as second
@@ -68,6 +68,7 @@ from scipy.io import loadmat
 from scipy.io.matlab.mio_utils import chars_to_strings
 from six import PY2
 
+from .._display import default_display_units
 from ..simres import Variable
 from ..util import next_nonblank
 
@@ -126,7 +127,7 @@ else:
 def _apply_unit(number, unit):
     """Apply the value of a unit to a number (in place).
     """
-    unit_value = core.value(unit)
+    unit_value = nc.value(unit)
     if unit_value <> 1.0:
         # Apply the unit.
         number *= unit_value
@@ -334,7 +335,6 @@ def readsim(fname, constants_only=False):
     version = Aclass[1]
     if version == '1.1':
         names = data['name']
-        units_included = 'unitSystem.c' in names
 
         # Extract the trajectories.
         trajectories = []
@@ -343,14 +343,14 @@ def readsim(fname, constants_only=False):
                 trajectories.append(data['data_%i' % i])
             except KeyError:
                 break # No more data sets
-            if not units_included:
+            else:
                 value = _apply_unit(trajectories[-1][:, 0], second)
 
         # Create the variables.
         variables = []
         for name, description, [data_set, sign_col] \
             in zip(names, data['description'], data['dataInfo'][:, 0:2]):
-            description, unit_str, displayUnit = parse_description(description)
+            description, unit_str, display_unit = parse_description(description)
             negated = sign_col < 0
             traj = trajectories[data_set - 1]
             signed_values =  traj[:, (-sign_col if negated else sign_col) - 1]
@@ -359,20 +359,22 @@ def readsim(fname, constants_only=False):
                 variables.append(Variable(Samples(times,
                                                   signed_values.astype(int),
                                                   False),
-                                          core.Exponents(''), '', description))
+                                          nc.Exponents(''), '', description))
             elif unit_str == ':#(type=Boolean)':
                 variables.append(Variable(Samples(times,
                                                   signed_values.astype(bool),
                                                   False),
-                                          core.Exponents(''), '', description))
+                                          nc.Exponents(''), '', description))
             else:
-                if units_included and name <> "Time":
+                if unit_str.startswith(' '):
                     # The dimension is entered in Modelica as the unit.
-                    dimension = core.Exponents(unit_str)
-                    display_unit = displayUnit # Use defaults if no display unit
+                    dimension = nc.Exponents(unit_str)
+                    if not display_unit:
+                        display_unit = default_display_units.find(dimension)
                 else:
-                    display_unit = displayUnit if displayUnit else unit_str
-                    unit = U._units(**core.Exponents(unit_str))
+                    if not display_unit:
+                        display_unit = unit_str
+                    unit = U._units(**nc.Exponents(unit_str))
                     try:
                         _apply_unit(signed_values, unit)
                     except AttributeError:
@@ -383,8 +385,7 @@ def readsim(fname, constants_only=False):
                         get_value = np.vectorize(lambda n:
                                                  unit._toquantity(n)._value)
                         signed_values = get_value(signed_values)
-                    dimension = core.Exponents(core.dimension(unit))
-                print dimension, display_unit, name, description
+                    dimension = nc.Exponents(nc.dimension(unit))
                 variables.append(Variable(Samples(times,
                                                   signed_values,
                                                   negated),
@@ -393,7 +394,7 @@ def readsim(fname, constants_only=False):
 
         # Time is from the last data set.
         #variables['Time'] = Variable(Samples(times, times, False),
-        #                             core.dimension(second), 's', 'Time')
+        #                             nc.dimension(second), 's', 'Time')
         return variables
 
     elif version == '1.0':
@@ -406,11 +407,11 @@ def readsim(fname, constants_only=False):
     raise AssertionError("The version of the Dymola-formatted result file (%s) "
                          "isn't supported.")
 
-       # TODOunit: assert these equal to natu:
-       #            'environment.baseUnits.R_inf', 'environment.baseUnits.c',
-       #            'environment.baseUnits.k_J', 'environment.baseUnits.R_K',
-       #            'environment.baseUnits.k_F', 'environment.baseUnits.R',
-       #            'environment.baseUnits.k_Aprime']))
+       # TODOunit: assert these equal to natu (values and dimensions):
+       #            'unitSystem.R_inf', 'unitSystem.c',
+       #            'unitSystem.k_J', 'unitSystem.R_K',
+       #            'unitSystem.k_F', 'unitSystem.R',
+       #            'unitSystem.k_Aprime'
 
 def readlin(fname):
     r"""Load Dymola\ :sup:`®`-formatted linearization results.
