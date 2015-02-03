@@ -261,7 +261,8 @@ class Variable(object):
     def __init__(self, samples, dimension, display_unit, description=""):
         self._samples = samples
         self._dimension = dimension
-        self.display_unit = display_unit
+        self._display_unit = nc.UnitExponents.fromstr(display_unit.replace('.',
+                                                                           '*'))
         self.description = description
 
     @property

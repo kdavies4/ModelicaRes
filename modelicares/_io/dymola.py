@@ -368,7 +368,7 @@ def readsim(fname, constants_only=False):
             else:
                 if unit_str.startswith(' '):
                     # The dimension is entered in Modelica as the unit.
-                    dimension = nc.Exponents(unit_str)
+                    dimension = nc.Exponents.fromstr(unit_str.lstrip())
                     if not display_unit:
                         display_unit = default_display_units.find(dimension)
                 else:
