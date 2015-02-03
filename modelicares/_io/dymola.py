@@ -292,7 +292,7 @@ def readsim(fname, constants_only=False):
     # This does the task of mfiles/traj/tload.m from the Dymola installation.
 
     def parse_description(description):
-        """Parse the a variable description string into description, unit, and
+        """Parse a variable description string into description, unit, and
         displayUnit.
 
         If the display unit is not specified, use the unit instead.  Convert the
@@ -359,12 +359,12 @@ def readsim(fname, constants_only=False):
                 variables.append(Variable(Samples(times,
                                                   signed_values.astype(int),
                                                   False),
-                                          nc.Exponents(''), '', description))
+                                          nc.Exponents(), '', description))
             elif unit_str == ':#(type=Boolean)':
                 variables.append(Variable(Samples(times,
                                                   signed_values.astype(bool),
                                                   False),
-                                          nc.Exponents(''), '', description))
+                                          nc.Exponents(), '', description))
             else:
                 if unit_str.startswith(' '):
                     # The dimension is entered in Modelica as the unit.
@@ -374,7 +374,7 @@ def readsim(fname, constants_only=False):
                 else:
                     if not display_unit:
                         display_unit = unit_str
-                    unit = U._units(**nc.Exponents(unit_str))
+                    unit = U._units(**nc.Exponents.fromstr(unit_str))
                     try:
                         _apply_unit(signed_values, unit)
                     except AttributeError:

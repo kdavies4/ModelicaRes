@@ -34,7 +34,8 @@ import sys
 import subprocess
 
 from datetime import date
-from shutil import copy, move
+from multiprocessing import Pool
+from shutil import copy, move, rmtree
 from . import read_options, read_params, write_options, write_params
 from ..util import ParamDict, cleanpath, run_in_dir, dict_to_lists
 
@@ -292,7 +293,7 @@ class dymola_script(object):
         self._run_log = run_log
 
         # Start counting the run() calls.
-        self.n_runs = 0
+        self.run_number = 0
 
     def __delattr__(self, attr):
         """Delete a command option.
@@ -309,7 +310,7 @@ class dymola_script(object):
         """Add known attributes directly, but unknown attributes go to the
         dictionary of command options.
         """
-        if attr in ('_command', '_results', '_options', 'n_runs', '_n_periods',
+        if attr in ('_command', '_results', '_options', 'run_number', 'period_number',
                     '_run_log', '_mos'):
             object.__setattr__(self, attr, value) # Traditional method
         else:
@@ -370,18 +371,18 @@ class dymola_script(object):
         :class:`dymola_script`.
         """
         # Increment the number of runs and reset the number of periods.
-        self.n_runs += 1
-        self._n_periods = 1
+        self.run_number += 1
+        self.period_number = 1
 
         # Retrieve some attributes.
-        n_runs = self.n_runs
+        run_number = self.run_number
         mos = self._mos
         command = self._command
         opts = self._options.copy()
         opts.update(options)
 
         # Write the command to run the model.
-        mos.write('// Run %i\n' % n_runs)
+        mos.write('// Run %i\n' % run_number)
         problem = '"%s%s"' % (model, ParamDict(params)) if model else None
         call = '%s%s' % (command, ParamDict(opts, problem=problem))
         mos.write('ok = %s;\n' % call)
@@ -389,10 +390,10 @@ class dymola_script(object):
         # Write commands to save the results and clear Dymola's log file.
         mos.write('if ok then\n')
         mos.write('    savelog();\n')
-        mos.write('    dest = destination + "%s%s";\n' % (n_runs, os.path.sep))
+        mos.write('    dest = destination + "%s%s";\n' % (run_number, os.path.sep))
         mos.write('    createDirectory(dest);\n')
         for result in self._results:
-            new_name = str(self._n_periods).join(os.path.splitext(result))
+            new_name = str(self.period_number).join(os.path.splitext(result))
             mos.write('    copy("%s", dest + "%s", true);\n'
                       % (result, new_name))
         mos.write('    copy("dsfinal.txt", dest + "dsfinal.txt", true);\n'
@@ -401,17 +402,64 @@ class dymola_script(object):
         mos.write('clearlog();\n\n')
 
         # Add an entry to the run log.
-        self._run_log.write('\t'.join([str(n_runs),
+        self._run_log.write('\t'.join([str(run_number),
                                        command,
                                        str(ParamDict(opts))[1:-1],
                                        problem[1:-1] if problem else ''])
                             + '\n')
-        print('Run %s:  %s' % (n_runs, call))
+        print('Run %s:  %s' % (run_number, call))
 
     # TODO: Consider adding a continue_run method.  The major issue is that it's
     # impossible to access stopTime programmatically in Dymola (due to problems
     # with assignment from Dymola's getExperiment() function). Therefore, it's
     # impossible to set the new stopTime based on duration.
+
+
+def _run_dymosim(options, executable, dsin_path, model_dir, results_dir,
+                 run_number, period_number, params={}, command=None,
+                 results=None, debug=False):
+    """Write the given model parameters and initial values (*params*) and
+    simulation options (*options*) to the initialization file at *dsin_path*,
+    run *executable* in directory *model_dir*, and save the results to
+    *results_dir*.
+    """
+    # Note: This is a function rather than a method of the dymosim context
+    # handler so that it can be called from multiprocessing.Pool.
+
+    # TODO **No need to update current options
+
+    # Write the simulation options.
+    if options:
+        write_options(options, dsin_path)
+
+    # Write the model parameters and initial conditions.
+    write_params(params, dsin_path)
+
+    # Create the working directory.
+    working_dir = os.path.join(model_dir, '%i_temp' % run_number)
+    assert not os.path.isdir(working_dir), (
+        "A previous simulation is still running.  Before continuing a "
+        "simulation, call simulation.wait() on the simulation returned by the "
+        "previous run() or continue_run().")
+    os.mkdir(working_dir)
+
+    # Run the model.
+    dsres_path = os.path.join(results_dir,
+                              'dsres%i.mat' % period_number)
+    dsfinal_path = os.path.join(results_dir, 'dsfinal.txt')
+    args = [os.path.join('..', executable), command, '-f',
+            dsfinal_path, dsin_path, dsres_path]
+    run_in_dir(args, working_dir, debug=debug)
+
+    # Save the other results.
+    for result in results:
+        source = os.path.join(working_dir, result)
+        destination = os.path.join(results_dir,
+            str(period_number).join(os.path.splitext(result)))
+        move(source, destination)
+
+    # Remove the working directory and its contents.
+    rmtree(working_dir)
 
 
 class dymosim(object):
@@ -434,6 +482,8 @@ class dymosim(object):
          Each entry is the name or path of a file that is generated by the
          executable.  The path is relative to the directory of the model (see
          :meth:`run`).
+
+    - *multi* - TODO
 
     - *debug* (*False*): If *True*, print the dymosim messages.
 
@@ -494,7 +544,7 @@ class dymosim(object):
     """
 
     def __init__(self, command='-s', results_dir='', results=['dslog.txt'],
-                 debug=False, **options):
+                 multi=True, debug=False, **options):
         """Upon initialization, establish some settings.
 
         See the top-level class documentation.
@@ -507,6 +557,8 @@ class dymosim(object):
         self._results = results
         self._debug = debug
         self._options = options
+        self._current_model = None
+        self._current_options = {}
 
         # Start the run log.
         if not os.path.isdir(results_dir):
@@ -516,8 +568,14 @@ class dymosim(object):
                       "parameters\n")
         self._run_log = run_log
 
-        # Start counting the run() calls.
-        self.n_runs = 0
+        # Start counting the number of runs and simulation periods
+        # (continuations).
+        self.run_number = 0
+        self.period_number = 0
+
+        # Prepare for asynchronous simulation.
+        if not debug:
+            self._pool = Pool()
 
     def __delattr__(self, attr):
         """Delete a command option.
@@ -530,13 +588,83 @@ class dymosim(object):
         """
         return self._options[attr]
 
+    @property
+    def current_dsin_path(self):
+        """The path to the current initial values file
+        """
+        return os.path.join(self.current_results_dir,
+                            'dsin%i.txt' % self.period_number)
+
+    @property
+    def current_executable(self):
+        """The current model executable, without directory
+        """
+        return self.current_model_base + EXE
+
+    @property
+    def current_model(self):
+        """The currently selected model
+        """
+        return self._current_model
+
+    @current_model.setter
+    def current_model(self, value):
+        """Set the current model.
+        """
+        if value:
+            self._current_model = value
+        else:
+            assert self._current_model, "The model must be specified."
+        assert os.path.isfile(self.current_model + EXE), (
+            'The executable (%s) cannot be found in the "%s" folder.'
+            % (self.current_executable, os.path.abspath(self.model_dir)))
+
+    @property
+    def current_model_base(self):
+        """Base name of the current model (without directory and possible '.exe'
+        extension)
+        """
+        try:
+            return os.path.basename(self.current_model)
+        except AttributeError:
+            return None
+
+    @property
+    def current_model_dir(self):
+        "Directory of the current model"
+        try:
+            return os.path.dirname(self.current_model)
+        except AttributeError:
+            return None
+
+    @property
+    def current_options(self):
+        """Current simulation options
+        """
+        return self._current_options
+
+    @current_options.setter
+    def current_options(self, value):
+        """Set the current simulation options, using the global options as
+        defaults.
+        """
+        self._current_options = self._options.copy()
+        self._current_options.update(value)
+
+    @property
+    def current_results_dir(self):
+        """The current results directory
+        """
+        return os.path.join(self._results_dir, str(self.run_number))
+
     def __setattr__(self, attr, value):
         """Add known attributes directly, but unknown attributes go to the
         dictionary of command options.
         """
-        if attr in ('_command', '_results_dir', '_results', '_options',
-                    '_debug', 'n_runs', '_n_periods', '_run_log',
-                    '_current_model'):
+        if attr in ('_command', '_current_model', '_current_options', '_debug',
+                    '_options', '_pool', '_results', '_results_dir', '_run_log',
+                    'current_model', 'current_options', 'period_number',
+                    'run_number'):
             object.__setattr__(self, attr, value) # Traditional method
         else:
             self._options[attr] = value
@@ -550,78 +678,18 @@ class dymosim(object):
     def __exit__(self, *exc_details):
         """Exit the context of the simulator.
         """
+        if not self._debug:
+            self._pool.close()
         self._run_log.close()
 
-    def _paths(self, model=None):
-        """Given a model's path (*model*, without extension) and the internal
-        state, return a tuple of:
-        1. the model's directory
-        2. the model's base name (without directory or extension)
-        3. the model executable (with '.exe' added in Windows)
-        4. the results directory
-        5. the path to the initialization file
-
-        Also, confirm that the executable exists.
-
-        Save the model.  If *model* is *None*, then use the last model.
+    def _write_log(self, parameters):
+        """Write a log entry for a model run or continuation with *parameters*.
         """
-
-        # Determine some paths and directories.
-        if model is None:
-            model = self._current_model
-        else:
-            self._current_model = model
-        model_dir, model_base = os.path.split(model)
-        results_dir = os.path.join(self._results_dir, str(self.n_runs))
-        dsin_path = os.path.join(results_dir, 'dsin%i.txt' % self._n_periods)
-
-        # Locate the executable.
-        executable = model_base + EXE
-        assert os.path.isfile(model + EXE), (
-            'The exectuable (%s) cannot be found in the "%s" folder.'
-            % (executable, os.path.abspath(model_dir)))
-
-        return model_dir, model_base, executable, results_dir, dsin_path
-
-    def _run(self, executable, params, options, model_dir, results_dir,
-             dsin_path):
-        """Write the given model parameters and initial values (*params*) and
-        simulation options (*options*) to the initialization file at
-        *dsin_path*, run *executable* in directory *model_dir*, and save the
-        results to *results_dir*.
-
-        Also write to the log file.
-        """
-        # Determine the file locations.
-
-        dsres_path = os.path.join(results_dir, 'dsres%i.mat' % self._n_periods)
-        dsfinal_path = os.path.join(results_dir, 'dsfinal.txt')
-
-        # Write the simulation options.
-        opts = self._options.copy()
-        opts.update(options)
-        write_options(opts, dsin_path)
-
-        # Write the model parameters and initial conditions.
-        write_params(params, dsin_path)
-
-        # Run the model.
-        run_in_dir([EXEC_PREFIX + executable, self._command, '-f', dsfinal_path,
-                    dsin_path, dsres_path], model_dir, output=self._debug)
-
-        # Copy the other results.
-        for result in self._results:
-            source = os.path.join(model_dir, result)
-            destination = os.path.join(results_dir,
-                str(self._n_periods).join(os.path.splitext(result)))
-            copy(source, destination)
-
-        # Add an entry to the run log.
-        self._run_log.write('\t'.join([str(self.n_runs),
-                                       str(self._n_periods),
-                                       str(ParamDict(opts))[1:-1],
-                                       executable,
-                                       str(ParamDict(params))[1:-1]])
+        self._run_log.write('\t'.join([str(self.run_number),
+                                       str(self.period_number),
+                                       str(ParamDict(self.current_options))[1:-1],
+                                       self.current_executable,
+                                       str(ParamDict(parameters))[1:-1]])
                             + '\n')
 
     def run(self, model='dymosim', params={}, **options):
@@ -671,20 +739,34 @@ class dymosim(object):
         Please see the example in the top-level documentation of
         :class:`dymosim`.
         """
-        # Increment the number of runs and reset the number of periods.
-        self.n_runs += 1
-        self._n_periods = 1
+        # Increment the number of runs.
+        self.run_number += 1
 
-        # Determine the file locations.
-        model_dir, model_base, exe, results_dir, dsin_path = self._paths(model)
+        # Reset the number of simulation periods.
+        self.period_number = 1
 
-        # Locate the original dsin file.
+        # Update the simulation options.
+        self.current_options = options
+
+        # Update the current model and determine the paths.
+        self.current_model = model
+        model_dir = self.current_model_dir
+        model_base = self.current_model_base
+        results_dir = self.current_results_dir
+        dsin_path = self.current_dsin_path
+
+        # Add an entry to the run log.
+        self._write_log(params)
+
+        # Locate the original dsin file.  Create it if necessary.
         if model_base == 'dymosim':
             dsin_name = 'dsin.txt'
         else:
             dsin_name = model_base + '_dsin.txt'
         if not os.path.isfile(os.path.join(model_dir, dsin_name)):
-            run_in_dir([EXEC_PREFIX + exe, '-i', dsin_name], model_dir)
+            # Create the file.
+            run_in_dir([EXEC_PREFIX + self.current_executable, '-i',
+                        dsin_name], model_dir)
         orig_dsin_path = os.path.join(model_dir, dsin_name)
 
         # Create the results folder and copy the original dsin file into it.
@@ -693,9 +775,35 @@ class dymosim(object):
         copy(orig_dsin_path, dsin_path)
 
         # Write the parameters and options, run the model, and save the results.
-        self._run(exe, params, options, model_dir, results_dir, dsin_path)
+        if not self._debug:
+            return self._pool.apply_async(
+                _run_dymosim,
+                [],
+                dict(options=self.current_options,
+                     executable = self.current_executable,
+                     dsin_path = self.current_dsin_path,
+                     model_dir = self.current_model_dir,
+                     results_dir = self.current_results_dir,
+                     run_number = self.run_number,
+                     period_number = self.period_number,
+                     params=params,
+                     command=self._command,
+                     results=self._results))
+        # In debug mode, it's not possible to run asynchronously because the
+        # output must be printed for each simulation as it runs.
+        _run_dymosim(options=self.current_options,
+                     executable = self.current_executable,
+                     dsin_path = self.current_dsin_path,
+                     model_dir = self.current_model_dir,
+                     results_dir = self.current_results_dir,
+                     run_number = self.run_number,
+                     period_number = self.period_number,
+                     params=params,
+                     command=self._command,
+                     results=self._results,
+                     debug=True)
 
-    def continue_run(self, duration, params={}, **options):
+    def continue_run(self, duration, params={}):
         """Continue the last run (using the same model).
 
         **Parameters:**
@@ -708,17 +816,6 @@ class dymosim(object):
              By default, the parameters remain as they were in the last
              :meth:`run`.  See that method for details on *params*.
 
-        - *\*\*options*: Adjustments to the simulation settings under
-          "Experiment parameters", "Method tuning parameters", and "Output
-          parameters" in the initialization file
-
-             By default, the options remain as they were in the last
-             :meth:`run`.  See that method for details.
-
-             StartTime and StopTime are ignored because they are determined
-             automatically from *duration* and the stop time of the last
-             simulation.
-
         .. warning::
 
            Be careful not to use *params* to adjust variables with tunable
@@ -726,21 +823,36 @@ class dymosim(object):
            where the last one left off.
         """
         # Increment the number of periods.
-        self._n_periods += 1
-
-        # Determine the file locations.
-        model_dir, __, exe, results_dir, dsin_path = self._paths()
+        self.period_number += 1
 
         # The new initialization file is the old final values file.
+        results_dir = self.current_results_dir
+        dsin_path = self.current_dsin_path
         move(os.path.join(results_dir, 'dsfinal.txt'), dsin_path)
 
-        # Set the new stop time.
+        # Establish the start and stop times.
         start_time = read_options('StartTime', dsin_path)
+        options = self.current_options
         options['StartTime'] = start_time
         options['StopTime'] = start_time + duration
 
+        # Add an entry to the run log.
+        self._write_log(params)
+
         # Write the parameters and options, run the model, and save the results.
-        self._run(exe, params, options, model_dir, results_dir, dsin_path)
+        if not self._debug:
+            return self._pool.apply_async(_run_dymosim, [],
+                                        dict(simulator=self,
+                                             params=params,
+                                             command=self._command,
+                                             results=self._results))
+        # Can't run asynchronously because output must be printed for each
+        # simulation as it runs.
+        _run_dymosim(simulator=self,
+                     params=params,
+                     command=self._command,
+                     results=self._results,
+                     debug=True)
 
 
 class fmi(object):
@@ -783,7 +895,7 @@ class fmi(object):
         self._run_log = run_log
 
         # Start counting the run() calls.
-        self.n_runs = 0
+        self.run_number = 0
 
     def __delattr__(self, attr):
         """Delete a command option.
@@ -800,7 +912,7 @@ class fmi(object):
         """Add known attributes directly, but unknown attributes go to the
         dictionary of command options.
         """
-        if attr in ('_results_dir', '_options', 'n_runs', '_n_periods',
+        if attr in ('_results_dir', '_options', 'run_number', 'period_number',
                     '_run_log', '_current_model', 'memory_result', 'fmu'):
             object.__setattr__(self, attr, value) # Traditional method
         else:
@@ -838,7 +950,7 @@ class fmi(object):
 
         # Return the directories.
         model_dir = os.path.dirname(model)
-        results_dir = os.path.join(self._results_dir, str(self.n_runs))
+        results_dir = os.path.join(self._results_dir, str(self.run_number))
         return model_dir, results_dir
 
     def load(self, fmu_path, results_dir):
@@ -869,7 +981,7 @@ class fmi(object):
             log = self.fmu.get_name()
         log += '_log.txt'
         source = os.path.join(os.getcwd(), log)
-        destination = os.path.join(results_dir, 'log%i.txt' % self._n_periods)
+        destination = os.path.join(results_dir, 'log%i.txt' % self.period_number)
         move(source, destination)
 
     def move_mat_file(self):
@@ -889,7 +1001,7 @@ class fmi(object):
         Also write to the log file.
         """
         # Determine the file locations.
-        dsres_path = os.path.join(results_dir, 'dsres%i.txt' % self._n_periods)
+        dsres_path = os.path.join(results_dir, 'dsres%i.txt' % self.period_number)
 
         # Write the simulation options.
         simulation_options = self.fmu.simulate_options()
@@ -919,15 +1031,15 @@ class fmi(object):
         self.fmu.set(params.keys(), params.values())
 
         # Run the model.
-        self.memory_result[self.n_runs][self._n_periods] = self.fmu.simulate(
+        self.memory_result[self.run_number][self.period_number] = self.fmu.simulate(
             start_time=start_time,
             final_time=stop_time,
             options=simulation_options
         )
 
         # Add an entry to the run log.
-        self._run_log.write('\t'.join([str(self.n_runs),
-                                       str(self._n_periods),
+        self._run_log.write('\t'.join([str(self.run_number),
+                                       str(self.period_number),
                                        str(ParamDict(options))[1:-1],
                                        self.fmu.get_name(),
                                        str(ParamDict(params))[1:-1]])
@@ -968,9 +1080,9 @@ class fmi(object):
         :class:`fmi`.
         """
         # Increment the number of runs and reset the number of periods.
-        self.n_runs += 1
-        self._n_periods = 1
-        self.memory_result[self.n_runs] = {}
+        self.run_number += 1
+        self.period_number = 1
+        self.memory_result[self.run_number] = {}
 
         # Determine the file locations.
         model_dir, results_dir = self._paths(model)
@@ -1008,7 +1120,7 @@ class fmi(object):
              simulation.
         """
         # Increment the number of periods.
-        self._n_periods += 1
+        self.period_number += 1
 
         # Determine the file locations.
         model_dir, results_dir = self._paths()

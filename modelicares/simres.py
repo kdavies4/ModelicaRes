@@ -277,7 +277,7 @@ class Variable(object):
     @display_unit.setter
     def display_unit(self, unit):
         """Set the display unit"""
-        display_unit = nc.UnitExponents(unit.replace('.', '*'))
+        display_unit = nc.UnitExponents.fromstr(unit.replace('.', '*'))
         dimension = nc.dimension(U._units(**display_unit))
         assert dimension == self._dimension, (
             "The dimensionality of the display unit is %s but must be %s."
