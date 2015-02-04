@@ -483,8 +483,6 @@ class dymosim(object):
          executable.  The path is relative to the directory of the model (see
          :meth:`run`).
 
-    - *multi* - TODO
-
     - *debug* (*False*): If *True*, print the dymosim messages.
 
     - *\*\*options*: Adjustments to the simulation settings under "Experiment
@@ -544,7 +542,7 @@ class dymosim(object):
     """
 
     def __init__(self, command='-s', results_dir='', results=['dslog.txt'],
-                 multi=True, debug=False, **options):
+                 debug=False, **options):
         """Upon initialization, establish some settings.
 
         See the top-level class documentation.
@@ -617,7 +615,8 @@ class dymosim(object):
             assert self._current_model, "The model must be specified."
         assert os.path.isfile(self.current_model + EXE), (
             'The executable (%s) cannot be found in the "%s" folder.'
-            % (self.current_executable, os.path.abspath(self.model_dir)))
+            % (self.current_executable,
+               os.path.abspath(self.current_model_dir)))
 
     @property
     def current_model_base(self):
@@ -781,23 +780,23 @@ class dymosim(object):
                 [],
                 dict(options=self.current_options,
                      executable = self.current_executable,
-                     dsin_path = self.current_dsin_path,
-                     model_dir = self.current_model_dir,
-                     results_dir = self.current_results_dir,
-                     run_number = self.run_number,
-                     period_number = self.period_number,
+                     dsin_path=self.current_dsin_path,
+                     model_dir=self.current_model_dir,
+                     results_dir=self.current_results_dir,
+                     run_number=self.run_number,
+                     period_number=self.period_number,
                      params=params,
                      command=self._command,
                      results=self._results))
         # In debug mode, it's not possible to run asynchronously because the
         # output must be printed for each simulation as it runs.
         _run_dymosim(options=self.current_options,
-                     executable = self.current_executable,
-                     dsin_path = self.current_dsin_path,
-                     model_dir = self.current_model_dir,
-                     results_dir = self.current_results_dir,
-                     run_number = self.run_number,
-                     period_number = self.period_number,
+                     executable=self.current_executable,
+                     dsin_path=self.current_dsin_path,
+                     model_dir=self.current_model_dir,
+                     results_dir=self.current_results_dir,
+                     run_number=self.run_number,
+                     period_number=self.period_number,
                      params=params,
                      command=self._command,
                      results=self._results,
