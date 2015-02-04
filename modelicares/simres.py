@@ -72,7 +72,7 @@ def _integral(y, x):
     """
     integral = trapz(nc.value(y), nc.value(x))
     if U._use_quantities:
-        return Quantity.quick_new(integral,
+        return Quantity.quicknew(integral,
                                   nc.dimension(x) + nc.dimension(y),
                                   nc.display_unit(x) + nc.display_unit(y))
     return integral
@@ -575,8 +575,8 @@ class Variable(object):
         [3.941368936561048, 3.7467045785160735]
         """
         if U._use_quantities:
-            return Quantity.quick_new(self._samples.values, self._dimension,
-                                      self._display_unit)
+            return Quantity.quicknew(self._samples.values, self._dimension,
+                                     self._display_unit)
         return self._samples.values
 
 # List of file-loading functions for SimRes
