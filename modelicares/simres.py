@@ -1219,11 +1219,11 @@ class SimRes(Res, dict):
         """
         return sum(self.is_constant)
 
-    def plot(self, ynames1=[], ylabel1=None, f1={}, legends1=[],
+    def plot(self, y1=[], ylabel1=None, f1={}, legends1=[],
              leg1_kwargs={'loc': 'best'}, ax1=None,
-             ynames2=[], ylabel2=None, f2={}, legends2=[],
+             y2=[], ylabel2=None, f2={}, legends2=[],
              leg2_kwargs={'loc': 'best'}, ax2=None,
-             xname='Time', xlabel=None,
+             x='Time', xlabel=None,
              title=None, label="xy", incl_prefix=False, suffix=None,
              use_paren=True, **kwargs):
         r"""Plot variables as points and/or curves in 2D Cartesian coordinates.
@@ -1233,7 +1233,7 @@ class SimRes(Res, dict):
 
         **Parameters:**
 
-        - *ynames1*: Name or list of names of variables for the primary y axis
+        - *y1*: Name or list of names of variables for the primary y axis
 
              If any names are invalid, then they will be skipped.
 
@@ -1248,16 +1248,16 @@ class SimRes(Res, dict):
           plotted on the primary y axis
 
              The functions take as the input a list of the vectors of values of
-             the variables in *ynames1*, sampled at the values of the 'Time'
+             the variables in *y1*, sampled at the values of the 'Time'
              variable.
 
         - *legends1*: List of legend entries for variables assigned to the
           primary y axis
 
-             If *legends1* is an empty list ([]), ynames1 will be used along
-             with the keys from the *f1* dictionary.  If *legends1* is *None*
-             and all of the variables on the primary axis have the same unit,
-             then no legend will be shown.
+             If *legends1* is an empty list ([]), y1 will be used along with the
+             keys from the *f1* dictionary.  If *legends1* is *None* and all of
+             the variables on the primary axis have the same unit, then no
+             legend will be shown.
 
         - *leg1_kwargs*: Dictionary of keyword arguments for the primary legend
 
@@ -1266,11 +1266,11 @@ class SimRes(Res, dict):
              If *ax1* is not provided, then axes will be created in a new
              figure.
 
-        - *ynames2*, *ylabel2*, *f2*, *legends2*, *leg2_kwargs*, and *ax2*:
-          Similar to *ynames1*, *ylabel1*, *f1*, *legends1*, *leg1_kwargs*, and
-          *ax1* but for the secondary y axis
+        - *y2*, *ylabel2*, *f2*, *legends2*, *leg2_kwargs*, and *ax2*: Similar
+          to *y1*, *ylabel1*, *f1*, *legends1*, *leg1_kwargs*, and *ax1* but for
+          the secondary y axis
 
-        - *xname*: Name of the x-axis variable
+        - *x*: Name of the x-axis variable
 
         - *xlabel*: Label for the x axis
 
@@ -1313,8 +1313,8 @@ class SimRes(Res, dict):
         .. plot:: examples/ChuaCircuit.py
            :alt: plot of Chua circuit
         """
-        # Note:  ynames1 is the first argument (besides self) so that plot()
-        # can be called with simply a variable name.
+        # Note:  y1 is the first argument (besides self) so that plot() can be
+        # called with simply a variable name.
 
         def ystrings(ynames, ylabel, legends, funcs):
             """Generate a y-axis label and set of legend entries.
@@ -1364,9 +1364,9 @@ class SimRes(Res, dict):
             return ylabel, legends, display_units
 
         # Process the inputs.
-        ynames1 = flatten_list(ynames1)
-        ynames2 = flatten_list(ynames2)
-        assert ynames1 or ynames2, "No signals were provided."
+        y1 = flatten_list(y1)
+        y2 = flatten_list(y2)
+        assert y1 or y2, "No signals were provided."
         if title is None:
             title = self.fbase
 
@@ -1374,28 +1374,28 @@ class SimRes(Res, dict):
         if not ax1:
             fig = util.figure(label)
             ax1 = fig.add_subplot(111)
-        if ynames2 and not ax2:
+        if y2 and not ax2:
             ax2 = ax1.twinx()
 
         # Generate the x-axis label.
         if xlabel is None:
-            xlabel = 'Time' if xname == 'Time' else self[xname].description
+            xlabel = 'Time' if x == 'Time' else self[x].description
             # With Dymola 7.4, the description of the time variable will be
             # "Time in", which isn't good.
         if xlabel != "":
-            xlabel = number_label(xlabel, self[xname].display_unit)
+            xlabel = number_label(xlabel, self[x].display_unit)
 
         # Generate the y-axis labels and sets of legend entries.
-        ylabel1, legends1, units1 = ystrings(ynames1, ylabel1, legends1, f1)
-        ylabel2, legends2, units2 = ystrings(ynames2, ylabel2, legends2, f2)
+        ylabel1, legends1, units1 = ystrings(y1, ylabel1, legends1, f1)
+        ylabel2, legends2, units2 = ystrings(y2, ylabel2, legends2, f2)
 
         # Retrieve the data.
         time = self['Time']
         all_times = time.values()
         time_unit = U._units(**time._display_unit)
-        yvars1 = self(ynames1)
-        yvars2 = self(ynames2)
-        if xname == 'Time':
+        yvars1 = self(y1)
+        yvars2 = self(y2)
+        if x == 'Time':
             y1 = [value / unit for value, unit in zip(yvars1.values(), units1)]
             if f1:
                 y1_all = yvars1.values(all_times)
@@ -1405,21 +1405,21 @@ class SimRes(Res, dict):
                 y2_all = yvars2.values(all_times)
                 y2 += [f(y2_all) for f in f2.values()]
         else:
-            x = self[xname].values()
-            times = self[xname].times()
+            x = self[x].values()
+            times = self[x].times()
             y1 = yvars1.values(times)
             y1 += [f(y1) for f in f1.values()]
             y2 = yvars2.values(times)
             y2 += [f(y2) for f in f2.values()]
 
         # Plot the data.
-        if ynames2:
+        if y2:
             y2times = ([time / time_unit for time in yvars2.times()]
-                       + [all_times] * len(f2) if xname == 'Time' else x)
-        if ynames1:
+                       + [all_times] * len(f2) if x == 'Time' else x)
+        if y1:
             y1times = ([time / time_unit for time in yvars1.times()]
-                       + [all_times] * len(f1) if xname == 'Time' else x)
-            if ynames2:
+                       + [all_times] * len(f1) if x == 'Time' else x)
+            if y2:
                 # Use solid lines for the primary axis and dotted lines for the
                 # secondary.
                 kwargs['dashes'] = [(None, None)]
@@ -1428,7 +1428,7 @@ class SimRes(Res, dict):
                 util.plot(y2, y2times, ax2, label=legends2, **kwargs)
             else:
                 util.plot(y1, y1times, ax1, label=legends1, **kwargs)
-        elif ynames2:
+        elif y2:
             util.plot(y2, y2times, ax2, label=legends2, **kwargs)
 
         # Decorate the figure.
