@@ -68,7 +68,7 @@ from scipy.io import loadmat
 from scipy.io.matlab.mio_utils import chars_to_strings
 from six import PY2
 
-from .._display import default_display_units
+#from .._display import default_display_units
 from ..simres import Variable
 from ..util import next_nonblank
 
