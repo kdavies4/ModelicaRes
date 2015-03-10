@@ -31,7 +31,6 @@ __license__ = "BSD-compatible (see LICENSE.txt)"
 
 import os
 import sys
-import subprocess
 
 from datetime import date
 from multiprocessing import Pool
@@ -571,9 +570,8 @@ class dymosim(object):
         self.run_number = 0
         self.period_number = 0
 
-        # Prepare for asynchronous simulation.
-        if not debug:
-            self._pool = Pool()
+        # Prepare for asynchronous simulation, unless debugging is enabled.
+        self._pool = None if debug else Pool()
 
     def __delattr__(self, attr):
         """Delete a command option.
@@ -677,8 +675,9 @@ class dymosim(object):
     def __exit__(self, *exc_details):
         """Exit the context of the simulator.
         """
-        if not self._debug:
+        if self._pool:
             self._pool.close()
+            self._pool.join() # Wait for all of the processes to exit.
         self._run_log.close()
 
     def _write_log(self, parameters):
@@ -774,7 +773,7 @@ class dymosim(object):
         copy(orig_dsin_path, dsin_path)
 
         # Write the parameters and options, run the model, and save the results.
-        if not self._debug:
+        if self._pool:
             return self._pool.apply_async(
                 _run_dymosim,
                 [],
@@ -788,7 +787,7 @@ class dymosim(object):
                      params=params,
                      command=self._command,
                      results=self._results))
-        # In debug mode, it's not possible to run asynchronously because the
+        # In debug mode, it isn't possible to run asynchronously because the
         # output must be printed for each simulation as it runs.
         _run_dymosim(options=self.current_options,
                      executable=self.current_executable,
@@ -839,7 +838,7 @@ class dymosim(object):
         self._write_log(params)
 
         # Write the parameters and options, run the model, and save the results.
-        if not self._debug:
+        if self._pool:
             return self._pool.apply_async(_run_dymosim, [],
                                         dict(simulator=self,
                                              params=params,

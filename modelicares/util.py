@@ -71,8 +71,7 @@ r"""Classes and functions to help plot and interpret experimental data
 
 - :func:`read_values` - Read integers or floats from a formatted text file.
 
-- :func:`save` - Save the current figures as images in a format or list of
-  formats.
+- :func:`save` - Save a figure in an image format or list of formats.
 
 - :func:`saveall` - Save all open figures as images in a format or list of
   formats.
@@ -822,6 +821,8 @@ def plot(y, x=None, ax=None, label=None,
 
     - *label*: List of labels of each series (to be used later for the legend
       if applied)
+
+         If *label* is *None*, no labels are applied.
 
     - *color*: Single entry, list, or :func:`itertools.cycle` of colors that
       will be used sequentially
