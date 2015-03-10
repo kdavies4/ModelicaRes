@@ -1005,8 +1005,11 @@ def run_in_dir(args, working_dir='', debug=False):
     # This function is based on code from Arnout Aertgeerts.
 
     # Run the command and print the output if debug is True.
+    print args, working_dir
+
     process = subprocess.Popen(args, cwd=working_dir if working_dir else None,
                                stdout=subprocess.PIPE)
+
     if debug:
         for line in iter(lambda: process.stdout.read(1), ''):
             sys.stdout.write(line)

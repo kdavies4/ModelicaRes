@@ -1,1 +1,2 @@
 Run #	Period #	Options	Executable	Initial values & parameters
+1	1	StopTime=2500	dymosim.exe	L(L=15)

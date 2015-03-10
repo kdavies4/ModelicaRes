@@ -40,12 +40,11 @@ from . import read_options, read_params, write_options, write_params
 from ..util import ParamDict, cleanpath, run_in_dir, dict_to_lists
 
 # OS-dependent strings
-EXE = '.exe' if os.name == 'nt' else '' # File extension for an executable
-EXEC_PREFIX = '' if os.name == 'nt' else './' # Prefix to execute a file
+EXE = '.exe' if os.name == 'nt' else ''  # File extension for an executable
+EXEC_PREFIX = '' if os.name == 'nt' else './'  # Prefix to execute a file
 
 
 class dymola_script(object):
-
     """Context manager to write a Dymola\ :sup:`®`-formatted script
 
     **Initialization parameters (defaults in parentheses):**
@@ -285,7 +284,7 @@ class dymola_script(object):
         # Sometimes Dymola opens with an error; simulate any model to clear the
         # error.
         # mos.write('simulateModel("Modelica.Electrical.Analog.Examples.'
-        #           'ChuaCircuit");\n\n')
+        # 'ChuaCircuit");\n\n')
 
         # Start the run log.
         run_log = open(os.path.join(results_dir, "runs.tsv"), 'w')
@@ -312,7 +311,7 @@ class dymola_script(object):
         """
         if attr in ('_command', '_results', '_options', 'run_number', 'period_number',
                     '_run_log', '_mos'):
-            object.__setattr__(self, attr, value) # Traditional method
+            object.__setattr__(self, attr, value)  # Traditional method
         else:
             self._options[attr] = value
 
@@ -409,10 +408,10 @@ class dymola_script(object):
                             + '\n')
         print('Run %s:  %s' % (run_number, call))
 
-    # TODO: Consider adding a continue_run method.  The major issue is that it's
-    # impossible to access stopTime programmatically in Dymola (due to problems
-    # with assignment from Dymola's getExperiment() function). Therefore, it's
-    # impossible to set the new stopTime based on duration.
+        # TODO: Consider adding a continue_run method.  The major issue is that it's
+        # impossible to access stopTime programmatically in Dymola (due to problems
+        # with assignment from Dymola's getExperiment() function). Therefore, it's
+        # impossible to set the new stopTime based on duration.
 
 
 def _run_dymosim(options, executable, dsin_path, model_dir, results_dir,
@@ -454,8 +453,7 @@ def _run_dymosim(options, executable, dsin_path, model_dir, results_dir,
     # Save the other results.
     for result in results:
         source = os.path.join(working_dir, result)
-        destination = os.path.join(results_dir,
-            str(period_number).join(os.path.splitext(result)))
+        destination = os.path.join(results_dir, str(period_number).join(os.path.splitext(result)))
         move(source, destination)
 
     # Remove the working directory and its contents.
@@ -463,7 +461,6 @@ def _run_dymosim(options, executable, dsin_path, model_dir, results_dir,
 
 
 class dymosim(object):
-
     """Context manager to run executable models from Dymola\ :sup:`®`
 
     **Initialization parameters (defaults in parentheses):**
@@ -569,7 +566,7 @@ class dymosim(object):
         # Start counting the number of runs and simulation periods
         # (continuations).
         self.run_number = 0
-        self.period_number = 0
+        self.period_number_list = [0]
 
         # Prepare for asynchronous simulation.
         if not debug:
@@ -656,15 +653,27 @@ class dymosim(object):
         """
         return os.path.join(self._results_dir, str(self.run_number))
 
+    @property
+    def period_number(self):
+        """Return the period number for the current run
+        """
+        return self.period_number_list[self.run_number]
+
+    @period_number.setter
+    def period_number(self, value):
+        """Set the period number according to the current run number
+        """
+        self.period_number_list[self.run_number] = value
+
     def __setattr__(self, attr, value):
         """Add known attributes directly, but unknown attributes go to the
         dictionary of command options.
         """
         if attr in ('_command', '_current_model', '_current_options', '_debug',
                     '_options', '_pool', '_results', '_results_dir', '_run_log',
-                    'current_model', 'current_options', 'period_number',
+                    'current_model', 'current_options', 'period_number', 'period_number_list',
                     'run_number'):
-            object.__setattr__(self, attr, value) # Traditional method
+            object.__setattr__(self, attr, value)  # Traditional method
         else:
             self._options[attr] = value
 
@@ -741,8 +750,8 @@ class dymosim(object):
         # Increment the number of runs.
         self.run_number += 1
 
-        # Reset the number of simulation periods.
-        self.period_number = 1
+        # Reset the number of simulation periods for the new run.
+        self.period_number_list.append(1)
 
         # Update the simulation options.
         self.current_options = options
@@ -779,7 +788,7 @@ class dymosim(object):
                 _run_dymosim,
                 [],
                 dict(options=self.current_options,
-                     executable = self.current_executable,
+                     executable=self.current_model,
                      dsin_path=self.current_dsin_path,
                      model_dir=self.current_model_dir,
                      results_dir=self.current_results_dir,
@@ -791,7 +800,7 @@ class dymosim(object):
         # In debug mode, it's not possible to run asynchronously because the
         # output must be printed for each simulation as it runs.
         _run_dymosim(options=self.current_options,
-                     executable=self.current_executable,
+                     executable=self.current_model,
                      dsin_path=self.current_dsin_path,
                      model_dir=self.current_model_dir,
                      results_dir=self.current_results_dir,
@@ -840,14 +849,26 @@ class dymosim(object):
 
         # Write the parameters and options, run the model, and save the results.
         if not self._debug:
-            return self._pool.apply_async(_run_dymosim, [],
-                                        dict(simulator=self,
-                                             params=params,
-                                             command=self._command,
-                                             results=self._results))
-        # Can't run asynchronously because output must be printed for each
-        # simulation as it runs.
-        _run_dymosim(simulator=self,
+            return self._pool.apply_async(_run_dymosim, [], dict(options=options,
+                                                                 executable=self.current_model,
+                                                                 dsin_path=self.current_dsin_path,
+                                                                 model_dir=self.current_model_dir,
+                                                                 results_dir=self.current_results_dir,
+                                                                 run_number=self.run_number,
+                                                                 period_number=self.period_number,
+                                                                 params=params,
+                                                                 command=self._command,
+                                                                 results=self._results))
+
+        # In debug mode, it's not possible to run asynchronously because the
+        # output must be printed for each simulation as it runs.
+        _run_dymosim(options=options,
+                     executable=self.current_model,
+                     dsin_path=self.current_dsin_path,
+                     model_dir=self.current_model_dir,
+                     results_dir=self.current_results_dir,
+                     run_number=self.run_number,
+                     period_number=self.period_number,
                      params=params,
                      command=self._command,
                      results=self._results,
@@ -855,7 +876,6 @@ class dymosim(object):
 
 
 class fmi(object):
-
     """Context manager to simulate FMUs_ via PyFMI_
 
     .. Warning:: This context manager has not been implemented yet. TODO
@@ -913,7 +933,7 @@ class fmi(object):
         """
         if attr in ('_results_dir', '_options', 'run_number', 'period_number',
                     '_run_log', '_current_model', 'memory_result', 'fmu'):
-            object.__setattr__(self, attr, value) # Traditional method
+            object.__setattr__(self, attr, value)  # Traditional method
         else:
             self._options[attr] = value
 
@@ -1132,8 +1152,10 @@ class fmi(object):
         }
         self._run(params, options, model_dir, results_dir)
 
+
 if __name__ == '__main__':
     # Test the contents of this file.
 
     import doctest
+
     doctest.testmod()
