@@ -414,8 +414,12 @@ class dymola_script(object):
         # impossible to set the new stopTime based on duration.
 
 
+def process_ended_callback(result):
+    print("Process resulted in", result)
+
+
 def _run_dymosim(options, executable, dsin_path, model_dir, results_dir,
-                 run_number, period_number, params={}, command=None,
+                 run_number, period_number, params={}, return_params=False, command=None,
                  results=None, debug=False):
     """Write the given model parameters and initial values (*params*) and
     simulation options (*options*) to the initialization file at *dsin_path*,
@@ -458,6 +462,9 @@ def _run_dymosim(options, executable, dsin_path, model_dir, results_dir,
 
     # Remove the working directory and its contents.
     rmtree(working_dir)
+
+    if return_params:
+        return run_number, read_params(return_params, dsfinal_path)
 
 
 class dymosim(object):
@@ -554,6 +561,7 @@ class dymosim(object):
         self._options = options
         self._current_model = None
         self._current_options = {}
+        self._return_params = False
 
         # Start the run log.
         if not os.path.isdir(results_dir):
@@ -672,7 +680,7 @@ class dymosim(object):
         if attr in ('_command', '_current_model', '_current_options', '_debug',
                     '_options', '_pool', '_results', '_results_dir', '_run_log',
                     'current_model', 'current_options', 'period_number', 'period_number_list',
-                    'run_number'):
+                    'run_number', '_return_params'):
             object.__setattr__(self, attr, value)  # Traditional method
         else:
             self._options[attr] = value
@@ -700,7 +708,7 @@ class dymosim(object):
                                        str(ParamDict(parameters))[1:-1]])
                             + '\n')
 
-    def run(self, model='dymosim', params={}, **options):
+    def run(self, model='dymosim', params={}, return_params=False, callback=process_ended_callback, **options):
         r"""Run and save the results of a single experiment.
 
         **Parameters:**
@@ -731,6 +739,18 @@ class dymosim(object):
 
              Any item with a value of *None* is skipped.
 
+        - *return_params*: Lists of names of parameters from which you want the end
+          value returned by a simulation.
+
+             The keys or variable names in this list must indicate the
+             hierarchy within the model---either in Modelica_ dot ('.') notation
+             or via nested dictionaries.  Due to the format of the
+             initialization files, arrays must be broken into scalars by
+             indicating the indices (Modelica_ 1-based indexing) in the key
+             along with the variable name.  Also, enumerations and Booleans must
+             be given as their unsigned integer equivalents (e.g., 0 for
+             *False*).  Strings and prefixes are not supported.
+
         - *\*\*options*: Adjustments to the simulation settings under
           "Experiment parameters", "Method tuning parameters", and "Output
           parameters" in the initialization file
@@ -747,11 +767,14 @@ class dymosim(object):
         Please see the example in the top-level documentation of
         :class:`dymosim`.
         """
-        # Increment the number of runs.
-        self.run_number += 1
+        # Create a new run number and set it for this simulation.
+        self.run_number = len(self.period_number_list)
 
         # Reset the number of simulation periods for the new run.
         self.period_number_list.append(1)
+
+        # Set the return parameters of the simulation
+        self._return_params = return_params
 
         # Update the simulation options.
         self.current_options = options
@@ -795,8 +818,10 @@ class dymosim(object):
                      run_number=self.run_number,
                      period_number=self.period_number,
                      params=params,
+                     return_params=self._return_params,
                      command=self._command,
-                     results=self._results))
+                     results=self._results),
+                callback)
         # In debug mode, it's not possible to run asynchronously because the
         # output must be printed for each simulation as it runs.
         _run_dymosim(options=self.current_options,
@@ -807,11 +832,12 @@ class dymosim(object):
                      run_number=self.run_number,
                      period_number=self.period_number,
                      params=params,
+                     return_params=self._return_params,
                      command=self._command,
                      results=self._results,
                      debug=True)
 
-    def continue_run(self, duration, params={}):
+    def continue_run(self, run_number, duration, params={}, callback=None):
         """Continue the last run (using the same model).
 
         **Parameters:**
@@ -830,7 +856,11 @@ class dymosim(object):
            initial values.  Otherwise, the new simulation will not continue
            where the last one left off.
         """
-        # Increment the number of periods.
+
+        # Set the run number to the right simulation run
+        self.run_number = run_number
+
+        # Increment the number of periods for this run.
         self.period_number += 1
 
         # The new initialization file is the old final values file.
@@ -849,16 +879,21 @@ class dymosim(object):
 
         # Write the parameters and options, run the model, and save the results.
         if not self._debug:
-            return self._pool.apply_async(_run_dymosim, [], dict(options=options,
-                                                                 executable=self.current_model,
-                                                                 dsin_path=self.current_dsin_path,
-                                                                 model_dir=self.current_model_dir,
-                                                                 results_dir=self.current_results_dir,
-                                                                 run_number=self.run_number,
-                                                                 period_number=self.period_number,
-                                                                 params=params,
-                                                                 command=self._command,
-                                                                 results=self._results))
+            return self._pool.apply_async(
+                _run_dymosim,
+                [],
+                dict(options=options,
+                     executable=self.current_model,
+                     dsin_path=self.current_dsin_path,
+                     model_dir=self.current_model_dir,
+                     results_dir=self.current_results_dir,
+                     run_number=self.run_number,
+                     period_number=self.period_number,
+                     params=params,
+                     return_params=self._return_params,
+                     command=self._command,
+                     results=self._results),
+                callback)
 
         # In debug mode, it's not possible to run asynchronously because the
         # output must be printed for each simulation as it runs.
