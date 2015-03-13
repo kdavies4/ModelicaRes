@@ -416,7 +416,7 @@ class dymola_script(object):
 
 
 def process_ended_callback(result):
-    print("Process resulted in", result)
+    pass
 
 
 def _run_dymosim(options, executable, dsin_path, model_dir, results_dir,
@@ -920,7 +920,10 @@ class dymosim(object):
     def result(self, run=[]):
         # Check if the parameter is an array
         if not isinstance(run, list):
-            runs = [run]
+            if run=='*':
+                runs = range(1, len(self.period_number_list))
+            else:
+                runs = [run]
         else:
             runs = run
 
