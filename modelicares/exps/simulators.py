@@ -687,7 +687,7 @@ class dymosim(object):
         if attr in ('_command', '_current_model', '_current_options', '_debug',
                     '_options', '_pool', '_results', '_results_dir', '_run_log',
                     'current_model', 'current_options', 'period_number', 'period_number_list',
-                    'run_number', '_return_params'):
+                    'run_number', '_return_params', '_synchronous'):
             object.__setattr__(self, attr, value)  # Traditional method
         else:
             self._options[attr] = value
