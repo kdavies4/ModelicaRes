@@ -38,6 +38,7 @@ from multiprocessing import Pool
 from shutil import copy, move, rmtree
 from . import read_options, read_params, write_options, write_params
 from ..util import ParamDict, cleanpath, run_in_dir, dict_to_lists
+from ..simres import SimRes, SimResList, SimResSequence
 
 # OS-dependent strings
 EXE = '.exe' if os.name == 'nt' else ''  # File extension for an executable
@@ -911,6 +912,59 @@ class dymosim(object):
                      results=self._results,
                      debug=True)
 
+    def result(self, run=[]):
+        # Check if the parameter is an array
+        if not isinstance(run, list):
+            runs = [run]
+        else:
+            runs = run
+
+        for r in runs:
+            if r < 1 or r > len(self.period_number_list) - 1:
+                print "%s is not a valid run number" % r
+                print "The run number should be between 1 and %s" % str(len(self.period_number_list) - 1)
+                return
+
+        # Return the current status if no specific run is asked
+        if len(runs) < 1:
+            # Return a simres if only one period is present
+            if self.period_number < 2:
+                return SimRes(os.path.join(self.current_results_dir,
+                                           'dsres1.mat'))
+            # Return a sequence if only there are more periods
+            else:
+                return SimResSequence(os.path.join(self.current_results_dir,
+                                                   'dsres*.mat'))
+
+        # Only one run is asked
+        elif len(runs) < 2:
+            self.run_number = runs[0]
+
+            # Return a simres if only one period is present
+            if self.period_number < 2:
+                return SimRes(os.path.join(self.current_results_dir,
+                                           'dsres1.mat'))
+            # Return a sequence if only there are more periods
+            else:
+                return SimResSequence(os.path.join(self.current_results_dir,
+                                                   'dsres*.mat'))
+
+        # More than one run is asked
+        else:
+            res = []
+            for r in runs:
+                self.run_number = r
+
+                # Return a simres if only one period is present
+                if self.period_number < 2:
+                    res.append(SimRes(os.path.join(self.current_results_dir,
+                                                   'dsres1.mat')))
+                # Return a sequence if only there are more periods
+                else:
+                    res.append(SimResSequence(os.path.join(self.current_results_dir,
+                                                           'dsres*.mat')))
+
+            return SimResList(res)
 
 class fmi(object):
     """Context manager to simulate FMUs_ via PyFMI_
