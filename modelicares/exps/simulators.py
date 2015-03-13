@@ -450,7 +450,8 @@ def _run_dymosim(options, executable, dsin_path, model_dir, results_dir,
     dsres_path = os.path.join(results_dir,
                               'dsres%i.mat' % period_number)
     dsfinal_path = os.path.join(results_dir, 'dsfinal.txt')
-    args = [os.path.join('..', executable), command, '-f',
+
+    args = [os.path.join(model_dir, executable), command, '-f',
             dsfinal_path, dsin_path, dsres_path]
     run_in_dir(args, working_dir, debug=debug)
 
@@ -837,7 +838,7 @@ class dymosim(object):
                      results=self._results,
                      debug=True)
 
-    def continue_run(self, run_number, duration, params={}, callback=None):
+    def continue_run(self, duration, params={}, run_number=0, callback=None):
         """Continue the last run (using the same model).
 
         **Parameters:**
@@ -858,7 +859,8 @@ class dymosim(object):
         """
 
         # Set the run number to the right simulation run
-        self.run_number = run_number
+        if run_number >= 1:
+            self.run_number = run_number
 
         # Increment the number of periods for this run.
         self.period_number += 1
