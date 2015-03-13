@@ -548,7 +548,7 @@ class dymosim(object):
     """
 
     def __init__(self, command='-s', results_dir='', results=['dslog.txt'],
-                 debug=False, **options):
+                 debug=False, sync=False, **options):
         """Upon initialization, establish some settings.
 
         See the top-level class documentation.
@@ -560,6 +560,11 @@ class dymosim(object):
         self._results_dir = results_dir
         self._results = results
         self._debug = debug
+        # Always run synchronously in debug mode
+        if debug:
+            self._synchronous = True
+        else:
+            self._synchronous = sync
         self._options = options
         self._current_model = None
         self._current_options = {}
@@ -808,7 +813,7 @@ class dymosim(object):
         copy(orig_dsin_path, dsin_path)
 
         # Write the parameters and options, run the model, and save the results.
-        if not self._debug:
+        if not self._synchronous:
             return self._pool.apply_async(
                 _run_dymosim,
                 [],
@@ -837,7 +842,7 @@ class dymosim(object):
                      return_params=self._return_params,
                      command=self._command,
                      results=self._results,
-                     debug=True)
+                     debug=self._debug)
 
     def continue_run(self, duration, params={}, run_number=0, callback=None):
         """Continue the last run (using the same model).
@@ -881,7 +886,7 @@ class dymosim(object):
         self._write_log(params)
 
         # Write the parameters and options, run the model, and save the results.
-        if not self._debug:
+        if not self._synchronous:
             return self._pool.apply_async(
                 _run_dymosim,
                 [],
@@ -910,7 +915,7 @@ class dymosim(object):
                      params=params,
                      command=self._command,
                      results=self._results,
-                     debug=True)
+                     debug=self._debug)
 
     def result(self, run=[]):
         # Check if the parameter is an array
@@ -965,6 +970,7 @@ class dymosim(object):
                                                            'dsres*.mat')))
 
             return SimResList(res)
+
 
 class fmi(object):
     """Context manager to simulate FMUs_ via PyFMI_
