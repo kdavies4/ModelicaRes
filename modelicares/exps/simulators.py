@@ -460,7 +460,6 @@ def _run_dymosim(options, executable, dsin_path, model_dir, results_dir,
     # Remove the working directory and its contents.
     rmtree(working_dir)
 
-
 class dymosim(object):
 
     """Context manager to run executable models from Dymola\ :sup:`®`
@@ -490,7 +489,7 @@ class dymosim(object):
 
          See the initialization file for more information.  The common
          parameters are those under "Experiment parameters".  Note that they are
-         slightly different than those for :class:`dymola_script`:
+         named differently than those for :class:`dymola_script`:
 
          - *StartTime* (compare to *startTime*): Time at which integration
            starts
@@ -801,6 +800,7 @@ class dymosim(object):
                      results=self._results,
                      debug=True)
 
+# TODO: apply continue() as a method of the run() result.
     def continue_run(self, duration, params={}):
         """Continue the last run (using the same model).
 
@@ -836,6 +836,8 @@ class dymosim(object):
 
         # Add an entry to the run log.
         self._write_log(params)
+
+        # TODO: Wait for the previous simulation to complete.
 
         # Write the parameters and options, run the model, and save the results.
         if self._pool:

@@ -8,6 +8,7 @@ include doc/*.md
 include doc/*.pws
 include doc/*.py
 include doc/*.rst
+include doc/*.txt
 include doc/_static/*
 include doc/_templates/*
 include doc/extra/*
