@@ -65,7 +65,9 @@ from .texunit import unit2tex, number_label # TODO Use natu.
 
 # Use Modelica formatting for dimensions and units.
 from natu import config
+
 config.default_format = 'M'
+
 
 def _integral(y, x):
     """Quantity-aware integration
@@ -73,15 +75,16 @@ def _integral(y, x):
     integral = trapz(nc.value(y), nc.value(x))
     if U._use_quantities:
         return Quantity.quicknew(integral,
-                                  nc.dimension(x) + nc.dimension(y),
-                                  nc.display_unit(x) + nc.display_unit(y))
+                                 nc.dimension(x) + nc.dimension(y),
+                                 nc.display_unit(x) + nc.display_unit(y))
     return integral
+
 
 def _interp1d(x, y, *args, **kwargs):
     """1D interpolation for quantities
     """
     interp = interp1d(nc.value(x), y, *args, **kwargs)
-    #x_dimension = nc.dimension(x)
+    # x_dimension = nc.dimension(x)
 
     def new_interpolator(xnew):
         #assert nc.dimension(xnew) == x_dimension, (
@@ -90,9 +93,11 @@ def _interp1d(x, y, *args, **kwargs):
 
     return new_interpolator
 
+
 def _select(meth):
     """Decorate a method to use time-based indexing to select values.
     """
+
     @wraps(meth, assigned=('__module__', '__name__')) # without __doc__
     def wrapped(self, t=None):
         """
@@ -129,6 +134,7 @@ def _select(meth):
              time(s) are interpreted using the unit system used by :mod:`natu`
              (SI by default).
         """
+
         def get_slice(t):
             """Return a slice that indexes the variable.
 
@@ -194,7 +200,6 @@ Samples = namedtuple('Samples', ['times', 'values'])
 
 
 class Variable(object):
-
     """Class to represent a variable in a simulation, with methods to retrieve
     and perform calculations on its values
 
@@ -261,8 +266,13 @@ class Variable(object):
     def __init__(self, samples, dimension, display_unit, description=""):
         self._samples = samples
         self._dimension = dimension
-        self._display_unit = nc.UnitExponents.fromstr(display_unit.replace('.',
-                                                                           '*'))
+
+        try:
+            self._display_unit = nc.UnitExponents.fromstr(display_unit.replace('.',
+                                                                               '*'))
+        except AttributeError:
+            self._display_unit = display_unit
+
         self.description = description
 
     @property
@@ -581,7 +591,8 @@ class Variable(object):
 
 # List of file-loading functions for SimRes
 from ._io.dymola import readsim as dymola
-READERS = [('dymola', dymola)]  # SimRes tries these in order.
+
+READERS = [('dymola', dymola)] # SimRes tries these in order.
 # All of the keys should be in lowercase.
 # This must be below the definition of Variable because that class is required
 # by the loading functions.
@@ -606,7 +617,6 @@ def _get_sims(fnames):
 
 
 class VarList(list):
-
     """Special list of simulation variables (instances of :class:`Variable`),
     allowing access to information from all of the variables at once
 
@@ -653,6 +663,7 @@ class VarList(list):
         """Return a method that operates on all of the variables in the list of
         variables, given a function that operates on a single variable.
         """
+
         @wraps(meth)
         def wrapped(self, attr):
             """Traverse the list recursively until the argument is a single
@@ -663,6 +674,7 @@ class VarList(list):
                                   if isinstance(variable, Variable) else
                                   wrapped(variable, attr)
                                   for variable in self])
+
         return wrapped
 
     @_listmethod
@@ -676,7 +688,6 @@ class VarList(list):
 
 
 class SimRes(Res, dict):
-
     """Class to load, analyze, and plot results from a Modelica_ simulation
 
     **Initialization parameters:**
@@ -1038,7 +1049,7 @@ class SimRes(Res, dict):
             title = self.fbase
 
         # Set up the subplots.
-        n_plots = len(times)  # Number of plots
+        n_plots = len(times) # Number of plots
         ax = util.setup_subplots(n_plots=n_plots, n_rows=n_rows,
                                  title=title, subtitles=subtitles, label=label,
                                  xlabel=xlabel, xticks=ind,
@@ -1320,7 +1331,7 @@ class SimRes(Res, dict):
             """Generate a y-axis label and set of legend entries.
             """
             if ynames:
-                if ylabel is None:  # Try to create a suitable axis label.
+                if ylabel is None: # Try to create a suitable axis label.
                     descriptions = self(ynames).description
                     # If the descriptions are the same, label the y axis with
                     # the 1st one.
@@ -1346,7 +1357,7 @@ class SimRes(Res, dict):
                     display_unit = variables[0]._display_unit
                     if ylabel != "":
                         ylabel = number_label(ylabel, display_unit)
-                    display_units = [U._units(**display_unit)]*len(variables)
+                    display_units = [U._units(**display_unit)] * len(variables)
                 else:
                     # Show the units in the legend.
                     if legends:
@@ -1624,9 +1635,9 @@ class SimRes(Res, dict):
 
             # Get the values.
             if np.array_equal(self[name].times(), times):
-                values = self[name].values()  # Save computation.
+                values = self[name].values() # Save computation.
             else:
-                values = self[name].values(t=times)  # Resample.
+                values = self[name].values(t=times) # Resample.
 
             unit = self[name].unit
 
@@ -1670,13 +1681,14 @@ class SimRes(Res, dict):
         >>> sim(['L.v', 'L.i']).unit
         ['V', 'A']
         """
+
         def entries(names):
             """Create a (possibly nested) list of data entries given a (possibly
             nested) list of variable names.
             """
             if isinstance(names, string_types):
                 return self[names]
-            return [entries(name) for name in names]  # Recursion
+            return [entries(name) for name in names] # Recursion
 
         assert not isinstance(names, string_types), (
             "Use square brackets (__getitem__ method) to retrieve a single "
@@ -1753,7 +1765,6 @@ class SimRes(Res, dict):
 
 
 class SimResList(ResList):
-
     r"""Special list of simulation results (:class:`SimRes` instances)
 
     **Initialization signatures:**
@@ -1928,7 +1939,7 @@ class SimResList(ResList):
         if not args: # Empty list
             super(SimResList, self).__init__([])
 
-        elif isinstance(args[0], string_types):  # Filenames or directories
+        elif isinstance(args[0], string_types): # Filenames or directories
             try:
                 fnames = multiglob(args)
             except TypeError:
@@ -1938,7 +1949,7 @@ class SimResList(ResList):
                     "arguments, each of which is a filename or directory.")
             list.__init__(self, _get_sims(fnames))
 
-        elif len(args) == 1:  # List or iterable of SimRes instances
+        elif len(args) == 1: # List or iterable of SimRes instances
             sims = list(args[0])
             for sim in sims:
                 assert isinstance(sim, SimRes), ("All entries in the list must "
@@ -2370,9 +2381,8 @@ class SimResList(ResList):
 
 
 class SimResSequence(SimRes):
-
     """Class to load, analyze, and plot results from a sequence of continued
-    Modelica_ simulations of the same model
+    Modelica simulations of the same model
 
     **Initialization signatures:**
 
@@ -2428,11 +2438,13 @@ class SimResSequence(SimRes):
         def get_variable(name):
             entries = sims[name]
             first = entries[0]
+
             return Variable(Samples(np.concatenate(entries.times()),
                                     np.concatenate(entries.values())),
                             first.dimension,
                             first.display_unit,
                             first.description)
+
         self.update({name: get_variable(name) for name in sims.names})
 
         # Set the other attributes.

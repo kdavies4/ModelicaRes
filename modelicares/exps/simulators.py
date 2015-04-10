@@ -446,7 +446,7 @@ def _run_dymosim(options, executable, dsin_path, model_dir, results_dir,
     dsres_path = os.path.join(results_dir,
                               'dsres%i.mat' % period_number)
     dsfinal_path = os.path.join(results_dir, 'dsfinal.txt')
-    args = [os.path.join('..', executable), command, '-f',
+    args = [os.path.join(model_dir, executable), command, '-f',
             dsfinal_path, dsin_path, dsres_path]
     run_in_dir(args, working_dir, debug=debug)
 
@@ -470,8 +470,9 @@ class dymosim(object):
 
          Besides '-s', this can be '-l' to create a state space representation.
 
-    - *results_dir* (''): Directory in which to store the results, relative to
-      the current directory
+    - *results_dir* (''): Directory in which to store the results
+
+         This is relative to the current directory.
 
     - *results* (['dslog.txt']): List of result files to keep, besides the
       trajectory (dsres.mat), initial values (dsin.txt), and final values
@@ -777,7 +778,7 @@ class dymosim(object):
                 _run_dymosim,
                 [],
                 dict(options=self.current_options,
-                     executable = self.current_executable,
+                     executable=self.current_executable,
                      dsin_path=self.current_dsin_path,
                      model_dir=self.current_model_dir,
                      results_dir=self.current_results_dir,
@@ -1087,11 +1088,12 @@ class fmi(object):
         # Determine the file locations.
         model_dir, results_dir = self._paths(model)
 
-        # Create the results folder
+        # Create the results folder.
         if not os.path.isdir(results_dir):
             os.makedirs(results_dir)
 
-        # Load the fmu, write the parameters and options, run the model, and save the results.
+        # Load the fmu, write the parameters and options, run the model, and
+        # save the results.
         self.load(model, results_dir)
         self._run(params, options, model_dir, results_dir)
 

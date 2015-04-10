@@ -13,6 +13,12 @@ if [[ ${FILE: -3} == ".py" ]]; then
 fi
 done
 
+# ------------------------------------------------------------------------------
+# Remove Dymola status files in case they're generated inside the repo.
+for f in request request. status status. success success.; do
+    find . -type f -name "$f" -exec rm -f {} \;
+done
+
 #-------------------------------------------------------------------------------
 # Check for file names with non-ASCII characters.
 # From pre-commit.sample
