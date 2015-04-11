@@ -1791,7 +1791,7 @@ class SimResList(ResList):
          Each file will be opened once at most; duplicate filename matches are
          ignored.
 
-    **Built-in methods**
+    **Built-in methods:**
 
     The list has all of the methods of a standard Python_ list (e.g., + or
     `__add__

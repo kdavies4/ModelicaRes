@@ -51,8 +51,8 @@ from .simres import SimRes, SimResList, SimResSequence
 from .linres import LinRes, LinResList
 from .util import (add_arrows, add_hlines, add_vlines, ArrowLine, closeall,
                    figure, load_csv, ParamDict, save, saveall, setup_subplots)
-from .exps import doe, read_params, write_params, simulators
-
+from .exps import (doe, read_options, read_params, write_options, write_params,
+                   simulators)
 
 def load(*args):
     """Load multiple Modelica_ simulation and/or linearization results.
