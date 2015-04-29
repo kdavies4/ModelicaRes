@@ -763,7 +763,7 @@ class dymosim(object):
             dsin_name = model_base + '_dsin.txt'
         if not os.path.isfile(os.path.join(model_dir, dsin_name)):
             # Create the file.
-            run_in_dir([EXEC_PREFIX + self.current_executable, '-i',
+            run_in_dir([os.path.join(model_dir, EXEC_PREFIX + self.current_executable), '-i',
                         dsin_name], model_dir)
         orig_dsin_path = os.path.join(model_dir, dsin_name)
 
