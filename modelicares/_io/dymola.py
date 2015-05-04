@@ -366,30 +366,37 @@ def readsim(fname, constants_only=False):
                                                   False),
                                           nc.Exponents(), '', description))
             else:
-                if unit_str.startswith(' '):
-                    # The dimension is entered in Modelica as the unit.
-                    dimension = nc.Exponents.fromstr(unit_str.lstrip())
-                    if not display_unit:
-                        display_unit = default_display_units.find(dimension)
-                else:
-                    if not display_unit:
-                        display_unit = unit_str
-                    unit = U._units(**nc.Exponents.fromstr(unit_str))
-                    try:
-                        _apply_unit(signed_values, unit)
-                    except AttributeError:
-                        # The unit is a LambdaUnit.
-                        if negated:
-                            signed_values = -signed_values
-                            negated = False
-                        get_value = np.vectorize(lambda n:
-                                                 unit._toquantity(n)._value)
-                        signed_values = get_value(signed_values)
-                    dimension = nc.Exponents(nc.dimension(unit))
-                variables.append(Variable(Samples(times,
-                                                  signed_values,
-                                                  negated),
-                                          dimension, display_unit, description))
+                try:
+                    if unit_str.startswith(' '):
+                        # The dimension is entered in Modelica as the unit.
+                        dimension = nc.Exponents.fromstr(unit_str.lstrip())
+                        if not display_unit:
+                            display_unit = default_display_units.find(dimension)
+                    else:
+                        if not display_unit:
+                            display_unit = unit_str
+                        unit = U._units(**nc.Exponents.fromstr(unit_str))
+                        try:
+                            _apply_unit(signed_values, unit)
+                        except TypeError or AttributeError:
+                            # The unit is a LambdaUnit.
+                            if negated:
+                                signed_values = -signed_values
+                                negated = False
+                            get_value = np.vectorize(lambda n:
+                                                     unit._toquantity(n)._value)
+                            signed_values = get_value(signed_values)
+                        dimension = nc.Exponents(nc.dimension(unit))
+                    variables.append(Variable(Samples(times,
+                                                      signed_values,
+                                                      negated),
+                                              dimension, display_unit, description))
+                except AttributeError:
+                    # Something went wrong parsing the units so add with default values
+                    variables.append(Variable(Samples(times,
+                                                      signed_values,
+                                                      negated),
+                                              '1', '/', description))
         variables = dict(zip(names, variables))
 
         # Time is from the last data set.
