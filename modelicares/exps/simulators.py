@@ -39,12 +39,11 @@ from . import read_options, read_params, write_options, write_params
 from ..util import ParamDict, cleanpath, run_in_dir, dict_to_lists
 
 # OS-dependent strings
-EXE = '.exe' if os.name == 'nt' else '' # File extension for an executable
-EXEC_PREFIX = '' if os.name == 'nt' else './' # Prefix to execute a file
+EXE = '.exe' if os.name == 'nt' else ''  # File extension for an executable
+EXEC_PREFIX = '' if os.name == 'nt' else './'  # Prefix to execute a file
 
 
 class dymola_script(object):
-
     """Context manager to write a Dymola\ :sup:`®`-formatted script
 
     **Initialization parameters (defaults in parentheses):**
@@ -284,7 +283,7 @@ class dymola_script(object):
         # Sometimes Dymola opens with an error; simulate any model to clear the
         # error.
         # mos.write('simulateModel("Modelica.Electrical.Analog.Examples.'
-        #           'ChuaCircuit");\n\n')
+        # 'ChuaCircuit");\n\n')
 
         # Start the run log.
         run_log = open(os.path.join(results_dir, "runs.tsv"), 'w')
@@ -311,7 +310,7 @@ class dymola_script(object):
         """
         if attr in ('_command', '_results', '_options', 'run_number', 'period_number',
                     '_run_log', '_mos'):
-            object.__setattr__(self, attr, value) # Traditional method
+            object.__setattr__(self, attr, value)  # Traditional method
         else:
             self._options[attr] = value
 
@@ -408,10 +407,10 @@ class dymola_script(object):
                             + '\n')
         print('Run %s:  %s' % (run_number, call))
 
-    # TODO: Consider adding a continue_run method.  The major issue is that it's
-    # impossible to access stopTime programmatically in Dymola (due to problems
-    # with assignment from Dymola's getExperiment() function). Therefore, it's
-    # impossible to set the new stopTime based on duration.
+        # TODO: Consider adding a continue_run method.  The major issue is that it's
+        # impossible to access stopTime programmatically in Dymola (due to problems
+        # with assignment from Dymola's getExperiment() function). Therefore, it's
+        # impossible to set the new stopTime based on duration.
 
 
 def _run_dymosim(options, executable, dsin_path, model_dir, results_dir,
@@ -454,14 +453,14 @@ def _run_dymosim(options, executable, dsin_path, model_dir, results_dir,
     for result in results:
         source = os.path.join(working_dir, result)
         destination = os.path.join(results_dir,
-            str(period_number).join(os.path.splitext(result)))
+                                   str(period_number).join(os.path.splitext(result)))
         move(source, destination)
 
     # Remove the working directory and its contents.
     rmtree(working_dir)
 
-class dymosim(object):
 
+class dymosim(object):
     """Context manager to run executable models from Dymola\ :sup:`®`
 
     **Initialization parameters (defaults in parentheses):**
@@ -662,7 +661,7 @@ class dymosim(object):
                     '_options', '_pool', '_results', '_results_dir', '_run_log',
                     'current_model', 'current_options', 'period_number',
                     'run_number'):
-            object.__setattr__(self, attr, value) # Traditional method
+            object.__setattr__(self, attr, value)  # Traditional method
         else:
             self._options[attr] = value
 
@@ -677,7 +676,7 @@ class dymosim(object):
         """
         if self._pool:
             self._pool.close()
-            self._pool.join() # Wait for all of the processes to exit.
+            self._pool.join()  # Wait for all of the processes to exit.
         self._run_log.close()
 
     def _write_log(self, parameters):
@@ -801,7 +800,7 @@ class dymosim(object):
                      results=self._results,
                      debug=True)
 
-# TODO: apply continue() as a method of the run() result.
+    # TODO: apply continue() as a method of the run() result.
     def continue_run(self, duration, params={}):
         """Continue the last run (using the same model).
 
@@ -843,21 +842,28 @@ class dymosim(object):
         # Write the parameters and options, run the model, and save the results.
         if self._pool:
             return self._pool.apply_async(_run_dymosim, [],
-                                        dict(simulator=self,
-                                             params=params,
-                                             command=self._command,
-                                             results=self._results))
+                                          dict(simulator=self,
+                                               params=params,
+                                               command=self._command,
+                                               results=self._results))
         # Can't run asynchronously because output must be printed for each
         # simulation as it runs.
-        _run_dymosim(simulator=self,
-                     params=params,
-                     command=self._command,
-                     results=self._results,
-                     debug=True)
+        _run_dymosim(
+            options=self.current_options,
+            executable=self.current_executable,
+            params=params,
+            command=self._command,
+            results=self._results,
+            debug=True,
+            dsin_path=self.current_dsin_path,
+            model_dir=self.current_model_dir,
+            results_dir=self.current_results_dir,
+            run_number=self.run_number,
+            period_number=self.period_number
+        )
 
 
 class fmi(object):
-
     """Context manager to simulate FMUs_ via PyFMI_
 
     .. Warning:: This context manager has not been implemented yet. TODO
@@ -915,7 +921,7 @@ class fmi(object):
         """
         if attr in ('_results_dir', '_options', 'run_number', 'period_number',
                     '_run_log', '_current_model', 'memory_result', 'fmu'):
-            object.__setattr__(self, attr, value) # Traditional method
+            object.__setattr__(self, attr, value)  # Traditional method
         else:
             self._options[attr] = value
 
@@ -1135,8 +1141,10 @@ class fmi(object):
         }
         self._run(params, options, model_dir, results_dir)
 
+
 if __name__ == '__main__':
     # Test the contents of this file.
 
     import doctest
+
     doctest.testmod()
