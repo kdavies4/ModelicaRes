@@ -298,7 +298,7 @@ class LinRes(Res):
 
         - *title*: Title for the figure
 
-             If *title* is *None* (default), then the title will be "Bode plot
+             If *title* is 'None' (default), then the title will be "Bode plot
              of fbase", where fbase is the base filename of the data.  Use ''
              for no title.
 
@@ -323,15 +323,15 @@ class LinRes(Res):
              - *freqs*: List or frequencies or tuple of (min, max) frequencies
                over which to plot the system response.
 
-                  If *freqs* is *None*, then an appropriate range will be
+                  If *freqs* is 'None', then an appropriate range will be
                   determined automatically.
 
-             - *in_Hz*: If *True* (default), the frequencies (*freqs*) are in
+             - *in_Hz*: If `True` (default), the frequencies (*freqs*) are in
                Hz and should be plotted in Hz (otherwise, rad/s)
 
-             - *in_dB*: If *True* (default), plot the magnitude in dB
+             - *in_dB*: If `True` (default), plot the magnitude in dB
 
-             - *in_deg*: If *True* (default), plot the phase in degrees
+             - *in_deg*: If `True` (default), plot the phase in degrees
                (otherwise, radians)
 
              Other keyword arguments are passed to
@@ -424,7 +424,7 @@ class LinRes(Res):
 
         - *title*: Title for the figure
 
-             If *title* is *None* (default), then the title will be "Nyquist
+             If *title* is 'None' (default), then the title will be "Nyquist
              plot of fbase", where fbase is the base filename of the data.  Use
              '' for no title.
 
@@ -443,21 +443,21 @@ class LinRes(Res):
              - *freqs*: List or frequencies or tuple of (min, max) frequencies
                over which to plot the system response.
 
-                  If *freqs* is *None*, then an appropriate range will be
+                  If *freqs* is 'None', then an appropriate range will be
                   determined automatically.
 
-             - *in_Hz*: If *True* (default), the frequencies (*freqs*) are in
+             - *in_Hz*: If `True` (default), the frequencies (*freqs*) are in
                Hz and should be plotted in Hz (otherwise, rad/s)
 
-             - *mark*: *True*, if the -1 point should be marked on the plot
+             - *mark*: `True`, if the -1 point should be marked on the plot
 
-             - *show_axes*: *True*, if the axes should be shown
+             - *show_axes*: `True`, if the axes should be shown
 
              - *skip*: Mark every nth frequency on the plot with a dot
 
-                  If *skip* is 0 or *None*, then the frequencies are not marked.
+                  If *skip* is 0 or 'None', then the frequencies are not marked.
 
-             - *label_freq*: If *True*, if the marked frequencies should be
+             - *label_freq*: If `True`, if the marked frequencies should be
                labeled
 
              Other keyword arguments are passed to
@@ -759,7 +759,7 @@ class LinResList(ResList):
     def _get_labels(self, labels):
         """Create labels for the legend of a Bode or Nyquist plot.
 
-        If *labels* is *None*, then no label will be used.  If it is an empty
+        If *labels* is 'None', then no label will be used.  If it is an empty
         string (''), then the filenames will be used (resolved to the
         *dirname*).
         """
@@ -804,7 +804,7 @@ class LinResList(ResList):
 
         - *labels*: Label or list of labels for the legends
 
-             If *labels* is *None*, then no label will be used.  If it is an
+             If *labels* is 'None', then no label will be used.  If it is an
              empty string (''), then the base filenames will be used.
 
         - *colors*: Color or list of colors that will be used sequentially
@@ -826,22 +826,22 @@ class LinResList(ResList):
         - *leg_kwargs*: Dictionary of keyword arguments for
           :func:`matplotlib.pyplot.legend`
 
-             If *leg_kwargs* is *None*, then no legend will be shown.
+             If *leg_kwargs* is 'None', then no legend will be shown.
 
         - *\*\*kwargs*: Additional plotting arguments:
 
              - *freqs*: List or frequencies or tuple of (min, max) frequencies
                over which to plot the system response.
 
-                  If *freqs* is *None*, then an appropriate range will be
+                  If *freqs* is 'None', then an appropriate range will be
                   determined automatically.
 
-             - *in_Hz*: If *True* (default), the frequencies (*freqs*) are in
+             - *in_Hz*: If `True` (default), the frequencies (*freqs*) are in
                Hz and should be plotted in Hz (otherwise, rad/s)
 
-             - *in_dB*: If *True* (default), plot the magnitude in dB
+             - *in_dB*: If `True` (default), plot the magnitude in dB
 
-             - *in_deg*: If *True* (default), plot the phase in degrees
+             - *in_deg*: If `True` (default), plot the phase in degrees
                (otherwise, radians)
 
              Other keyword arguments are passed to
@@ -936,7 +936,7 @@ class LinResList(ResList):
 
         - *labels*: Label or list of labels for the legends
 
-             If *labels* is *None*, then no label will be used.  If it is an
+             If *labels* is 'None', then no label will be used.  If it is an
              empty string (''), then the base filenames will be used.
 
         - *colors*: Color or list of colors that will be used sequentially
@@ -948,28 +948,28 @@ class LinResList(ResList):
         - *leg_kwargs*: Dictionary of keyword arguments for
           :func:`matplotlib.pyplot.legend`
 
-             If *leg_kwargs* is *None*, then no legend will be shown.
+             If *leg_kwargs* is 'None', then no legend will be shown.
 
         - *\*\*kwargs*: Additional plotting arguments:
 
              - *freqs*: List or frequencies or tuple of (min, max) frequencies
                over which to plot the system response.
 
-                  If *freqs* is *None*, then an appropriate range will be
+                  If *freqs* is 'None', then an appropriate range will be
                   determined automatically.
 
-             - *in_Hz*: If *True* (default), the frequencies (*freqs*) are in
+             - *in_Hz*: If `True` (default), the frequencies (*freqs*) are in
                Hz and should be plotted in Hz (otherwise, rad/s)
 
-             - *mark*: *True*, if the -1 point should be marked on the plot
+             - *mark*: `True`, if the -1 point should be marked on the plot
 
-             - *show_axes*: *True*, if the axes should be shown
+             - *show_axes*: `True`, if the axes should be shown
 
              - *skip*: Mark every nth frequency on the plot with a dot
 
-                  If *skip* is 0 or *None*, then the frequencies are not marked.
+                  If *skip* is 0 or 'None', then the frequencies are not marked.
 
-             - *label_freq*: If *True*, if the marked frequencies should be
+             - *label_freq*: If `True`, if the marked frequencies should be
                labeled
 
              Other keyword arguments are passed to

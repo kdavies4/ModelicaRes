@@ -105,7 +105,7 @@ def _select(meth):
 
         - *t*: Time index
 
-             - Default or *None*: All samples are included.
+             - Default or 'None': All samples are included.
 
              - :class:`float`: Interpolate to a single time.
 
@@ -227,7 +227,7 @@ class Variable(object):
 
          This property is settable.
 
-    If *dimension* and *display_unit* are unknown, use *None*.
+    If *dimension* and *display_unit* are unknown, use 'None'.
 
     **Examples:**
 
@@ -315,7 +315,7 @@ class Variable(object):
 
     @property
     def is_constant(self):
-        """*True* if the variable does not change over time
+        """`True` if the variable does not change over time
 
         **Example:**
 
@@ -477,7 +477,7 @@ class Variable(object):
              This may have any of the forms listed in :meth:`values`, but the
              useful ones are:
 
-             - Default or *None*: All times are included.
+             - Default or 'None': All times are included.
 
              - *tuple*: Extract recorded times from a range of times.  The
                structure is similar to the arguments of Python's slice_
@@ -544,7 +544,7 @@ class Variable(object):
 
         - *t*: Time index
 
-             - Default or *None*: All samples are included.
+             - Default or 'None': All samples are included.
 
              - *float*: Interpolate (linearly) to a single time.
 
@@ -696,13 +696,13 @@ class SimRes(Res, dict):
 
          '/' can be used as a path separator in both Windows and Unix/Linux.
 
-    - *constants_only*: *True* (default) to load only the variables from the
+    - *constants_only*: `True` (default) to load only the variables from the
       first data table
 
          The first data table typically contains all of the constants,
          parameters, and variables that don't vary.  If only that
          information is needed, it may save resources to set
-         *constants_only* to *True*.
+         *constants_only* to `True`.
 
     - *tool*: String indicating the simulation tool that created the file
       and thus the function to be used to load it
@@ -717,7 +717,7 @@ class SimRes(Res, dict):
     built-in dictionary methods may be used:
 
     - :meth:`__contains__` (invoked as ``name in sim``, where ``name`` is a
-      string containing the name of a variable) - Return *True* if a variable is
+      string containing the name of a variable) - Return `True` if a variable is
       present in the simulation results.
 
          **Example:**
@@ -753,7 +753,7 @@ class SimRes(Res, dict):
 
          - :meth:`~Variable.IV` - Return the initial value of the variable.
 
-         - :attr:`~Variable.is_constant` - *True*, if the variable does not
+         - :attr:`~Variable.is_constant` - `True`, if the variable does not
            change over time
 
          - :meth:`~Variable.max` - Return the maximum value of the variable.
@@ -991,7 +991,7 @@ class SimRes(Res, dict):
 
         - *title*: Title for the figure
 
-             If *title* is *None* (default), then the title will be the base
+             If *title* is 'None' (default), then the title will be the base
              filename of the source.  Use '' for no title.
 
         - *subtitles*: List of subtitles (i.e., titles for each subplot)
@@ -1030,7 +1030,7 @@ class SimRes(Res, dict):
         - *leg_kwargs*: Dictionary of keyword arguments for
           :func:`matplotlib.pyplot.legend`
 
-             If *leg_kwargs* is *None*, then no legend will be shown.
+             If *leg_kwargs* is 'None', then no legend will be shown.
 
         - *\*\*kwargs*: Additional arguments for  :func:`matplotlib.pyplot.bar`
 
@@ -1170,7 +1170,7 @@ class SimRes(Res, dict):
             all variables that contain "x", but 'x\*' matches only the variables
             that begin with "x".
 
-          - If *re* is *True*, the regular expressions are used a la `Python's
+          - If *re* is `True`, the regular expressions are used a la `Python's
             re module <http://docs.python.org/2/library/re.html>`_.  See also
             http://docs.python.org/2/howto/regex.html#regex-howto.
 
@@ -1183,9 +1183,9 @@ class SimRes(Res, dict):
             Note that '.' is a subclass separator in Modelica_ but a wildcard in
             regular expressions.  Escape subclass separators as '\\.'.
 
-        - *re*: *True* to use regular expressions (*False* to use shell style)
+        - *re*: `True` to use regular expressions (*False* to use shell style)
 
-        - *constants_only*: *True* to include only the variables that do not
+        - *constants_only*: `True` to include only the variables that do not
           change over time
 
         **Example:**
@@ -1250,7 +1250,7 @@ class SimRes(Res, dict):
 
         - *ylabel1*: Label for the primary y axis
 
-             If *ylabel1* is *None* (default) and all of the variables have the
+             If *ylabel1* is 'None' (default) and all of the variables have the
              same Modelica_ description string, then it will be used as the
              label.  Use '' for no label.  The units will be automatically
              noted, so they should not be included here.
@@ -1266,7 +1266,7 @@ class SimRes(Res, dict):
           primary y axis
 
              If *legends1* is an empty list ([]), y1 will be used along with the
-             keys from the *f1* dictionary.  If *legends1* is *None* and all of
+             keys from the *f1* dictionary.  If *legends1* is 'None' and all of
              the variables on the primary axis have the same unit, then no
              legend will be shown.
 
@@ -1285,12 +1285,12 @@ class SimRes(Res, dict):
 
         - *xlabel*: Label for the x axis
 
-             If *xlabel* is *None* (default), the variable's Modelica_
+             If *xlabel* is 'None' (default), the variable's Modelica_
              description string will be applied.  Use '' for no label.
 
         - *title*: Title for the figure
 
-             If *title* is *None* (default), then the title will be the base
+             If *title* is 'None' (default), then the title will be the base
              filename.  Use '' for no title.
 
         - *label*: Label for the figure (ignored if *ax* is provided)
@@ -1299,7 +1299,7 @@ class SimRes(Res, dict):
              :func:`~modelicares.util.save` or
              :func:`~modelicares.util.saveall`.
 
-        - *incl_prefix*: If *True*, prefix the legend strings with the base
+        - *incl_prefix*: If `True`, prefix the legend strings with the base
           filename of the class.
 
         - *suffix*: String that will be added at the end of the legend entries
@@ -1483,7 +1483,7 @@ class SimRes(Res, dict):
 
         - *title*: Title for the figure
 
-             If *title* is *None* (default), then the title will be "Sankey
+             If *title* is 'None' (default), then the title will be "Sankey
              Diagram of *fbase*", where *fbase* is the base filename of the
              data.  Use '' for no title.
 
@@ -1580,7 +1580,7 @@ class SimRes(Res, dict):
 
         - *names*: String or list of strings of the variable names
 
-             If *names* is *None* (default), then all variables are included.
+             If *names* is 'None' (default), then all variables are included.
 
         - *aliases*: Dictionary of aliases for the variable names
 
@@ -1836,7 +1836,7 @@ class SimResList(ResList):
       using a slice, or a :class:`Variable` across the list of simulations using
       a variable name.
 
-    - :meth:`__contains__` - Return *True* if:
+    - :meth:`__contains__` - Return `True` if:
 
          - a simulation is in the list of simulations or
          - a variable name is present in all of the simulations in the list.
@@ -2044,7 +2044,7 @@ class SimResList(ResList):
             all variables that contain "x", but 'x\*' matches only the variables
             that begin with "x".
 
-          - If *re* is *True*, regular expressions are used a la `Python's re
+          - If *re* is `True`, regular expressions are used a la `Python's re
             module <http://docs.python.org/2/library/re.html>`_.  See also
             http://docs.python.org/2/howto/regex.html#regex-howto.
 
@@ -2057,9 +2057,9 @@ class SimResList(ResList):
             Note that '.' is a subclass separator in Modelica_ but a wildcard in
             regular expressions.  Escape subclass separators as '\\.'.
 
-        - *re*: *True* to use regular expressions (*False* to use shell style)
+        - *re*: `True` to use regular expressions (*False* to use shell style)
 
-        - *constants_only*: *True* to include only the variables that do not
+        - *constants_only*: `True` to include only the variables that do not
           change over time
 
         **Example:**
@@ -2086,7 +2086,7 @@ class SimResList(ResList):
 
         **Parameters:**
 
-        - *constants_only*: *True* to include only the variables that do not
+        - *constants_only*: `True` to include only the variables that do not
           change over time
 
         - *tolerance*: Maximum variation allowed for values to still be
@@ -2142,7 +2142,7 @@ class SimResList(ResList):
         return sorted(names)
 
     def __contains__(self, item):
-        """Return *True* if a variable is present in all of the simulation
+        """Return `True` if a variable is present in all of the simulation
         results or a simulation is present in the list of simulations.
 
         This method is overloaded---*item* can be a string representing a
@@ -2279,7 +2279,7 @@ class SimResList(ResList):
         - *suffixes*: Suffix or list of suffixes for the legends (see
           :meth:`SimRes.plot`)
 
-             Use '' for no suffix.  If *suffixes* is *None*, the *label*
+             Use '' for no suffix.  If *suffixes* is 'None', the *label*
              property of the simulations will be used.  If the simulations do
              not have *label* properties, then the base filenames will be used
              with enough of the path to distinguish the files.

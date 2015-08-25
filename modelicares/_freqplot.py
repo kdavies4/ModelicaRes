@@ -103,7 +103,7 @@ def default_frequency_range(syslist, in_Hz=True):
 
     - *syslist*: List of linear input/output systems (single system is OK)
 
-    - *in_Hz*: If *True*, the frequencies (*freqs*) are rounded to decades of
+    - *in_Hz*: If `True`, the frequencies (*freqs*) are rounded to decades of
       Hz (otherwise, rad/s)
 
     **Returns:**
@@ -172,7 +172,7 @@ def require_SISO(func):
 
 def overload_freqs(func):
     """Decorate a function to accept frequencies via (min, max) or default
-    (*None*), as well as a list of frequencies.
+    ('None'), as well as a list of frequencies.
     """
     @wraps(func)
     def wrapped(sys, freqs=None, in_Hz=True, *args, **kwargs):
@@ -227,21 +227,21 @@ def bode_plot(mag, phase, f, in_Hz=True, in_dB=True, in_deg=True, label=None,
     - *freqs*: List or frequencies or tuple of (min, max) frequencies over which
       to plot the system response.
 
-         If *freqs* is *None*, then an appropriate range will be determined
+         If *freqs* is 'None', then an appropriate range will be determined
          automatically.
 
-    - *in_Hz*: If *True*, the frequencies (*freqs*) are in Hz and should be
+    - *in_Hz*: If `True`, the frequencies (*freqs*) are in Hz and should be
       plotted in Hz (otherwise, rad/s)
 
-    - *in_dB*: If *True*, plot the magnitude in dB
+    - *in_dB*: If `True`, plot the magnitude in dB
 
-    - *in_deg*: If *True*, plot the phase in degrees (otherwise, radians)
+    - *in_deg*: If `True`, plot the phase in degrees (otherwise, radians)
 
     - *label*: Label for the legend, if added
 
     - *axes*: Tuple (pair) of axes to plot into
 
-         If *None* or (*None*, None*), then axes are created
+         If 'None' or ('None', None*), then axes are created
 
     - *\*args*, *\*\*kwargs*: Additional options to matplotlib (color,
       linestyle, etc.)
@@ -304,26 +304,26 @@ def nyquist_plot(mag, phase, f, in_Hz=True, label=None, mark=False,
     - *freqs*: List or frequencies or tuple of (min, max) frequencies over which
       to plot the system response.
 
-         If *freqs* is *None*, then an appropriate range will be determined
+         If *freqs* is 'None', then an appropriate range will be determined
          automatically.
 
-    - *in_Hz*: *True*, if the frequencies (*freqs*) are in Hz (otherwise, rad/s)
+    - *in_Hz*: `True`, if the frequencies (*freqs*) are in Hz (otherwise, rad/s)
 
     - *label*: Label for the legend, if added
 
-    - *mark*: *True*, if the -1 point should be marked on the plot
+    - *mark*: `True`, if the -1 point should be marked on the plot
 
-    - *show_axes*: *True*, if the axes should be shown
+    - *show_axes*: `True`, if the axes should be shown
 
     - *skip*: Mark every nth frequency on the plot with a dot (int)
 
-         If *skip* is 0 or *None*, then the frequencies are not marked.
+         If *skip* is 0 or 'None', then the frequencies are not marked.
 
-    - *label_freq*: If *True*, if the marked frequencies should be labeled
+    - *label_freq*: If `True`, if the marked frequencies should be labeled
 
     - *ax*: Axes to plot into
 
-         If *None*, then axes are created.
+         If 'None', then axes are created.
 
     - *\*args*, *\*\*kwargs*: Additional options to matplotlib (color, etc.)
 

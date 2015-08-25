@@ -80,7 +80,7 @@ def number_label(quantity="", unit=None, times=r'\,', per=r'\,/\,',
             >>> number_label("Gain", "dB")
             'Gain in $dB$'
 
-    - *roman*: *True*, if the units should be typeset in Roman (rather than
+    - *roman*: `True`, if the units should be typeset in Roman (rather than
       italics)
 
     **Examples:**
@@ -117,7 +117,7 @@ def quantity_str(number, unit='', use_si=True, format='%g', times=r'\,',
 
          *unit* uses extended Modelica_ notation.  See :func:`unit2tex`.
 
-    - *use_si*: *True*, if SI prefixes should be used
+    - *use_si*: `True`, if SI prefixes should be used
 
     - *format*: Modified Python_ number formatting string
 
@@ -132,7 +132,7 @@ def quantity_str(number, unit='', use_si=True, format='%g', times=r'\,',
          the significand and the exponent is always indicated by
          ":math:`\times`".
 
-    - *roman*: *True*, if the units should be typeset in Roman (rather than
+    - *roman*: `True`, if the units should be typeset in Roman (rather than
       Italics)
 
     **Examples:**
@@ -204,7 +204,7 @@ def unit2tex(unit, times=r'\,', roman=False):
          *times* is applied between the number and the first unit and between
          units.  The default is 3/18 quad space.
 
-    - *roman*: *True*, if the units should be typeset in Roman (rather than
+    - *roman*: `True`, if the units should be typeset in Roman (rather than
       italics)
 
     **Example:**

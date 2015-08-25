@@ -142,7 +142,7 @@ def loadtxt(file_name, variable_names=None, skip_header=1):
     - *variable_names*: List of the names of the variables to read
 
          Any variable with a name not in this list will be skipped, possibly
-         saving some processing time.  If *variable_names* is *None*, then all
+         saving some processing time.  If *variable_names* is 'None', then all
          variables will be read.
 
      - *skip_header*: Number of lines to skip at the beginning of the file
@@ -207,7 +207,7 @@ def read(fname, constants_only=False):
 
          This may be from a simulation or a linearization.
 
-    - *constants_only*: *True* to assume the result is from a simulation and
+    - *constants_only*: `True` to assume the result is from a simulation and
       read only the variables from the first data matrix
 
     **Returns:**
@@ -273,12 +273,12 @@ def readsim(fname, constants_only=False):
 
     - *fname*: Name of the results file, including the path and extension
 
-    - *constants_only*: *True* to read only the variables from the first data
+    - *constants_only*: `True` to read only the variables from the first data
       matrix
 
          The first data matrix typically contains all of the constants,
          parameters, and variables that don't vary.  If only that information is
-         needed, it may save resources to set *constants_only* to *True*.
+         needed, it may save resources to set *constants_only* to `True`.
 
     **Returns:** A dictionary of variables (instances of
     :class:`~modelicares.simres.Variable`)

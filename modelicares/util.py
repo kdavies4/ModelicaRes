@@ -30,6 +30,8 @@ r"""Classes and functions to help plot and interpret experimental data
 
 - :func:`basename` - Return the base filename from *fname*.
 
+- :func:`call` - Run a system command, with the option to silence the output.
+
 - :func:`cast_sametype` - Decorate a method to return an instance of the
   containing class.
 
@@ -65,9 +67,6 @@ r"""Classes and functions to help plot and interpret experimental data
   Cartesian coordinates.
 
 - :func:`quiver` - Plot 2D vector data as arrows in 2D Cartesian coordinates.
-
-- :func:`run_in_dir` - Run a system command in a given working directory and
-  print the output.
 
 - :func:`read_values` - Read integers or floats from a formatted text file.
 
@@ -327,6 +326,18 @@ def basename(fname):
 
     Unlike :func:`os.path.basename`, this function strips the file extension."""
     return os.path.splitext(os.path.basename(fname))[0]
+
+
+def call(args, silent=False):
+    """Run a system command, with the options to silence the output.
+
+    **Parameters:**
+
+    - *args*: List of program arguments or a single string
+
+    - *silent*: *False*, if the output should be printed
+    """
+    subprocess.call(args, stdout=open(os.devnull, 'w') if silent else None)
 
 
 def cast_sametype(meth):
@@ -705,7 +716,7 @@ def match(strings, pattern=None, re=False):
         strings that contain "x", but 'x\*' matches only the strings that begin
         with "x".
 
-      - If *re* is *True*, regular expressions are used a la `Python's re
+      - If *re* is `True`, regular expressions are used a la `Python's re
         module <http://docs.python.org/2/library/re.html>`_.  See also
         http://docs.python.org/2/howto/regex.html#regex-howto.
 
@@ -718,7 +729,7 @@ def match(strings, pattern=None, re=False):
         Note that '.' is a subclass separator in Modelica_ but a wildcard in
         regular expressions.  Escape the subclass separator as '\\.'.
 
-    - *re*: *True* to use regular expressions (*False* to use shell style)
+    - *re*: `True` to use regular expressions (*False* to use shell style)
 
     **Example:**
 
@@ -817,12 +828,12 @@ def plot(y, x=None, ax=None, label=None,
 
     - *ax*: Axis onto which the data should be plotted.
 
-         If *ax* is *None* (default), axes are created.
+         If *ax* is 'None' (default), axes are created.
 
     - *label*: List of labels of each series (to be used later for the legend
       if applied)
 
-         If *label* is *None*, no labels are applied.
+         If *label* is 'None', no labels are applied.
 
     - *color*: Single entry, list, or :func:`itertools.cycle` of colors that
       will be used sequentially
@@ -834,7 +845,7 @@ def plot(y, x=None, ax=None, label=None,
     - *marker*: Single entry, list, or :func:`itertools.cycle` of markers that
       will be used sequentially
 
-         Use *None* for no marker.  A good assortment is ['o', 'v', '^', '<',
+         Use 'None' for no marker.  A good assortment is ['o', 'v', '^', '<',
          '>', 's', 'p', '*', 'h', 'H', 'D', 'd']. All of the possible entries
          are listed at:
          http://matplotlib.sourceforge.net/api/artist_api.html#matplotlib.lines.Line2D.set_marker.
@@ -843,7 +854,7 @@ def plot(y, x=None, ax=None, label=None,
       that will be used sequentially
 
          Each style is a tuple of on/off lengths representing dashes.  Use
-         (0, 1) for no line and (*None*, *None*) for a solid line.
+         (0, 1) for no line and ('None', 'None') for a solid line.
 
          .. Seealso:: http://matplotlib.org/api/lines_api.html#matplotlib.lines.Line2D.set_dashes
 
@@ -991,38 +1002,13 @@ def read_values(names, fname, patterns):
         return map(_read_value, names)
 
 
-def run_in_dir(args, working_dir='', debug=False):
-    """Run a system command in a given working directory.
-
-    **Parameters:**
-
-    - *args*: List of program arguments or a single string
-
-    - *working_dir*: Working directory (string), absolute or relative to the
-      current directory
-
-    - *debug*: *True*, if the output should be printed
-    """
-    # This function is based on code from Arnout Aertgeerts.
-
-    # Run the command and print the output if debug is True
-
-    process = subprocess.Popen(args, cwd=working_dir if working_dir else None,
-                               stdout=subprocess.PIPE)
-
-    if debug:
-        for line in iter(lambda: process.stdout.read(1), ''):
-            sys.stdout.write(line)
-    process.communicate() # This also waits for the process to finish.
-
-
 def save(formats=['pdf', 'png'], fname=None, fig=None):
     """Save a figure in an image format or list of formats.
 
     The base filename (with directory if necessary but without extension) is
     determined in this order of priority:
 
-    1. *fname* argument if it is not *None*
+    1. *fname* argument if it is not 'None'
     2. the *label* property of the figure, if it is not empty
     3. the response from a file dialog
 
@@ -1038,7 +1024,7 @@ def save(formats=['pdf', 'png'], fname=None, fig=None):
     - *fig*: `matplotlib figure <http://matplotlib.org/api/figure_api.html>`_
       or list of figures to be saved
 
-           If *fig* is *None* (default), then the current figure will be saved.
+           If *fig* is 'None' (default), then the current figure will be saved.
 
     .. Note::  In general, :func:`save` should be called before
        :func:`matplotlib.pyplot.show` so that the figure(s) are still present in
@@ -1161,7 +1147,7 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
 
     - *title*: Title for the figure
 
-    - *subtitles*: List of subtitles (i.e., titles for each subplot) or *None*
+    - *subtitles*: List of subtitles (i.e., titles for each subplot) or 'None'
       for no subtitles
 
     - *label*: Label for the figure
@@ -1174,11 +1160,11 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
     - *xticklabels*: Labels for the x-axis ticks (only shown for the subplots
       on the bottom row)
 
-         If *None*, then the default is used.
+         If 'None', then the default is used.
 
     - *xticks*: Positions of the x-axis ticks
 
-         If *None*, then the default is used.
+         If 'None', then the default is used.
 
     - *ylabel*: Label for the y-axis (only shown for the subplots on the left
       column)
@@ -1186,13 +1172,13 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
     - *yticklabels*: Labels for the y-axis ticks (only shown for the subplots
       on the left column)
 
-         If *None*, then the default is used.
+         If 'None', then the default is used.
 
     - *yticks*: Positions of the y-axis ticks
 
-         If *None*, then the default is used.
+         If 'None', then the default is used.
 
-    - *ctype*: Type of colorbar (*None*, 'vertical', or 'horizontal')
+    - *ctype*: Type of colorbar ('None', 'vertical', or 'horizontal')
 
     - *clabel*: Label for the color- or c-bar axis
 
@@ -1214,17 +1200,17 @@ def setup_subplots(n_plots, n_rows, title="", subtitles=None,
 
     - *cbar_space*: Space between the subplot rectangles and the colorbar
 
-         If *cbar* is *None*, then this is ignored.
+         If *cbar* is 'None', then this is ignored.
 
     - *cbar_width*: Width of the colorbar if vertical (or height if horizontal)
 
-         If *cbar* is *None*, then this is ignored.
+         If *cbar* is 'None', then this is ignored.
 
     **Returns:**
 
     1. List of subplot axes
 
-    2. Colorbar axis (returned iff *cbar* is not *None*)
+    2. Colorbar axis (returned iff *cbar* is not 'None')
 
     3. Number of columns of subplots
 
@@ -1482,7 +1468,7 @@ def write_values(data, fname, patterns):
     - *data*: Dictionary of variable names and values
 
          The string representation of each value will be used in the file,
-         except any item with a value of *None* will be skipped.
+         except any item with a value of 'None' will be skipped.
 
     - *fname*: Name of the file (may include the file path)
 
@@ -1752,12 +1738,12 @@ class ParamDict(dict):
     In the string mapping, each key is interpreted as a parameter name
     (including the full model path in Modelica_ dot notation) and each entry is
     a parameter value.  The value may be a number (:class:`int` or
-    :class:`float`), Boolean constant (in Python_ format---*True* or *False*,
+    :class:`float`), Boolean constant (in Python_ format---`True` or *False*,
     not 'true' or 'false'), string, or NumPy_ arrays of these.  Modelica_
     strings must be given with double quotes included (e.g., '"hello"').
     Enumerations may be used as values (e.g., 'Axis.x').  Values may be
     functions or modified classes, but the entire value must be expressed as a
-    Python_ string (e.g., 'fill(true, 2, 2)').  Items with a value of *None* are
+    Python_ string (e.g., 'fill(true, 2, 2)').  Items with a value of 'None' are
     not shown.
 
     Redeclarations and other prefixes must be included in the key along with the

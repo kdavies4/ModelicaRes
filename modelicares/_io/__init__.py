@@ -9,7 +9,7 @@ Each submodule contains the following functions for a specific results format:
 
 The first argument of each function is *fname*, the name of the results file
 (including the path).  :func:`readsim` takes a second argument,
-*constants_only*.  If it is *True* and the format supports it, :func:`readsim`
+*constants_only*.  If it is `True` and the format supports it, :func:`readsim`
 will only read constants.
 
 :func:`readsim` returns a dictionary of variables.  The keys are variable names

@@ -214,7 +214,7 @@ def write_params(params, fname='dsin.txt'):
          in Modelica_ dot notation) and each entry is a value.  The name
          includes array indices (if any) in Modelica_ representation (1-based
          indexing).  The values must be representable as scalar numbers (integer
-         or floating point).  *True* and *False* (not 'true' and 'false') are
+         or floating point).  `True` and *False* (not 'true' and 'false') are
          automatically mapped to 1 and 0.  Enumerations must be given explicitly
          as the unsigned integer equivalent.  Strings, functions,
          redeclarations, etc. are not supported.

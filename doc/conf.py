@@ -43,8 +43,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.doctest',
               'sphinx.ext.pngmath',
               'sphinx.ext.intersphinx',
-              #'sphinx.ext.inheritance_diagram',
-              #'sphinx.ext.graphviz',
+              'sphinx.ext.inheritance_diagram',
+              'sphinx.ext.graphviz',
               'matplotlib.sphinxext.plot_directive'
              ]
 # Note: sphinx.ext.autosummary produces a table, but I'd rather have a bulleted
