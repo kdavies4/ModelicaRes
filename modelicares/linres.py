@@ -30,7 +30,7 @@ import numpy as np
 
 from control.matlab import ss
 from functools import wraps
-from matplotlib.cbook import iterable
+from numpy import iterable
 from natu.util import multiglob
 from scipy.signal import ss2tf
 from six import string_types
