@@ -47,7 +47,7 @@ from difflib import get_close_matches
 from functools import wraps
 from itertools import cycle
 from matplotlib import rcParams
-from matplotlib.cbook import iterable
+from numpy import iterable
 from matplotlib.pyplot import figlegend
 from natu import core as nc
 from natu import numpy as np
