@@ -126,7 +126,7 @@ from itertools import cycle
 from math import floor
 from matplotlib import rcParams
 from matplotlib._pylab_helpers import Gcf
-from matplotlib.cbook import iterable
+from numpy import iterable
 from matplotlib.lines import Line2D
 from natu.util import flatten_list
 from six import string_types
