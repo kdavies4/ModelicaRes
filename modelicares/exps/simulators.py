@@ -629,13 +629,13 @@ class _InteractiveSimulator(object):
     - *async* (`True`): If `True`, run simulations asynchronously (in parallel).
     """
 
-    def __init__(self, output_dir='', async=True, **options):
+    def __init__(self, output_dir='', asynch=True, **options):
         """Initialize the simulator.
 
         See the top-level class documentation.
         """
         # Prepare for asynchronous simulation.
-        self._pool = Pool() if async else None
+        self._pool = Pool() if asynch else None
 
         # Create the results directory.
         self._output_dir = cleanpath(output_dir)
@@ -808,7 +808,7 @@ class dymosim(_InteractiveSimulator):
         See the top-level class documentation.
         """
         self._command = command
-        _InteractiveSimulator.__init__(self, output_dir, async=not debug,
+        _InteractiveSimulator.__init__(self, output_dir, asynch=not debug,
                                        **options)
 
     def __setattr__(self, attr, value):
