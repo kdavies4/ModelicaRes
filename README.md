@@ -1,3 +1,10 @@
+Fork of https://github.com/kdavies4/ModelicaRes
+Avoids issues related to matplotlib and other out of date code since last commit on original
+Works for python 3.10.8
+matplotlib 3.6.2
+numpy 1.23.4
+scipy 1.9.3
+
 ModelicaRes
 -----------
 
