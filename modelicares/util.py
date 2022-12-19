@@ -117,7 +117,7 @@ import subprocess
 import sys
 import time
 
-from collections import MutableMapping
+from collections.abc import MutableMapping
 from decimal import Decimal
 from fnmatch import fnmatchcase
 from functools import wraps
