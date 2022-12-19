@@ -128,7 +128,7 @@ def _apply_unit(number, unit):
     """Apply the value of a unit to a number (in place).
     """
     unit_value = nc.value(unit)
-    if unit_value <> 1.0:
+    if unit_value != 1.0:
         # Apply the unit.
         number *= unit_value
 
