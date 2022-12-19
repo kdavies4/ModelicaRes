@@ -1720,7 +1720,7 @@ class SimRes(Res, dict):
         try:
             return util.CallDict(zip(self.keys(), values))
         except ValueError:
-            if attr == 'value' and len(self) <> self.n_constants:
+            if attr == 'value' and len(self) != self.n_constants:
                 raise ValueError("The variables aren't all constants.  "
                                  "Use values() instead of value.")
             raise
