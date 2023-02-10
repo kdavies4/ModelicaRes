@@ -20,7 +20,7 @@ versioneer.versionfile_source = 'modelicares/_version.py'
 versioneer.versionfile_build = 'modelicares/_version.py'
 versioneer.tag_prefix = 'v' # Tags are like 1.2.0
 versioneer.parentdir_prefix = 'ModelicaRes-'
-version = versioneer.get_version()
+version = "1.0.0"#versioneer.get_version()
 
 with open(path.join(here, 'doc/long-description.txt')) as f:
     long_description = f.read()
