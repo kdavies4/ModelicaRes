@@ -7,7 +7,6 @@ See README.md for instructions.
 # pylint: disable=C0103
 
 import re
-import versioneer
 
 from glob import glob
 from os import path
@@ -15,12 +14,7 @@ from setuptools import setup
 
 here = path.abspath(path.dirname(__file__))
 
-versioneer.VCS = 'git'
-versioneer.versionfile_source = 'modelicares/_version.py'
-versioneer.versionfile_build = 'modelicares/_version.py'
-versioneer.tag_prefix = 'v' # Tags are like 1.2.0
-versioneer.parentdir_prefix = 'ModelicaRes-'
-version = "1.0.0"#versioneer.get_version()
+version = "1.0.0"
 
 with open(path.join(here, 'doc/long-description.txt')) as f:
     long_description = f.read()
